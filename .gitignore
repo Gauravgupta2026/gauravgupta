@@ -1,0 +1,15 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vite
+
+Portfolio Design System.html
+Design System.dc.html
+inspo/
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
