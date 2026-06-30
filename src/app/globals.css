@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+/* ----------------------------------------------------------------------------
+   Design tokens — see CLAUDE.md "Design System". Tailwind v4 reads these
+   `@theme` vars to generate utilities (e.g. --color-blue → bg-blue/text-blue).
+---------------------------------------------------------------------------- */
+@theme {
+  --color-cream: #faf6ec; /* page background */
+  --color-ink: #14130f; /* primary text */
+  --color-blue: #1b16ee; /* signature electric-blue accent */
+  --color-blue-deep: #130fb4; /* gradient end for CTA band */
+  --color-blue-tint: #f1f0fe; /* hover / soft surfaces */
+  --color-soft-ink: #6f6b62; /* muted body text */
+  --color-mute: #9a958a; /* labels / quiet meta */
+  --color-gold: #e8c24a; /* secondary accent */
+  --color-card: #fdfbf6; /* raised card surface on cream */
+
+  --font-display: var(--font-newsreader), Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* layout */
+  --spacing-shell: 1180px; /* max content width */
+}
+
+:root {
+  --side-pad: 48px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --side-pad: 28px;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-blue);
+  color: var(--color-cream);
+}
+
+/* Live status / "currently exploring" pulse */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}
+
+.animate-blink {
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+/* Scroll-in fade + rise (driven by IntersectionObserver in <Reveal>) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 0.7, 0.2, 1),
+    transform 0.9s cubic-bezier(0.16, 0.7, 0.2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-blink {
+    animation: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
