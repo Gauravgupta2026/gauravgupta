@@ -27,7 +27,7 @@ export function StatCard({
   href?: string;
 }) {
   return (
-    <div className="group relative flex h-full flex-col border border-ink/10 bg-card p-[30px_30px_26px] transition-[border-color,transform] duration-[400ms] ease-out hover:-translate-y-[3px] hover:border-blue">
+    <div className="group relative flex h-full flex-col border border-ink/10 bg-card p-[24px_22px_22px] transition-[border-color,transform] duration-[400ms] ease-out hover:-translate-y-[3px] hover:border-blue md:p-[30px_30px_26px]">
       <CardLabel>{label}</CardLabel>
       <div className="flex flex-1 flex-col gap-[22px]">
         {stats.map((s, i) => (
@@ -38,7 +38,7 @@ export function StatCard({
             }`}
           >
             <span
-              className={`w-[78px] shrink-0 font-display text-[46px] font-normal leading-[0.9] ${
+              className={`w-[64px] shrink-0 font-display text-[40px] font-normal leading-[0.9] md:w-[78px] md:text-[46px] ${
                 s.accent ? "text-blue" : "text-ink"
               }`}
             >
@@ -76,7 +76,7 @@ export function ExploringCard({
   items: string[];
 }) {
   return (
-    <div className="relative flex h-full flex-col border border-blue/15 bg-blue-tint p-[30px] transition-transform duration-[400ms] ease-out hover:-translate-y-[3px]">
+    <div className="relative flex h-full flex-col border border-blue/15 bg-blue-tint p-[24px_22px] transition-transform duration-[400ms] ease-out hover:-translate-y-[3px] md:p-[30px]">
       <div className="mb-[30px] flex items-center gap-[8px]">
         <span className="h-[7px] w-[7px] rounded-full bg-blue animate-blink" />
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-blue">
@@ -112,7 +112,7 @@ export function StackCard({
   items: StackItem[];
 }) {
   return (
-    <div className="relative flex h-full flex-col border border-ink/10 bg-card p-[30px] transition-[border-color,transform] duration-[400ms] ease-out hover:-translate-y-[3px] hover:border-blue">
+    <div className="relative flex h-full flex-col border border-ink/10 bg-card p-[24px_22px] transition-[border-color,transform] duration-[400ms] ease-out hover:-translate-y-[3px] hover:border-blue md:p-[30px]">
       <CardLabel>{label}</CardLabel>
       <div className="grid flex-1 grid-cols-3 content-start gap-x-[12px] gap-y-[24px]">
         {items.map((it) => (

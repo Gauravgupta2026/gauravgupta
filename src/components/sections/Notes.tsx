@@ -8,7 +8,7 @@ export function Notes() {
     <Shell as="section" id="notes" className="pt-[90px] md:pt-[150px]">
       <Reveal
         as="h2"
-        className="m-0 mb-[50px] text-center font-display text-[38px] font-normal italic tracking-[-0.01em] text-ink"
+        className="m-0 mb-[36px] text-center font-display text-[28px] font-normal italic tracking-[-0.01em] text-ink md:mb-[50px] md:text-[38px]"
       >
         Notes
       </Reveal>

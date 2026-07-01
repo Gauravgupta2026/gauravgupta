@@ -44,7 +44,7 @@ export function ProjectCard({ project }: { project: Project }) {
   return (
     <div className="grid grid-cols-1 border border-ink/12 bg-card md:grid-cols-[1fr_1.1fr_0.8fr]">
       {/* left — copy */}
-      <div className="flex flex-col p-[34px]">
+      <div className="flex flex-col p-[24px] md:p-[34px]">
         <div
           className={`mb-[22px] font-mono text-[9px] uppercase tracking-[0.2em] ${
             accentAct ? "text-blue" : "text-mute"
@@ -52,7 +52,7 @@ export function ProjectCard({ project }: { project: Project }) {
         >
           {act}
         </div>
-        <h3 className="m-0 mb-[8px] font-display text-[34px] font-medium text-ink">
+        <h3 className="m-0 mb-[8px] font-display text-[28px] font-medium text-ink md:text-[34px]">
           {title}
         </h3>
         <div className="mb-[20px] font-mono text-[11px] text-soft-ink">
@@ -82,14 +82,14 @@ export function ProjectCard({ project }: { project: Project }) {
       {/* right — meta rail */}
       <div className="flex flex-col border-t border-ink/12 md:border-t-0">
         {meta.map((m) => (
-          <div key={m.label} className="border-b border-ink/10 p-[26px_28px]">
+          <div key={m.label} className="border-b border-ink/10 p-[22px_24px] md:p-[26px_28px]">
             <div className="mb-[10px] font-mono text-[9px] uppercase tracking-[0.2em] text-mute">
               {m.label}
             </div>
             <div className="font-display text-[20px] text-ink">{m.value}</div>
           </div>
         ))}
-        <div className="p-[26px_28px]">
+        <div className="p-[22px_24px] md:p-[26px_28px]">
           <div className="mb-[14px] font-mono text-[9px] uppercase tracking-[0.2em] text-mute">
             Stack
           </div>

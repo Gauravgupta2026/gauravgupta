@@ -42,7 +42,7 @@ export function Signals() {
         <div className="mb-[18px]">
           <Eyebrow>Proof &amp; Direction</Eyebrow>
         </div>
-        <h2 className="m-0 font-display text-[42px] font-normal italic tracking-[-0.01em] text-ink">
+        <h2 className="m-0 font-display text-[30px] font-normal italic tracking-[-0.01em] text-ink md:text-[42px]">
           Work, in signals
         </h2>
       </Reveal>

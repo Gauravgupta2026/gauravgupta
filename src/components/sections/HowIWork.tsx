@@ -41,7 +41,7 @@ export function HowIWork() {
       <div className="grid grid-cols-1 items-start gap-[40px] md:grid-cols-[0.85fr_1.3fr] md:gap-[80px]">
         {/* sticky intro + quote */}
         <Reveal className="md:sticky md:top-[48px]">
-          <h2 className="m-0 mb-[22px] font-display text-[38px] font-normal italic tracking-[-0.01em] text-ink">
+          <h2 className="m-0 mb-[22px] font-display text-[28px] font-normal italic tracking-[-0.01em] text-ink md:text-[38px]">
             How I Work
           </h2>
           <p className="m-0 mb-[38px] max-w-[300px] font-mono text-[12.5px] leading-[1.8] text-soft-ink">

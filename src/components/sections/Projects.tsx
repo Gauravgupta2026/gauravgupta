@@ -7,7 +7,7 @@ export function Projects() {
   return (
     <Shell as="section" id="projects" className="pt-[90px] md:pt-[130px]">
       <Reveal as="h2" className="m-0 mb-[58px] text-center">
-        <span className="font-display text-[42px] font-normal italic leading-[1.08] tracking-[-0.01em] text-ink">
+        <span className="font-display text-[30px] font-normal italic leading-[1.08] tracking-[-0.01em] text-ink md:text-[42px]">
           Projects &amp;
           <br />
           Case Study
