@@ -12,7 +12,7 @@ export function ContactBand({
 }) {
   return (
     <Shell as="section" className="mt-[90px] md:mt-[120px]">
-      <Reveal className="rounded-[20px] border border-ink/10 bg-card px-[26px] py-[64px] text-center">
+      <Reveal className="rounded-[20px] border border-ink/10 bg-card px-[24px] py-[44px] text-center md:px-[26px] md:py-[64px]">
         <h2 className="m-0 font-display text-[clamp(26px,4vw,34px)] font-normal text-ink">
           Have a question about my work?
         </h2>

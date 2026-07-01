@@ -68,7 +68,7 @@ export default function AboutPage() {
 
           <Reveal
             as="h2"
-            className="m-0 mt-[64px] font-display text-[32px] font-normal italic tracking-[-0.01em] text-ink"
+            className="m-0 mt-[48px] font-display text-[26px] font-normal italic tracking-[-0.01em] text-ink md:mt-[64px] md:text-[32px]"
           >
             Work Experience
           </Reveal>

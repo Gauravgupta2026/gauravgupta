@@ -16,7 +16,7 @@ export function ArticleBody({ body }: { body: Block[] }) {
             return (
               <p
                 key={i}
-                className="m-0 font-display text-[19px] leading-[1.75] text-ink/90"
+                className="m-0 font-display text-[17px] leading-[1.75] text-ink/90 md:text-[19px]"
               >
                 {block.text}
               </p>
@@ -26,7 +26,7 @@ export function ArticleBody({ body }: { body: Block[] }) {
             return (
               <h2
                 key={i}
-                className="m-0 mt-[22px] font-display text-[27px] font-medium leading-[1.2] text-ink"
+                className="m-0 mt-[22px] font-display text-[23px] font-medium leading-[1.2] text-ink md:text-[27px]"
               >
                 {block.text}
               </h2>
@@ -38,7 +38,7 @@ export function ArticleBody({ body }: { body: Block[] }) {
                 key={i}
                 className="my-[14px] border-l-2 border-blue pl-[24px]"
               >
-                <blockquote className="m-0 font-display text-[23px] italic leading-[1.5] text-ink">
+                <blockquote className="m-0 font-display text-[20px] italic leading-[1.5] text-ink md:text-[23px]">
                   {block.text}
                 </blockquote>
                 {block.cite ? (

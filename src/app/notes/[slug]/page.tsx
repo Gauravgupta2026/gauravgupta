@@ -59,11 +59,11 @@ export default async function NotePage({
             <span>{article.readingTime}</span>
           </div>
 
-          <h1 className="m-0 mt-[20px] font-display text-[clamp(34px,6vw,48px)] font-normal italic leading-[1.08] tracking-[-0.01em] text-ink">
+          <h1 className="m-0 mt-[20px] font-display text-[clamp(28px,6vw,48px)] font-normal italic leading-[1.1] tracking-[-0.01em] text-ink md:leading-[1.08]">
             {article.title}
           </h1>
 
-          <p className="m-0 mt-[22px] font-display text-[21px] leading-[1.5] text-soft-ink">
+          <p className="m-0 mt-[22px] font-display text-[18px] leading-[1.5] text-soft-ink md:text-[21px]">
             {article.dek}
           </p>
 

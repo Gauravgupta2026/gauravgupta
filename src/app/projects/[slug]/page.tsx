@@ -66,7 +66,7 @@ export default async function ProjectPage({
         </Reveal>
 
         {/* offset photo gallery */}
-        <Reveal className="mt-[64px] grid grid-cols-2 gap-[18px] md:grid-cols-4 md:gap-[22px]">
+        <Reveal className="mt-[48px] grid grid-cols-2 gap-[14px] md:mt-[64px] md:grid-cols-4 md:gap-[22px]">
           {project.gallery.map((label, i) => (
             <PhotoFrame
               key={i}
@@ -79,8 +79,8 @@ export default async function ProjectPage({
         </Reveal>
 
         {/* tech stack + stakeholders */}
-        <Reveal className={`${READING_COL} mt-[80px]`}>
-          <div className="grid grid-cols-1 gap-[40px] sm:grid-cols-2">
+        <Reveal className={`${READING_COL} mt-[56px] md:mt-[80px]`}>
+          <div className="grid grid-cols-1 gap-[28px] sm:grid-cols-2 sm:gap-[40px]">
             <div>
               <h2 className="m-0 mb-[18px] font-mono text-[13px] font-semibold text-ink">
                 Tech Stack
@@ -109,8 +109,8 @@ export default async function ProjectPage({
         </Reveal>
 
         {/* statement + body */}
-        <Reveal className={`${READING_COL} mt-[72px]`}>
-          <p className="m-0 font-mono text-[19px] font-medium leading-[1.5] text-ink">
+        <Reveal className={`${READING_COL} mt-[52px] md:mt-[72px]`}>
+          <p className="m-0 font-mono text-[16px] font-medium leading-[1.5] text-ink md:text-[19px]">
             {project.statement}
           </p>
           <div className="mt-[28px] flex flex-col gap-[20px]">
@@ -126,7 +126,7 @@ export default async function ProjectPage({
         </Reveal>
 
         {/* wide showcase */}
-        <Reveal className="mt-[64px]">
+        <Reveal className="mt-[48px] md:mt-[64px]">
           <PhotoFrame
             label={project.showcaseLabel}
             className="aspect-[4/5] w-full md:aspect-[16/11]"
@@ -134,10 +134,10 @@ export default async function ProjectPage({
         </Reveal>
 
         {/* next project */}
-        <div className="mt-[96px]">
+        <div className="mt-[64px] md:mt-[96px]">
           <Reveal
             as="h2"
-            className="m-0 mb-[28px] font-display text-[30px] font-normal text-ink"
+            className="m-0 mb-[24px] font-display text-[24px] font-normal text-ink md:mb-[28px] md:text-[30px]"
           >
             Next Project
           </Reveal>
