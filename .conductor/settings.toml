@@ -1,0 +1,9 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+setup = "npm install"
+run = "npm run dev -- --port $CONDUCTOR_PORT"
+run_mode = "concurrent"
+
+[prompts]
+general = "Follow the design system and responsive layout rules in CLAUDE.md. Build section by section and pause for review. Check rendered output against reference images before moving forward."
