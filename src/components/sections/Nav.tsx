@@ -11,7 +11,7 @@ export function Nav() {
     <Shell
       as="nav"
       wide
-      className="grid grid-cols-[1fr_auto_1fr] items-center pb-[48px] pt-[64px]"
+      className="grid grid-cols-[1fr_auto_1fr] items-center pb-[48px] pt-[54px]"
     >
       <Link
         href="/"
