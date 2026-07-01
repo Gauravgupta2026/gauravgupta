@@ -11,23 +11,23 @@ export function Nav() {
     <Shell
       as="nav"
       wide
-      className="grid grid-cols-[1fr_auto_1fr] items-center pb-[34px] pt-[52px]"
+      className="grid grid-cols-[1fr_auto_1fr] items-center pb-[48px] pt-[64px]"
     >
       <Link
         href="/"
-        className="justify-self-start font-mono text-[12px] font-semibold tracking-[0.12em] text-ink no-underline"
+        className="justify-self-start font-mono text-[12px] font-bold tracking-[0.12em] text-ink no-underline"
       >
         GG.
       </Link>
       <Link
         href="/about"
-        className="justify-self-center font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink no-underline transition-colors duration-300 hover:text-blue"
+        className="justify-self-center font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-ink no-underline transition-colors duration-300 hover:text-blue  "
       >
         About
       </Link>
       <Link
         href="/#projects"
-        className="justify-self-end font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink no-underline transition-colors duration-300 hover:text-blue"
+        className="justify-self-end font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-ink no-underline transition-colors duration-300 hover:text-blue"
       >
         Work
       </Link>

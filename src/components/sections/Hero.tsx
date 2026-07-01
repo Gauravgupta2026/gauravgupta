@@ -1,5 +1,5 @@
 import { Shell } from "@/components/Shell";
-import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
+import Image from "next/image";
 
 /**
  * Hero — layout is final, do not redesign.
@@ -13,11 +13,16 @@ export function Hero() {
   return (
     <Shell as="header" id="top" wide>
       <div className="relative grid grid-cols-1 items-stretch gap-0 overflow-hidden bg-blue p-[30px_26px_42px] md:min-h-[70vh] md:grid-cols-[0.95fr_1.15fr] md:content-center md:items-end md:gap-[46px] md:p-[80px]">
-        <MediaPlaceholder
-          label="[ B/W PORTRAIT ]"
-          align="bottom-left"
-          className="mt-[6px] aspect-[4/3.4] md:mt-0 md:aspect-[4/3]"
-        />
+        <div className="relative mt-[6px] aspect-[4/3.4] overflow-hidden bg-[#0c0c0c] md:mt-0 md:aspect-[4/3]">
+          <Image
+            src="/assets/hero.jpeg"
+            alt="Gaurav Gupta"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 45vw"
+            className="object-cover"
+          />
+        </div>
 
         <div className="relative pt-[56px] md:pt-0">
           <h1 className="m-0 mb-[22px] font-display text-[clamp(42px,13vw,60px)] font-normal italic leading-[0.98] tracking-[-0.01em] text-cream md:text-[64px]">

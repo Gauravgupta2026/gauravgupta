@@ -25,7 +25,7 @@ const jetbrainsMono = JetBrains_Mono({
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const TITLE = "Gaurav Gupta — AI systems & user-facing tools";
 const DESCRIPTION =
-  "I build AI systems and user-facing tools, moving from idea to interface to shipped product. Interested in long-horizon agents.";
+  "I build AI systems and user-facing tools,\n moving from idea to interface to shipped product. Interested in long-horizon agents.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

@@ -23,12 +23,12 @@
 }
 
 :root {
-  --side-pad: 48px;
+  --side-pad: 42px;
 }
 
 @media (max-width: 768px) {
   :root {
-    --side-pad: 28px;
+    --side-pad: 24px;
   }
 }
 

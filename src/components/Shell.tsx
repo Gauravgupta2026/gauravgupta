@@ -19,7 +19,7 @@ export function Shell({
   className?: string;
   children: ReactNode;
 } & Record<string, unknown>) {
-  const track = wide ? "max-w-[1475px]" : "max-w-shell";
+  const track = wide ? "max-w-[1375px]" : "max-w-shell";
   return (
     <Tag
       className={`mx-auto w-full ${track} px-[var(--side-pad)] ${className}`}
