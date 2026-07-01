@@ -13,7 +13,7 @@ export function Hero() {
   return (
     <Shell as="header" id="top" wide>
       <div className="relative grid grid-cols-1 items-stretch gap-0 overflow-hidden bg-blue p-[30px_26px_42px] md:min-h-[70vh] md:grid-cols-[0.95fr_1.15fr] md:content-center md:items-end md:gap-[46px] md:p-[80px]">
-        <div className="relative mt-[6px] aspect-[4/3.4] overflow-hidden bg-[#0c0c0c] md:mt-0 md:aspect-[4/3]">
+        <div className="relative mt-[6px] aspect-[4/3.4] self-start overflow-hidden bg-[#0c0c0c] md:mt-0 md:aspect-[4/3] md:self-auto">
           <Image
             src="/assets/hero.jpeg"
             alt="Gaurav Gupta"
