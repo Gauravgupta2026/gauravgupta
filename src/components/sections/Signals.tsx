@@ -25,7 +25,7 @@ const STACK: StackItem[] = [
   { name: "Swift", slug: "swift" },
   { name: "Convex", slug: "convex" },
   { name: "Claude", slug: "claude" },
-  { name: "Codex", mono: "Cx" },
+  { name: "Codex", slug: "codex" },
   { name: "Docker", slug: "docker" },
 ];
 
@@ -49,7 +49,7 @@ export function Signals() {
 
       <div className="grid grid-cols-1 items-stretch gap-[18px] md:grid-cols-3">
         <Reveal>
-          <StatCard stats={STATS} cta="View proof" />
+          <StatCard stats={STATS} />
         </Reveal>
         <Reveal delay={80}>
           <ExploringCard items={EXPLORING} />

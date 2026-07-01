@@ -16,14 +16,14 @@ export type Stat = { value: string; label: ReactNode; accent?: boolean };
 
 /** "Proof of building" — stat list. Hover lifts the card + reveals the arrow. */
 export function StatCard({
-  label = "Proof of building",
+  label = "Project Stats",
   stats,
   cta,
   href = "#projects",
 }: {
   label?: string;
   stats: Stat[];
-  cta: string;
+  cta?: string;
   href?: string;
 }) {
   return (
@@ -33,12 +33,12 @@ export function StatCard({
         {stats.map((s, i) => (
           <div
             key={i}
-            className={`flex items-baseline gap-[14px] ${
+            className={`flex items-center gap-[14px] ${
               i < stats.length - 1 ? "border-b border-ink/10 pb-[18px]" : ""
             }`}
           >
             <span
-              className={`font-display text-[46px] font-normal leading-[0.9] ${
+              className={`w-[78px] shrink-0 font-display text-[46px] font-normal leading-[0.9] ${
                 s.accent ? "text-blue" : "text-ink"
               }`}
             >
@@ -50,15 +50,17 @@ export function StatCard({
           </div>
         ))}
       </div>
-      <a
-        href={href}
-        className="mt-[26px] inline-flex items-center gap-[6px] font-mono text-[11px] tracking-[0.08em] text-blue no-underline"
-      >
-        {cta}
-        <span className="opacity-0 transition-opacity duration-[350ms] group-hover:opacity-100">
-          &rarr;
-        </span>
-      </a>
+      {cta && (
+        <a
+          href={href}
+          className="mt-[26px] inline-flex items-center gap-[6px] font-mono text-[11px] tracking-[0.08em] text-blue no-underline"
+        >
+          {cta}
+          <span className="opacity-0 transition-opacity duration-[350ms] group-hover:opacity-100">
+            &rarr;
+          </span>
+        </a>
+      )}
     </div>
   );
 }
