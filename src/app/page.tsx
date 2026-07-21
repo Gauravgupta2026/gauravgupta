@@ -1,9 +1,7 @@
 import { Nav } from "@/components/sections/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { MetaBar } from "@/components/sections/MetaBar";
-import { Signals } from "@/components/sections/Signals";
 import { Projects } from "@/components/sections/Projects";
-import { Experiments } from "@/components/sections/Experiments";
 import { HowIWork } from "@/components/sections/HowIWork";
 import { Notes } from "@/components/sections/Notes";
 import { CTA } from "@/components/sections/CTA";
@@ -15,9 +13,7 @@ export default function Home() {
       <Nav />
       <Hero />
       <MetaBar />
-      <Signals />
       <Projects />
-      <Experiments />
       <HowIWork />
       <Notes />
       <CTA />

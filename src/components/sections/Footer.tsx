@@ -34,7 +34,7 @@ export function Footer() {
           General
         </div>
         <FooterLink href="#projects">Projects</FooterLink>
-        <FooterLink href="#work">About</FooterLink>
+        <FooterLink href="/about">About</FooterLink>
       </div>
       <div className="flex flex-col gap-[12px]">
         <div className="mb-[4px] font-mono text-[10px] uppercase tracking-[0.18em] text-mute">
