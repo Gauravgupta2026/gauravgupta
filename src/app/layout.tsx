@@ -1,6 +1,25 @@
 import type { Metadata } from "next";
 import { Newsreader, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { IntroSplash } from "@/components/intro/IntroSplash";
+
+/**
+ * Decides — before first paint — whether the intro curtain plays.
+ *
+ * This has to be a blocking inline script rather than an effect: <IntroSplash>
+ * is CSS-hidden by default, and only this script can reveal it early enough
+ * that a first-time visitor never sees the page flash before the curtain drops.
+ * The inverse (render visible, hide on mount) would flash the curtain at every
+ * returning visitor, which is the exact failure this avoids.
+ *
+ * Skips entirely for reduced-motion and repeat visits within the session.
+ */
+const INTRO_BOOTSTRAP = `(function(){try{
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+if(sessionStorage.getItem('intro-seen'))return;
+document.documentElement.dataset.intro='play';
+document.documentElement.classList.add('intro-lock');
+}catch(e){}})();`;
 
 /**
  * Display serif. Italic 400 = headings/eyebrows, roman 500 = titles.
@@ -54,8 +73,16 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${newsreader.variable} ${jetbrainsMono.variable}`}
+      // INTRO_BOOTSTRAP stamps data-intro / .intro-lock onto <html> before
+      // hydration, which React would otherwise flag as a server/client mismatch
+      // and repair — restarting the intro's animations from zero.
+      suppressHydrationWarning
     >
-      <body>{children}</body>
+      <body>
+        <script dangerouslySetInnerHTML={{ __html: INTRO_BOOTSTRAP }} />
+        <IntroSplash />
+        {children}
+      </body>
     </html>
   );
 }

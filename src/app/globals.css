@@ -24,6 +24,9 @@
 
 :root {
   --side-pad: 42px;
+  /* Hold time per line-boil frame. 80ms ≈ 12fps — cel animation "on twos".
+     Keep in sync with BOIL_STEP_MS in src/components/intro/scribble.ts. */
+  --boil-step: 80ms;
 }
 
 @media (max-width: 768px) {
@@ -82,6 +85,175 @@ body {
 .reveal.is-visible {
   opacity: 1;
   transform: none;
+}
+
+/* ----------------------------------------------------------------------------
+   Intro splash — the curtain that draws its lockup on, holds, then slides down.
+
+   Hidden by default and revealed only when the inline script in layout.tsx sets
+   html[data-intro="play"] before first paint. Defaulting to hidden (rather than
+   visible-then-hidden) is what guarantees no flash of curtain for returning,
+   reduced-motion, or no-JS visitors.
+---------------------------------------------------------------------------- */
+.intro-splash {
+  display: none;
+}
+
+html[data-intro="play"] .intro-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 0 var(--side-pad);
+  background: var(--color-ink);
+  transform: translateY(0);
+  transition: transform 0.9s cubic-bezier(0.16, 0.7, 0.2, 1);
+}
+
+/* "Slide down": the curtain drops away, uncovering the page beneath.
+   Transform-only, so it stays on the compositor. */
+html[data-intro="play"] .intro-splash.is-leaving {
+  transform: translateY(100%);
+}
+
+/* Scroll lock while the curtain is up. Set by the inline script, released the
+   instant the curtain starts moving. */
+html.intro-lock,
+html.intro-lock body {
+  overflow: hidden;
+}
+
+.intro-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(92vw, 640px);
+}
+
+/* The lockup and the scribble share one box, so the circle keeps hugging the
+   word at every viewport width without any JS measurement. */
+.intro-lockup {
+  position: relative;
+  width: 100%;
+}
+
+.intro-word-slot {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.intro-stroke {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  stroke: var(--color-blue);
+}
+
+.intro-stroke path {
+  stroke-dashoffset: 1;
+  stroke-dasharray: 1;
+  animation-name: intro-draw, intro-boil;
+  animation-duration: var(--draw-duration), calc(var(--boil-step) * 3);
+  animation-timing-function: cubic-bezier(0.16, 0.7, 0.2, 1), linear;
+  animation-fill-mode: forwards, none;
+  animation-iteration-count: 1, infinite;
+}
+
+.intro-scribble {
+  /* Just enough bloom to lift #1B16EE off near-black. Any more and it reads as
+     a neon sign rather than ink on a page. */
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--color-blue) 30%, transparent));
+}
+
+.intro-swash {
+  width: 68%;
+  margin: 8px auto 0;
+  stroke: var(--color-gold);
+}
+
+@keyframes intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Line boil: exactly one variant is opaque per 80ms slot. The hard-cut keyframe
+   stops (33.33 → 33.34) make it snap rather than crossfade — a crossfade would
+   read as a glow pulse, not a redrawn line. */
+@keyframes intro-boil {
+  0%,
+  33.33% {
+    opacity: 1;
+  }
+  33.34%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes intro-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.intro-eyebrow,
+.intro-word,
+.intro-of,
+.intro-name {
+  margin: 0;
+  opacity: 0;
+  animation: intro-rise 0.7s cubic-bezier(0.16, 0.7, 0.2, 1) forwards;
+}
+
+.intro-eyebrow {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(15px, 3.4vw, 21px);
+  color: color-mix(in srgb, var(--color-cream) 72%, transparent);
+  animation-delay: 60ms;
+}
+
+.intro-word {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(44px, 15vw, 96px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--color-cream);
+  animation-delay: 180ms;
+}
+
+.intro-of {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(13px, 2.8vw, 17px);
+  color: var(--color-mute);
+  animation-delay: 300ms;
+}
+
+.intro-name-wrap {
+  margin-top: 6px;
+  width: min(80vw, 260px);
+}
+
+.intro-name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(20px, 5vw, 30px);
+  line-height: 1.2;
+  text-align: center;
+  color: var(--color-cream);
+  animation-delay: 380ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
