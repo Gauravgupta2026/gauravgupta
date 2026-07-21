@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Newsreader, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { PostHogProvider } from "@/components/PostHogProvider";
 
 /**
  * Display serif. Italic 400 = headings/eyebrows, roman 500 = titles.
@@ -55,7 +56,9 @@ export default function RootLayout({
       lang="en"
       className={`${newsreader.variable} ${jetbrainsMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <PostHogProvider>{children}</PostHogProvider>
+      </body>
     </html>
   );
 }
