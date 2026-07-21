@@ -15,7 +15,13 @@ export const projects: Project[] = [
       { label: "Role", value: "Design + Build" },
       { label: "Timeline", value: "6 months" },
     ],
-    stack: ["Swift", "Convex", "Claude", "Figma"],
+    stack: [
+      { name: "Flutter", slug: "flutter" },
+      { name: "React", slug: "react" },
+      { name: "Next.js", slug: "nextdotjs" },
+      { name: "Supabase", slug: "supabase" },
+      { name: "ChatGPT", slug: "openai" },
+    ],
   },
   {
     slug: "wylde",
@@ -29,7 +35,11 @@ export const projects: Project[] = [
       { label: "Role", value: "Design + Build" },
       { label: "Platform", value: "iOS · 2026" },
     ],
-    stack: ["Swift", "SwiftUI", "Convex"],
+    stack: [
+      { name: "Codex", slug: "codex" },
+      { name: "Supabase", slug: "supabase" },
+      { name: "Swift", slug: "swift" },
+    ],
   },
   {
     slug: "lucky-day",
@@ -43,7 +53,10 @@ export const projects: Project[] = [
       { label: "Role", value: "Design + Build" },
       { label: "Platform", value: "iOS · 2026" },
     ],
-    stack: ["Swift", "SwiftUI"],
+    stack: [
+      { name: "Swift", slug: "swift" },
+      { name: "SwiftUI" },
+    ],
   },
   {
     slug: "new-project",
@@ -58,6 +71,10 @@ export const projects: Project[] = [
       { label: "Role", value: "Design + Build" },
       { label: "Status", value: "Building · 2026" },
     ],
-    stack: ["TypeScript", "Next.js", "Convex"],
+    stack: [
+      { name: "TypeScript", slug: "typescript" },
+      { name: "Next.js", slug: "nextdotjs" },
+      { name: "Convex", slug: "convex" },
+    ],
   },
 ];

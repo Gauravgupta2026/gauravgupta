@@ -1,7 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { ClipReveal } from "@/components/ClipReveal";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
-import { Tag } from "@/components/ui/Chip";
+import type { StackItem } from "@/components/ui/SignalCard";
 
 export type MetaItem = { label: string; value: string };
 
@@ -18,7 +19,8 @@ export type Project = {
   href?: string;
   imageLabel: string;
   meta: MetaItem[];
-  stack: string[];
+  /** Icon-backed where `slug` matches a file in /public/icons; text-only otherwise. */
+  stack: StackItem[];
 };
 
 /**
@@ -90,12 +92,30 @@ export function ProjectCard({ project }: { project: Project }) {
           </div>
         ))}
         <div className="p-[22px_24px] md:p-[26px_28px]">
-          <div className="mb-[14px] font-mono text-[9px] uppercase tracking-[0.2em] text-mute">
+          <div className="mb-[16px] font-mono text-[9px] uppercase tracking-[0.2em] text-mute">
             Stack
           </div>
-          <div className="flex flex-wrap gap-[7px]">
+          <div className="flex flex-wrap gap-x-[18px] gap-y-[14px]">
             {stack.map((s) => (
-              <Tag key={s}>{s}</Tag>
+              <div key={s.name} className="flex items-center gap-[8px]">
+                {s.slug ? (
+                  <img
+                    src={`/icons/${s.slug}.svg`}
+                    alt=""
+                    width={20}
+                    height={20}
+                    className="opacity-90"
+                  />
+                ) : (
+                  <span
+                    aria-hidden
+                    className="h-[6px] w-[6px] rounded-full bg-ink/25"
+                  />
+                )}
+                <span className="font-mono text-[11px] text-soft-ink">
+                  {s.name}
+                </span>
+              </div>
             ))}
           </div>
         </div>

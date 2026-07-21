@@ -1,6 +1,5 @@
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import {
   StatCard,
   ExploringCard,
@@ -39,9 +38,6 @@ export function Signals() {
   return (
     <Shell as="section" id="work" className="pt-[90px] md:pt-[120px]">
       <Reveal className="mb-[54px] text-center">
-        <div className="mb-[18px]">
-          <Eyebrow>Proof &amp; Direction</Eyebrow>
-        </div>
         <h2 className="m-0 font-display text-[30px] font-normal italic tracking-[-0.01em] text-ink md:text-[42px]">
           Work, in signals
         </h2>
