@@ -2,7 +2,9 @@
 import Link from "next/link";
 import { ClipReveal } from "@/components/ClipReveal";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
-import type { StackItem } from "@/components/ui/SignalCard";
+
+/** A tech-stack entry. Icon-backed when `slug` matches a file in /public/icons. */
+export type StackItem = { name: string; slug?: string };
 
 export type MetaItem = { label: string; value: string };
 

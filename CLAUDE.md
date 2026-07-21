@@ -63,13 +63,15 @@ NoteRow · ExperimentRow (status dot) · Button (primary/ghost) · Chip · Edito
    floor (blue panel). Mobile: photo top → name → description → tags. "Looking for APM
    Roles" tag is gold; name is Newsreader italic.
 3. Meta bar — Socials · BLR · Send an email
-4. Work, in signals — 3 signal cards + orgs strip
-5. Projects & Case Study — featured + more cards (same card style); center image wipe
-6. Experiments — live log, status dots + legend + "updated by hermes" line. **Data lives
-   in `src/content/experiments.json`** so an agent can update it later.
-7. Notes — article rows, source-icon hover reveal. Article data in `src/content`.
-8. CTA band (blue gradient) + Footer.
-(How I Work process rows live between Experiments and Notes per the reference.)
+4. Projects & Case Study — featured + more cards (same card style); center image wipe.
+   Project cards show a tech-stack row with icons from `/public/icons` (`StackItem`
+   `{ name, slug? }`; `slug` → `/icons/<slug>.svg`, else a dot).
+5. How I Work — process rows.
+6. Notes — article rows, source-icon hover reveal. Article data in `src/content`.
+7. CTA band (blue gradient) + Footer.
+
+> The "Work, in signals" and Experiments sections were removed. The intro splash
+> is documented on the `animate-opening` branch, not here.
 
 ## Routes
 - `/` — landing (sections above).
@@ -77,17 +79,21 @@ NoteRow · ExperimentRow (status dot) · Button (primary/ghost) · Chip · Edito
 - `/notes/[slug]` — long-form article reader (block-based body, inline images).
   Content in `src/content/articles.ts`. Prose set in Newsreader for readability.
 - `/projects/[slug]` — case study: breadcrumb, offset photo gallery, tech
-  stack / stakeholders, statement, body, wide showcase, "Next Project" cards,
-  contact band. Content in `src/content/projectDetails.ts`. Uses the lighter,
-  rounded `PhotoFrame` treatment from the provided design, our color tokens, and
+  stack / stakeholders, statement pull-quote, optional proof bar (demo / Loom /
+  eval sheet / feedback), then the framework narrative spine, wide showcase,
+  "Next Project" cards, contact band. Content in `src/content/projectDetails.ts`
+  — two templates keyed by `kind`: `"ai"` (Real Problem → Before/After → AI
+  Workflow → Evaluation → Guardrails → Business) and `"craft"` (swaps the AI
+  blocks for a single Process block). Framework source: `case-study-must-have.md`.
+  Uses the lighter, rounded `PhotoFrame` treatment, our color tokens, and
   **blue** as the accent (the reference mock used a rust accent — kept on-brand).
 - Shared: `ContactBand` (About + project pages). Mobile side padding is **28px**.
 - Hero blue panel is `min-h-[82vh]`, content vertically centered on desktop.
 
 ## Content / data
 - Placeholders for portrait & app screenshots (user swaps real assets) → `public/`.
-- Stat numbers and project copy are kept verbatim from the reference (user edits later).
-- Experiments + Notes are data-driven (JSON in `src/content/`).
+- Project copy is kept verbatim from the reference (user edits later).
+- Notes are data-driven (`src/content/`).
 
 ## Workflow
 - Build **section by section**; pause for review after each.
