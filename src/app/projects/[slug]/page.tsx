@@ -7,8 +7,35 @@ import { ContactBand } from "@/components/sections/ContactBand";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
 import { PhotoFrame } from "@/components/ui/PhotoFrame";
-import { projectDetails, getProjectDetail } from "@/content/projectDetails";
+import {
+  projectDetails,
+  getProjectDetail,
+  type ProjectDetail,
+  type Section,
+} from "@/content/projectDetails";
 import { projects } from "@/content/projects";
+
+/**
+ * Ordered narrative sections per template. AI projects carry the full
+ * evaluation + guardrails spine; craft projects swap that for a single
+ * process block. Order matches `case-study-must-have.md`.
+ */
+function narrativeSections(project: ProjectDetail): Section[] {
+  const sections: Section[] = [project.realProblem, project.beforeAfter];
+  if (project.kind === "ai") {
+    sections.push(project.aiWorkflow, project.evaluation, project.guardrails);
+  } else {
+    sections.push(project.process);
+  }
+  sections.push(project.business);
+  return sections;
+}
+
+const PROOF_LABELS: Record<string, string> = {
+  demo: "Working demo",
+  loom: "Watch the walkthrough",
+  evalSheet: "Eval sheet",
+};
 
 export function generateStaticParams() {
   return Object.keys(projectDetails).map((slug) => ({ slug }));
@@ -108,22 +135,67 @@ export default async function ProjectPage({
           </div>
         </Reveal>
 
-        {/* statement + body */}
+        {/* statement pull-quote */}
         <Reveal className={`${READING_COL} mt-[52px] md:mt-[72px]`}>
           <p className="m-0 font-mono text-[16px] font-medium leading-[1.5] text-ink md:text-[19px]">
             {project.statement}
           </p>
-          <div className="mt-[28px] flex flex-col gap-[20px]">
-            {project.body.map((para, i) => (
-              <p
-                key={i}
-                className="m-0 font-mono text-[12.5px] leading-[1.85] text-soft-ink"
-              >
-                {para}
-              </p>
-            ))}
-          </div>
         </Reveal>
+
+        {/* proof bar — renders only populated must-have links */}
+        {project.proof && (
+          <Reveal className={`${READING_COL} mt-[28px]`}>
+            <div className="flex flex-col gap-[14px] rounded-[14px] border border-ink/10 bg-card p-[20px]">
+              {(["demo", "loom", "evalSheet"] as const).some(
+                (k) => project.proof?.[k]
+              ) && (
+                <div className="flex flex-wrap gap-x-[20px] gap-y-[10px]">
+                  {(["demo", "loom", "evalSheet"] as const).map((key) => {
+                    const href = project.proof?.[key];
+                    if (!href) return null;
+                    return (
+                      <a
+                        key={key}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-[11px] uppercase tracking-[0.14em] text-blue no-underline transition-opacity hover:opacity-70"
+                      >
+                        {PROOF_LABELS[key]} &rarr;
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
+              {project.proof.feedback && (
+                <p className="m-0 font-mono text-[12px] leading-[1.7] text-soft-ink">
+                  {project.proof.feedback}
+                </p>
+              )}
+            </div>
+          </Reveal>
+        )}
+
+        {/* narrative sections (framework spine) */}
+        <div className={`${READING_COL} mt-[52px] flex flex-col gap-[44px] md:mt-[72px] md:gap-[56px]`}>
+          {narrativeSections(project).map((section) => (
+            <Reveal key={section.heading} as="section">
+              <h2 className="m-0 mb-[16px] font-display text-[20px] font-medium leading-[1.2] text-ink md:text-[24px]">
+                {section.heading}
+              </h2>
+              <div className="flex flex-col gap-[16px]">
+                {section.body.map((para, i) => (
+                  <p
+                    key={i}
+                    className="m-0 font-mono text-[12.5px] leading-[1.85] text-soft-ink"
+                  >
+                    {para}
+                  </p>
+                ))}
+              </div>
+            </Reveal>
+          ))}
+        </div>
 
         {/* wide showcase */}
         <Reveal className="mt-[48px] md:mt-[64px]">
