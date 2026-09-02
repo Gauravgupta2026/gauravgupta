@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Allison&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #0b0b0b; }
+  body { font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #bdbbff; text-decoration: none; }
+  a:hover { color: #d6d5ff; }
+  ::selection { background: #bdbbff; color: #0b0b0b; }
+  @keyframes om-rise { from { opacity: 0; transform: translate3d(0,18px,0); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+
+<div style="position: relative; width: 1512px; height: 2160px; margin: 0 auto; background: #0b0b0b; color: #f3f3f3; overflow: hidden">
+
+  <nav style="position: fixed; top: 103.2px; left: 0; width: 1512px; height: 16px; z-index: 60; font-size: 16px; line-height: 16px; font-weight: 400; letter-spacing: 0.06em; color: #8a8a8a">
+    <a href="Landing.dc.html" title="Back to home" style="position: absolute; left: 230.5px; top: -18px; font-family: Allison, cursive; font-size: 46px; line-height: 46px; letter-spacing: 0; color: #d10000; transition: color .35s ease" style-hover="color: #f3f3f3">GG</a>
+    <a href="Work.dc.html" style="position: absolute; left: 340.5px; top: 0; color: #8a8a8a" style-hover="color: #f3f3f3">WORK</a>
+    <a href="Labs.dc.html" style="position: absolute; left: 502.9px; top: 0; color: #f3f3f3">LABS</a>
+    <a href="Landing.dc.html" style="position: absolute; left: 1195.1px; top: 0; color: #8a8a8a" style-hover="color: #f3f3f3">SAY&nbsp;&nbsp;HELLO</a>
+  </nav>
+
+  <h1 style="position: absolute; top: 328px; left: 230.5px; margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Labs</h1>
+  <p style="position: absolute; top: 412px; left: 230.5px; width: 676.5px; margin: 0; font-size: 18px; line-height: 29px; color: #929292; text-wrap: pretty">Half-finished things kept in public. Nothing here is a product yet, and some of it never will be.</p>
+  <div style="position: absolute; top: 424.5px; left: 1136px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">WORK IN PROGRESS</div>
+  <div style="position: absolute; top: 520px; left: 0; width: 1512px; height: 1px; background: #414141"></div>
+
+  <div style="position: absolute; top: 600px; left: 230.5px; width: 1051px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; background-image: linear-gradient(to right, #151515 1px, transparent 1px), linear-gradient(to bottom, #151515 1px, transparent 1px); background-size: 84.2px 84.2px; background-position: -1px -1px">
+    <div style="display: flex; flex-direction: column; gap: 24px">
+      <sc-for list="{{ colA }}" as="e" hint-placeholder-count="3">
+        <div onClick="{{ e.open }}" style="position: relative; width: 100%; height: {{ e.h }}; background: #101010; border: 1px solid #1e1e1e; box-sizing: border-box; overflow: hidden; cursor: zoom-in; transition: border-color .45s ease" style-hover="border-color: #3a3a3a">
+          <img ref="{{ e.ref }}" alt="{{ e.title }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.35) contrast(1.05) brightness(.85); transition: transform .9s cubic-bezier(.22,1,.36,1), filter .55s ease" style-hover="transform: scale(1.03); filter: grayscale(0) contrast(1.02) brightness(1)">
+          <div style="position: absolute; inset: 0; padding: 20px 22px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; background: linear-gradient(to top, rgba(6,6,6,.86) 0%, rgba(6,6,6,.2) 46%, rgba(6,6,6,0) 100%); opacity: 0; transition: opacity .38s cubic-bezier(.22,1,.36,1)" style-hover="opacity: 1">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">{{ e.kind }}</div>
+            <div style="font-family: Newsreader, serif; font-size: 27px; line-height: 27px; font-weight: 300; color: #ffffff">{{ e.title }}</div>
+            <div style="font-size: 13px; line-height: 13px; color: #bdbbff">{{ e.state }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 24px">
+      <sc-for list="{{ colB }}" as="e" hint-placeholder-count="3">
+        <div onClick="{{ e.open }}" style="position: relative; width: 100%; height: {{ e.h }}; background: #101010; border: 1px solid #1e1e1e; box-sizing: border-box; overflow: hidden; cursor: zoom-in; transition: border-color .45s ease" style-hover="border-color: #3a3a3a">
+          <img ref="{{ e.ref }}" alt="{{ e.title }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.35) contrast(1.05) brightness(.85); transition: transform .9s cubic-bezier(.22,1,.36,1), filter .55s ease" style-hover="transform: scale(1.03); filter: grayscale(0) contrast(1.02) brightness(1)">
+          <div style="position: absolute; inset: 0; padding: 20px 22px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; background: linear-gradient(to top, rgba(6,6,6,.86) 0%, rgba(6,6,6,.2) 46%, rgba(6,6,6,0) 100%); opacity: 0; transition: opacity .38s cubic-bezier(.22,1,.36,1)" style-hover="opacity: 1">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">{{ e.kind }}</div>
+            <div style="font-family: Newsreader, serif; font-size: 27px; line-height: 27px; font-weight: 300; color: #ffffff">{{ e.title }}</div>
+            <div style="font-size: 13px; line-height: 13px; color: #bdbbff">{{ e.state }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 24px">
+      <sc-for list="{{ colC }}" as="e" hint-placeholder-count="3">
+        <div onClick="{{ e.open }}" style="position: relative; width: 100%; height: {{ e.h }}; background: #101010; border: 1px solid #1e1e1e; box-sizing: border-box; overflow: hidden; cursor: zoom-in; transition: border-color .45s ease" style-hover="border-color: #3a3a3a">
+          <img ref="{{ e.ref }}" alt="{{ e.title }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.35) contrast(1.05) brightness(.85); transition: transform .9s cubic-bezier(.22,1,.36,1), filter .55s ease" style-hover="transform: scale(1.03); filter: grayscale(0) contrast(1.02) brightness(1)">
+          <div style="position: absolute; inset: 0; padding: 20px 22px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; background: linear-gradient(to top, rgba(6,6,6,.86) 0%, rgba(6,6,6,.2) 46%, rgba(6,6,6,0) 100%); opacity: 0; transition: opacity .38s cubic-bezier(.22,1,.36,1)" style-hover="opacity: 1">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">{{ e.kind }}</div>
+            <div style="font-family: Newsreader, serif; font-size: 27px; line-height: 27px; font-weight: 300; color: #ffffff">{{ e.title }}</div>
+            <div style="font-size: 13px; line-height: 13px; color: #bdbbff">{{ e.state }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; top: 1900px; left: 0; width: 1512px; height: 1px; background: #414141"></div>
+  <a href="Landing.dc.html" style="position: absolute; top: 1960px; left: 230.5px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #f3f3f3" style-hover="color: #bdbbff">&larr; BACK HOME</a>
+
+  <div onClick="{{ close }}" style="position: fixed; inset: 0; z-index: 90; display: flex; align-items: center; justify-content: center; background: rgba(6,6,6,.8); backdrop-filter: blur(24px) saturate(.9); -webkit-backdrop-filter: blur(24px) saturate(.9); opacity: {{ vis }}; pointer-events: {{ pe }}; cursor: zoom-out; transition: opacity .42s cubic-bezier(.22,1,.36,1)">
+    <div style="position: relative; width: 84vw; max-width: 1180px; height: 80vh; transform: {{ zoomT }}; transition: transform .62s cubic-bezier(.16,1.02,.24,1)">
+      <img ref="{{ zoomRef }}" alt="{{ openTitle }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block">
+      <div style="position: absolute; left: 0; bottom: -54px; right: 0; display: flex; align-items: baseline; gap: 20px">
+        <span style="font-family: Newsreader, serif; font-size: 27px; line-height: 27px; font-weight: 300; color: #ffffff">{{ openTitle }}</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">{{ openKind }}</span>
+        <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #bdbbff">{{ openState }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1512,&quot;height&quot;:1000}}">
+const IMG = (seed, w, h) => 'https://picsum.photos/seed/' + seed + '/' + w + '/' + h;
+
+const ITEMS = [
+  { col: 0, h: 447, kind: 'FILM', title: 'Kart build, night shift', state: 'Archive', src: IMG('labs-kart', 900, 1200) },
+  { col: 0, h: 279, kind: 'SKETCH', title: 'Photo-first forms', state: 'Prototype', src: IMG('labs-forms', 900, 620) },
+  { col: 0, h: 363, kind: 'TOOL', title: 'Kill-condition template', state: 'In use', src: IMG('labs-kill', 900, 900) },
+  { col: 1, h: 279, kind: 'EXPERIMENT', title: 'Two-hour plans', state: 'Testing', src: IMG('labs-plans', 900, 520) },
+  { col: 1, h: 447, kind: 'MOTION', title: 'Loop study, 12 frames', state: 'Shelved', src: IMG('labs-loop', 900, 1000) },
+  { col: 1, h: 363, kind: 'WRITING', title: 'Notes on friction', state: 'Ongoing', src: IMG('labs-friction', 900, 700) },
+  { col: 2, h: 363, kind: 'INTERFACE', title: 'Evidence-gated approvals', state: 'Prototype', src: IMG('labs-gate', 900, 720) },
+  { col: 2, h: 279, kind: 'FILM', title: 'Workshop, Manipal', state: 'Archive', src: IMG('labs-workshop', 900, 560) },
+  { col: 2, h: 447, kind: 'SKETCH', title: 'Deck that teaches its rules', state: 'Shelved', src: IMG('labs-deck', 900, 1180) }
+];
+
+class Component extends DCLogic {
+  state = { open: -1 };
+
+  componentDidMount() {
+    ITEMS.forEach(it => { const i = new Image(); i.src = it.src; });
+    this.onKey = e => { if (e.key === 'Escape') this.setState({ open: -1 }); };
+    window.addEventListener('keydown', this.onKey);
+  }
+
+  componentWillUnmount() { window.removeEventListener('keydown', this.onKey); }
+
+  tile(it, i) {
+    return {
+      kind: it.kind,
+      title: it.title,
+      state: it.state,
+      h: it.h + 'px',
+      open: () => this.setState({ open: i }),
+      ref: el => { if (el && el.getAttribute('src') !== it.src) el.setAttribute('src', it.src); }
+    };
+  }
+
+  renderVals() {
+    const open = this.state.open;
+    const cur = open >= 0 ? ITEMS[open] : null;
+    const pick = c => ITEMS.map((it, i) => [it, i]).filter(p => p[0].col === c).map(p => this.tile(p[0], p[1]));
+    return {
+      colA: pick(0),
+      colB: pick(1),
+      colC: pick(2),
+      vis: cur ? '1' : '0',
+      pe: cur ? 'auto' : 'none',
+      zoomT: cur ? 'scale(1)' : 'scale(.92)',
+      openTitle: cur ? cur.title : '',
+      openKind: cur ? cur.kind : '',
+      openState: cur ? cur.state : '',
+      zoomRef: el => { const s = cur ? cur.src : ''; if (el && s && el.getAttribute('src') !== s) el.setAttribute('src', s); },
+      close: () => this.setState({ open: -1 })
+    };
+  }
+}
+</script>
+</body>
+</html>
