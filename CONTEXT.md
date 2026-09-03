@@ -17,3 +17,8 @@ Build the landing page (`/`) only.
 
 ## Merge target
 Merge back into `Gauravgupta2026/re-design` when this phase is reviewed and done.
+
+## ⚠ HIGH PRIORITY — Mobile optimization
+Mobile viewing must be optimized for this phase before it is done.
+Tracked in GitHub issue #10. See `CLAUDE.md` → Design System → Layout:
+768px breakpoint, single column, hit targets ≥44px.
