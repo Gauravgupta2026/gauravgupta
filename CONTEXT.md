@@ -31,3 +31,8 @@ phases in it.
 ## Merge target
 Merge back into `Gauravgupta2026/re-design`, then `re-design` merges into
 `main`.
+
+## ⚠ HIGH PRIORITY — Mobile optimization
+Final mobile pass is a required check in this phase, not optional polish.
+Tracked in GitHub issue #10. See `CLAUDE.md` → Design System → Layout:
+768px breakpoint, single column, hit targets ≥44px.
