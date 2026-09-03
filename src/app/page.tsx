@@ -1,23 +1,24 @@
 import { Nav } from "@/components/sections/Nav";
 import { Hero } from "@/components/sections/Hero";
-import { MetaBar } from "@/components/sections/MetaBar";
 import { Projects } from "@/components/sections/Projects";
-import { HowIWork } from "@/components/sections/HowIWork";
+// HowIWork ("Work is the story") is built but not confident yet — parked
+// out of the page for now. Component stays in place, just unimported.
+// import { HowIWork } from "@/components/sections/HowIWork";
+import { MyStory } from "@/components/sections/MyStory";
 import { Notes } from "@/components/sections/Notes";
-import { CTA } from "@/components/sections/CTA";
-import { Footer } from "@/components/sections/Footer";
+import { WorkedWith } from "@/components/sections/WorkedWith";
+import { SiteFooter } from "@/components/sections/SiteFooter";
 
 export default function Home() {
   return (
     <main>
       <Nav />
       <Hero />
-      <MetaBar />
       <Projects />
-      <HowIWork />
+      <MyStory />
       <Notes />
-      <CTA />
-      <Footer />
+      <WorkedWith />
+      <SiteFooter />
     </main>
   );
 }

@@ -1,25 +1,38 @@
 import type { Metadata } from "next";
-import { Newsreader, JetBrains_Mono } from "next/font/google";
+import { Newsreader, Inter, JetBrains_Mono, Allison } from "next/font/google";
 import "./globals.css";
 import { PostHogProvider } from "@/components/PostHogProvider";
 
-/**
- * Display serif. Italic 400 = headings/eyebrows, roman 500 = titles.
- * `opsz` is variable (6..72) so Newsreader optically adjusts across sizes.
- */
+/** Display serif, weight 300 roman — headings only. */
 const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin"],
   style: ["normal", "italic"],
+  weight: ["300", "400", "500"],
+  display: "swap",
+});
+
+/** Body copy. */
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
   display: "swap",
 });
 
-/** UI / body / labels. */
+/** UI / labels / nav / meta. */
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500"],
+  display: "swap",
+});
+
+/** Logo mark — "GG" wordmark. */
+const allison = Allison({
+  variable: "--font-allison",
+  subsets: ["latin"],
+  weight: ["400"],
   display: "swap",
 });
 
@@ -54,7 +67,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${newsreader.variable} ${jetbrainsMono.variable}`}
+      className={`${newsreader.variable} ${inter.variable} ${jetbrainsMono.variable} ${allison.variable}`}
     >
       <body>
         <PostHogProvider>{children}</PostHogProvider>
