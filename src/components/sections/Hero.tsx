@@ -1,46 +1,77 @@
+import Link from "next/link";
 import { Shell } from "@/components/Shell";
-import Image from "next/image";
+import { Reveal } from "@/components/Reveal";
 
 /**
- * Hero — layout is final, do not redesign.
- * Desktop (≥768): wide blue panel (breaks out ~25% past the 1180 shell, stays
- * centered). Photo left + text right share one floor (items-end); that content
- * block is vertically centered in the panel (content-center). Mobile: single
- * column — photo on top, then name → description → tags. The "Looking for APM
- * Roles" tag is gold; name is Newsreader italic.
+ * Identity block. Text-only — no portrait in the new design. GG mark sits
+ * above the name, scrolling with the page (not fixed — that's the nav's
+ * job). Copy is verbatim from LANDING 4-dark.pdf. Top padding clears the
+ * fixed nav.
  */
 export function Hero() {
   return (
-    <Shell as="header" id="top" wide>
-      <div className="relative grid grid-cols-1 items-stretch gap-0 overflow-hidden bg-blue p-[30px_26px_42px] md:min-h-[70vh] md:grid-cols-[0.95fr_1.15fr] md:content-center md:items-end md:gap-[46px] md:p-[80px]">
-        <div className="relative mt-[6px] aspect-[4/3.4] self-start overflow-hidden bg-[#0c0c0c] md:mt-0 md:aspect-[4/3] md:self-auto">
-          <Image
-            src="/assets/hero.jpeg"
-            alt="Gaurav Gupta"
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, 45vw"
-            className="object-cover"
-          />
-        </div>
-
-        <div className="relative pt-[56px] md:pt-0">
-          <h1 className="m-0 mb-[22px] font-display text-[clamp(42px,13vw,60px)] font-normal italic leading-[0.98] tracking-[-0.01em] text-cream md:text-[64px]">
-            Gaurav Gupta
-          </h1>
-          <p className="m-0 mb-[24px] max-w-[430px] font-mono text-[12.5px] leading-[1.85] text-cream/80">
-            I build AI systems and user-facing tools, moving from idea to
-            interface to shipped product. Interested in long horizon agents.
-          </p>
-          <div className="mt-[34px] flex flex-wrap items-center gap-[12px] font-mono text-[11px] tracking-[0.08em] text-cream/90 md:mt-0">
-            <span>[ Risk @ KPMG ]</span>
-            <span className="opacity-50">&bull;</span>
-            <span className="font-display text-[15px] italic tracking-normal text-gold">
-              Looking for APM Roles
-            </span>
-          </div>
-        </div>
+    <Shell as="header" id="top" wide className="pb-[56px] pt-[96px] md:pb-[80px] md:pt-[145px]">
+      <div className="font-logo text-[44px] leading-none text-red md:text-[64px]">
+        GG
       </div>
+
+      <Reveal
+        as="div"
+        delay={0}
+        className="mt-[56px] font-body text-[16px] leading-[26px] md:mt-[110px] md:text-[18px] md:leading-[29px]"
+      >
+        <div className="text-ink">Gaurav Gupta</div>
+        <div className="text-mute-2">Product &amp; design &middot; Bengaluru</div>
+      </Reveal>
+
+      <Reveal
+        as="p"
+        delay={80}
+        className="m-0 mt-[22px] max-w-[1051px] text-pretty font-body text-[16px] leading-[27px] text-ink md:mt-[28px] md:text-[18px] md:leading-[32px]"
+      >
+        I find the friction, build the smallest thing that removes it, then
+        check whether it worked. I focus on accessibility, performance and
+        interactivity.
+      </Reveal>
+
+      <Reveal
+        as="p"
+        delay={160}
+        className="m-0 mt-[14px] max-w-[1051px] text-pretty font-body text-[16px] leading-[27px] text-ink md:mt-[16px] md:text-[18px] md:leading-[32px]"
+      >
+        I am currently working on:{" "}
+        <Link href="/projects/wylde" className="font-medium text-ink">
+          Wylde
+        </Link>
+        , an app to make the room play together. Cut play-time by reducing{" "}
+        <span className="font-medium text-ink">160 cards to 40</span> because
+        the rest were the problem.
+      </Reveal>
+
+      <Reveal
+        as="p"
+        delay={240}
+        className="m-0 mt-[14px] max-w-[1051px] font-body text-[16px] leading-[27px] text-mute-2 md:mt-[16px] md:text-[18px] md:leading-[32px]"
+      >
+        Previously at KPMG, on operational risk controls and an
+        evidence-gated decision engine.
+      </Reveal>
+
+      <Reveal
+        as="p"
+        delay={320}
+        className="m-0 mt-[14px] max-w-[1051px] text-pretty font-body text-[16px] leading-[27px] text-ink md:mt-[16px] md:text-[18px] md:leading-[32px]"
+      >
+        Available for product management roles. Also built:{" "}
+        <Link href="/projects/lucky-day" className="underline underline-offset-4">
+          Lucky Day
+        </Link>
+        ,{" "}
+        <Link href="/projects/sachetana" className="underline underline-offset-4">
+          Sachetana
+        </Link>
+        .
+      </Reveal>
     </Shell>
   );
 }

@@ -5,18 +5,26 @@
    `@theme` vars to generate utilities (e.g. --color-blue → bg-blue/text-blue).
 ---------------------------------------------------------------------------- */
 @theme {
-  --color-cream: #faf6ec; /* page background */
-  --color-ink: #14130f; /* primary text */
-  --color-blue: #1b16ee; /* signature electric-blue accent */
-  --color-blue-deep: #130fb4; /* gradient end for CTA band */
-  --color-blue-tint: #f1f0fe; /* hover / soft surfaces */
-  --color-soft-ink: #6f6b62; /* muted body text */
-  --color-mute: #9a958a; /* labels / quiet meta */
-  --color-gold: #e8c24a; /* secondary accent */
-  --color-card: #fdfbf6; /* raised card surface on cream */
+  --color-bg: #0b0b0b; /* page background */
+  --color-ink: #f3f3f3; /* primary text */
+  --color-white: #ffffff; /* headings / high-emphasis text */
+  --color-red: #d10000; /* signature accent — logo mark, links, CTAs */
+  --color-lilac: #bdbbff; /* link hover / secondary accent */
+  --color-lilac-soft: #d6d5ff; /* link hover, lighter step */
+  --color-soft-ink: #dcdcdc; /* secondary headings */
+  --color-mute: #8a8a8a; /* nav labels, meta text */
+  --color-mute-2: #929292; /* body copy on dark */
+  --color-mute-3: #7c7c7c; /* quieter meta */
+  --color-faint: #5c5c5c; /* numerals, faint labels */
+  --color-border: #1e1e1e; /* card borders */
+  --color-border-2: #1c1c1c; /* row dividers */
+  --color-divider: #414141; /* section rule lines */
+  --color-surface: #0d0d0d; /* raised card surface on bg */
 
   --font-display: var(--font-newsreader), Georgia, serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-logo: var(--font-allison), cursive;
 
   /* layout */
   --spacing-shell: 1180px; /* max content width */
@@ -28,7 +36,7 @@
 
 @media (max-width: 768px) {
   :root {
-    --side-pad: 24px;
+    --side-pad: 22px;
   }
 }
 
@@ -40,19 +48,152 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  margin: 0;
-  background: var(--color-cream);
-  color: var(--color-ink);
-  font-family: var(--font-mono);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+@layer base {
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  a {
+    color: var(--color-lilac);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-lilac-soft);
+  }
+
+  ::selection {
+    background: var(--color-lilac);
+    color: var(--color-bg);
+  }
 }
 
-::selection {
-  background: var(--color-blue);
-  color: var(--color-cream);
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 34s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* Crossfading photo pair in the Manipal story band */
+@keyframes crossfade-a {
+  0%,
+  38% {
+    opacity: 1;
+  }
+  50%,
+  88% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes crossfade-b {
+  0%,
+  38% {
+    opacity: 0;
+  }
+  50%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-crossfade-a {
+  animation: crossfade-a 16s ease-in-out infinite;
+}
+
+.animate-crossfade-b {
+  animation: crossfade-b 16s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-crossfade-a {
+    animation: none;
+    opacity: 1;
+  }
+  .animate-crossfade-b {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Animated gradient-mesh "shader" background for the process-stage popup card */
+@keyframes shader-shift {
+  0%,
+  100% {
+    background-position:
+      10% 20%,
+      90% 15%,
+      50% 100%;
+  }
+  50% {
+    background-position:
+      35% 45%,
+      65% 35%,
+      55% 75%;
+  }
+}
+
+.shader-card {
+  position: relative;
+  background:
+    radial-gradient(70% 90% at 8% 12%, rgba(209, 0, 0, 0.4), transparent 60%),
+    radial-gradient(65% 85% at 92% 10%, rgba(189, 187, 255, 0.34), transparent 55%),
+    radial-gradient(80% 90% at 50% 105%, rgba(214, 213, 255, 0.2), transparent 62%),
+    linear-gradient(160deg, #141414 0%, #0a0a0a 100%);
+  background-size: 240% 240%;
+  animation: shader-shift 14s ease-in-out infinite;
+}
+
+.shader-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0) 70%,
+    rgba(189, 187, 255, 0.14)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shader-card {
+    animation: none;
+  }
 }
 
 /* Live status / "currently exploring" pulse */

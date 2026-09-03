@@ -1,36 +1,139 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { Shell } from "@/components/Shell";
+import { projects } from "@/content/projects";
+
+const WORK_MENU_GRADIENTS: Record<string, string> = {
+  sachetana: "linear-gradient(135deg,#8a8a8a 0%,#3a3a3a 100%)",
+  wylde: "linear-gradient(135deg,#bdbbff 0%,#5a58a8 48%,#d10000 100%)",
+  "lucky-day": "linear-gradient(135deg,#d10000 0%,#6b1a1a 46%,#bdbbff 100%)",
+};
 
 /**
- * Top nav: logo left, ABOUT centered, WORK right (1fr · auto · 1fr grid so the
- * center item stays optically centered regardless of side widths). Targets are
- * absolute so the nav works from any route (landing, about, article).
+ * Fixed nav. Fades and lifts on scroll down, settles back in shortly after
+ * scrolling stops (mirrors the reference's om-onScroll behavior). WORK opens
+ * a hover dropdown listing the first three projects.
  */
 export function Nav() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const menuTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (reduced) return;
+
+    const onScroll = () => {
+      const y = window.scrollY || 0;
+      setMenuOpen(false);
+      if (y > 60) setHidden(true);
+      if (settleTimer.current) clearTimeout(settleTimer.current);
+      settleTimer.current = setTimeout(() => setHidden(false), 240);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (settleTimer.current) clearTimeout(settleTimer.current);
+    };
+  }, []);
+
+  const openMenu = () => {
+    if (menuTimer.current) clearTimeout(menuTimer.current);
+    setMenuOpen(true);
+  };
+  const closeMenu = () => {
+    if (menuTimer.current) clearTimeout(menuTimer.current);
+    menuTimer.current = setTimeout(() => setMenuOpen(false), 120);
+  };
+
   return (
-    <Shell
-      as="nav"
-      wide
-      className="grid grid-cols-[1fr_auto_1fr] items-center pb-[48px] pt-[54px]"
+    <nav
+      className="fixed left-0 top-0 z-[60] w-full border-b border-border-2/60 bg-bg/70 py-[18px] font-mono text-[13px] font-normal tracking-[0.06em] text-mute backdrop-blur-md transition-[opacity,transform] duration-300 md:py-[24px] md:text-[16px]"
+      style={
+        hidden
+          ? { opacity: 0, transform: "translate3d(0,-10px,0)" }
+          : { opacity: 1, transform: "translate3d(0,0,0)" }
+      }
     >
-      <Link
-        href="/"
-        className="justify-self-start font-mono text-[12px] font-bold tracking-[0.12em] text-ink no-underline"
-      >
-        GG.
-      </Link>
-      <Link
-        href="/about"
-        className="justify-self-center font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-ink no-underline transition-colors duration-300 hover:text-blue  "
-      >
-        About
-      </Link>
-      <Link
-        href="/#projects"
-        className="justify-self-end font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-ink no-underline transition-colors duration-300 hover:text-blue"
-      >
-        Work
-      </Link>
-    </Shell>
+      <Shell wide className="relative flex items-center justify-between">
+        <div className="flex items-center gap-[24px] md:gap-[127px]">
+          <div
+            className="relative"
+            onMouseEnter={openMenu}
+            onMouseLeave={closeMenu}
+          >
+            <Link
+              href="/work"
+              className={`-m-[10px] block p-[10px] no-underline transition-colors duration-300 ${menuOpen ? "text-ink" : "text-mute"}`}
+            >
+              WORK
+            </Link>
+
+            <div
+              className="absolute left-0 top-[36px] w-[calc(100vw-44px)] max-w-[280px] pt-[12px] transition-[opacity,transform] duration-300 md:left-[-16px]"
+              style={{
+                opacity: menuOpen ? 1 : 0,
+                transform: menuOpen
+                  ? "translate3d(0,0,0) scale(1)"
+                  : "translate3d(0,-4px,0) scale(.96)",
+                pointerEvents: menuOpen ? "auto" : "none",
+                transformOrigin: "24px -8px",
+              }}
+            >
+              <div className="relative rounded-xl border border-border bg-surface p-[10px] shadow-[0_20px_48px_rgba(0,0,0,.7)]">
+                {projects.slice(0, 3).map((p) => (
+                  <Link
+                    key={p.slug}
+                    href={`/projects/${p.slug}`}
+                    className="flex items-center gap-[12px] rounded-lg px-[6px] py-[8px] text-inherit no-underline transition-colors hover:bg-white/5"
+                  >
+                    <span
+                      className="block h-[34px] w-[34px] flex-shrink-0 rounded-[6px] bg-cover bg-center"
+                      style={{
+                        background:
+                          WORK_MENU_GRADIENTS[p.slug] ?? "#141414",
+                      }}
+                    />
+                    <span className="min-w-0 flex-1 truncate text-[14px] text-ink">
+                      {p.title}
+                    </span>
+                    <span className="font-mono text-[11px] tracking-[0.1em] text-faint">
+                      {p.act.replace("Act.", "")}
+                    </span>
+                  </Link>
+                ))}
+
+                <Link
+                  href="/work"
+                  className="mt-[4px] flex items-center justify-between rounded-lg px-[6px] py-[8px] font-mono text-[11px] tracking-[0.14em] text-mute no-underline transition-colors hover:bg-white/5 hover:text-ink"
+                >
+                  <span>ALL WORK</span>
+                  <span className="text-red">&#8599;</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <Link
+            href="/labs"
+            className="-m-[10px] block p-[10px] text-mute no-underline transition-colors duration-300 hover:text-ink"
+          >
+            LABS
+          </Link>
+        </div>
+
+        <Link
+          href="/#contact"
+          className="-m-[10px] block p-[10px] text-mute no-underline transition-colors duration-300 hover:text-ink"
+        >
+          SAY HELLO
+        </Link>
+      </Shell>
+    </nav>
   );
 }

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Allison&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #0b0b0b; }
+  body { font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #bdbbff; text-decoration: none; }
+  a:hover { color: #d6d5ff; }
+  ::selection { background: #bdbbff; color: #0b0b0b; }
+</style>
+</helmet>
+
+<div style="position: relative; width: 1512px; margin: 0 auto; background: #0b0b0b; color: #f3f3f3; overflow: hidden">
+
+  <div style="position: fixed; top: 0; left: 0; z-index: 70; height: 2px; width: {{ progress }}; background: #d10000"></div>
+
+  <nav style="position: fixed; top: 103.2px; left: 0; width: 1512px; height: 16px; z-index: 60; font-size: 16px; line-height: 16px; letter-spacing: 0.06em; color: #8a8a8a">
+    <a href="Landing.dc.html" title="Back to home" style="position: absolute; left: 230.5px; top: -18px; font-family: Allison, cursive; font-size: 46px; line-height: 46px; color: #d10000; transition: color .35s ease" style-hover="color: #f3f3f3">GG</a>
+    <a href="Work.dc.html" style="position: absolute; left: 340.5px; top: 0; color: #8a8a8a" style-hover="color: #f3f3f3">WORK</a>
+    <a href="Labs.dc.html" style="position: absolute; left: 502.9px; top: 0; color: #8a8a8a" style-hover="color: #f3f3f3">LABS</a>
+    <a href="Landing.dc.html" style="position: absolute; left: 1195.1px; top: 0; color: #8a8a8a" style-hover="color: #f3f3f3">SAY&nbsp;&nbsp;HELLO</a>
+  </nav>
+
+  <div style="padding: 300px 230.5px 0; width: 1051px">
+    <div style="display: flex; align-items: baseline; gap: 26px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">
+      <span>{{ note.when }}</span><span>{{ note.meta }}</span>
+    </div>
+    <h1 style="margin: 30px 0 0; width: 900px; font-family: Newsreader, serif; font-size: 66px; line-height: 70px; font-weight: 300; letter-spacing: -0.02em; color: #ffffff; text-wrap: pretty">{{ note.title }}</h1>
+    <p style="margin: 34px 0 0; width: 740px; font-family: Newsreader, serif; font-style: italic; font-size: 27px; line-height: 38px; font-weight: 300; color: #f4f4f4; text-wrap: pretty">{{ note.pull }}</p>
+  </div>
+
+  <div style="margin-top: 90px; width: 1512px; height: 1px; background: #414141"></div>
+
+  <div style="padding: 90px 230.5px 0; width: 1051px">
+    <div style="display: flex; flex-direction: column; gap: 34px">
+      <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+        <p style="margin: 0; font-size: 19px; line-height: 33px; color: {{ b.color }}; text-wrap: pretty">{{ b.text }}</p>
+      </sc-for>
+    </div>
+
+  </div>
+
+  <div style="padding: 130px 230.5px 0; width: 1051px">
+    <div style="border-top: 1px solid #414141"></div>
+
+    <div style="margin-top: 110px; padding: 44px 48px 46px; background: #111111; border: 1px solid #242424; width: 640px; box-sizing: border-box; display: flex; flex-direction: column">
+      <div style="display: grid; grid-template-columns: 84px 1fr; align-items: center; height: 58px; border-bottom: 1px solid {{ fromLine }}; transition: border-color .35s ease">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: {{ fromLabel }}; transition: color .35s ease">FROM</span>
+        <input value="{{ from }}" onChange="{{ onFrom }}" onFocus="{{ focusFrom }}" onBlur="{{ blur }}" placeholder="you@somewhere.com" style="width: 100%; border: none; background: transparent; font-family: Inter, system-ui, sans-serif; font-size: 16px; line-height: 22px; color: #f3f3f3; outline: none">
+      </div>
+      <textarea value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onKey }}" onFocus="{{ focusBody }}" onBlur="{{ blur }}" placeholder="Tell me where I got it wrong." style="width: 100%; box-sizing: border-box; resize: none; height: 160px; padding: 26px 0 22px; border: none; border-bottom: 1px solid {{ bodyLine }}; background: transparent; font-family: Inter, system-ui, sans-serif; font-size: 17px; line-height: 29px; color: #f3f3f3; outline: none; transition: border-color .35s ease"></textarea>
+      <div style="padding-top: 24px; display: flex; align-items: center; gap: 26px">
+        <button onClick="{{ send }}" style="padding: 15px 34px; border: 1px solid {{ sendBorder }}; background: {{ sendBg }}; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: {{ sendFg }}; cursor: {{ sendCursor }}; transition: background-color .35s ease, color .35s ease, border-color .35s ease" style-hover="background: #bdbbff; border-color: #bdbbff; color: #0b0b0b">SEND</button>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #bdbbff">{{ mailStatus }}</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 110px; padding-top: 40px; border-top: 1px solid #1c1c1c">
+      <a href="Landing.dc.html" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #f3f3f3" style-hover="color: #bdbbff">&larr; BACK HOME</a>
+    </div>
+    <div style="height: 200px"></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1512,&quot;height&quot;:1000}}">
+const POSTS = [
+  { slug: 'kill-condition', when: '2026 \u2014 AUG', title: 'The kill condition goes first', meta: '4 MIN',
+    pull: 'If you cannot say what would make you stop, you are not testing an idea. You are decorating one.',
+    body: [
+      'Every project I have shipped on time started with one line written before the brief: the thing that, if true, means we stop. Not a risk register, not a list of assumptions \u2014 one sentence, written where the team can see it.',
+      'It is the cheapest document in the process and the only one people argue with honestly. Nobody fights about a roadmap in week one, because a roadmap does not threaten anything. A kill condition does.',
+      'The rule I hold myself to is that it has to be falsifiable by conversations, not by a quarter of building. If checking it needs an engineering team and three months, it is not a kill condition. It is a plan.',
+      'Wylde\u2019s was: if people will not propose a plan when nobody can see it fail, we stop. Five conversations settled it. That is the whole point.',
+      'The failure mode is writing one and then quietly moving it when the evidence arrives. I have done that. The tell is that you start describing the condition as \u201cmore nuanced than we thought\u201d.'
+    ] },
+  { slug: 'two-hours', when: '2026 \u2014 JUL', title: 'Two hours is a design decision', meta: '3 MIN',
+    pull: 'Every expiry window is a claim about how people behave. Most products never say theirs out loud.',
+    body: [
+      'Wylde deletes unconfirmed plans after two hours. That number is the product. Change it to twenty-four and you have built a different thing with the same screens.',
+      'I picked it by feel, from interviews where people described same-evening plans as the ones that actually happen. That is a hypothesis dressed as a spec, and writing this down is how I admitted it.',
+      'What makes it defensible is not the number but that it is the first thing we test once beta data exists. A guess you have scheduled an experiment for is a decision. A guess you have not is a habit.'
+    ] },
+  { slug: 'definition-of-done', when: '2026 \u2014 MAY', title: 'Getting the room to agree what done means', meta: '5 MIN',
+    pull: 'The kart did not finish because I was the best engineer there. It finished because nobody could redefine finished halfway through.',
+    body: [
+      'Fifteen people, one car, a competition date at Buddh. Every subsystem owner believed theirs deserved the extra week, and in isolation every one of them was right.',
+      'What worked was writing the definition of done on a wall before anyone cut metal, and then refusing to move it \u2014 including the parts I had argued against.',
+      'The wall mattered more than the words on it. A shared definition that lives in one person\u2019s head is not shared; it is a bottleneck with opinions.',
+      'We finished fourth overall. I have used the same move on every project since, including ones with no metal in them.'
+    ] },
+  { slug: 'evals-first', when: '2026 \u2014 MAR', title: 'Write the eval set before the prompt', meta: '4 MIN',
+    pull: 'We tuned prompts against vibes for a week. The week cost more than the harness would have.',
+    body: [
+      'A hundred real inputs with hand-written expected outputs is boring to make and settles every argument afterwards.',
+      'Without it, model choice becomes taste, and taste cannot be handed to anyone else. With it, swapping models is a one-line change and a number that moves.',
+      'The second-order benefit is honesty about what the model is for. Writing expected outputs forces you to say what a correct answer looks like, and sometimes you find out you cannot.'
+    ] },
+  { slug: 'photography', when: '2026 \u2014 FEB', title: 'What photography taught me about product', meta: '3 MIN',
+    pull: 'One afternoon, someone else\u2019s vision, and a room waiting on you to call it.',
+    body: [
+      'Freelancing behind a camera is the same muscle as product work, compressed into a day.',
+      'You get a fixed window, an outcome you did not choose, and people who will keep waiting until somebody decides. There is no roadmap to hide behind, so the deciding is visible.',
+      'It also taught me that most of the job is removing things. Nobody ever asked for a busier frame.'
+    ] },
+  { slug: 'nine-days', when: '2025 \u2014 NOV', title: 'Nine days, and why the number matters', meta: '2 MIN',
+    pull: 'Speed is not the point. Being able to be wrong quickly is.',
+    body: [
+      'Idea to working prototype in nine days is the house median, not a boast.',
+      'It exists so that killing something costs nine days instead of a quarter \u2014 which is the only reason anyone on the team is willing to propose the risky version.'
+    ] }
+];
+
+class Component extends DCLogic {
+  state = { i: 0, from: '', draft: '', focus: '', sent: false, progress: '0%' };
+
+  componentDidMount() {
+    const h = (location.hash || '').replace('#', '');
+    const found = POSTS.findIndex(p => p.slug === h);
+    if (found >= 0) this.setState({ i: found });
+    const tick = () => {
+      const se = document.scrollingElement || document.documentElement;
+      const top = se.scrollTop || window.scrollY || 0;
+      const max = se.scrollHeight - (window.innerHeight || se.clientHeight);
+      const pct = max > 0 ? Math.min(100, Math.max(0, (top / max) * 100)) : 0;
+      const next = pct.toFixed(2) + '%';
+      if (next !== this.state.progress) this.setState({ progress: next });
+      this.raf = requestAnimationFrame(tick);
+    };
+    tick();
+  }
+
+  componentWillUnmount() { cancelAnimationFrame(this.raf); }
+
+  go(n) {
+    if (n < 0 || n >= POSTS.length) return;
+    this.setState({ i: n });
+    if (history.replaceState) history.replaceState(null, '', '#' + POSTS[n].slug);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  renderVals() {
+    const i = this.state.i;
+    const note = POSTS[i];
+    const has = (this.state.draft || '').trim();
+    return {
+      note: note,
+      progress: this.state.progress,
+      blocks: note.body.map((t, k) => ({ text: t, color: k === 0 ? '#f3f3f3' : '#b9b9b9' })),
+      others: POSTS.filter((p, k) => k !== i).map(p => ({
+        when: p.when, title: p.title,
+        color: '#c8c8c8',
+        pick: e => { e.preventDefault(); this.go(POSTS.indexOf(p)); }
+      })),
+      prevTitle: POSTS[i + 1] ? POSTS[i + 1].title : '',
+      nextTitle: POSTS[i - 1] ? POSTS[i - 1].title : '',
+      prevVis: POSTS[i + 1] ? '1' : '0',
+      nextVis: POSTS[i - 1] ? '1' : '0',
+      goPrev: e => { e.preventDefault(); this.go(i + 1); },
+      goNext: e => { e.preventDefault(); this.go(i - 1); },
+      from: this.state.from,
+      draft: this.state.draft,
+      onFrom: e => this.setState({ from: e.target.value }),
+      onDraft: e => this.setState({ draft: e.target.value }),
+      onKey: e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); if (has) this.setState({ sent: true, draft: '' }); } },
+      send: () => { if (has) this.setState({ sent: true, draft: '' }); },
+      focusFrom: () => this.setState({ focus: 'from' }),
+      focusBody: () => this.setState({ focus: 'body' }),
+      blur: () => this.setState({ focus: '' }),
+      fromLine: this.state.focus === 'from' ? '#3a3a3a' : '#1c1c1c',
+      bodyLine: this.state.focus === 'body' ? '#3a3a3a' : '#1c1c1c',
+      fromLabel: this.state.focus === 'from' ? '#bdbbff' : '#5c5c5c',
+      sendBg: has ? '#bdbbff' : 'transparent',
+      sendFg: has ? '#0b0b0b' : '#5c5c5c',
+      sendBorder: has ? '#bdbbff' : '#262626',
+      sendCursor: has ? 'pointer' : 'default',
+      mailStatus: this.state.sent ? 'SENT \u2014 I\u2019LL REPLY WITHIN A DAY' : ''
+    };
+  }
+}
+</script>
+</body>
+</html>
