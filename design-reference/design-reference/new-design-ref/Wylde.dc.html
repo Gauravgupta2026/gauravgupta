@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./theme.js" defer></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&amp;family=Allison&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #0b0b0b; }
+  body { font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #bdbbff; text-decoration: none; }
+  a:hover { color: #d6d5ff; }
+  ::selection { background: #bdbbff; color: #0b0b0b; }
+</style>
+</helmet>
+
+<div style="position: relative; width: 1512px; margin: 0 auto; background: #0b0b0b; color: #f3f3f3; overflow: hidden">
+
+  <nav style="position: fixed; top: 103.2px; left: 0; width: 1512px; height: 16px; z-index: 60; font-size: 16px; line-height: 16px; letter-spacing: 0.06em; color: #8a8a8a">
+    <a href="Landing.dc.html" title="Back to home" style="position: absolute; left: 230.5px; top: -18px; font-family: Allison, cursive; font-size: 46px; line-height: 46px; letter-spacing: 0; color: #d10000; transition: color .35s ease" style-hover="color: #f3f3f3">GG</a>
+    <a href="Work.dc.html" style="position: absolute; left: 340.5px; top: 0; color: #f3f3f3">WORK</a>
+    <a href="Labs.dc.html" style="position: absolute; left: 502.9px; top: 0; color: #8a8a8a" style-hover="color: #f3f3f3">LABS</a>
+    <a href="Contact.dc.html" style="position: absolute; left: 1195.1px; top: 0; color: #8a8a8a" style-hover="color: #f3f3f3">SAY&nbsp;&nbsp;HELLO</a>
+  </nav>
+
+  <div style="padding: 300px 230.5px 0; width: 1051px; box-sizing: content-box">
+
+    <h1 style="margin: 0; font-family: Newsreader, serif; font-size: 116px; line-height: 106px; font-weight: 300; letter-spacing: -0.03em; color: #ffffff">Wylde</h1>
+    <p style="margin: 34px 0 0; width: 760px; font-family: Inter; font-style: normal; font-size: 24px; line-height: 38px; font-weight: 300; color: #FAFAFA; text-wrap: pretty">One tap from “someone should do something” to a plan with a time on it. Anything not confirmed within two hours disappears.</p>
+
+    <div style="margin-top: 64px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px; padding: 30px 0; border-top: 1px solid #414141; border-bottom: 1px solid #1c1c1c">
+      <sc-for list="{{ meta }}" as="m" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">{{ m.k }}</span>
+          <span style="font-size: 18px; line-height: 24px; color: #f3f3f3">{{ m.v }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin: 90px 0 0 -230.5px; width: 1512px; height: 700px; overflow: hidden; position: relative">
+      <img src="https://picsum.photos/seed/wylde-bts-hero/2400/1100" alt="Wylde — build session, Manipal" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.35) contrast(1.05) brightness(.85)">
+      <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11,11,11,.55) 0%, rgba(11,11,11,0) 34%, rgba(11,11,11,.9) 100%)"></div>
+      <div style="position: absolute; left: 230.5px; bottom: 40px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">BEHIND THE SCENES &mdash; PLACEHOLDER, SWAP FOR YOUR SHOT</div>
+    </div>
+
+    <div style="margin-top: 60px; display: flex; align-items: center; gap: 46px; padding-bottom: 30px; border-bottom: 1px solid #1c1c1c">
+      <sc-for list="{{ stack }}" as="s" hint-placeholder-count="6">
+        <img ref="{{ s.ref }}" alt="{{ s.name }}" title="{{ s.name }}" style="width: 24px; height: 24px; display: block; opacity: .75; transition: opacity .35s ease" style-hover="opacity: 1">
+      </sc-for>
+      <span style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #5c5c5c">LOGOS PENDING &mdash; YOUR MARKS GO HERE</span>
+    </div>
+
+    <div style="margin-top: 130px; display: grid; grid-template-columns: 145.5px 1fr; column-gap: 0">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">01</div>
+      <div>
+        <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">The problem, and the box it lives in</h2>
+        <div style="margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px">
+          <p style="margin: 0; font-size: 19px; line-height: 30px; color: #dcdcdc; text-wrap: pretty">Groups do not fail to make plans because they lack a tool. They fail because the cost of proposing something is social, and the cost of ignoring a proposal is zero. So the feed of a planning app becomes a graveyard of dead suggestions, and opening it starts to feel like a chore.</p>
+          <p style="margin: 0; font-size: 19px; line-height: 30px; color: #929292; text-wrap: pretty">The constraint I wrote before the brief: <span style="color: #f3f3f3">if people will not propose a plan when nobody can see it fail, we stop.</span> Falsifiable by five conversations, not by a quarter of building.</p>
+        </div>
+        <div style="margin-top: 54px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px">
+          <sc-for list="{{ research }}" as="r" hint-placeholder-count="3">
+            <div style="border: 1px solid #1e1e1e; background: #101010; padding: 26px 26px 24px; display: flex; flex-direction: column; gap: 14px">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">{{ r.k }}</span>
+              <span style="font-family: Newsreader, serif; font-size: 27px; line-height: 30px; font-weight: 300; color: #ffffff">{{ r.n }}</span>
+              <span style="font-size: 14px; line-height: 21px; color: #929292; text-wrap: pretty">{{ r.d }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 150px; display: grid; grid-template-columns: 145.5px 1fr">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">02</div>
+      <div>
+        <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Decision log</h2>
+        <p style="margin: 22px 0 0; width: 620px; font-size: 18px; line-height: 29px; color: #929292; text-wrap: pretty">Four forks that changed the product. Pick one to see what we chose, what we turned down, and what the choice cost us.</p>
+
+        <div style="margin-top: 48px; display: grid; grid-template-columns: 330px 1fr; gap: 34px; align-items: start">
+          <div style="display: flex; flex-direction: column">
+            <sc-for list="{{ forks }}" as="f" hint-placeholder-count="4">
+              <div onClick="{{ f.pick }}" onMouseEnter="{{ f.pick }}" style="padding: 22px 0 20px; border-top: 1px solid {{ f.line }}; cursor: pointer; display: flex; flex-direction: column; gap: 9px; transition: border-color .4s ease">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: {{ f.numColor }}; transition: color .4s ease">FORK {{ f.num }}</span>
+                <span style="font-size: 22px; line-height: 28px; letter-spacing: -0.01em; color: {{ f.titleColor }}; transition: color .4s ease; text-wrap: pretty">{{ f.q }}</span>
+              </div>
+            </sc-for>
+            <div style="border-top: 1px solid #1c1c1c"></div>
+          </div>
+
+          <div style="position: relative; border: 1px solid #1e1e1e; background: #0d0d0d; padding: 40px 40px 36px; min-height: 420px; box-sizing: border-box">
+            <div style="position: absolute; top: 0; left: 0; height: 1px; width: {{ forkRule }}; background: #d10000; transition: width .8s cubic-bezier(.22,1,.36,1)"></div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">THE ARGUMENT</div>
+            <div style="margin-top: 18px; font-family: Newsreader, serif; font-style: italic; font-size: 30px; line-height: 40px; font-weight: 300; color: #ffffff; text-wrap: pretty">{{ fork.q }}</div>
+            <div style="margin-top: 34px; display: grid; grid-template-columns: 1fr 1fr; gap: 34px">
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #bdbbff">WE CHOSE</span>
+                <span style="font-size: 19px; line-height: 28px; color: #ffffff; text-wrap: pretty">{{ fork.chose }}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #5c5c5c">WE TURNED DOWN</span>
+                <span style="font-size: 19px; line-height: 28px; color: #929292; text-wrap: pretty">{{ fork.rejected }}</span>
+              </div>
+            </div>
+            <div style="margin-top: 34px; padding-top: 26px; border-top: 1px solid #1a1a1a; display: grid; grid-template-columns: 1fr 1fr; gap: 34px">
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">WHAT IT COST</span>
+                <span style="font-size: 15px; line-height: 24px; color: #dcdcdc; text-wrap: pretty">{{ fork.cost }}</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">EVIDENCE</span>
+                <span style="font-size: 15px; line-height: 24px; color: #dcdcdc; text-wrap: pretty">{{ fork.evidence }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 110px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px">
+      <sc-for list="{{ btsPair }}" as="b" hint-placeholder-count="2">
+        <div style="position: relative; height: 420px; overflow: hidden; background: #101010; border: 1px solid #1e1e1e">
+          <img ref="{{ b.ref }}" alt="{{ b.cap }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.35) contrast(1.05) brightness(.85); transition: transform .9s cubic-bezier(.22,1,.36,1), filter .5s ease" style-hover="transform: scale(1.03); filter: grayscale(0) brightness(1)">
+          <div style="position: absolute; left: 22px; bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #c9c9c9">{{ b.cap }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 150px; display: grid; grid-template-columns: 145.5px 1fr">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">03</div>
+      <div>
+        <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">How it is put together</h2>
+        <p style="margin: 22px 0 0; width: 620px; font-size: 18px; line-height: 29px; color: #929292; text-wrap: pretty">Five layers. Hover one to bring it forward — the model and eval notes sit in the layer that does the judging.</p>
+
+        <div style="margin-top: 48px; display: flex; flex-direction: column; gap: 2px">
+          <sc-for list="{{ layers }}" as="l" hint-placeholder-count="5">
+            <div onMouseEnter="{{ l.enter }}" onMouseLeave="{{ l.leave }}" style="position: relative; border: 1px solid {{ l.border }}; background: {{ l.bg }}; padding: 24px 30px; overflow: hidden; cursor: default; transition: border-color .45s ease, background-color .45s ease">
+              <div style="position: relative; display: grid; grid-template-columns: 92px 260px 1fr; align-items: baseline; gap: 30px">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: {{ l.tag }}; transition: color .45s ease">{{ l.k }}</span>
+                <span style="font-size: 22px; line-height: 28px; letter-spacing: -0.01em; color: {{ l.title }}; transition: color .45s ease">{{ l.n }}</span>
+                <span style="font-size: 15px; line-height: 24px; color: {{ l.bodyColor }}; opacity: {{ l.bodyVis }}; transition: opacity .4s ease, color .45s ease; text-wrap: pretty">{{ l.d }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 150px; display: grid; grid-template-columns: 145.5px 1fr">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">04</div>
+      <div>
+        <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Walkthrough</h2>
+        <p style="margin: 22px 0 0; width: 620px; font-size: 18px; line-height: 29px; color: #929292; text-wrap: pretty">Four screens, in the order a first-time user meets them. Scroll — the frame keeps pace with the notes.</p>
+
+        <div style="margin-top: 48px; display: grid; grid-template-columns: 372px 1fr; gap: 60px; align-items: start">
+          <div style="position: sticky; top: 220px">
+            <div style="position: relative; width: 340px; height: 700px; border: 1px solid #262626; border-radius: 42px; background: #0d0d0d; padding: 12px; box-sizing: border-box; box-shadow: 0 40px 90px rgba(0,0,0,.7)">
+              <div style="position: relative; width: 100%; height: 100%; border-radius: 32px; background: #101010; overflow: hidden">
+                <img ref="{{ shotRef }}" alt="{{ step.title }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.35) contrast(1.05) brightness(.85)">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,6,6,.9) 0%, rgba(6,6,6,0) 52%)"></div>
+                <div style="position: absolute; left: 24px; right: 24px; bottom: 26px; display: flex; flex-direction: column; gap: 10px">
+                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #bdbbff">STEP {{ step.num }}</span>
+                  <span style="font-family: Newsreader, serif; font-size: 27px; line-height: 30px; font-weight: 300; color: #ffffff">{{ step.title }}</span>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 22px; display: flex; align-items: center; gap: 8px">
+              <sc-for list="{{ dots }}" as="d" hint-placeholder-count="4">
+                <div style="height: 2px; width: 42px; background: {{ d.c }}; transition: background-color .45s ease"></div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0">
+            <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+              <div ref="{{ s.ref }}" onMouseEnter="{{ s.pick }}" style="padding: 54px 0; border-bottom: 1px solid #1a1a1a; display: flex; flex-direction: column; gap: 16px; opacity: {{ s.op }}; transition: opacity .5s ease">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">{{ s.num }} — {{ s.tag }}</span>
+                <span style="font-family: Newsreader, serif; font-size: 34px; line-height: 40px; font-weight: 300; color: #ffffff; text-wrap: pretty">{{ s.title }}</span>
+                <span style="font-size: 17px; line-height: 28px; color: #b9b9b9; text-wrap: pretty">{{ s.body }}</span>
+                <span style="font-size: 14px; line-height: 22px; color: #6f6f6f; text-wrap: pretty">{{ s.note }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 110px; display: grid; grid-template-columns: 145.5px 1fr">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">&mdash;</div>
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">ARTEFACTS &amp; TRIGGER FILES</div>
+        <div style="margin-top: 24px; display: flex; flex-direction: column">
+          <sc-for list="{{ files }}" as="f" hint-placeholder-count="5">
+            <a href="#" style="padding: 18px 0; border-bottom: 1px solid #1a1a1a; display: grid; grid-template-columns: 300px 1fr 120px 90px; align-items: baseline; gap: 24px; color: inherit" style-hover="opacity: .7">
+              <span style="font-size: 18px; line-height: 24px; color: #f3f3f3">{{ f.name }}</span>
+              <span style="font-size: 14px; line-height: 22px; color: #8f8f8f; text-wrap: pretty">{{ f.d }}</span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #5c5c5c">{{ f.kind }}</span>
+              <span style="justify-self: end; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #bdbbff">{{ f.action }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 110px; margin-left: -230.5px; width: 1512px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px">
+      <sc-for list="{{ shots }}" as="s" hint-placeholder-count="3">
+        <div style="position: relative; height: 620px; overflow: hidden; background: #101010">
+          <img ref="{{ s.ref }}" alt="{{ s.cap }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.35) contrast(1.05) brightness(.82); transition: filter .5s ease" style-hover="filter: none">
+          <div style="position: absolute; left: 22px; bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #c9c9c9">{{ s.cap }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 150px; display: grid; grid-template-columns: 145.5px 1fr">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">05</div>
+      <div>
+        <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Where it stands</h2>
+        <div style="margin-top: 44px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: #1c1c1c; border: 1px solid #1c1c1c">
+          <sc-for list="{{ results }}" as="r" hint-placeholder-count="4">
+            <div style="background: #0d0d0d; padding: 38px 34px; display: flex; flex-direction: column; gap: 14px">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">{{ r.k }}</span>
+              <span style="font-family: Newsreader, serif; font-size: 66px; line-height: 62px; font-weight: 300; letter-spacing: -0.02em; color: #ffffff">{{ r.v }}</span>
+              <span style="font-size: 15px; line-height: 24px; color: #929292; text-wrap: pretty">{{ r.d }}</span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: {{ r.stateColor }}">{{ r.state }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-top: 60px">
+          <div style="width: 720px">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">WHAT I’D DO DIFFERENTLY</div>
+            <div style="margin-top: 22px; display: flex; flex-direction: column; gap: 20px">
+              <sc-for list="{{ regrets }}" as="g" hint-placeholder-count="3">
+                <div style="display: grid; grid-template-columns: 18px 1fr; gap: 16px; align-items: baseline">
+                  <span style="color: #d10000; font-size: 15px">—</span>
+                  <span style="font-size: 17px; line-height: 27px; color: #dcdcdc; text-wrap: pretty">{{ g }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 150px; display: grid; grid-template-columns: 145.5px 1fr">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">06</div>
+      <div>
+        <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Questions I get asked</h2>
+        <div style="margin-top: 44px; display: flex; flex-direction: column">
+          <sc-for list="{{ faqs }}" as="q" hint-placeholder-count="6">
+            <div onClick="{{ q.toggle }}" style="border-top: 1px solid #1c1c1c; padding: 30px 0; cursor: pointer">
+              <div style="display: grid; grid-template-columns: 1fr 40px; align-items: baseline; gap: 24px">
+                <span style="font-size: 24px; line-height: 32px; letter-spacing: -0.01em; color: {{ q.color }}; transition: color .35s ease; text-wrap: pretty">{{ q.q }}</span>
+                <span style="justify-self: end; font-family: 'JetBrains Mono', monospace; font-size: 18px; color: {{ q.signColor }}; transform: {{ q.signRot }}; transition: transform .45s cubic-bezier(.22,1,.36,1), color .35s ease">+</span>
+              </div>
+              <div style="overflow: hidden; max-height: {{ q.h }}; opacity: {{ q.op }}; transition: max-height .55s cubic-bezier(.22,1,.36,1), opacity .4s ease">
+                <div style="padding: 20px 0 4px; width: 720px; font-size: 17px; line-height: 29px; color: #b9b9b9; text-wrap: pretty">{{ q.a }}</div>
+              </div>
+            </div>
+          </sc-for>
+          <div style="border-top: 1px solid #1c1c1c"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 150px; padding: 68px 0 72px; border-top: 1px solid #414141; border-bottom: 1px solid #1c1c1c; display: flex; justify-content: center">
+      <div style="width: 640px; padding: 44px 48px 46px; background: #111111; border: 1px solid #242424; display: flex; flex-direction: column">
+        <div style="display: grid; grid-template-columns: 84px 1fr; align-items: center; height: 58px; border-bottom: 1px solid {{ fromLine }}; transition: border-color .35s ease">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: {{ fromLabel }}; transition: color .35s ease">FROM</span>
+          <input ref="{{ fromRef }}" value="{{ from }}" onChange="{{ onFrom }}" onFocus="{{ focusFrom }}" onBlur="{{ blur }}" placeholder="you@somewhere.com" style="width: 100%; border: none; background: transparent; font-family: Inter, system-ui, sans-serif; font-size: 16px; line-height: 22px; color: #f3f3f3; outline: none">
+        </div>
+
+        <textarea ref="{{ inputRef }}" value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onKey }}" onFocus="{{ focusBody }}" onBlur="{{ blur }}" placeholder="Tell me where I got it wrong." style="width: 100%; box-sizing: border-box; resize: none; height: 160px; padding: 26px 0 22px; border: none; border-bottom: 1px solid {{ bodyLine }}; background: transparent; font-family: Inter, system-ui, sans-serif; font-size: 17px; line-height: 29px; color: #f3f3f3; outline: none; transition: border-color .35s ease"></textarea>
+
+        <div style="padding-top: 24px; display: flex; align-items: center; gap: 26px">
+          <button onClick="{{ send }}" style="padding: 15px 34px; border: 1px solid {{ sendBorder }}; background: {{ sendBg }}; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: {{ sendFg }}; cursor: {{ sendCursor }}; transition: background-color .35s ease, color .35s ease, border-color .35s ease" style-hover="background: #bdbbff; border-color: #bdbbff; color: #0b0b0b">SEND</button>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: {{ statusColor }}; transition: color .35s ease">{{ mailStatus }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin: 60px 0 0; display: flex; align-items: baseline; justify-content: space-between">
+      <a href="Work.dc.html" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #f3f3f3" style-hover="color: #bdbbff">← ALL WORK</a>
+      <a href="Work.dc.html" style="display: flex; align-items: baseline; gap: 18px">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">NEXT</span>
+        <span style="font-family: Newsreader, serif; font-size: 40px; line-height: 40px; font-weight: 300; color: #ffffff">Lucky Day</span>
+        <span style="color: #d10000">↗</span>
+      </a>
+    </div>
+
+    <div style="height: 200px"></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1512,&quot;height&quot;:1000}}">
+const META = [
+  { k: 'ROLE', v: 'Product lead, design, AI' },
+  { k: 'PERIOD', v: '2026 — in build' },
+  { k: 'TEAM', v: 'Four, part-time' },
+  { k: 'SURFACE', v: 'iOS, TestFlight' }
+];
+
+const RESEARCH = [
+  { k: 'CONVERSATIONS', n: '14', d: 'Students in Manipal, asked about the last plan they abandoned and why.' },
+  { k: 'PATTERN', n: '11 of 14', d: 'Described waiting for someone else to commit first. Nobody wanted to be the organiser.' },
+  { k: 'KILL CHECK', n: 'Survived', d: 'People did propose plans once the proposal expired on its own. The premise held.' }
+];
+
+const FORKS = [
+  { num: '01', q: 'Do plans live forever, or expire?',
+    chose: 'Two-hour expiry on anything unconfirmed, with no way to extend it.',
+    rejected: 'A permanent feed with archive and snooze, the pattern every competitor ships.',
+    cost: 'We lose the long tail — a plan for next weekend cannot exist yet. That is a real gap and the most common piece of feedback.',
+    evidence: 'In the paper test, a feed with dead plans in it was opened half as often as one that emptied itself.' },
+  { num: '02', q: 'Who owns a plan once it is proposed?',
+    chose: 'Nobody. The plan is a shared object; the proposer gets no admin rights and no notification burden.',
+    rejected: 'An organiser role with edit rights, invitations and a guest list.',
+    cost: 'Nobody chases stragglers, so some plans die that a human host would have saved.',
+    evidence: 'Ownership was the single strongest predictor of people not proposing at all.' },
+  { num: '03', q: 'Do we build groups up front?',
+    chose: 'No groups. A plan is visible to whoever is nearby in your contacts graph at the time.',
+    rejected: 'Create-a-group onboarding, the thing users say they want in interviews.',
+    cost: 'Harder to explain in one line, and the empty state is much harder to design.',
+    evidence: 'Group creation moved all the work back onto the organiser — exactly the friction we set out to remove.' },
+  { num: '04', q: 'Does the model write the plan, or read it?',
+    chose: 'Read only. The model turns a scrappy line into a time, a place and a category. It never invents the plan.',
+    rejected: 'A suggestion engine that proposes plans when the group is quiet.',
+    cost: 'Fewer plans created per week than a suggestion feed would produce, on paper.',
+    evidence: 'Suggested plans were confirmed at a third of the rate of human ones in the prototype.' }
+];
+
+const ART = [
+  '..:::--==+*',
+  '.:-=+*#%@#*',
+  '-=+*#%@%*+=',
+  '=+*#%@%#*+-',
+  '+*#%@#*+=-.'
+];
+const band = i => Array.from({ length: 4 }, (_, r) => ART[(i + r) % ART.length].repeat(9)).join('\n');
+
+const LAYERS = [
+  { k: 'CLIENT', n: 'One-tap composer', d: 'A single field and a send. No date picker, no title, no category — the fewest decisions we could get away with.' },
+  { k: 'PARSER', n: 'Line to plan object', d: 'The model reads "chai at 6ish?" and returns time, place, category and a confidence. Below threshold, the app asks one question instead of guessing.' },
+  { k: 'EVALS', n: '120-line golden set', d: 'Real messages with hand-written expected fields. We ship on exact-match for time and place; a small local model wins on latency, the large one on slang.' },
+  { k: 'EXPIRY', n: 'The two-hour worker', d: 'Every plan carries its own death timestamp. Confirmation is the only thing that clears it, and confirmation is one tap from anyone.' },
+  { k: 'SIGNAL', n: 'What we log, and do not', d: 'Confirm rate, time-to-first-confirm, and expiry rate. No content, no location history, nothing that would make the log worth selling.' }
+];
+
+const STEPS = [
+  { num: '01', tag: 'COLD OPEN', title: 'A field, and nothing else', body: 'First launch is one line of text and a send button. No sign-up wall, no group to create, no tour.', note: 'Median time to first plan in testing: 11 seconds.', src: 'https://picsum.photos/seed/wylde-open/700/1440' },
+  { num: '02', tag: 'PARSE', title: 'It reads you, then shows its work', body: 'The parsed time and place appear as editable chips above the keyboard, so the guess is always visible and always cheap to fix.', note: 'Confidence under 0.6 turns into one question, never a silent guess.', src: 'https://picsum.photos/seed/wylde-parse/700/1440' },
+  { num: '03', tag: 'LIVE', title: 'Two hours on the clock', body: 'The plan enters the feed with a countdown, not a timestamp. Anyone can confirm; the first confirm freezes the clock.', note: 'The countdown is the only urgency in the product. No badges, no streaks.', src: 'https://picsum.photos/seed/wylde-live/700/1440' },
+  { num: '04', tag: 'AFTER', title: 'It disappears, on purpose', body: 'Unconfirmed plans vanish with no tombstone and no notification. Nothing tells you your idea was ignored.', note: 'This is the feature people argue with, and the one that makes the rest work.', src: 'https://picsum.photos/seed/wylde-after/700/1440' }
+];
+
+const RESULTS = [
+  { k: 'CONFIRM RATE', v: '—', d: 'Share of plans that get a first confirmation inside two hours.', state: 'AWAITING BETA DATA' },
+  { k: 'TIME TO PLAN', v: '11s', d: 'Median from cold open to a plan on the feed, in moderated testing.', state: 'MEASURED, N=14' },
+  { k: 'PARSE ACCURACY', v: '—', d: 'Exact match on time and place against the golden set.', state: 'EVAL HARNESS IN BUILD' },
+  { k: 'BUILD TIME', v: '9d', d: 'Idea to working prototype, the house median.', state: 'MEASURED' }
+];
+
+const REGRETS = [
+  'Written the eval set before the parser, not alongside it. We tuned prompts against vibes for the first week.',
+  'Tested the two-hour window as a variable from the start. It is the whole product and we picked the number by feel.',
+  'Shipped a way to say "next weekend" behind a flag, so the long-tail gap could be measured instead of argued about.'
+];
+
+const TEAM = [
+  { who: 'Me', role: 'PRODUCT, DESIGN, EVALS', me: true },
+  { who: 'Engineer', role: 'IOS, EXPIRY WORKER' },
+  { who: 'Engineer', role: 'BACKEND, PARSER' },
+  { who: 'Advisor', role: 'RESEARCH REVIEW' }
+];
+
+const FAQS = [
+  { q: 'Why not just use a group chat?', a: 'A chat keeps everything, which is its strength and the reason it is bad at plans. An ignored message stays visible, so proposing carries risk. Wylde deletes the evidence, which is the only way we found to make proposing cheap.' },
+  { q: 'Two hours seems arbitrary. Is it?', a: 'Yes, for now. It came out of interviews — people described same-evening plans as the ones that actually happen — and it has not yet been tested as a variable. That is the first experiment once beta data exists.' },
+  { q: 'What does the AI actually do here?', a: 'One narrow job: turn a scrappy line into structured fields, and say how sure it is. It never proposes, ranks or writes copy. Anything it is unsure about becomes a question to the user, not a guess.' },
+  { q: 'Which model, and why?', a: 'A small local model handles the common case for latency; a larger hosted one takes over on slang and mixed-language input. The split is decided by the eval set, not by preference — and the harness is what makes swapping models a one-line change.' },
+  { q: 'How is this measured as a product manager, not a builder?', a: 'One number per week: share of plans confirmed inside the window. Features that do not move it are candidates for removal, including ones I designed.' },
+  { q: 'Is it live? Can I try it?', a: 'Not yet — it is in build, with a TestFlight cohort next. Write to me and I will add you when the parser clears its eval bar.' }
+];
+
+const ICON = (slug, name) => ({ src: 'https://cdn.simpleicons.org/' + slug + '/9a9a9a', name: name });
+const STACK = [ICON('swift', 'Swift'), ICON('supabase', 'Supabase'), ICON('anthropic', 'Claude'), ICON('figma', 'Figma'), ICON('linear', 'Linear'), ICON('posthog', 'PostHog'), ICON('apple', 'TestFlight')];
+
+const BTS = [
+  { src: 'https://picsum.photos/seed/wylde-bts-1/1200/900', cap: 'PAPER TEST, ROUND TWO' },
+  { src: 'https://picsum.photos/seed/wylde-bts-2/1200/900', cap: 'EXPIRY WINDOW, ARGUED ON A WALL' }
+];
+
+const SHOTS = [
+  { src: 'https://picsum.photos/seed/wylde-shot-1/900/1400', cap: 'COMPOSER' },
+  { src: 'https://picsum.photos/seed/wylde-shot-2/900/1400', cap: 'PARSED CHIPS' },
+  { src: 'https://picsum.photos/seed/wylde-shot-3/900/1400', cap: 'COUNTDOWN FEED' }
+];
+
+const FILES = [
+  { name: 'kill-condition.md', d: 'The one line written before the brief, and the date it survived.', kind: 'MARKDOWN', action: 'READ' },
+  { name: 'golden-set.csv', d: '120 real messages with hand-written expected fields.', kind: 'DATASET', action: 'OPEN' },
+  { name: 'expiry-window.fig', d: 'Countdown states, including the ones we cut.', kind: 'FIGMA', action: 'VIEW' },
+  { name: 'parser-evals.ipynb', d: 'Exact-match scoring across three models, with latency.', kind: 'NOTEBOOK', action: 'OPEN' },
+  { name: 'interviews-14.pdf', d: 'Transcript excerpts, coded by abandonment reason.', kind: 'PDF', action: 'READ' }
+];
+
+class Component extends DCLogic {
+  state = { fork: 0, layer: -1, step: 0, faq: 0, copied: false, draft: '', sent: [], reply: '', from: '', subject: '', focus: '' };
+
+  doSend() {
+    const text = (this.state.draft || '').trim();
+    if (!text) return;
+    this.setState({ sent: this.state.sent.concat([{ text: text }]), draft: '', reply: 'Got it \u2014 I\u2019ll write back within a day.' });
+  }
+
+  componentDidMount() {
+    STEPS.forEach(s => { const i = new Image(); i.src = s.src; });
+    this.stepEls = [];
+    this.io = new IntersectionObserver(es => {
+      es.forEach(e => {
+        if (!e.isIntersecting) return;
+        const i = this.stepEls.indexOf(e.target);
+        if (i >= 0 && i !== this.state.step) this.setState({ step: i });
+      });
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+    this.stepEls.forEach(el => el && this.io.observe(el));
+  }
+
+  componentWillUnmount() { if (this.io) this.io.disconnect(); }
+
+  observe(el, i) {
+    if (!this.stepEls) this.stepEls = [];
+    if (!el) return;
+    this.stepEls[i] = el;
+    if (this.io) this.io.observe(el);
+  }
+
+  renderVals() {
+    const { fork, layer, step, faq } = this.state;
+    const cur = STEPS[step];
+    return {
+      meta: META,
+      research: RESEARCH,
+      files: FILES,
+      draft: this.state.draft,
+      sent: this.state.sent,
+      hasReply: !!this.state.reply,
+      replyText: this.state.reply,
+      inputRef: el => { this.inputEl = el; },
+      fromRef: el => { this.fromEl = el; },
+      subjRef: el => { this.subjEl = el; },
+      from: this.state.from,
+      subject: this.state.subject,
+      onFrom: e => this.setState({ from: e.target.value }),
+      onSubject: e => this.setState({ subject: e.target.value }),
+      onDraft: e => this.setState({ draft: e.target.value }),
+      onKey: e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); this.doSend(); } },
+      send: () => this.doSend(),
+      sendBg: (this.state.draft || '').trim() ? '#bdbbff' : 'transparent',
+      sendFg: (this.state.draft || '').trim() ? '#0b0b0b' : '#5c5c5c',
+      sendBorder: (this.state.draft || '').trim() ? '#bdbbff' : '#262626',
+      sendCursor: (this.state.draft || '').trim() ? 'pointer' : 'default',
+      hintLine: (this.state.draft || '').trim() ? '\u2318 + ENTER TO SEND' : '',
+      fromLine: this.state.focus === 'from' ? '#3a3a3a' : '#1c1c1c',
+      bodyLine: this.state.focus === 'body' ? '#3a3a3a' : '#1c1c1c',
+      fromLabel: this.state.focus === 'from' ? '#bdbbff' : '#5c5c5c',
+      mailStatus: this.state.reply ? 'SENT \u2014 I\u2019LL REPLY WITHIN A DAY' : '',
+      statusColor: '#bdbbff',
+      focusFrom: () => this.setState({ focus: 'from' }),
+      focusBody: () => this.setState({ focus: 'body' }),
+      blur: () => this.setState({ focus: '' }),
+      statusLine: this.state.sent.length ? 'SENT \u2014 REPLIES IN UNDER 24H' : 'OPEN TO WORK \u2014 OCT 2026',
+      stack: STACK.map(s => ({ name: s.name, ref: el => { if (el && el.getAttribute('src') !== s.src) el.setAttribute('src', s.src); } })),
+      btsPair: BTS.map(b => ({ cap: b.cap, ref: el => { if (el && el.getAttribute('src') !== b.src) el.setAttribute('src', b.src); } })),
+      shots: SHOTS.map(s => ({ cap: s.cap, ref: el => { if (el && el.getAttribute('src') !== s.src) el.setAttribute('src', s.src); } })),
+      forks: FORKS.map((f, i) => ({
+        num: f.num,
+        q: f.q,
+        line: i === fork ? '#bdbbff' : '#1c1c1c',
+        numColor: i === fork ? '#bdbbff' : '#5c5c5c',
+        titleColor: i === fork ? '#ffffff' : '#716e6e',
+        pick: () => this.setState({ fork: i })
+      })),
+      fork: FORKS[fork],
+      forkRule: '100%',
+      layers: LAYERS.map((l, i) => {
+        const on = i === layer;
+        return {
+          k: l.k, n: l.n, d: l.d,
+          art: band(i),
+          border: on ? '#3a3a3a' : '#161616',
+          bg: on ? '#0f0f0f' : '#0b0b0b',
+          ascii: on ? '#bdbbff' : '#1c1c1c',
+          tag: on ? '#bdbbff' : '#5c5c5c',
+          title: on ? '#ffffff' : '#8f8f8f',
+          bodyColor: on ? '#dcdcdc' : '#5c5c5c',
+          bodyVis: on ? '1' : '0.35',
+          enter: () => this.setState({ layer: i }),
+          leave: () => this.setState({ layer: -1 })
+        };
+      }),
+      steps: STEPS.map((s, i) => ({
+        num: s.num, tag: s.tag, title: s.title, body: s.body, note: s.note,
+        op: i === step ? '1' : '0.42',
+        pick: () => this.setState({ step: i }),
+        ref: el => this.observe(el, i)
+      })),
+      step: cur,
+      shotRef: el => { if (el && el.getAttribute('src') !== cur.src) el.setAttribute('src', cur.src); },
+      dots: STEPS.map((s, i) => ({ c: i === step ? '#bdbbff' : '#242424' })),
+      results: RESULTS.map(r => ({
+        k: r.k, v: r.v, d: r.d, state: r.state,
+        stateColor: r.state.indexOf('MEASURED') === 0 ? '#bdbbff' : '#5c5c5c'
+      })),
+      regrets: REGRETS,
+      team: TEAM.map(t => ({ who: t.who, role: t.role, color: t.me ? '#ffffff' : '#929292' })),
+      faqs: FAQS.map((f, i) => {
+        const on = i === faq;
+        return {
+          q: f.q, a: f.a,
+          color: on ? '#ffffff' : '#c8c8c8',
+          signColor: on ? '#bdbbff' : '#5c5c5c',
+          signRot: on ? 'rotate(45deg)' : 'rotate(0deg)',
+          h: on ? '260px' : '0px',
+          op: on ? '1' : '0',
+          toggle: () => this.setState({ faq: on ? -1 : i })
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

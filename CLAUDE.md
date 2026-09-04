@@ -62,22 +62,94 @@ reproduce it faithfully and keep it responsive. Do not redesign.
 - Link hover: `mute` → `ink`/`white`, or `lilac` → `lilac-soft` for inline text links.
 - Reveal-on-scroll for section headings (`data-reveal` indices in the reference).
 - **Respect `prefers-reduced-motion`** — reveals show immediately, transitions off.
+- Recurring patterns reused across pages — build each once, share the component:
+  - **Hover-to-color grayscale image tile** (Labs grid, Wylde BTS/triptych images):
+    grayscale + contrast/brightness filter at rest, full color + slight scale on hover.
+  - **Accordion** (Wylde FAQ): click toggles max-height/opacity, rotates a "+" to "×".
+  - **Lightbox** (Labs): full-screen blurred backdrop, click-outside or Esc to close.
+  - **Contact form** (Notes, Wylde footer): FROM input + message textarea + SEND button,
+    with focus/filled/empty visual states — same shape both places, extract one component.
+  - **Footer dither/clock**: canvas-like ASCII animation plus a live IST clock; treat as
+    a self-contained client component since it depends on `requestAnimationFrame` and
+    `setInterval`.
 
 ## Page structure — 5 templates, 3 build phases
 Source files: `design-reference/re-design inspo/{Landing,Work,Labs,Notes,Wylde}.dc.html`.
+Shared nav shell on every page: `GG` (Allison, red) · WORK · LABS · SAY HELLO, fixed
+position, hides on scroll-down and fades back in ~240ms after scroll settles. On
+Landing only, **WORK** opens a hover dropdown (dark card, `surface` bg, `border`
+outline, 16px radius, heavy shadow) listing 3 projects with thumbnail, title, sub-label,
+number, plus an "All selected work" CTA and MY STORY / SAY HELLO row.
 
-**Phase 1 — Landing** (`Landing.dc.html`, 623 lines): nav (GG logo · WORK · LABS ·
-SAY HELLO), WORK hover dropdown, hero, and sections down the page marked by
-`data-reveal="5"` through `data-reveal="12"` — read the file in order, don't assume
-old section names carry over.
+**Phase 1 — Landing** (`Landing.dc.html`): 12 `data-reveal` sections in order:
+1. Name + role ("Gaurav Gupta" / "Associate Product Manager").
+2. Intro paragraph (who, where, focus).
+3. Previous-role line (KPMG).
+4. Current-work paragraph (active projects named inline).
+5. **"Selected Work"** — numbered project list (hover to switch active project) next to
+   an auto-rotating card carousel (PREMISE / BEHIND THE SCENES / A DECISION AND WHY /
+   WHAT WE DIDN'T SHIP cards, 1.7s auto-advance, pauses on hover, tick indicators below).
+6. **"Work is the story"** — 4-stage process list (Discovery/Delivery/Distribution/
+   Iteration), each with a question, a call, a "why" paragraph with an inline metric,
+   and a tool-logo row; hovering a stage reveals matching artwork in a floating panel
+   with logo icons pinned to slot coordinates.
+7. Full-bleed crossfading photo pair (masked top/bottom), captioned origin story.
+8. Centered pull-quote paragraph (childhood/Manipal framing).
+9. Long-form narrative block (4 paragraphs) — the go-kart / Manipal story, ends on the
+   "definition of done" lesson.
+10. Career timeline — monospace rows of `when — dashes — what`.
+11. Freelance/photography reflection block (4 paragraphs, inline links to freelance
+    clients), closing line ties it back to product work.
+12. **"Notes"** section — numbered list linking to article slugs.
+13. **"Worked with"** — infinite horizontal marquee of affiliations.
+14. Footer (see below) — not a numbered reveal, always present.
 
-**Phase 2 — Work + Labs** (`Work.dc.html`, `Labs.dc.html`, + `Wylde.dc.html` as the
-project template): `/work` is a numbered list of case studies (num · title · status —
-"WRITE-UP IN PROGRESS" or "CASE STUDY"), linking out to project pages. `Wylde.dc.html`
-is the full case-study template other projects will reuse. `/labs` is a lighter page,
-same nav shell.
+**Footer** (shared shape, present on Landing at minimum): live IST clock, animated
+ASCII-dither background (canvas of characters redrawn every frame, brightened in a
+radial mask that follows the pointer), large "SAY HELLO" mailto heading that swaps to
+"copied ✓" on click, INDEX / ELSEWHERE / CURRENTLY three-column grid, and a closing bar
+with the GG mark, copyright, "BUILT IN MANIPAL", and a "BACK TO TOP" link.
 
-**Phase 3 — Notes** (`Notes.dc.html`, 192 lines): standalone, same nav shell.
+**Phase 2 — Work + Labs**:
+- `Work.dc.html` → `/work`: heading + intro line, divider, then a plain numbered list
+  (num · title · status tag — "WRITE-UP IN PROGRESS" or "CASE STUDY") linking to case
+  studies, "← BACK HOME" at the bottom.
+- `Labs.dc.html` → `/labs`: heading + intro line + "WORK IN PROGRESS" tag, divider, then
+  a **3-column masonry grid** of tiles (varying heights) tagged by kind (FILM, SKETCH,
+  TOOL, EXPERIMENT, MOTION, WRITING, INTERFACE) with a state label (Archive, Prototype,
+  In use, Testing, Shelved, Ongoing). Tiles are grayscale by default, go full-color and
+  scale up slightly on hover, and reveal a title/kind/state overlay. Clicking a tile
+  opens a full-screen blurred-backdrop lightbox with the same title/kind/state.
+- `Wylde.dc.html` → the project-case-study template (see below), reused per project.
+
+**Phase 3 — Notes** (`Notes.dc.html` → `/notes/[slug]`): scroll-progress bar (red, fixed
+top), header (date/read-time meta, serif h1, italic pull-quote), divider, body
+paragraphs (first block full `ink`, rest `mute-2`-toned), divider, then an inline
+feedback form (FROM email input, message textarea, SEND button — states: empty/focus/
+filled), "← BACK HOME".
+
+**Wylde case-study template** (`Wylde.dc.html` → `/projects/[slug]`), numbered sections:
+- Header: huge serif title, subhead, 4-column meta row (ROLE/PERIOD/TEAM/SURFACE).
+- Full-bleed hero photo (grayscale-tinted) with caption.
+- Tech-stack logo row.
+- **01 The problem** — two-column text (the problem vs. the pre-brief kill condition)
+  + a 3-card research-findings row (conversations, pattern, kill-check result).
+- **02 Decision log** — left list of "forks" (click/hover to select), right panel shows
+  the chosen question with WE CHOSE / WE TURNED DOWN / WHAT IT COST / EVIDENCE grid.
+- Two-image BTS pair (grayscale-hover-to-color).
+- **03 How it's put together** — vertical stack of architecture "layers" (CLIENT,
+  PARSER, EVALS, EXPIRY, SIGNAL); hovering a layer highlights it and reveals its
+  description.
+- **04 Walkthrough** — sticky phone-frame mockup on the left showing the active step's
+  screenshot; on the right, a scrolling list of steps (scroll-linked via
+  IntersectionObserver) each with tag/title/body/note.
+- Artefacts & trigger files list (filename, description, kind, action link).
+- 3-image triptych strip (grayscale-hover-to-color).
+- **05 Where it stands** — 2×2 metrics grid (value + description + status tag) +
+  "what I'd do differently" bullet list.
+- **06 Questions I get asked** — FAQ accordion (click to expand/collapse).
+- Closing contact form (same FROM/message/SEND pattern as Notes) + "← ALL WORK" /
+  "NEXT [project] →" footer nav.
 
 **About — not in scope yet.** No `About.dc.html` exists in the new reference. Keep the
 old `/about` page and its old design-system values (cream/blue) untouched until a new
