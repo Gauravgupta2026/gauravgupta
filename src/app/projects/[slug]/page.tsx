@@ -2,11 +2,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Nav } from "@/components/sections/Nav";
-import { Footer } from "@/components/sections/Footer";
-import { ContactBand } from "@/components/sections/ContactBand";
+import { ContactCard } from "@/components/sections/ContactCard";
+import { DecisionLog } from "@/components/sections/DecisionLog";
+import { ArtifactFiles } from "@/components/sections/ArtifactFiles";
+import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
-import { PhotoFrame } from "@/components/ui/PhotoFrame";
+import { SectionDivider } from "@/components/ui/SectionDivider";
+import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
+import { MetaRow } from "@/components/ui/MetaRow";
+import { NumberedSection } from "@/components/ui/NumberedSection";
 import {
   projectDetails,
   getProjectDetail,
@@ -52,7 +57,7 @@ export async function generateMetadata({
   return { title: `${project.title} — Gaurav Gupta`, description: project.tagline };
 }
 
-const READING_COL = "mx-auto max-w-[640px]";
+const pad = (n: number) => String(n).padStart(2, "0");
 
 export default async function ProjectPage({
   params,
@@ -65,177 +70,221 @@ export default async function ProjectPage({
 
   const others = projects.filter((p) => p.slug !== slug).slice(0, 3);
 
+  // Section numbers run past the narrative spine into whichever optional
+  // blocks (decision log, results, FAQ) this project has.
+  const sections = narrativeSections(project);
+  let nextNum = sections.length;
+  const forksNum = project.forks ? ++nextNum : 0;
+  const filesNum = project.files ? ++nextNum : 0;
+  const faqsNum = project.faqs ? ++nextNum : 0;
+
   return (
-    <>
+    <main>
       <Nav />
 
-      <Shell as="main" className="pt-[24px] md:pt-[40px]">
-        {/* header */}
-        <Reveal className={`${READING_COL} text-center`}>
-          <nav className="flex items-center justify-center gap-[8px] font-mono text-[11px] uppercase tracking-[0.14em]">
-            <Link
-              href="/"
-              className="text-mute no-underline transition-colors hover:text-blue"
-            >
-              Home
-            </Link>
-            <span className="text-mute opacity-60">&rsaquo;</span>
-            <Link href="/#projects" className="text-blue no-underline">
-              Projects
-            </Link>
-          </nav>
-          <h1 className="m-0 mt-[26px] font-display text-[clamp(30px,5vw,40px)] font-normal leading-[1.12] text-ink">
-            {project.title}
-          </h1>
-          <p className="m-0 mx-auto mt-[18px] max-w-[440px] font-mono text-[12px] leading-[1.7] text-soft-ink">
-            {project.tagline}
-          </p>
+      <Shell as="header" wide className="pb-[28px] pt-[80px] md:pb-[56px] md:pt-[145px]">
+        <nav className="flex items-center gap-[8px] font-mono text-[8px] uppercase tracking-[0.14em] md:text-[9px]">
+          <Link
+            href="/"
+            className="text-mute no-underline transition-colors duration-300 hover:text-lilac"
+          >
+            Home
+          </Link>
+          <span className="text-faint">&rsaquo;</span>
+          <Link href="/work" className="text-lilac no-underline">
+            Work
+          </Link>
+        </nav>
+
+        <Reveal
+          as="h1"
+          delay={60}
+          className="m-0 mt-[16px] text-pretty font-display text-[26px] font-light leading-[1.08] tracking-[-0.02em] text-white md:mt-[34px] md:text-[64px] md:leading-[61px]"
+        >
+          {project.title}
+        </Reveal>
+        <Reveal
+          as="p"
+          delay={120}
+          className="m-0 mt-[12px] max-w-[677px] text-pretty text-[11px] leading-[17px] text-mute-2 md:mt-[28px] md:text-[16px] md:leading-[26px]"
+        >
+          {project.tagline}
         </Reveal>
 
-        {/* offset photo gallery */}
-        <Reveal className="mt-[48px] grid grid-cols-2 gap-[14px] md:mt-[64px] md:grid-cols-4 md:gap-[22px]">
+        {project.meta && (
+          <div className="mt-[22px] md:mt-[48px]">
+            <MetaRow items={project.meta} />
+          </div>
+        )}
+      </Shell>
+
+      {/* offset photo gallery */}
+      <Shell wide>
+        <div className="grid grid-cols-2 gap-[8px] md:grid-cols-4 md:gap-[22px]">
           {project.gallery.map((label, i) => (
-            <PhotoFrame
+            <MediaPlaceholder
               key={i}
               label={label}
-              className={`aspect-[3/4] w-full ${
+              className={`aspect-[3/4] w-full border border-border ${
                 i % 2 === 1 ? "md:mt-[48px]" : ""
               }`}
             />
           ))}
-        </Reveal>
-
-        {/* tech stack + stakeholders */}
-        <Reveal className={`${READING_COL} mt-[56px] md:mt-[80px]`}>
-          <div className="grid grid-cols-1 gap-[28px] sm:grid-cols-2 sm:gap-[40px]">
-            <div>
-              <h2 className="m-0 mb-[18px] font-mono text-[13px] font-semibold text-ink">
-                Tech Stack
-              </h2>
-              <ul className="m-0 flex list-none flex-col gap-[8px] p-0">
-                {project.techStack.map((t) => (
-                  <li key={t} className="font-mono text-[12px] text-soft-ink">
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h2 className="m-0 mb-[18px] font-mono text-[13px] font-semibold text-ink">
-                Stakeholders
-              </h2>
-              <ul className="m-0 flex list-none flex-col gap-[8px] p-0">
-                {project.stakeholders.map((s) => (
-                  <li key={s} className="font-mono text-[12px] text-soft-ink">
-                    {s}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* statement pull-quote */}
-        <Reveal className={`${READING_COL} mt-[52px] md:mt-[72px]`}>
-          <p className="m-0 font-mono text-[16px] font-medium leading-[1.5] text-ink md:text-[19px]">
-            {project.statement}
-          </p>
-        </Reveal>
-
-        {/* proof bar — renders only populated must-have links */}
-        {project.proof && (
-          <Reveal className={`${READING_COL} mt-[28px]`}>
-            <div className="flex flex-col gap-[14px] rounded-[14px] border border-ink/10 bg-card p-[20px]">
-              {(["demo", "loom", "evalSheet"] as const).some(
-                (k) => project.proof?.[k]
-              ) && (
-                <div className="flex flex-wrap gap-x-[20px] gap-y-[10px]">
-                  {(["demo", "loom", "evalSheet"] as const).map((key) => {
-                    const href = project.proof?.[key];
-                    if (!href) return null;
-                    return (
-                      <a
-                        key={key}
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-mono text-[11px] uppercase tracking-[0.14em] text-blue no-underline transition-opacity hover:opacity-70"
-                      >
-                        {PROOF_LABELS[key]} &rarr;
-                      </a>
-                    );
-                  })}
-                </div>
-              )}
-              {project.proof.feedback && (
-                <p className="m-0 font-mono text-[12px] leading-[1.7] text-soft-ink">
-                  {project.proof.feedback}
-                </p>
-              )}
-            </div>
-          </Reveal>
-        )}
-
-        {/* narrative sections (framework spine) */}
-        <div className={`${READING_COL} mt-[52px] flex flex-col gap-[44px] md:mt-[72px] md:gap-[56px]`}>
-          {narrativeSections(project).map((section) => (
-            <Reveal key={section.heading} as="section">
-              <h2 className="m-0 mb-[16px] font-display text-[20px] font-medium leading-[1.2] text-ink md:text-[24px]">
-                {section.heading}
-              </h2>
-              <div className="flex flex-col gap-[16px]">
-                {section.body.map((para, i) => (
-                  <p
-                    key={i}
-                    className="m-0 font-mono text-[12.5px] leading-[1.85] text-soft-ink"
-                  >
-                    {para}
-                  </p>
-                ))}
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
-        {/* wide showcase */}
-        <Reveal className="mt-[48px] md:mt-[64px]">
-          <PhotoFrame
-            label={project.showcaseLabel}
-            className="aspect-[4/5] w-full md:aspect-[16/11]"
-          />
-        </Reveal>
-
-        {/* next project */}
-        <div className="mt-[64px] md:mt-[96px]">
-          <Reveal
-            as="h2"
-            className="m-0 mb-[24px] font-display text-[24px] font-normal text-ink md:mb-[28px] md:text-[30px]"
-          >
-            Next Project
-          </Reveal>
-          <Reveal className="grid grid-cols-1 gap-[20px] sm:grid-cols-2 md:grid-cols-3">
-            {others.map((p) => (
-              <Link
-                key={p.slug}
-                href={`/projects/${p.slug}`}
-                className="group relative block overflow-hidden rounded-[16px] border border-ink/10 bg-card no-underline transition-transform duration-300 hover:-translate-y-[3px]"
-              >
-                <div className="flex aspect-[4/3] items-center justify-center">
-                  <span className="font-mono text-[11px] tracking-[0.12em] text-mute">
-                    Screens
-                  </span>
-                </div>
-                <span className="absolute bottom-[16px] left-[16px] inline-flex rounded-full border border-ink/15 bg-cream px-[14px] py-[7px] font-mono text-[11px] text-ink">
-                  {p.title}
-                </span>
-              </Link>
-            ))}
-          </Reveal>
         </div>
       </Shell>
 
-      <ContactBand />
-      <Footer />
-    </>
+      {/* tech stack + stakeholders */}
+      <Shell wide className="mt-[36px] md:mt-[80px]">
+        <div className="grid grid-cols-1 gap-[18px] border-t border-border-2 pt-[20px] sm:grid-cols-2 sm:gap-[40px] md:pt-[36px]">
+          <div>
+            <h2 className="m-0 mb-[10px] font-mono text-[7px] tracking-[0.24em] text-mute md:mb-[18px] md:text-[8px]">
+              Tech stack
+            </h2>
+            <ul className="m-0 flex list-none flex-col gap-[6px] p-0 md:gap-[10px]">
+              {project.techStack.map((t) => (
+                <li key={t} className="text-[10px] text-soft-ink md:text-[12px]">
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h2 className="m-0 mb-[10px] font-mono text-[7px] tracking-[0.24em] text-mute md:mb-[18px] md:text-[8px]">
+              Stakeholders
+            </h2>
+            <ul className="m-0 flex list-none flex-col gap-[6px] p-0 md:gap-[10px]">
+              {project.stakeholders.map((s) => (
+                <li key={s} className="text-[10px] text-soft-ink md:text-[12px]">
+                  {s}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </Shell>
+
+      {/* statement pull-quote */}
+      <Shell wide className="mt-[32px] md:mt-[72px]">
+        <p className="m-0 max-w-[820px] text-pretty font-display text-[15px] font-light italic leading-[1.35] text-white md:text-[26px]">
+          &ldquo;{project.statement}&rdquo;
+        </p>
+      </Shell>
+
+      {/* proof bar — renders only populated must-have links */}
+      {project.proof && (
+        <Shell wide className="mt-[18px] md:mt-[28px]">
+          <div className="flex flex-col gap-[10px] border border-border bg-surface p-[16px] md:gap-[14px] md:p-[24px]">
+            {(["demo", "loom", "evalSheet"] as const).some(
+              (k) => project.proof?.[k],
+            ) && (
+              <div className="flex flex-wrap gap-x-[16px] gap-y-[8px]">
+                {(["demo", "loom", "evalSheet"] as const).map((key) => {
+                  const href = project.proof?.[key];
+                  if (!href) return null;
+                  return (
+                    <a
+                      key={key}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-[8px] uppercase tracking-[0.14em] text-lilac no-underline transition-opacity hover:opacity-70 md:text-[9px]"
+                    >
+                      {PROOF_LABELS[key]} &rarr;
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+            {project.proof.feedback && (
+              <p className="m-0 text-[10px] leading-[15px] text-mute-2 md:text-[10px] md:leading-[18px]">
+                {project.proof.feedback}
+              </p>
+            )}
+          </div>
+        </Shell>
+      )}
+
+      {/* narrative sections (framework spine) — single reading column.
+          Two-up only earns its place for genuinely parallel short items
+          (see DecisionLog's chose/rejected); continuous prose reads
+          top-to-bottom, not left-right. */}
+      <Shell wide>
+        {sections.map((section, i) => (
+          <NumberedSection key={section.heading} num={pad(i + 1)} title={section.heading}>
+            <div className="mt-[32px] flex max-w-[720px] flex-col gap-[16px] md:mt-[40px]">
+              {section.body.map((para, i) => (
+                <p
+                  key={i}
+                  className="m-0 text-pretty text-[13px] leading-[21px] text-soft-ink md:text-[15px] md:leading-[24px]"
+                >
+                  {para}
+                </p>
+              ))}
+            </div>
+          </NumberedSection>
+        ))}
+
+        {project.forks && (
+          <NumberedSection
+            num={pad(forksNum)}
+            title="Decision log"
+            intro="Forks that changed the product. Pick one to see what we chose, what we turned down, and what the choice cost us."
+          >
+            <DecisionLog forks={project.forks} />
+          </NumberedSection>
+        )}
+
+        {project.files && (
+          <NumberedSection num={pad(filesNum)} title="Artefacts & trigger files">
+            <ArtifactFiles files={project.files} />
+          </NumberedSection>
+        )}
+
+        {project.faqs && (
+          <NumberedSection num={pad(faqsNum)} title="Questions I get asked">
+            <FaqAccordion faqs={project.faqs} />
+          </NumberedSection>
+        )}
+      </Shell>
+
+      {/* wide showcase */}
+      <Shell wide className="mt-[80px] md:mt-[110px]">
+        <MediaPlaceholder
+          label={project.showcaseLabel}
+          className="aspect-[4/5] w-full border border-border md:aspect-[16/9]"
+        />
+      </Shell>
+
+      {/* next project */}
+      <Shell wide className="mt-[80px] md:mt-[110px]">
+        <SectionDivider className="mb-[56px] md:mb-[72px]" />
+        <Reveal
+          as="h2"
+          className="m-0 mb-[24px] font-display text-[21px] font-light text-white md:mb-[28px] md:text-[27px]"
+        >
+          Next project
+        </Reveal>
+        <div className="grid grid-cols-1 gap-[20px] sm:grid-cols-2 md:grid-cols-3">
+          {others.map((p) => (
+            <Link
+              key={p.slug}
+              href={`/projects/${p.slug}`}
+              className="group relative block overflow-hidden border border-border bg-surface no-underline transition-transform duration-300 hover:-translate-y-[3px]"
+            >
+              <div className="flex aspect-[4/3] items-center justify-center">
+                <span className="font-mono text-[9px] tracking-[0.12em] text-mute">
+                  Screens
+                </span>
+              </div>
+              <span className="absolute bottom-[16px] left-[16px] inline-flex border border-border bg-bg px-[14px] py-[7px] font-mono text-[9px] text-ink">
+                {p.title}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </Shell>
+
+      <ContactCard />
+    </main>
   );
 }

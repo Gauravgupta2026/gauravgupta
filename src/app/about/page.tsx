@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/sections/Nav";
-import { Footer } from "@/components/sections/Footer";
+import { ContactCard } from "@/components/sections/ContactCard";
+import { AboutGallery } from "@/components/sections/AboutGallery";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
-import { ContactBand } from "@/components/sections/ContactBand";
-import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
+import { SectionDivider } from "@/components/ui/SectionDivider";
 
 export const metadata: Metadata = {
   title: "About — Gaurav Gupta",
@@ -12,88 +12,117 @@ export const metadata: Metadata = {
     "A future-oriented thinker and fast mover building AI systems and user-facing tools.",
 };
 
-/** Work history — placeholder copy from the reference; edit freely. */
+/** Condensed to fact pairs — the old placeholder blurbs read as filler, cut
+ *  entirely rather than kept as noise. */
+const FACTS = [
+  { k: "LOCATION", v: "Bengaluru, IN" },
+  { k: "FOCUS", v: "Product & design" },
+];
+
 const EXPERIENCE = [
-  {
-    role: "Risk, KPMG",
-    period: "2026",
-    body: "I worked on this this this and did not get rewarded and all was a waste. I wish I could have utilised this opprotunity better but I cant do anything now.",
-  },
-  {
-    role: "Campus Ambassador, Volvo Group Pvt Ltd",
-    period: "2023–2025",
-    body: "I worked on this this this and did not get rewarded and all was a waste. I wish I could have utilised this opprotunity better but I cant do anything now.",
-  },
-  {
-    role: "Campus Ambassador, Volvo Group Pvt Ltd",
-    period: "2023–2025",
-    body: "I worked on this this this and did not get rewarded and all was a waste. I wish I could have utilised this opprotunity better but I cant do anything now.",
-  },
+  { role: "Risk, KPMG", period: "2026" },
+  { role: "Campus Ambassador, Volvo Group", period: "2023 — 2025" },
 ];
 
 export default function AboutPage() {
   return (
-    <>
+    <main>
       <Nav />
 
-      <Shell as="main" className="pt-[40px] md:pt-[70px]">
-        <div className="mx-auto max-w-[640px]">
+      {/* masthead — editorial label pair, echoes reference's "JOURNAL —— Archive" */}
+      <Shell as="header" wide className="pt-[96px] md:pt-[145px]">
+        <Reveal as="div" className="flex items-baseline gap-[14px]">
+          <span className="font-mono text-[11px] tracking-[0.24em] text-mute md:text-[12px]">
+            ABOUT
+          </span>
+          <span className="text-mute-3">——</span>
+          <span className="font-display text-[18px] italic text-soft-ink md:text-[22px]">
+            Gaurav Gupta
+          </span>
+        </Reveal>
+
+        {/* section label + full-width rule, echoes reference's "FEATURED CREATORS" bar */}
+        <div className="mt-[40px] md:mt-[56px]">
           <Reveal
-            as="h1"
-            className="m-0 font-display text-[clamp(32px,5vw,40px)] font-normal leading-[1.15] text-ink"
+            as="span"
+            delay={40}
+            className="font-mono text-[9px] tracking-[0.24em] text-mute md:text-[10px]"
           >
-            I&rsquo;m a husband, dad to three pets, and a designer who&rsquo;s
-            trying not to take himself too seriously.
+            THE PERSON
           </Reveal>
+          <div className="mt-[14px] h-px w-full bg-divider" />
+        </div>
 
-          <Reveal
-            as="p"
-            className="m-0 mt-[34px] font-mono text-[12.5px] leading-[1.9] text-soft-ink"
-          >
-            I am a future-oriented thinker, and a fast mover. In this journey I
-            don&rsquo;t intend to lose the vibrant side of me. I like music, I
-            like to read and I like to go outdoors. I have a side of me that
-            wishes to indulge in poetry. I have planned a few things for myself
-            for the next 5 years [2030]. I want to sketch, pen&amp;ink, I want to
-            sell tools. There are more.
-          </Reveal>
+        {/* asymmetric body — wide story column, narrow offset facts rail */}
+        <div className="mt-[40px] grid grid-cols-1 gap-[40px] pb-[64px] md:mt-[48px] md:grid-cols-[1fr_260px] md:gap-[64px] md:pb-[96px]">
+          <div className="max-w-[600px]">
+            <Reveal
+              as="h1"
+              delay={80}
+              className="m-0 text-pretty font-display text-[28px] font-light leading-[1.25] text-white md:text-[38px]"
+            >
+              I&rsquo;m a husband, dad to three pets, and a designer who&rsquo;s
+              trying not to take himself too seriously.
+            </Reveal>
+            <Reveal
+              as="p"
+              delay={160}
+              className="m-0 mt-[24px] text-pretty text-[14px] leading-[24px] text-mute-2 md:mt-[28px] md:text-[16px] md:leading-[27px]"
+            >
+              I am a future-oriented thinker, and a fast mover. In this
+              journey I don&rsquo;t intend to lose the vibrant side of me. I
+              like music, I like to read and I like to go outdoors. I have a
+              side of me that wishes to indulge in poetry. I have planned a
+              few things for myself for the next five years — I want to
+              sketch, pen &amp; ink, and I want to sell tools. There are more.
+            </Reveal>
+          </div>
 
-          <Reveal className="mt-[48px]">
-            <MediaPlaceholder
-              label="[ B/W PHOTO ]"
-              align="bottom-left"
-              className="aspect-[16/11] w-full"
-            />
-          </Reveal>
-
-          <Reveal
-            as="h2"
-            className="m-0 mt-[48px] font-display text-[26px] font-normal italic tracking-[-0.01em] text-ink md:mt-[64px] md:text-[32px]"
-          >
-            Work Experience
-          </Reveal>
-
-          <div className="mt-[10px]">
-            {EXPERIENCE.map((job, i) => (
-              <Reveal key={i} className="pt-[36px]">
-                <h3 className="m-0 font-display text-[18px] font-medium text-ink">
-                  {job.role}
-                </h3>
-                <div className="mt-[6px] font-mono text-[11px] tracking-[0.04em] text-mute">
-                  {job.period}
-                </div>
-                <p className="m-0 mt-[18px] font-mono text-[12.5px] leading-[1.9] text-soft-ink">
-                  {job.body}
-                </p>
-              </Reveal>
+          {/* facts rail — offset down on desktop, breaks the symmetric grid.
+              Caption typography (bold value line, mono meta line below)
+              matches the reference's thumbnail-caption pattern. */}
+          <div className="flex flex-col gap-[28px] md:mt-[6px]">
+            {FACTS.map((f) => (
+              <div key={f.k} className="flex flex-col gap-[4px]">
+                <span className="text-[13px] font-medium tracking-[0.02em] text-ink">
+                  {f.v}
+                </span>
+                <span className="font-mono text-[9px] tracking-[0.2em] text-mute">
+                  {f.k}
+                </span>
+              </div>
             ))}
+
+            <div className="flex flex-col gap-[20px] border-t border-border-2 pt-[24px]">
+              {EXPERIENCE.map((job) => (
+                <div key={job.role} className="flex flex-col gap-[4px]">
+                  <span className="text-[13px] font-medium tracking-[0.02em] text-ink">
+                    {job.role}
+                  </span>
+                  <span className="font-mono text-[9px] tracking-[0.2em] text-mute">
+                    {job.period}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </Shell>
 
-      <ContactBand />
+      <SectionDivider />
 
-      <Footer />
-    </>
+      {/* horizontal photo strip — grayscale at rest, tap to focus + color */}
+      <Shell wide className="py-[56px] md:py-[80px]">
+        <Reveal
+          as="h2"
+          className="m-0 mb-[24px] font-display text-[20px] font-light text-soft-ink md:mb-[32px] md:text-[27px]"
+        >
+          A few frames
+        </Reveal>
+        <AboutGallery />
+      </Shell>
+
+      <ContactCard />
+    </main>
   );
 }

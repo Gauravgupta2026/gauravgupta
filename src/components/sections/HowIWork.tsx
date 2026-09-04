@@ -10,7 +10,7 @@ import { workStages, type WorkStage } from "@/content/workStages";
 function StageCardBody({ stage }: { stage: WorkStage }) {
   return (
     <div className="shader-card w-full rounded-[20px] border border-white/10 p-[26px] shadow-[0_40px_80px_rgba(0,0,0,.55)]">
-      <p className="m-0 text-pretty font-display text-[21px] font-light leading-[1.3] text-white md:text-[23px]">
+      <p className="m-0 text-pretty font-display text-[17px] font-light leading-[1.3] text-white md:text-[18px]">
         {stage.call}
       </p>
 
@@ -32,7 +32,7 @@ function StageCardBody({ stage }: { stage: WorkStage }) {
         ))}
       </div>
 
-      <div className="mt-[20px] inline-flex items-center gap-[8px] rounded-full border border-lilac/25 bg-lilac/10 px-[13px] py-[7px] text-[12px] leading-none text-lilac-soft">
+      <div className="mt-[20px] inline-flex items-center gap-[8px] rounded-full border border-lilac/25 bg-lilac/10 px-[13px] py-[7px] text-[10px] leading-none text-lilac-soft">
         <span className="h-[5px] w-[5px] rounded-full bg-lilac" />
         {stage.metric}
       </div>
@@ -60,7 +60,7 @@ export function HowIWork() {
     <Shell as="section" id="process" wide className="pt-[80px] md:pt-[130px]">
       <Reveal
         as="h2"
-        className="m-0 font-display text-[34px] font-light leading-[1.05] tracking-[-0.008em] text-white md:text-[50px]"
+        className="m-0 font-display text-[27px] font-light leading-[1.05] tracking-[-0.008em] text-white md:text-[40px]"
       >
         Work is the story
       </Reveal>
@@ -80,10 +80,10 @@ export function HowIWork() {
                 onClick={() => setActive(i)}
                 className="flex w-full items-baseline gap-[10px] border-b border-border-2 py-[18px] text-left sm:gap-[18px] md:border-0 md:py-0"
               >
-                <span className="font-mono text-[14px] leading-[40px] text-faint sm:text-[16px] md:text-[24px]">
+                <span className="font-mono text-[11px] leading-[32px] text-faint sm:text-[13px] md:text-[19px]">
                   {s.num}
                 </span>
-                <span className="font-body text-[19px] tracking-[-0.02em] text-white sm:text-[24px] md:text-[36px]">
+                <span className="font-body text-[15px] tracking-[-0.02em] text-white sm:text-[19px] md:text-[29px]">
                   {s.title}
                 </span>
               </button>

@@ -67,9 +67,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${newsreader.variable} ${inter.variable} ${jetbrainsMono.variable} ${allison.variable}`}
     >
       <body>
+        <script
+          // Runs before paint so a stored "light" choice never flashes dark first.
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}",
+          }}
+        />
         <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>

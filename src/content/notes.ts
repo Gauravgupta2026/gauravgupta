@@ -3,18 +3,21 @@ export type Note = {
   title: string;
 };
 
-/** Copy verbatim from Landing.dc.html's NOTES data. */
+/** Three most recent articles from src/content/articles.ts — kept as a
+ *  separate light list (title + slug only) so the landing teaser doesn't
+ *  need the full article body. Landing.dc.html's placeholder titles never
+ *  matched real articles once Phase 3 landed; these do. */
 export const notes: Note[] = [
   {
-    slug: "how-a-constraint-changes-the-shape-of-a-product",
-    title: "How a constraint changes the shape of a product",
+    slug: "notes-on-long-horizon-agents",
+    title: "Notes on Long-Horizon Agents",
   },
   {
-    slug: "what-i-look-for-before-i-start-prototyping",
-    title: "What I look for before I start prototyping",
+    slug: "intercultural-communication",
+    title: "Intercultural Communication",
   },
   {
-    slug: "the-smallest-thing-that-removes-the-friction",
-    title: "The smallest thing that removes the friction",
+    slug: "designing-for-trust",
+    title: "Designing for Trust",
   },
 ];

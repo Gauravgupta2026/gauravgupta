@@ -1,19 +1,23 @@
-# Worktree context — Phase 1: Landing
+# Worktree context — Phase 2: Work + Labs + Projects
 
-**Branch:** `Gauravgupta2026/re-design-landing`
-**Base:** tip of `Gauravgupta2026/re-design` (includes Framer Motion).
+**Branch:** `Gauravgupta2026/re-design-work-labs-projects`
+**Base:** tip of `Gauravgupta2026/re-design` (includes Framer Motion, Phase 1 landing).
 
 ## Scope
-Build the landing page (`/`) only.
+Build the case-study index, the labs page, and the reusable project case-study
+template: `/work`, `/labs`, `/projects/[slug]`.
 
-## Reference file
-`design-reference/re-design inspo/Landing.dc.html`
+## Reference files
+- `design-reference/re-design inspo/Work.dc.html`
+- `design-reference/re-design inspo/Labs.dc.html`
+- `design-reference/re-design inspo/Wylde.dc.html` (case-study template)
 
 ## Relevant `CLAUDE.md` sections
 - Design System (colors, typography, layout, interactions)
-- Page structure — Phase 1 — Landing (all 12 `data-reveal` sections + shared nav
-  shell + footer with IST clock and ASCII-dither canvas)
-- Recurring patterns: contact form, footer dither/clock
+- Page structure — Phase 2 — Work + Labs, and the full Wylde case-study
+  template section
+- Recurring patterns: hover-to-color grayscale image tile, accordion,
+  lightbox, contact form
 
 ## Merge target
 Merge back into `Gauravgupta2026/re-design` when this phase is reviewed and done.

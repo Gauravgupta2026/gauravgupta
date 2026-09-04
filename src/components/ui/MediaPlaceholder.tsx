@@ -27,7 +27,7 @@ export function MediaPlaceholder({
       className={`flex ${placement} bg-[#0c0c0c] ${className}`}
       style={{ backgroundImage: stripes, ...style }}
     >
-      <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#5a5a5a]">
+      <span className="font-mono text-[7px] uppercase tracking-[0.22em] text-[#5a5a5a]">
         {label}
       </span>
     </div>

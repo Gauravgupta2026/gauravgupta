@@ -19,7 +19,7 @@ export function EditorialLink({
   return (
     <a
       href={href}
-      className={`font-display text-[17px] italic underline underline-offset-4 ${color} ${className}`}
+      className={`font-display text-[14px] italic underline underline-offset-4 ${color} ${className}`}
     >
       {children}
     </a>

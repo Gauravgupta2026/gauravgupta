@@ -32,6 +32,30 @@ export type ProofLinks = {
   feedback?: string;
 };
 
+/** Role / period / platform-style facts shown in the meta row up top. */
+export type MetaField = { k: string; v: string };
+
+/** One entry in the decision log — a fork the project could have taken. */
+export type DecisionFork = {
+  num: string;
+  q: string;
+  chose: string;
+  rejected: string;
+  cost: string;
+  evidence: string;
+};
+
+export type Faq = { q: string; a: string };
+
+/** One row in the artefacts / trigger files list. */
+export type FileArtifact = {
+  name: string;
+  d: string;
+  kind: string;
+  action: string;
+  href?: string;
+};
+
 type BaseDetail = {
   slug: string;
   title: string;
@@ -49,6 +73,13 @@ type BaseDetail = {
   beforeAfter: Section;
   /** Business — what it saves, improves, or earns. */
   business: Section;
+  /** Role / period / platform facts — renders as a top meta row when present. */
+  meta?: MetaField[];
+  /** Decision log — forks worth showing. Only "CASE STUDY"-ready projects carry this. */
+  forks?: DecisionFork[];
+  faqs?: Faq[];
+  /** Artefacts & trigger files — real project documents, worth linking. */
+  files?: FileArtifact[];
 };
 
 /** AI product: carries the full evaluation + guardrails spine. */
@@ -83,6 +114,12 @@ export const projectDetails: Record<string, ProjectDetail> = {
     stakeholders: ["Students", "Campus counsellors"],
     statement:
       "The constraint was trust: nothing leaves the device unless the student chooses it.",
+    meta: [
+      { k: "ROLE", v: "Design + build, solo" },
+      { k: "PERIOD", v: "6 months" },
+      { k: "PLATFORM", v: "iOS · Web" },
+      { k: "STATUS", v: "Write-up in progress" },
+    ],
     proof: {
       feedback:
         "Shaped from interviews with students who'd deleted every other journaling app.",
@@ -142,6 +179,12 @@ export const projectDetails: Record<string, ProjectDetail> = {
     stakeholders: ["Friends & playtesters", "Local game nights"],
     statement:
       "No rulebook, no setup, just pass the phone and play.",
+    meta: [
+      { k: "ROLE", v: "Design + build, solo" },
+      { k: "PERIOD", v: "2026 — in build" },
+      { k: "PLATFORM", v: "iOS · TestFlight" },
+      { k: "PLAYERS", v: "4–8, pass and play" },
+    ],
     proof: {
       feedback:
         "Rewrote the shuffle logic three times after watching where laughter died on real game nights.",
@@ -173,6 +216,98 @@ export const projectDetails: Record<string, ProjectDetail> = {
         "A party game lives or dies on whether it comes back out of the drawer. Killing the setup tax is what turns a one-time play into a regular one — retention, but for a coffee-table game.",
       ],
     },
+    forks: [
+      {
+        num: "01",
+        q: "Rules in a book, or taught by playing?",
+        chose:
+          "The first round is the tutorial. Card design and pacing carry every rule — no page anyone has to read aloud.",
+        rejected:
+          "A printed rules card, the format almost every party game ships with.",
+        cost:
+          "The first three cards do a lot of work to earn their keep — get the pacing wrong and the game looks broken, not unexplained.",
+        evidence:
+          "Playtesters handed a rules card still asked what to do. The card wasn't the thing being read.",
+      },
+      {
+        num: "02",
+        q: "Keep score, or don't?",
+        chose:
+          "No scoring. The loop is the reward — a card lands or it doesn't, and the room moves on.",
+        rejected:
+          "A running score with a winner at the end, the default for card games.",
+        cost:
+          "Some players expect a winner and ask for one. There isn't a satisfying answer yet.",
+        evidence:
+          "Score turned a warm-up into a competition. People stopped talking to each other and started tracking points.",
+      },
+      {
+        num: "03",
+        q: "How much does shuffle randomness matter?",
+        chose:
+          "Hand-tuned shuffle weighting, rewritten three times after watching real game nights.",
+        rejected:
+          "A true random shuffle — simpler to build, mathematically \"fair.\"",
+        cost:
+          "More code to maintain, and \"fair by feel\" is harder to defend than fair by math.",
+        evidence:
+          "True-random runs produced dead stretches. Laughter tracked the rewritten weighting, not the coin-flip version.",
+      },
+    ],
+    faqs: [
+      {
+        q: "Do I need to read a rulebook?",
+        a: "No. The first round teaches the loop by making you play it. If a card needs a caption to make sense, that's a bug.",
+      },
+      {
+        q: "Is there a winner?",
+        a: "Not yet, on purpose. Testing showed scoring made people play to win instead of talking to each other. That's the open question I'm still sitting with.",
+      },
+      {
+        q: "How many players?",
+        a: "Built and tuned for four to eight — pass the phone works best in a room that size.",
+      },
+      {
+        q: "What stops the shuffle from repeating a card too soon?",
+        a: "It's weighted against that. Early versions used a pure random shuffle and it produced dead stretches; the current weighting rules out immediate repeats.",
+      },
+      {
+        q: "Is it on the App Store?",
+        a: "Not yet — it's in active build. Write to me if you want in on the next playtest.",
+      },
+    ],
+    files: [
+      {
+        name: "no-rulebook.md",
+        d: "The one line written before the brief: if a stranger needs the rules explained twice, the card failed.",
+        kind: "MARKDOWN",
+        action: "READ",
+      },
+      {
+        name: "shuffle-log.csv",
+        d: "Every shuffle-weighting pass, with which game night flagged it.",
+        kind: "DATASET",
+        action: "OPEN",
+      },
+      {
+        name: "card-deck.fig",
+        d: "Full deck art and layout, including the cards we cut.",
+        kind: "FIGMA",
+        action: "VIEW",
+      },
+      {
+        name: "playtest-notes-12.pdf",
+        d: "Session notes from all twelve game nights, coded by where laughter died.",
+        kind: "PDF",
+        action: "READ",
+      },
+      {
+        name: "scoring-prototype.swift",
+        d: "The scoring build we cut, kept for the record.",
+        kind: "CODE",
+        action: "OPEN",
+      },
+    ],
     showcaseLabel: "Project showcase",
   },
   "lucky-day": {
@@ -186,6 +321,12 @@ export const projectDetails: Record<string, ProjectDetail> = {
     stakeholders: ["Personal project", "Motion-design study"],
     statement:
       "Every pull had to feel weighty — chance you can feel in your thumb.",
+    meta: [
+      { k: "ROLE", v: "Design + build, solo" },
+      { k: "PERIOD", v: "2026" },
+      { k: "PLATFORM", v: "iOS" },
+      { k: "STATUS", v: "Write-up in progress" },
+    ],
     realProblem: {
       heading: "The real problem",
       body: [
@@ -224,6 +365,12 @@ export const projectDetails: Record<string, ProjectDetail> = {
     techStack: ["TypeScript", "Next.js", "Convex"],
     stakeholders: ["Internal team", "Operations"],
     statement: "Cut the daily busywork down to a single, honest dashboard.",
+    meta: [
+      { k: "ROLE", v: "Design + build, solo" },
+      { k: "PERIOD", v: "2026 — in build" },
+      { k: "PLATFORM", v: "Web" },
+      { k: "STATUS", v: "Building" },
+    ],
     realProblem: {
       heading: "The real problem",
       body: [
