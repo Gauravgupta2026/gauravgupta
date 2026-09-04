@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
 import { SectionDivider } from "@/components/ui/SectionDivider";
+import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { selectedWork } from "@/content/selectedWork";
 
 const AUTOPLAY_MS = 1700;
@@ -101,11 +102,12 @@ export function Projects() {
                 </div>
 
                 {c.placeholder && (
-                  <div className="mt-[20px] flex flex-1 items-end bg-[repeating-linear-gradient(135deg,#0a0a0a_0_8px,#141414_8px_16px)] p-[16px] md:mt-[24px]">
-                    <div className="whitespace-pre-line font-mono text-[9px] leading-[13px] text-[#6f6f6f]">
-                      {c.placeholder}
-                    </div>
-                  </div>
+                  <MediaPlaceholder
+                    label={c.label}
+                    seed={`${selectedWork[active].slug}-${i}`}
+                    align="bottom-left"
+                    className="mt-[20px] flex-1 md:mt-[24px]"
+                  />
                 )}
 
                 {c.title && (
@@ -114,7 +116,7 @@ export function Projects() {
                   </div>
                 )}
                 {c.body && (
-                  <div className="mt-[12px] text-pretty text-[10px] leading-[15px] text-[#9a9a9a] md:mt-[14px] md:text-[11px] md:leading-[17px]">
+                  <div className="mt-[12px] text-pretty text-[10px] leading-[15px] text-mute-2 md:mt-[14px] md:text-[11px] md:leading-[17px]">
                     {c.body}
                   </div>
                 )}
@@ -139,7 +141,7 @@ export function Projects() {
               >
                 <span
                   className={`h-[2px] w-full transition-colors duration-300 ${
-                    i === card ? "bg-[#6b6b6b]" : "bg-black"
+                    i === card ? "progress-tick-active" : "progress-tick-rest"
                   }`}
                 />
               </button>

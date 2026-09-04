@@ -81,6 +81,34 @@
   filter: none;
 }
 
+/* Footer CTA card ground — dark theme keeps the moody `surface` tone;
+   light theme goes plain white so the magenta/blue halftone graphic has
+   real contrast to sit on top of (the cream `surface` tone read as a dull
+   smudge next to it). */
+.cta-band {
+  background: var(--color-surface);
+}
+
+:root[data-theme="light"] .cta-band {
+  background: #ffffff;
+}
+
+/* Selected-Work progress ticks — rest blends into the page background
+   (black on dark, near-white on light) the same way in both themes;
+   active is the accent, but a saturated red reads harsh on a light
+   ground, so light theme gets a softer red. */
+.progress-tick-rest {
+  background: var(--color-bg);
+}
+
+.progress-tick-active {
+  background: #6b6b6b;
+}
+
+:root[data-theme="light"] .progress-tick-active {
+  background: #e2726b;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -126,6 +154,50 @@ html {
 
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee {
+    animation: none;
+  }
+}
+
+/* Looping motion for the project-link hover preview's placeholder graphic
+   (stands in for a real gif — same convention as the site's other media
+   placeholders, just animated). */
+@keyframes gif-shift {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+.animate-gif-shift {
+  animation: gif-shift 2.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-gif-shift {
+    animation: none;
+  }
+}
+
+/* Initials wall — a slow, gentle vertical bob so the wall reads as
+   floating rather than static text in a row. */
+@keyframes float-initial {
+  0%,
+  100% {
+    transform: translateY(var(--float-y, 0px));
+  }
+  50% {
+    transform: translateY(calc(var(--float-y, 0px) - 10px));
+  }
+}
+
+.animate-float-initial {
+  animation: float-initial ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-initial {
     animation: none;
   }
 }

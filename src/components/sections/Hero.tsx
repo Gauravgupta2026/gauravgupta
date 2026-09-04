@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
+import { ProjectPreviewLink } from "@/components/ui/ProjectPreviewLink";
 
 /**
  * Identity block. Text-only — no portrait in the new design. GG mark sits
@@ -69,14 +70,16 @@ export function Hero() {
         delay={320}
         className="m-0 mt-[14px] max-w-[1051px] text-pretty font-body text-[13px] leading-[22px] text-ink md:mt-[16px] md:text-[14px] md:leading-[26px]"
       >
-        Available for product management roles. Also built:{" "}
-        <Link href="/projects/lucky-day" className="underline underline-offset-4">
+        Available for product management roles.
+        <br />
+        Also built:{" "}
+        <ProjectPreviewLink href="/projects/lucky-day" label="Lucky Day">
           Lucky Day
-        </Link>
+        </ProjectPreviewLink>
         ,{" "}
-        <Link href="/projects/sachetana" className="underline underline-offset-4">
+        <ProjectPreviewLink href="/projects/sachetana" label="Sachetana">
           Sachetana
-        </Link>
+        </ProjectPreviewLink>
         .
       </Reveal>
     </Shell>

@@ -1,26 +1,21 @@
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
-import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { timeline } from "@/content/story";
 
 /**
- * The Manipal go-kart story — crossfading photo band, pull quote, the
- * kart narrative, the career timeline, and the freelance-photography
- * coda. Copy verbatim from Landing.dc.html / LANDING 4-dark.pdf.
+ * The Manipal go-kart story — a static photo band, pull quote, the kart
+ * narrative, the career timeline, and the freelance-photography coda.
+ * Copy verbatim from Landing.dc.html / LANDING 4-dark.pdf.
  */
 export function MyStory() {
   return (
     <section id="story" className="pt-[80px] md:pt-[130px]">
-      <div className="relative h-[260px] w-full overflow-hidden md:h-[420px]">
-        <MediaPlaceholder
-          label="Workshop, Manipal"
-          className="animate-crossfade-a absolute inset-0 h-full w-full"
-        />
-        <MediaPlaceholder
-          label="Kart build, Manipal"
-          className="animate-crossfade-b absolute inset-0 h-full w-full"
-        />
-      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/photos/beach-manipal.png"
+        alt="Beach night, Manipal"
+        className="block h-auto w-full"
+      />
 
       <Shell wide className="pt-[56px] md:pt-[90px]">
         <Reveal
@@ -66,13 +61,18 @@ export function MyStory() {
           {timeline.map((r) => (
             <div
               key={r.when}
-              className="grid h-[36px] grid-cols-[86px_1fr] items-center sm:h-[38px] sm:grid-cols-[110px_110px_1fr] md:h-[42px] md:grid-cols-[130px_140px_1fr]"
+              className="flex h-[36px] items-baseline gap-[10px] sm:h-[38px] md:h-[42px]"
             >
-              <div className="whitespace-nowrap text-mute-3">{r.when}</div>
-              <div className="hidden overflow-hidden whitespace-nowrap text-mute-3 sm:block">
-                ------------------------------------------------------------
-              </div>
-              <div className="truncate font-body text-mute-2">{r.what}</div>
+              <div className="shrink-0 whitespace-nowrap text-mute-3">{r.when}</div>
+              {/* leader line — flex-grows to fill exactly the gap between
+                  the two columns, so it stays aligned regardless of how
+                  long `when`/`what` are, instead of a fixed dash count
+                  that only lined up by coincidence at one text length. */}
+              <div
+                aria-hidden="true"
+                className="hidden h-0 min-w-[16px] flex-1 translate-y-[-3px] border-b border-dotted border-mute-3/50 sm:block"
+              />
+              <div className="min-w-0 shrink truncate font-body text-mute-2">{r.what}</div>
             </div>
           ))}
         </Reveal>

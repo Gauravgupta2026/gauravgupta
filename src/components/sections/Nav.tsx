@@ -6,12 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Shell } from "@/components/Shell";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { projects } from "@/content/projects";
-
-const WORK_MENU_GRADIENTS: Record<string, string> = {
-  sachetana: "linear-gradient(135deg,#8a8a8a 0%,#3a3a3a 100%)",
-  wylde: "linear-gradient(135deg,#bdbbff 0%,#5a58a8 48%,#d10000 100%)",
-  "lucky-day": "linear-gradient(135deg,#d10000 0%,#6b1a1a 46%,#bdbbff 100%)",
-};
+import { imageFor } from "@/content/images";
 
 /**
  * Fixed nav. Fades and lifts on scroll down, settles back in shortly after
@@ -110,8 +105,7 @@ export function Nav() {
                     <span
                       className="block h-[34px] w-[34px] flex-shrink-0 rounded-[6px] bg-cover bg-center"
                       style={{
-                        background:
-                          WORK_MENU_GRADIENTS[p.slug] ?? "#141414",
+                        backgroundImage: `url(${imageFor(`nav-${p.slug}`, 68, 68)})`,
                       }}
                     />
                     <span className="min-w-0 flex-1 truncate text-[11px] text-ink">
@@ -145,10 +139,10 @@ export function Nav() {
 
         <div className="flex items-center gap-[16px] md:gap-[20px]">
           <Link
-            href="/#contact"
+            href="/about"
             className="-m-[10px] block p-[10px] text-mute no-underline transition-colors duration-300 hover:text-ink"
           >
-            SAY HELLO
+            ABOUT
           </Link>
           <ThemeToggle />
         </div>

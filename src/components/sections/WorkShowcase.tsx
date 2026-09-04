@@ -76,7 +76,11 @@ function ShowcaseRow({ entry }: { entry: (typeof workIndex)[number] }) {
             className="absolute inset-0 transition-opacity duration-700"
             style={{ opacity: i === slide ? 1 : 0 }}
           >
-            <MediaPlaceholder label={label} className="h-full w-full" />
+            <MediaPlaceholder
+              label={label}
+              seed={`${entry.slug}-${i}`}
+              className="h-full w-full"
+            />
           </div>
         ))}
         {gallery.length > 1 && (

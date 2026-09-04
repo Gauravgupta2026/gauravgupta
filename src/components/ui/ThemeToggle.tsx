@@ -21,6 +21,9 @@ export function ThemeToggle() {
       document.documentElement.removeAttribute("data-theme");
       localStorage.setItem("theme", "dark");
     }
+    // Canvas-drawn graphics (e.g. HalftoneField) can't react to the
+    // [data-theme] attribute via CSS — they redraw on this event instead.
+    window.dispatchEvent(new Event("themechange"));
   };
 
   return (

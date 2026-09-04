@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/sections/Nav";
-import { ContactCard } from "@/components/sections/ContactCard";
 import { LabsGrid } from "@/components/sections/LabsGrid";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
@@ -46,7 +45,6 @@ export default function LabsPage() {
         <LabsGrid />
       </Shell>
 
-      <ContactCard />
     </main>
   );
 }

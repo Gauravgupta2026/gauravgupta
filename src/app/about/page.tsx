@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/sections/Nav";
-import { ContactCard } from "@/components/sections/ContactCard";
+import { FooterCTA } from "@/components/sections/FooterCTA";
 import { AboutGallery } from "@/components/sections/AboutGallery";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
@@ -111,18 +111,23 @@ export default function AboutPage() {
 
       <SectionDivider />
 
-      {/* horizontal photo strip — grayscale at rest, tap to focus + color */}
-      <Shell wide className="py-[56px] md:py-[80px]">
-        <Reveal
-          as="h2"
-          className="m-0 mb-[24px] font-display text-[20px] font-light text-soft-ink md:mb-[32px] md:text-[27px]"
-        >
-          A few frames
-        </Reveal>
+      {/* horizontal photo strip — grayscale at rest, tap to focus + color.
+          Full-bleed (no Shell) so the strip runs edge to edge instead of
+          stopping at the shell's max-width; the heading keeps the shell's
+          padding so it still lines up with the rest of the page. */}
+      <div className="py-[56px] md:py-[80px]">
+        <Shell wide>
+          <Reveal
+            as="h2"
+            className="m-0 mb-[24px] font-display text-[20px] font-light text-soft-ink md:mb-[32px] md:text-[27px]"
+          >
+            A few frames
+          </Reveal>
+        </Shell>
         <AboutGallery />
-      </Shell>
+      </div>
 
-      <ContactCard />
+      <FooterCTA />
     </main>
   );
 }

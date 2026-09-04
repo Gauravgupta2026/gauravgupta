@@ -7,7 +7,7 @@ import { Projects } from "@/components/sections/Projects";
 import { MyStory } from "@/components/sections/MyStory";
 import { Notes } from "@/components/sections/Notes";
 import { WorkedWith } from "@/components/sections/WorkedWith";
-import { SiteFooter } from "@/components/sections/SiteFooter";
+import { FooterCTA } from "@/components/sections/FooterCTA";
 
 export default function Home() {
   return (
@@ -18,7 +18,15 @@ export default function Home() {
       <MyStory />
       <Notes />
       <WorkedWith />
-      <SiteFooter />
+
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/photos/mountains.png"
+        alt="Looking out over the mountains"
+        className="block h-auto w-full"
+      />
+
+      <FooterCTA />
     </main>
   );
 }
