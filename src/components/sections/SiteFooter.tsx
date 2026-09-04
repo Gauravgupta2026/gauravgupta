@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Shell } from "@/components/Shell";
 import { DitherField } from "@/components/ui/DitherField";
+import { HalftoneField } from "@/components/ui/HalftoneField";
 import { ManipalClock } from "@/components/ui/ManipalClock";
 import { footerIndex, footerSocial } from "@/content/footer";
 
@@ -32,6 +33,37 @@ export function SiteFooter() {
 
   return (
     <footer id="contact" className="mt-[80px] border-t border-divider md:mt-[130px]">
+      <div className="relative overflow-hidden border-b border-border bg-surface">
+        <HalftoneField />
+        <Shell wide className="relative py-[34px] md:py-[46px]">
+          <div className="max-w-[560px]">
+            <h2 className="m-0 font-display text-[clamp(30px,4.5vw,44px)] font-light leading-[1.05] tracking-[-0.01em] text-white">
+              Let&apos;s build something.
+            </h2>
+            <p className="mt-[16px] max-w-[420px] text-[15px] leading-[1.6] text-mute-2">
+              Open to product design work, and to arguments about scope.
+            </p>
+            <div className="mt-[28px] flex flex-wrap gap-[12px]">
+              <a
+                href="/resume.pdf"
+                className="inline-flex h-[38px] items-center gap-[8px] rounded-full bg-white px-[16px] text-[13px] font-medium text-bg no-underline transition-colors duration-200 hover:bg-lilac-soft"
+              >
+                <span className="h-[8px] w-[8px] rounded-[2px] bg-red" aria-hidden="true" />
+                Download Resume
+              </a>
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex h-[38px] items-center rounded-full border border-border px-[16px] text-[13px] font-medium text-ink no-underline transition-colors duration-200 hover:border-divider hover:text-white"
+              >
+                Check GitHub
+              </a>
+            </div>
+          </div>
+        </Shell>
+      </div>
+
       <div className="relative overflow-hidden">
         <DitherField />
         <Shell wide className="relative py-[64px] md:py-[96px]">
