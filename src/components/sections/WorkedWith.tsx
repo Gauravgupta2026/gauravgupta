@@ -31,12 +31,31 @@ export function WorkedWith() {
         <SectionDivider className="mt-[26px] md:mt-[45px]" />
       </Shell>
 
-      <div className="mt-[48px] overflow-hidden md:mt-[80px]">
+      {/* pl matches Shell's side-pad so the marquee's start lines up with
+          the heading above it instead of bleeding flush to the viewport
+          edge. The mask fades both edges — without it, a name gets
+          guillotined mid-word at the container boundary on every pass,
+          since the track scrolls continuously. py (not just mt) + the
+          bottom SectionDivider give the band equal space above and below,
+          so the text centers between the two rules instead of sitting
+          closer to one. */}
+      <div
+        className="overflow-hidden py-[48px] md:py-[80px]"
+        style={{
+          paddingLeft: "max(var(--side-pad), calc((100% - 1375px) / 2 + var(--side-pad)))",
+          maskImage:
+            "linear-gradient(to right, transparent 0, black 64px, black calc(100% - 64px), transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to right, transparent 0, black 64px, black calc(100% - 64px), transparent 100%)",
+        }}
+      >
         <div className="flex w-max animate-marquee will-change-transform">
           <MarqueeGroup />
           <MarqueeGroup />
         </div>
       </div>
+
+      <SectionDivider />
     </section>
   );
 }

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Nav } from "@/components/sections/Nav";
-import { Footer } from "@/components/sections/Footer";
 import { Shell } from "@/components/Shell";
 import { ArticleBody } from "@/components/article/ArticleBody";
 import { SourceIcon } from "@/components/ui/SourceIcon";
@@ -88,7 +87,6 @@ export default async function NotePage({
           </div>
         </div>
       </Shell>
-      <Footer />
     </>
   );
 }

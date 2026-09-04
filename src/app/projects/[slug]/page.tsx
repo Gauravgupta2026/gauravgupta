@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Nav } from "@/components/sections/Nav";
-import { ContactCard } from "@/components/sections/ContactCard";
 import { DecisionLog } from "@/components/sections/DecisionLog";
 import { ArtifactFiles } from "@/components/sections/ArtifactFiles";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
@@ -125,6 +124,7 @@ export default async function ProjectPage({
             <MediaPlaceholder
               key={i}
               label={label}
+              seed={`${slug}-gallery-${i}`}
               className={`aspect-[3/4] w-full border border-border ${
                 i % 2 === 1 ? "md:mt-[48px]" : ""
               }`}
@@ -251,6 +251,7 @@ export default async function ProjectPage({
       <Shell wide className="mt-[80px] md:mt-[110px]">
         <MediaPlaceholder
           label={project.showcaseLabel}
+          seed={`${slug}-showcase`}
           className="aspect-[4/5] w-full border border-border md:aspect-[16/9]"
         />
       </Shell>
@@ -271,11 +272,11 @@ export default async function ProjectPage({
               href={`/projects/${p.slug}`}
               className="group relative block overflow-hidden border border-border bg-surface no-underline transition-transform duration-300 hover:-translate-y-[3px]"
             >
-              <div className="flex aspect-[4/3] items-center justify-center">
-                <span className="font-mono text-[9px] tracking-[0.12em] text-mute">
-                  Screens
-                </span>
-              </div>
+              <MediaPlaceholder
+                label="Screens"
+                seed={`${p.slug}-next`}
+                className="aspect-[4/3] w-full"
+              />
               <span className="absolute bottom-[16px] left-[16px] inline-flex border border-border bg-bg px-[14px] py-[7px] font-mono text-[9px] text-ink">
                 {p.title}
               </span>
@@ -284,7 +285,6 @@ export default async function ProjectPage({
         </div>
       </Shell>
 
-      <ContactCard />
     </main>
   );
 }

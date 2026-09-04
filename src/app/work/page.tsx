@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/sections/Nav";
-import { ContactCard } from "@/components/sections/ContactCard";
+import { FooterCTA } from "@/components/sections/FooterCTA";
 import { WorkShowcase } from "@/components/sections/WorkShowcase";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
@@ -39,7 +39,7 @@ export default function WorkPage() {
         <WorkShowcase />
       </Shell>
 
-      <ContactCard />
+      <FooterCTA />
     </main>
   );
 }

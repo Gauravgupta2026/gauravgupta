@@ -34,14 +34,7 @@ export function LabsGrid() {
 
   return (
     <>
-      <div
-        className="grid grid-cols-1 gap-[14px] sm:grid-cols-2 sm:gap-[18px] md:grid-cols-3 md:gap-[24px]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, #151515 1px, transparent 1px), linear-gradient(to bottom, #151515 1px, transparent 1px)",
-          backgroundSize: "84.2px 84.2px",
-        }}
-      >
+      <div className="grid grid-cols-1 gap-[14px] sm:grid-cols-2 sm:gap-[18px] md:grid-cols-3 md:gap-[24px]">
         {COLUMNS.map((column, i) => (
           <div key={i} className="flex flex-col gap-[14px] md:gap-[24px]">
             {column.map((item) => (
@@ -51,7 +44,11 @@ export function LabsGrid() {
                 onClick={() => setOpen(item)}
                 className={`group relative box-border w-full cursor-zoom-in overflow-hidden border border-border bg-[#101010] text-left transition-colors duration-[450ms] hover:border-[#3a3a3a] ${HEIGHT_CLASS[item.h]}`}
               >
-                <MediaPlaceholder label={item.kind} className="absolute inset-0 h-full w-full" />
+                <MediaPlaceholder
+                  label={item.kind}
+                  seed={item.title}
+                  className="absolute inset-0 h-full w-full"
+                />
                 <div className="absolute inset-0 flex flex-col justify-end gap-[4px] bg-gradient-to-t from-[rgba(6,6,6,.86)] via-[rgba(6,6,6,.2)] via-46% to-[rgba(6,6,6,0)] p-[12px_14px] opacity-100 transition-opacity duration-300 md:gap-[8px] md:p-[20px_22px] md:opacity-0 md:group-hover:opacity-100">
                   <div className="font-mono text-[7px] tracking-[0.24em] text-mute md:text-[8px]">
                     {item.kind}
@@ -82,7 +79,11 @@ export function LabsGrid() {
           style={{ transform: open ? "scale(1)" : "scale(.92)" }}
         >
           {open && (
-            <MediaPlaceholder label={open.kind} className="absolute inset-0 h-full w-full" />
+            <MediaPlaceholder
+              label={open.kind}
+              seed={open.title}
+              className="absolute inset-0 h-full w-full"
+            />
           )}
           <div className="absolute bottom-[-40px] left-0 right-0 flex flex-wrap items-baseline gap-[10px] md:bottom-[-54px] md:gap-[20px]">
             <span className="font-display text-[15px] font-light leading-[18px] text-white md:text-[22px] md:leading-[22px]">
