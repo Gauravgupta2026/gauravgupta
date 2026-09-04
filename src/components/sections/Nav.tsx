@@ -1,15 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Shell } from "@/components/Shell";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { projects } from "@/content/projects";
-
-const WORK_MENU_GRADIENTS: Record<string, string> = {
-  sachetana: "linear-gradient(135deg,#8a8a8a 0%,#3a3a3a 100%)",
-  wylde: "linear-gradient(135deg,#bdbbff 0%,#5a58a8 48%,#d10000 100%)",
-  "lucky-day": "linear-gradient(135deg,#d10000 0%,#6b1a1a 46%,#bdbbff 100%)",
-};
+import { imageFor } from "@/content/images";
 
 /**
  * Fixed nav. Fades and lifts on scroll down, settles back in shortly after
@@ -17,6 +14,8 @@ const WORK_MENU_GRADIENTS: Record<string, string> = {
  * a hover dropdown listing the first three projects.
  */
 export function Nav() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const [menuOpen, setMenuOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const menuTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -53,7 +52,7 @@ export function Nav() {
 
   return (
     <nav
-      className="fixed left-0 top-0 z-[60] w-full border-b border-border-2/60 bg-bg/70 py-[18px] font-mono text-[13px] font-normal tracking-[0.06em] text-mute backdrop-blur-md transition-[opacity,transform] duration-300 md:py-[24px] md:text-[16px]"
+      className="fixed left-0 top-0 z-[60] w-full border-b border-border-2/60 bg-bg/70 py-[18px] font-mono text-[10px] font-normal tracking-[0.06em] text-mute backdrop-blur-md transition-[opacity,transform] duration-300 md:py-[24px] md:text-[13px]"
       style={
         hidden
           ? { opacity: 0, transform: "translate3d(0,-10px,0)" }
@@ -61,7 +60,18 @@ export function Nav() {
       }
     >
       <Shell wide className="relative flex items-center justify-between">
-        <div className="flex items-center gap-[24px] md:gap-[127px]">
+        <div className="flex items-center gap-[24px] md:gap-[64px]">
+          {!isHome && (
+            <Link
+              href="/"
+              title="Back to home"
+              className="font-logo text-[28px] leading-none text-red no-underline transition-colors duration-300 hover:text-ink md:text-[34px]"
+            >
+              GG
+            </Link>
+          )}
+
+          <div className="flex items-center gap-[24px] md:gap-[127px]">
           <div
             className="relative"
             onMouseEnter={openMenu}
@@ -95,14 +105,13 @@ export function Nav() {
                     <span
                       className="block h-[34px] w-[34px] flex-shrink-0 rounded-[6px] bg-cover bg-center"
                       style={{
-                        background:
-                          WORK_MENU_GRADIENTS[p.slug] ?? "#141414",
+                        backgroundImage: `url(${imageFor(`nav-${p.slug}`, 68, 68)})`,
                       }}
                     />
-                    <span className="min-w-0 flex-1 truncate text-[14px] text-ink">
+                    <span className="min-w-0 flex-1 truncate text-[11px] text-ink">
                       {p.title}
                     </span>
-                    <span className="font-mono text-[11px] tracking-[0.1em] text-faint">
+                    <span className="font-mono text-[9px] tracking-[0.1em] text-faint">
                       {p.act.replace("Act.", "")}
                     </span>
                   </Link>
@@ -110,7 +119,7 @@ export function Nav() {
 
                 <Link
                   href="/work"
-                  className="mt-[4px] flex items-center justify-between rounded-lg px-[6px] py-[8px] font-mono text-[11px] tracking-[0.14em] text-mute no-underline transition-colors hover:bg-white/5 hover:text-ink"
+                  className="mt-[4px] flex items-center justify-between rounded-lg px-[6px] py-[8px] font-mono text-[9px] tracking-[0.14em] text-mute no-underline transition-colors hover:bg-white/5 hover:text-ink"
                 >
                   <span>ALL WORK</span>
                   <span className="text-red">&#8599;</span>
@@ -125,14 +134,18 @@ export function Nav() {
           >
             LABS
           </Link>
+          </div>
         </div>
 
-        <Link
-          href="/#contact"
-          className="-m-[10px] block p-[10px] text-mute no-underline transition-colors duration-300 hover:text-ink"
-        >
-          SAY HELLO
-        </Link>
+        <div className="flex items-center gap-[16px] md:gap-[20px]">
+          <Link
+            href="/about"
+            className="-m-[10px] block p-[10px] text-mute no-underline transition-colors duration-300 hover:text-ink"
+          >
+            ABOUT
+          </Link>
+          <ThemeToggle />
+        </div>
       </Shell>
     </nav>
   );

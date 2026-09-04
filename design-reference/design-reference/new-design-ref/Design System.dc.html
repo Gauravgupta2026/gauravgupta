@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./theme.js" defer></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&amp;family=Allison&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #0b0b0b; }
+  body { font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #bdbbff; text-decoration: none; }
+  a:hover { color: #d6d5ff; }
+  ::selection { background: #bdbbff; color: #0b0b0b; }
+</style>
+</helmet>
+
+<div style="position: relative; width: 1512px; margin: 0 auto; background: #0b0b0b; color: #f3f3f3">
+
+  <div style="padding: 128px 230.5px 0; width: 1051px">
+    <div style="display: flex; align-items: baseline; gap: 22px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; color: #5c5c5c">
+      <span style="color: #d10000">&#9679;</span><span>DESIGN SYSTEM</span><span>&mdash;</span><span>V1.0</span><span style="margin-left: auto; color: #8a8a8a">SEP 2026</span>
+    </div>
+    <h1 style="margin: 34px 0 0; font-family: Newsreader, serif; font-size: 82px; line-height: 82px; font-weight: 300; letter-spacing: -0.025em; color: #ffffff">The GG system.</h1>
+    <p style="margin: 34px 0 0; width: 720px; font-family: Newsreader, serif; font-style: italic; font-size: 27px; line-height: 39px; font-weight: 300; color: #f4f4f4; text-wrap: pretty">Editorial, quiet, and mostly monochrome. Serif does the talking, mono does the labelling, and exactly two colours are allowed to raise their voice.</p>
+
+    <div style="margin-top: 54px; display: flex; flex-wrap: wrap; gap: 12px">
+      <sc-for list="{{ toc }}" as="t" hint-placeholder-count="6">
+        <a href="{{ t.href }}" style="padding: 10px 18px; border: 1px solid #242424; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #8a8a8a; transition: color .3s ease, border-color .3s ease" style-hover="color: #f3f3f3; border-color: #6f6f6f">{{ t.label }}</a>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="margin-top: 96px; width: 1512px; height: 1px; background: #414141"></div>
+
+  <div id="canvas" style="padding: 92px 230.5px 0; width: 1051px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; color: #8a8a8a">01</span>
+      <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Canvas &amp; grid</h2>
+    </div>
+
+    <div style="margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 90px; row-gap: 34px">
+      <div style="display: grid; grid-template-columns: 150px 1fr; row-gap: 18px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em">
+        <span style="color: #5c5c5c">CANVAS</span><span style="color: #f3f3f3">1512 PX FIXED, CENTRED</span>
+        <span style="color: #5c5c5c">SIDE MARGIN</span><span style="color: #f3f3f3">230.5 PX</span>
+        <span style="color: #5c5c5c">CONTENT</span><span style="color: #f3f3f3">1051 PX</span>
+        <span style="color: #5c5c5c">NAV BASELINE</span><span style="color: #f3f3f3">103.2 PX FROM TOP</span>
+        <span style="color: #5c5c5c">FULL-BLEED RULE</span><span style="color: #f3f3f3">1512 &times; 1 PX &middot; #414141</span>
+        <span style="color: #5c5c5c">INSET RULE</span><span style="color: #f3f3f3">1051 &times; 1 PX &middot; #1C1C1C</span>
+      </div>
+      <div>
+        <div style="height: 172px; border: 1px solid #1e1e1e; background: #0d0d0d; position: relative; overflow: hidden">
+          <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 15.25%; background: repeating-linear-gradient(135deg, #101010 0 6px, #151515 6px 12px)"></div>
+          <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 15.25%; background: repeating-linear-gradient(135deg, #101010 0 6px, #151515 6px 12px)"></div>
+          <div style="position: absolute; left: 15.25%; right: 15.25%; top: 0; bottom: 0; border-left: 1px solid #2a2a2a; border-right: 1px solid #2a2a2a; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #6f6f6f">1051 CONTENT</div>
+          <div style="position: absolute; left: 0; right: 0; top: 22px; height: 1px; background: #414141"></div>
+        </div>
+        <p style="margin: 18px 0 0; font-size: 15px; line-height: 26px; color: #7c7c7c; text-wrap: pretty">Everything hangs off the 230.5 px left margin. Section headers, rules and body copy share that spine; only rules, imagery and the dither footer break to full bleed.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="color" style="padding: 104px 230.5px 0; width: 1051px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; color: #8a8a8a">02</span>
+      <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Colour</h2>
+    </div>
+    <p style="margin: 26px 0 0; width: 640px; font-size: 18px; line-height: 32px; color: #7c7c7c; text-wrap: pretty">A near-black ground, a long grey ramp for text and borders, and two accents. Red is identity only &mdash; the monogram, live dots, rules. Lavender is interaction &mdash; links, focus, selected state.</p>
+
+    <div style="margin-top: 44px; display: flex; flex-direction: column; gap: 40px">
+      <sc-for list="{{ ramps }}" as="r" hint-placeholder-count="4">
+        <div>
+          <div style="display: flex; align-items: baseline; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid #1c1c1c">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #f3f3f3">{{ r.name }}</span>
+            <span style="font-size: 14px; line-height: 18px; color: #6f6f6f">{{ r.use }}</span>
+          </div>
+          <div style="margin-top: 22px; display: flex; flex-wrap: wrap; gap: 14px">
+            <sc-for list="{{ r.items }}" as="c" hint-placeholder-count="6">
+              <div data-om-theme-lock="1" style="width: 158px">
+                <div style="height: 74px; background: {{ c.hex }}; border: 1px solid {{ c.ring }}"></div>
+                <div style="margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #f3f3f3">{{ c.hex }}</div>
+                <div style="margin-top: 5px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #5c5c5c">{{ c.role }}</div>
+                <div style="margin-top: 5px; display: flex; align-items: center; gap: 7px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #8b8478">
+                  <span style="width: 9px; height: 9px; background: {{ c.light }}; border: 1px solid #2a2a2a"></span><span>{{ c.light }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 48px; padding: 30px 34px; border: 1px solid #242424; background: #111111">
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">LIGHT MODE</div>
+      <p style="margin: 16px 0 0; width: 780px; font-size: 16px; line-height: 28px; color: #929292; text-wrap: pretty">Light mode is a remap, not a second palette: every dark hex has one ivory counterpart (shown as the small chip under each swatch). Ground is ivory <span style="color: #f3f3f3">#F4F2EE</span>, never pure white &mdash; white would clash with the red and lavender and lose the paper feel. Lavender darkens to <span style="color: #f3f3f3">#4B47C9</span> to hold contrast; red is identity and never shifts. Pure black stays unmapped because it only ever appears as shadow and mask alpha.</p>
+    </div>
+  </div>
+
+  <div id="type" style="padding: 104px 230.5px 0; width: 1051px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; color: #8a8a8a">03</span>
+      <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Type</h2>
+    </div>
+
+    <div style="margin-top: 44px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #1c1c1c; border: 1px solid #1c1c1c">
+      <sc-for list="{{ families }}" as="f" hint-placeholder-count="4">
+        <div style="padding: 26px 24px 28px; background: #0d0d0d">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #5c5c5c">{{ f.role }}</div>
+          <div style="margin-top: 16px; font-family: {{ f.stack }}; font-size: {{ f.sampleSize }}; line-height: {{ f.sampleLine }}; font-weight: 300; color: #ffffff">{{ f.sample }}</div>
+          <div style="margin-top: 18px; font-size: 15px; line-height: 22px; color: #f3f3f3">{{ f.name }}</div>
+          <div style="margin-top: 7px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #6f6f6f">{{ f.weights }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 46px; display: flex; flex-direction: column">
+      <sc-for list="{{ scale }}" as="s" hint-placeholder-count="8">
+        <div style="padding: 26px 0; border-bottom: 1px solid #1a1a1a; display: grid; grid-template-columns: 1fr 246px; column-gap: 40px; align-items: baseline">
+          <div style="font-family: {{ s.stack }}; font-size: {{ s.size }}; line-height: {{ s.line }}; font-weight: {{ s.weight }}; font-style: {{ s.italic }}; letter-spacing: {{ s.tracking }}; color: {{ s.color }}; padding-bottom: {{ s.pad }}">{{ s.sample }}</div>
+          <div style="display: flex; flex-direction: column">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #f3f3f3">{{ s.name }}</div>
+            <div style="margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; line-height: 17px; letter-spacing: 0.08em; color: #5c5c5c">{{ s.spec }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 90px">
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">RULES</div>
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 14px; font-size: 16px; line-height: 27px; color: #929292">
+          <div>Serif headings always <span style="color: #f3f3f3">weight 300</span> with negative tracking. Never bold serif.</div>
+          <div>Mono is uppercase only, <span style="color: #f3f3f3">10&ndash;12 px</span>, tracking <span style="color: #f3f3f3">0.14&ndash;0.24em</span>. It labels; it never carries a sentence.</div>
+          <div>Italic serif marks voice &mdash; pull quotes, &ldquo;currently&rdquo; notes, section asides.</div>
+          <div>Body sans sits at <span style="color: #f3f3f3">18/32</span>; long measures cap at 720 px with <span style="color: #f3f3f3">text-wrap: pretty</span>.</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">MONO LABEL SET</div>
+        <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px">
+          <sc-for list="{{ labels }}" as="l" hint-placeholder-count="8">
+            <span style="padding: 8px 13px; border: 1px solid #1e1e1e; background: #111111; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #8a8a8a">{{ l }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="components" style="padding: 104px 230.5px 0; width: 1051px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; color: #8a8a8a">04</span>
+      <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Components</h2>
+    </div>
+
+    <div style="margin-top: 46px; padding-bottom: 18px; border-bottom: 1px solid #1c1c1c; display: flex; align-items: baseline; gap: 16px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #f3f3f3">4.1 &nbsp;NAVIGATION</span>
+      <span style="font-size: 14px; color: #6f6f6f">Fixed, 16 px mono, absolute stops. Present on every page.</span>
+    </div>
+    <div style="margin-top: 26px; padding: 34px 30px; border: 1px solid #1e1e1e; background: #0d0d0d">
+      <div style="position: relative; height: 46px; font-size: 16px; line-height: 16px; letter-spacing: 0.06em; color: #8a8a8a">
+        <span style="position: absolute; left: 0; top: -12px; font-family: Allison, cursive; font-size: 46px; line-height: 46px; color: #d10000">GG</span>
+        <span style="position: absolute; left: 110px; top: 0; color: #f3f3f3">WORK</span>
+        <span style="position: absolute; left: 272px; top: 0">LABS</span>
+        <span style="position: absolute; right: 44px; top: 0; white-space: nowrap">SAY&nbsp;&nbsp;HELLO</span>
+        <span aria-hidden="true" style="position: absolute; right: 0; top: 3px; width: 11px; height: 11px; border-radius: 50%; border: 1px solid #6f6f6f; box-sizing: border-box; background: linear-gradient(90deg, #6f6f6f 0 50%, transparent 50% 100%); opacity: .32"></span>
+      </div>
+      <div style="margin-top: 26px; display: grid; grid-template-columns: 150px 1fr; row-gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em">
+        <span style="color: #5c5c5c">STOPS</span><span style="color: #929292">GG 230.5 &middot; WORK 340.5 &middot; LABS 502.9 &middot; HELLO 1195.1</span>
+        <span style="color: #5c5c5c">REST / HOVER</span><span style="color: #929292">#8A8A8A &rarr; #F3F3F3 &middot; CURRENT PAGE STAYS #F3F3F3</span>
+        <span style="color: #5c5c5c">MONOGRAM</span><span style="color: #929292">ALLISON 46 PX &middot; #D10000 &rarr; #F3F3F3 ON HOVER</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 46px; padding-bottom: 18px; border-bottom: 1px solid #1c1c1c; display: flex; align-items: baseline; gap: 16px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #f3f3f3">4.2 &nbsp;HOVER PANELS</span>
+      <span style="font-size: 14px; color: #6f6f6f">Two variants of one shell: the work index and the mailbox.</span>
+    </div>
+    <div style="margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start">
+
+      <div style="background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 16px; padding: 28px 30px 26px; box-shadow: 0 34px 80px rgba(0,0,0,.8)">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between">
+          <div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; line-height: 10px; letter-spacing: 0.24em; color: #8a8a8a">SELECTED WORK</div>
+            <div style="margin-top: 14px; font-family: Newsreader, serif; font-size: 44px; line-height: 44px; font-weight: 300; letter-spacing: -0.01em; color: #ffffff">Work</div>
+          </div>
+          <div style="width: 42px; height: 42px; border-radius: 999px; background: #f3f3f3; color: #0b0b0b; display: flex; align-items: center; justify-content: center; font-size: 17px">&times;</div>
+        </div>
+        <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 18px">
+          <sc-for list="{{ menuRows }}" as="m" hint-placeholder-count="2">
+            <div style="display: grid; grid-template-columns: 78px 1fr 30px; column-gap: 18px; align-items: center">
+              <span style="height: 78px; border-radius: 8px; display: block; background: repeating-linear-gradient(135deg, #101010 0 7px, #171717 7px 14px)"></span>
+              <span style="display: flex; flex-direction: column; gap: 7px">
+                <span style="font-family: Newsreader, serif; font-size: 27px; line-height: 27px; font-weight: 300; color: #ffffff">{{ m.title }}</span>
+                <span style="font-size: 14px; line-height: 14px; color: #8a8a8a">{{ m.sub }}</span>
+              </span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; color: #5c5c5c; align-self: start">{{ m.num }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #1a1a1a; display: flex; align-items: center; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #f3f3f3">
+          <span>MY STORY</span><span>SAY HELLO</span>
+        </div>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 16px; padding: 28px 30px 26px; box-shadow: 0 34px 80px rgba(0,0,0,.8)">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between">
+          <div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; line-height: 10px; letter-spacing: 0.24em; color: #8a8a8a">NEW MESSAGE</div>
+            <div style="margin-top: 14px; font-family: Newsreader, serif; font-size: 34px; line-height: 34px; font-weight: 300; letter-spacing: -0.01em; color: #ffffff">Get in touch</div>
+          </div>
+          <div aria-hidden="true" style="width: 46px; height: 32px; border: 1px solid #3a3a3a; border-radius: 4px; background: linear-gradient(to bottom right, transparent calc(50% - 0.6px), #3a3a3a calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) left top / 50% 62% no-repeat, linear-gradient(to bottom left, transparent calc(50% - 0.6px), #3a3a3a calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) right top / 50% 62% no-repeat"></div>
+        </div>
+        <div style="margin-top: 24px; height: 1px; background: #1e1e1e"></div>
+        <div style="margin-top: 20px; display: grid; grid-template-columns: 44px 1fr; row-gap: 4px; align-items: baseline">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #5c5c5c; padding: 14px 0; border-bottom: 1px solid #1a1a1a">TO</span>
+          <span style="font-size: 16px; color: #f3f3f3; padding: 14px 0; border-bottom: 1px solid #1a1a1a">hello@gg.studio</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #5c5c5c; padding: 14px 0">RE</span>
+          <span style="font-size: 14px; line-height: 20px; color: #929292; padding: 14px 0">a project &middot; a role &middot; an argument about scope</span>
+        </div>
+        <div style="margin-top: 22px; display: flex; align-items: center; justify-content: center; gap: 12px; height: 60px; border-radius: 12px; background: #f3f3f3; color: #0b0b0b; font-size: 16px; font-weight: 500; letter-spacing: -0.01em">
+          <span>Write a message</span><span style="color: #d10000">&#8599;</span>
+        </div>
+        <div style="margin-top: 22px; display: flex; align-items: center; gap: 16px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: #5c5c5c">
+          <span style="color: #d10000">&#9679;</span><span>REPLIES IN UNDER 24H</span><span style="margin-left: auto">MANIPAL, IN</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 22px; display: grid; grid-template-columns: 150px 1fr; row-gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em">
+      <span style="color: #5c5c5c">SHELL</span><span style="color: #929292">#0D0D0D &middot; 1PX #1E1E1E &middot; R16 &middot; SHADOW 0 34 80 RGBA(0,0,0,.8)</span>
+      <span style="color: #5c5c5c">ANATOMY</span><span style="color: #929292">MONO KICKER &rarr; SERIF TITLE &rarr; RULE &rarr; ROWS &rarr; ACTION &rarr; MONO FOOTER</span>
+      <span style="color: #5c5c5c">OPEN</span><span style="color: #929292">SCALE .9&rarr;1 FROM TOP-RIGHT, 120 MS CLOSE GRACE, SHUTS ON SCROLL</span>
+    </div>
+
+    <div style="margin-top: 46px; padding-bottom: 18px; border-bottom: 1px solid #1c1c1c; display: flex; align-items: baseline; gap: 16px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #f3f3f3">4.3 &nbsp;ACTIONS &amp; INPUTS</span>
+      <span style="font-size: 14px; color: #6f6f6f">Squared mono buttons, chips, and underline fields.</span>
+    </div>
+    <div style="margin-top: 26px; padding: 34px 30px; border: 1px solid #1e1e1e; background: #0d0d0d; display: flex; flex-direction: column; gap: 32px">
+      <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap">
+        <span style="padding: 16px 38px; border: 1px solid #bdbbff; background: #bdbbff; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #0b0b0b">SEND MESSAGE</span>
+        <span style="padding: 16px 38px; border: 1px solid #262626; background: transparent; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">SEND MESSAGE</span>
+        <span style="padding: 10px 18px; border: 1px solid #2f2f2f; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #8a8a8a">CLOSE &times;</span>
+        <span style="display: flex; align-items: center; justify-content: center; gap: 12px; height: 60px; padding: 0 26px; border-radius: 12px; background: #f3f3f3; color: #0b0b0b; font-size: 16px; font-weight: 500">Write a message <span style="color: #d10000">&#8599;</span></span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 18px">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #5c5c5c">ABOUT</span>
+        <span style="display: flex; gap: 10px">
+          <span style="padding: 9px 16px; border: 1px solid #bdbbff; background: #bdbbff; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #0b0b0b">A project</span>
+          <span style="padding: 9px 16px; border: 1px solid #333333; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #c8c8c8">A role</span>
+          <span style="padding: 9px 16px; border: 1px solid #333333; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #c8c8c8">Scope argument</span>
+        </span>
+      </div>
+      <div style="display: grid; grid-template-columns: 84px 1fr; align-items: center; height: 56px; border-bottom: 1px solid #3a3a3a">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #bdbbff">FROM</span>
+        <span style="font-size: 16px; color: #5c5c5c">you@somewhere.com</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 150px 1fr; row-gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em">
+        <span style="color: #5c5c5c">PRIMARY</span><span style="color: #929292">16&times;38 &middot; LAVENDER FILL &middot; INK LABEL &middot; SQUARE</span>
+        <span style="color: #5c5c5c">DISABLED</span><span style="color: #929292">TRANSPARENT &middot; 1PX #262626 &middot; #5C5C5C &middot; DEFAULT CURSOR</span>
+        <span style="color: #5c5c5c">FIELD</span><span style="color: #929292">UNDERLINE #1C1C1C &rarr; #3A3A3A ON FOCUS, LABEL &rarr; LAVENDER</span>
+        <span style="color: #5c5c5c">RADIUS</span><span style="color: #929292">0 FOR MONO CONTROLS &middot; 12 PX PILL-BUTTONS &middot; 16 PX PANELS &middot; 999 CLOSE DOT</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 46px; padding-bottom: 18px; border-bottom: 1px solid #1c1c1c; display: flex; align-items: baseline; gap: 16px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #f3f3f3">4.4 &nbsp;LISTS &amp; CARDS</span>
+      <span style="font-size: 14px; color: #6f6f6f">Numbered project rows, story cards, captioned frames.</span>
+    </div>
+    <div style="margin-top: 26px; display: flex; flex-direction: column">
+      <sc-for list="{{ projects }}" as="p" hint-placeholder-count="3">
+        <div style="height: 96px; border-bottom: 1px solid #1a1a1a; display: flex; align-items: baseline">
+          <div style="flex: 0 0 90.5px; font-size: 24px; line-height: 40px; color: {{ p.numColor }}">{{ p.num }}</div>
+          <div style="font-family: Newsreader, serif; font-size: {{ p.size }}; line-height: 40px; font-weight: 300; letter-spacing: -0.005em; color: {{ p.color }}">{{ p.title }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top: 18px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #5c5c5c">HOVERED ROW LIFTS TO #FFFFFF AT 40 PX; RESTING ROWS SIT AT #464646 / 34 PX &middot; 450 MS EASE</div>
+
+    <div style="margin-top: 36px; display: grid; grid-template-columns: 316px 300px 223px; gap: 30px; align-items: start">
+      <figure style="margin: 0">
+        <div style="height: 300px; background: repeating-linear-gradient(135deg, #0f0f0f 0 8px, #151515 8px 16px)"></div>
+        <figcaption style="margin-top: 16px; display: flex; align-items: baseline; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: #f3f3f3">
+          <span>FRAME TITLE</span><span style="color: #5c5c5c">PLACE &middot; YEAR</span>
+        </figcaption>
+      </figure>
+      <div style="padding: 26px 24px; background: #111111; border: 1px solid #242424">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">CARD KICKER</div>
+        <div style="margin-top: 14px; font-family: Newsreader, serif; font-size: 30px; line-height: 34px; font-weight: 300; color: #ffffff">Card title</div>
+        <p style="margin: 14px 0 0; font-size: 15px; line-height: 26px; color: #929292; text-wrap: pretty">Surface #111111 on a #0B0B0B ground, hairline #242424, no radius, no shadow.</p>
+      </div>
+      <div style="padding: 16px; box-sizing: border-box; height: 194px; display: flex; align-items: flex-end; background: repeating-linear-gradient(135deg, #0a0a0a 0 8px, #141414 8px 16px); font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 16px; color: #6f6f6f">IMAGE PLACEHOLDER &mdash; DIAGONAL HATCH</div>
+    </div>
+    <div style="margin-top: 20px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #5c5c5c">PHOTO TREATMENT: GRAYSCALE .32 &middot; CONTRAST 1.05 &middot; BRIGHTNESS .86 &middot; CAPTION 11 PX MONO, TITLE LEFT / META RIGHT</div>
+
+    <div style="margin-top: 46px; padding-bottom: 18px; border-bottom: 1px solid #1c1c1c; display: flex; align-items: baseline; gap: 16px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #f3f3f3">4.5 &nbsp;THEME TOGGLE</span>
+      <span style="font-size: 14px; color: #6f6f6f">The quietest control on the site.</span>
+    </div>
+    <div style="margin-top: 26px; padding: 34px 30px; border: 1px solid #1e1e1e; background: #0d0d0d; display: flex; align-items: center; gap: 46px">
+      <div style="display: flex; align-items: center; gap: 26px">
+        <sc-for list="{{ toggles }}" as="t" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 14px">
+            <span data-om-theme-lock="1" style="width: 11px; height: 11px; border-radius: 50%; border: 1px solid {{ t.ring }}; box-sizing: border-box; background: {{ t.fill }}; opacity: {{ t.opacity }}"></span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #5c5c5c">{{ t.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: 130px 1fr; row-gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em">
+        <span style="color: #5c5c5c">SIZE</span><span style="color: #929292">11 PX CIRCLE &middot; FIXED 107 / RIGHT 46</span>
+        <span style="color: #5c5c5c">OPACITY</span><span style="color: #929292">.32 REST &rarr; .85 HOVER &middot; 350 MS</span>
+        <span style="color: #5c5c5c">STATE</span><span style="color: #929292">FILLED HALF FLIPS SIDES &middot; PERSISTS IN LOCALSTORAGE</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="motion" style="padding: 104px 230.5px 0; width: 1051px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; color: #8a8a8a">05</span>
+      <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Motion</h2>
+    </div>
+    <p style="margin: 26px 0 0; width: 640px; font-size: 18px; line-height: 32px; color: #7c7c7c; text-wrap: pretty">Long, decelerating easing for anything that arrives; short linear-ish fades for colour. Nothing bounces, nothing spins.</p>
+    <div style="margin-top: 40px">
+      <div style="display: grid; grid-template-columns: 250px 1fr 210px; column-gap: 30px; padding-bottom: 16px; border-bottom: 1px solid #1c1c1c; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #8a8a8a">
+        <span>MOVE</span><span>CURVE</span><span>DURATION</span>
+      </div>
+      <sc-for list="{{ motion }}" as="m" hint-placeholder-count="6">
+        <div style="display: grid; grid-template-columns: 250px 1fr 210px; column-gap: 30px; padding: 20px 0; border-bottom: 1px solid #1a1a1a; align-items: baseline">
+          <span style="font-size: 16px; line-height: 24px; color: #f3f3f3">{{ m.name }}</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: #929292">{{ m.curve }}</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: #bdbbff">{{ m.dur }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top: 34px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 90px; row-gap: 18px; font-size: 16px; line-height: 27px; color: #929292">
+      <div><span style="color: #f3f3f3">Reveal on scroll.</span> Sections rise 20&ndash;36 px into place once, never again. Staggered siblings step by 90 ms.</div>
+      <div><span style="color: #f3f3f3">Overscroll sheet.</span> Past the page end, continued downward intent slides the archive up over a blurred ground; upward intent at its top, Esc, or Close returns it.</div>
+    </div>
+  </div>
+
+  <div id="voice" style="padding: 104px 230.5px 0; width: 1051px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; color: #8a8a8a">06</span>
+      <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Voice &amp; principles</h2>
+    </div>
+    <div style="margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #1c1c1c; border: 1px solid #1c1c1c">
+      <div style="padding: 30px 32px 34px; background: #0d0d0d">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #bdbbff">DO</div>
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px; font-size: 16px; line-height: 27px; color: #f3f3f3">
+          <sc-for list="{{ dos }}" as="d" hint-placeholder-count="5"><div>{{ d }}</div></sc-for>
+        </div>
+      </div>
+      <div style="padding: 30px 32px 34px; background: #0d0d0d">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #d10000">DON&rsquo;T</div>
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px; font-size: 16px; line-height: 27px; color: #929292">
+          <sc-for list="{{ donts }}" as="d" hint-placeholder-count="5"><div>{{ d }}</div></sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pages" style="padding: 104px 230.5px 0; width: 1051px">
+    <div style="display: flex; align-items: baseline; gap: 20px">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; color: #8a8a8a">07</span>
+      <h2 style="margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Pages</h2>
+    </div>
+    <div style="margin-top: 40px; display: flex; flex-direction: column">
+      <sc-for list="{{ pages }}" as="p" hint-placeholder-count="6">
+        <a href="{{ p.href }}" style="padding: 24px 0; border-bottom: 1px solid #1a1a1a; display: grid; grid-template-columns: 44px 250px 1fr; column-gap: 26px; align-items: baseline; color: #f3f3f3; transition: color .3s ease" style-hover="color: #bdbbff">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #5c5c5c">{{ p.num }}</span>
+          <span style="font-family: Newsreader, serif; font-size: 30px; line-height: 32px; font-weight: 300">{{ p.name }}</span>
+          <span style="font-size: 15px; line-height: 24px; color: #7c7c7c">{{ p.note }}</span>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 110px 230.5px 0; width: 1051px">
+    <div style="height: 1px; background: #1c1c1c"></div>
+    <div style="margin-top: 40px; display: flex; align-items: baseline; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">
+      <span style="font-family: Allison, cursive; font-size: 40px; line-height: 11px; letter-spacing: 0; color: #d10000">GG</span>
+      <span style="margin-left: 30px">DESIGN SYSTEM &mdash; V1.0</span>
+      <span style="margin-left: auto; color: #8a8a8a">BUILT IN MANIPAL</span>
+    </div>
+  </div>
+  <div style="height: 180px"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1512,&quot;height&quot;:1200},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#bdbbff&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#bdbbff&quot;,&quot;#d6d5ff&quot;,&quot;#4b47c9&quot;],&quot;section&quot;:&quot;Theme&quot;}}">
+const RAMPS = [
+  { name: 'GROUND', use: 'page and surfaces, darkest to lightest', items: [
+    { hex: '#0b0b0b', role: 'PAGE', light: '#f4f2ee', ring: '#1c1c1c' },
+    { hex: '#0d0d0d', role: 'PANEL', light: '#ece9e3', ring: '#1c1c1c' },
+    { hex: '#111111', role: 'CARD', light: '#ece9e3', ring: '#1c1c1c' },
+    { hex: '#131313', role: 'IMAGE WELL', light: '#e7e4dd', ring: '#1c1c1c' },
+    { hex: '#141414', role: 'THUMB', light: '#d9d5cc', ring: '#1c1c1c' }
+  ]},
+  { name: 'LINE', use: 'hairlines, borders, rules', items: [
+    { hex: '#1a1a1a', role: 'ROW RULE', light: '#d9d5cc', ring: '#242424' },
+    { hex: '#1c1c1c', role: 'INSET RULE', light: '#d5d0c6', ring: '#242424' },
+    { hex: '#1e1e1e', role: 'PANEL EDGE', light: '#d5d0c6', ring: '#242424' },
+    { hex: '#242424', role: 'CARD EDGE', light: '#cfc9be', ring: '#2a2a2a' },
+    { hex: '#3a3a3a', role: 'FOCUS / ICON', light: '#b6ada0', ring: '#464646' },
+    { hex: '#414141', role: 'FULL-BLEED RULE', light: '#c4bdb0', ring: '#5c5c5c' }
+  ]},
+  { name: 'TEXT', use: 'ink ramp, brightest is emphasis only', items: [
+    { hex: '#ffffff', role: 'HEADING', light: '#141210', ring: '#ffffff' },
+    { hex: '#f3f3f3', role: 'PRIMARY', light: '#1a1815', ring: '#f3f3f3' },
+    { hex: '#929292', role: 'SECONDARY', light: '#68635a', ring: '#929292' },
+    { hex: '#8a8a8a', role: 'LABEL', light: '#7a7368', ring: '#8a8a8a' },
+    { hex: '#7c7c7c', role: 'BODY MUTED', light: '#6b665c', ring: '#7c7c7c' },
+    { hex: '#6f6f6f', role: 'PLACEHOLDER', light: '#7e776b', ring: '#6f6f6f' },
+    { hex: '#5c5c5c', role: 'META DIM', light: '#8b8478', ring: '#5c5c5c' },
+    { hex: '#464646', role: 'RESTING ROW', light: '#a49a8d', ring: '#5c5c5c' }
+  ]},
+  { name: 'ACCENT', use: 'identity red, interaction lavender', items: [
+    { hex: '#d10000', role: 'IDENTITY', light: '#d10000', ring: '#d10000' },
+    { hex: '#bdbbff', role: 'INTERACTION', light: '#4b47c9', ring: '#bdbbff' },
+    { hex: '#d6d5ff', role: 'LINK HOVER', light: '#3a36b4', ring: '#d6d5ff' }
+  ]}
+];
+
+const FAMILIES = [
+  { role: 'DISPLAY / HEADINGS', name: 'Newsreader', stack: 'Newsreader, serif', weights: '300 · 400 · ITALIC', sample: 'Aa', sampleSize: '68px', sampleLine: '68px' },
+  { role: 'BODY / UI', name: 'Inter', stack: 'Inter, system-ui, sans-serif', weights: '300 · 400 · 500 · 600', sample: 'Aa', sampleSize: '68px', sampleLine: '68px' },
+  { role: 'LABELS / META', name: 'JetBrains Mono', stack: "'JetBrains Mono', monospace", weights: '400 · 500', sample: 'Aa', sampleSize: '58px', sampleLine: '68px' },
+  { role: 'MONOGRAM ONLY', name: 'Allison', stack: 'Allison, cursive', weights: '400', sample: 'GG', sampleSize: '76px', sampleLine: '68px' }
+];
+
+const SERIF = 'Newsreader, serif';
+const SANS = 'Inter, system-ui, sans-serif';
+const MONO = "'JetBrains Mono', monospace";
+
+const SCALE = [
+  { name: 'MAIL DISPLAY', spec: 'NEWSREADER 300 · 116 / 106 · -0.03EM', stack: SERIF, size: '116px', line: '106px', weight: 300, tracking: '-0.03em', color: '#ffffff', italic: 'normal', sample: 'hello@' },
+  { name: 'PAGE TITLE', spec: 'NEWSREADER 300 · 82 / 82 · -0.025EM', stack: SERIF, size: '82px', line: '82px', weight: 300, tracking: '-0.025em', color: '#ffffff', italic: 'normal', sample: 'Tell me what’s stuck.' },
+  { name: 'SECTION H2', spec: 'NEWSREADER 300 · 50 / 50 · -0.008EM', stack: SERIF, size: '50px', line: '50px', weight: 300, tracking: '-0.008em', color: '#ffffff', italic: 'normal', sample: 'Selected work' },
+  { name: 'PANEL TITLE', spec: 'NEWSREADER 300 · 44 / 44 · -0.01EM', stack: SERIF, size: '44px', line: '44px', weight: 300, tracking: '-0.01em', color: '#ffffff', italic: 'normal', sample: 'Work' },
+  { name: 'ROW TITLE (HOVER)', spec: 'NEWSREADER 300 · 40 / 40 · -0.005EM', stack: SERIF, size: '40px', line: '40px', weight: 300, tracking: '-0.005em', color: '#ffffff', italic: 'normal', sample: 'Wylde Coffee' },
+  { name: 'SUBHEAD', spec: 'NEWSREADER 300 · 30 / 34', stack: SERIF, size: '30px', line: '34px', weight: 300, tracking: '0', color: '#ffffff', italic: 'normal', sample: 'Get in touch' },
+  { name: 'PULL QUOTE', spec: 'NEWSREADER 300 ITALIC · 27 / 39', stack: SERIF, size: '27px', line: '39px', weight: 300, tracking: '0', color: '#f4f4f4', italic: 'italic', sample: 'Open to product design work' },
+  { name: 'INDEX LINK', spec: 'INTER 400 · 24 / 30 · -0.01EM', stack: SANS, size: '24px', line: '30px', weight: 400, tracking: '-0.01em', color: '#f3f3f3', italic: 'normal', sample: 'Say hello' },
+  { name: 'BODY', spec: 'INTER 400 · 18 / 32 · MAX 720', stack: SANS, size: '18px', line: '32px', weight: 400, tracking: '0', color: '#f3f3f3', italic: 'normal', sample: 'The best notes name one problem.' },
+  { name: 'BODY SMALL', spec: 'INTER 400 · 15–16 / 26–28', stack: SANS, size: '16px', line: '28px', weight: 400, tracking: '0', color: '#929292', italic: 'normal', sample: 'Secondary and caption copy sits here.' },
+  { name: 'NAV', spec: 'INTER 400 · 16 / 16 · 0.06EM', stack: SANS, size: '16px', line: '16px', weight: 400, tracking: '0.06em', color: '#8a8a8a', italic: 'normal', sample: 'SAY  HELLO' },
+  { name: 'MONO LABEL', spec: 'JETBRAINS 400 · 10–11 · 0.24EM', stack: MONO, size: '11px', line: '16px', weight: 400, tracking: '0.24em', color: '#8a8a8a', italic: 'normal', sample: 'SELECTED WORK' },
+  { name: 'MONO META', spec: 'JETBRAINS 400 · 10–11 · 0.14EM', stack: MONO, size: '11px', line: '16px', weight: 400, tracking: '0.14em', color: '#5c5c5c', italic: 'normal', sample: 'MANIPAL, IN · 2024' },
+  { name: 'MONOGRAM', spec: 'ALLISON 400 · 84 NAV-HERO / 46 NAV / 40 FOOT', stack: 'Allison, cursive', size: '84px', line: '84px', weight: 400, tracking: '0', color: '#d10000', italic: 'normal', sample: 'GG' }
+];
+
+const MOTION = [
+  { name: 'Scroll reveal', curve: 'CUBIC-BEZIER(.22, 1, .36, 1)', dur: '800 MS' },
+  { name: 'Gallery tile rise', curve: 'CUBIC-BEZIER(.22, 1, .36, 1)', dur: '1000 MS + 90 STEP' },
+  { name: 'Panel open', curve: 'CUBIC-BEZIER(.16, 1.02, .24, 1)', dur: '580 MS / 260 FADE' },
+  { name: 'Overscroll sheet', curve: 'CUBIC-BEZIER(.16, 1, .3, 1)', dur: '820 MS' },
+  { name: 'Row title / colour', curve: 'CUBIC-BEZIER(.22, 1, .36, 1)', dur: '450 MS' },
+  { name: 'Link & border hover', curve: 'EASE', dur: '300–350 MS' },
+  { name: 'Theme toggle opacity', curve: 'EASE', dur: '350 MS' }
+];
+
+const PAGES = [
+  { num: '01', name: 'Landing', href: 'Landing.dc.html', note: 'Hero, project index, story cards, dither footer, both hover panels.' },
+  { num: '02', name: 'Work', href: 'Work.dc.html', note: 'Case-study index.' },
+  { num: '03', name: 'Labs', href: 'Labs.dc.html', note: 'Experiments and side work.' },
+  { num: '04', name: 'Wylde', href: 'Wylde.dc.html', note: 'Case study — full-bleed imagery.' },
+  { num: '05', name: 'Notes', href: 'Notes.dc.html', note: 'Writing index.' },
+  { num: '06', name: 'Contact', href: 'Contact.dc.html', note: 'Get in touch, compose card, overscroll photo archive.' }
+];
+
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accent ?? '#bdbbff';
+    return {
+      accent,
+      toc: [
+        { label: '01 CANVAS', href: '#canvas' }, { label: '02 COLOUR', href: '#color' },
+        { label: '03 TYPE', href: '#type' }, { label: '04 COMPONENTS', href: '#components' },
+        { label: '05 MOTION', href: '#motion' }, { label: '06 VOICE', href: '#voice' },
+        { label: '07 PAGES', href: '#pages' }
+      ],
+      ramps: RAMPS,
+      families: FAMILIES,
+      scale: SCALE.map(s => ({ ...s, pad: s.name === 'MONOGRAM' ? '20px' : (s.name === 'MAIL DISPLAY' ? '10px' : '0px') })),
+      motion: MOTION,
+      pages: PAGES,
+      labels: ['SELECTED WORK', 'NEW MESSAGE', 'SAY HELLO', 'INDEX', 'ELSEWHERE', 'CURRENTLY', 'FRAMES', 'DIRECT', 'ABOUT', 'REPLIES IN UNDER 24H', 'MANIPAL, IN'],
+      menuRows: [
+        { title: 'Wylde Coffee', sub: 'Brand & storefront', num: '01' },
+        { title: 'Superteam', sub: 'Community product', num: '02' }
+      ],
+      projects: [
+        { num: '01', title: 'Wylde Coffee', size: '40px', color: '#ffffff', numColor: '#f3f3f3' },
+        { num: '02', title: 'Superteam India', size: '34px', color: '#464646', numColor: '#464646' },
+        { num: '03', title: 'Little Unusual', size: '34px', color: '#464646', numColor: '#464646' }
+      ],
+      toggles: [
+        { label: 'DARK / REST', ring: '#6f6f6f', fill: 'linear-gradient(90deg, #6f6f6f 0 50%, transparent 50% 100%)', opacity: '.32' },
+        { label: 'HOVER', ring: '#6f6f6f', fill: 'linear-gradient(90deg, #6f6f6f 0 50%, transparent 50% 100%)', opacity: '.85' },
+        { label: 'LIGHT ACTIVE', ring: '#8b8478', fill: 'linear-gradient(90deg, transparent 0 50%, #8b8478 50% 100%)', opacity: '.85' }
+      ],
+      dos: [
+        'Let the 230.5 px spine hold everything; break it only for rules and imagery.',
+        'Label with mono, speak with serif, explain with sans.',
+        'Keep one accent per moment — red for identity, lavender for interaction.',
+        'Let hover do the work: colour lifts, sizes grow, nothing moves sideways.',
+        'Name a real place and a real time — Manipal, IST, under 24h.'
+      ],
+      donts: [
+        'No gradients as decoration; gradients only veil imagery or dither.',
+        'No emoji, no icon sets — envelopes and arrows are drawn from borders and glyphs.',
+        'No pure white ground in light mode, and no pure black card on the dark ground.',
+        'No bold serif, no mono sentences, no third accent colour.',
+        'No bouncing, spinning, or looping motion; arrival only, once.'
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

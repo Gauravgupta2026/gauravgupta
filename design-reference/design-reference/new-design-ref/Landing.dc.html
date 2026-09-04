@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./theme.js" defer></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&amp;family=Allison&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #0b0b0b; }
+  body { font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #bdbbff; text-decoration: none; }
+  a:hover { color: #d6d5ff; }
+  ::selection { background: #bdbbff; color: #0b0b0b; }
+  @keyframes om-marquee { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+  @keyframes om-rise { from { opacity: 0; transform: translate3d(0,18px,0); } to { opacity: 1; transform: none; } }
+  .om-in { animation: om-rise .7s cubic-bezier(.22,1,.36,1) both; }
+  @keyframes om-xfa { 0%,38% { opacity: 1; } 50%,88% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes om-xfb { 0%,38% { opacity: 0; } 50%,88% { opacity: 1; } 100% { opacity: 0; } }
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="position: relative; width: 1512px; height: 7960px; margin: 0 auto; background: #0b0b0b; color: #f3f3f3; overflow: hidden">
+
+  <nav ref="{{ navRef }}" style="position: fixed; top: 103.2px; left: 0; width: 1512px; height: 16px; z-index: 60; font-size: 16px; line-height: 16px; font-weight: 400; letter-spacing: 0.06em; color: #8a8a8a; transition: opacity .32s cubic-bezier(.22,1,.36,1), transform .32s cubic-bezier(.22,1,.36,1)">
+    <div onMouseEnter="{{ openWorkMenu }}" onMouseLeave="{{ closeWorkMenu }}" style="position: absolute; left: 230.5px; top: -14px; padding: 14px 0 0">
+      <a href="Work.dc.html" style="display: block; color: {{ workNavColor }}; transition: color .3s ease">WORK</a>
+      <div style="position: absolute; left: -34px; top: 44px; width: 560px; padding-top: 18px; opacity: {{ workMenuOpacity }}; transform: {{ workMenuShift }}; pointer-events: {{ workMenuEvents }}; transform-origin: 60px -8px; transition: opacity .26s cubic-bezier(.4,0,.2,1), transform .58s cubic-bezier(.16,1.02,.24,1)">
+        <div style="position: relative; background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 16px; padding: 34px 34px 26px; box-shadow: 0 34px 80px rgba(0,0,0,.8)">
+
+          <div style="display: flex; align-items: flex-start; justify-content: space-between">
+            <div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; line-height: 10px; letter-spacing: 0.24em; color: #8a8a8a">SELECTED WORK</div>
+              <div style="margin-top: 14px; font-family: Newsreader, serif; font-size: 44px; line-height: 44px; font-weight: 300; letter-spacing: -0.01em; color: #ffffff">Work</div>
+            </div>
+            <div onClick="{{ dismissWorkMenu }}" style="width: 42px; height: 42px; border-radius: 999px; background: #f3f3f3; color: #0b0b0b; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer" style-hover="background: #ffffff">&times;</div>
+          </div>
+
+          <div style="margin-top: 26px; height: 1px; background: #1e1e1e"></div>
+
+          <sc-for list="{{ workMenu }}" as="m" hint-placeholder-count="3">
+            <a href="{{ m.href }}" style="display: grid; grid-template-columns: 104px 1fr auto; align-items: center; gap: 26px; padding: 18px 0; border-bottom: 1px solid #1a1a1a; color: inherit; letter-spacing: 0" style-hover="opacity: .72">
+              <span ref="{{ m.thumbRef }}" style="height: 78px; border-radius: 8px; display: block; background-color: #141414; background-size: cover; background-position: center"></span>
+              <span style="display: flex; flex-direction: column; gap: 7px">
+                <span style="font-family: Newsreader, serif; font-size: 27px; line-height: 27px; font-weight: 300; color: #ffffff">{{ m.title }}</span>
+                <span style="font-size: 14px; line-height: 14px; color: #8a8a8a">{{ m.sub }}</span>
+              </span>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.1em; color: #5c5c5c; align-self: start">{{ m.num }}</span>
+            </a>
+          </sc-for>
+
+          <a href="Work.dc.html" style="margin-top: 26px; display: flex; align-items: center; justify-content: center; gap: 12px; height: 62px; border-radius: 12px; background: #f3f3f3; color: #0b0b0b; font-size: 17px; font-weight: 500; letter-spacing: -0.01em" style-hover="background: #ffffff">
+            <span>All selected work</span><span style="color: #d10000">&#8599;</span>
+          </a>
+
+          <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #1a1a1a; display: flex; align-items: center; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em">
+            <a href="Landing.dc.html" style="color: #f3f3f3" style-hover="color: #bdbbff">MY STORY</a>
+            <a href="Contact.dc.html" style="color: #f3f3f3" style-hover="color: #bdbbff">SAY HELLO</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="Labs.dc.html" style="position: absolute; left: 392.9px; top: 0; color: #8a8a8a" style-hover="color: #f3f3f3">LABS</a>
+    <div onMouseEnter="{{ openHelloMenu }}" onMouseLeave="{{ closeHelloMenu }}" style="position: absolute; left: 1195.1px; top: -14px; padding: 14px 0 0">
+      <a href="Contact.dc.html" style="display: block; white-space: nowrap; color: {{ helloNavColor }}; transition: color .3s ease">SAY&nbsp;&nbsp;HELLO</a>
+      <div style="position: absolute; right: -4px; top: 44px; width: 380px; padding-top: 18px; opacity: {{ helloMenuOpacity }}; transform: {{ helloMenuShift }}; pointer-events: {{ helloMenuEvents }}; transform-origin: 320px -8px; transition: opacity .26s cubic-bezier(.4,0,.2,1), transform .58s cubic-bezier(.16,1.02,.24,1)">
+        <div style="position: relative; background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 16px; padding: 28px 30px 26px; box-shadow: 0 34px 80px rgba(0,0,0,.8)">
+
+          <div style="display: flex; align-items: flex-start; justify-content: space-between">
+            <div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; line-height: 10px; letter-spacing: 0.24em; color: #8a8a8a">NEW MESSAGE</div>
+              <div style="margin-top: 14px; font-family: Newsreader, serif; font-size: 34px; line-height: 34px; font-weight: 300; letter-spacing: -0.01em; color: #ffffff">Get in touch</div>
+            </div>
+            <div aria-hidden="true" style="width: 46px; height: 32px; border: 1px solid #3a3a3a; border-radius: 4px; background: linear-gradient(to bottom right, transparent calc(50% - 0.6px), #3a3a3a calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) left top / 50% 62% no-repeat, linear-gradient(to bottom left, transparent calc(50% - 0.6px), #3a3a3a calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) right top / 50% 62% no-repeat"></div>
+          </div>
+
+          <div style="margin-top: 24px; height: 1px; background: #1e1e1e"></div>
+
+          <div style="margin-top: 20px; display: grid; grid-template-columns: 44px 1fr; row-gap: 4px; align-items: baseline">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #5c5c5c; padding: 14px 0; border-bottom: 1px solid #1a1a1a">TO</span>
+            <span style="font-family: Inter, system-ui, sans-serif; font-size: 16px; color: #f3f3f3; padding: 14px 0; border-bottom: 1px solid #1a1a1a">hello@gg.studio</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #5c5c5c; padding: 14px 0">RE</span>
+            <span style="font-size: 14px; line-height: 20px; color: #929292; padding: 14px 0">a project &middot; a role &middot; an argument about scope</span>
+          </div>
+
+          <a href="Contact.dc.html" style="margin-top: 22px; display: flex; align-items: center; justify-content: center; gap: 12px; height: 60px; border-radius: 12px; background: #f3f3f3; color: #0b0b0b; font-size: 16px; font-weight: 500; letter-spacing: -0.01em" style-hover="background: #ffffff">
+            <span>Write a message</span><span style="color: #d10000">&#8599;</span>
+          </a>
+
+          <div style="margin-top: 22px; display: flex; align-items: center; gap: 16px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: #5c5c5c">
+            <span style="color: #d10000">&#9679;</span><span>REPLIES IN UNDER 24H</span><span style="margin-left: auto">MANIPAL, IN</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div style="position: absolute; top: 186px; left: 228px; font-family: Allison, cursive; font-size: 84px; line-height: 84px; font-weight: 400; letter-spacing: 0; color: #d10000">GG</div>
+
+  <div data-reveal="1" style="position: absolute; top: 328px; left: 230.5px; font-size: 18px; line-height: 29px; font-weight: 400">
+    <div style="color: #f3f3f3">Gaurav Gupta</div>
+    <div style="color: #929292">Associate Product Manager</div>
+  </div>
+
+  <p data-reveal="2" style="position: absolute; top: 445.5px; left: 230.5px; width: 1051px; margin: 0; font-size: 18px; line-height: 32px; font-weight: 400; color: #f3f3f3; text-wrap: pretty; font-family: Inter">I'm an AI Product Builder in Bengaluru, India. I’m passionate about crafting beautiful yet functional systems and websites with a focus on accessibility, performance and interactivity. I am now focused on contracting with small craft-focused teams and agencies.</p>
+
+  <p data-reveal="3" style="position: absolute; top: 573.5px; left: 230.5px; width: 1051px; margin: 0; font-size: 18px; line-height: 32px; color: #929292">Previously at KPMG, on operational risk controls and an evidence-gated decision engine.</p>
+
+  <p data-reveal="4" style="position: absolute; top: 637.5px; left: 230.5px; width: 1051px; margin: 0; font-size: 18px; line-height: 32px; color: #f3f3f3; text-wrap: pretty">I am currently working as a Designer &amp; Developer on: Wylde, an app for fun times. Also built : Lucky Day, Sachetana. I find the friction, build the smallest thing that removes it, then check whether it worked.</p>
+
+  <h2 data-reveal="5" style="position: absolute; top: 906.8px; left: 230.5px; margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #dcdcdc">Selected Work</h2>
+  <div style="position: absolute; top: 1016.8px; left: 0; width: 1512px; height: 1px; background: #414141"></div>
+
+  <div style="position: absolute; top: 1231.5px; left: 230.5px; width: 1051px" onMouseLeave="{{ onListLeave }}">
+    <sc-for list="{{ projects }}" as="p" hint-placeholder-count="3">
+      <div style="height: 147px; display: flex; align-items: baseline; gap: 0; cursor: pointer" onMouseEnter="{{ p.hover }}">
+        <div style="flex: 0 0 90.5px; font-size: 24px; line-height: 40px; font-weight: 400; color: {{ p.numColor }}; transition: color .45s cubic-bezier(.22,1,.36,1)">{{ p.num }}</div>
+        <div style="font-family: Newsreader, serif; font-size: {{ p.size }}; line-height: 40px; font-weight: 300; letter-spacing: -0.005em; color: {{ p.titleColor }}; transition: color .45s cubic-bezier(.22,1,.36,1), font-size .45s cubic-bezier(.22,1,.36,1)">{{ p.title }}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; top: 1168.7px; left: 673px; width: 602.8px; height: 482.2px; overflow: hidden" onMouseEnter="{{ onPanelEnter }}" onMouseLeave="{{ onPanelLeave }}">
+    <div style="display: flex; gap: 24px; height: 100%; transform: {{ trackTransform }}; transition: transform .72s cubic-bezier(.22,1,.36,1); will-change: transform">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="4">
+        <div style="flex: 0 0 380px; height: 100%; padding: 32px; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; background-color: #0B0B0B">
+          <div style="font-size: 11px; line-height: 11px; letter-spacing: 0.14em; color: #7d7d7d; font-weight: 500">{{ c.label }}</div>
+          <sc-if value="{{ c.img }}" hint-placeholder-val="{{ false }}">
+            <div ref="{{ c.imgRef }}" role="img" aria-label="{{ c.alt }}" style="flex: 1; margin-top: 24px; overflow: hidden; background-color: #0a0a0a; background-size: cover; background-position: center; filter: saturate(.85) contrast(1.05)"></div>
+          </sc-if>
+          <sc-if value="{{ c.placeholder }}" hint-placeholder-val="{{ false }}">
+            <div style="flex: 1; margin-top: 24px; display: flex; align-items: flex-end; padding: 16px; box-sizing: border-box; background: repeating-linear-gradient(135deg, #0a0a0a 0 8px, #141414 8px 16px)">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 16px; color: #6f6f6f">{{ c.placeholder }}</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ c.title }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top: 24px; font-size: 20px; line-height: 27px; font-weight: 400; letter-spacing: -0.01em; color: #f3f3f3; text-wrap: pretty">{{ c.title }}</div>
+          </sc-if>
+          <sc-if value="{{ c.body }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top: 14px; font-size: 14px; line-height: 21px; color: #9a9a9a; text-wrap: pretty">{{ c.body }}</div>
+          </sc-if>
+          <sc-if value="{{ c.metric }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top: auto; padding-top: 20px; font-size: 14px; line-height: 14px; color: #bdbbff">{{ c.metric }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; top: 1673px; left: 673px; width: 602.8px; display: flex; gap: 8px">
+    <sc-for list="{{ ticks }}" as="t" hint-placeholder-count="4">
+      <div onClick="{{ t.pin }}" style="flex: 1; height: 14px; display: flex; align-items: center; cursor: pointer">
+        <div style="width: 100%; height: 2px; background: {{ t.color }}; transition: background .3s linear"></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <h2 data-reveal="6" style="position: absolute; top: 1990.8px; left: 230.5px; margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Work is the story</h2>
+  <div style="position: absolute; top: 2087.1px; left: 0; width: 1512px; height: 1px; background: #414141"></div>
+
+  <div onMouseLeave="{{ onStageGridLeave }}" style="position: absolute; top: 2261.5px; left: 230.5px; width: 1051px; display: grid; grid-template-columns: 676.5px 1fr; grid-auto-rows: min-content; row-gap: 285px">
+    <sc-for list="{{ stages }}" as="s" hint-placeholder-count="4">
+      <div style="display: flex; align-items: baseline; gap: 0; cursor: default" onMouseEnter="{{ s.hover }}">
+        <div style="flex: 0 0 145.5px; font-size: 24px; line-height: 40px; color: {{ s.numColor }}; transition: color .45s cubic-bezier(.22,1,.36,1)">{{ s.num }}</div>
+        <div style="position: relative; font-size: 40px; line-height: 40px; letter-spacing: -0.02em; color: {{ s.titleColor }}; transition: color .45s cubic-bezier(.22,1,.36,1)">
+          {{ s.title }}
+          <div style="position: absolute; left: 0; bottom: -10px; height: 1px; background: #bdbbff; width: {{ s.underline }}; transition: width .5s cubic-bezier(.22,1,.36,1)"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; top: {{ stageCardTop }}; left: {{ stageCardLeft }}; width: {{ stageCardW }}; height: {{ stageCardH }}; background: #131313; opacity: {{ stageVis }}; transform: {{ stageShift }}; transform-origin: {{ stageOrigin }}; pointer-events: none; overflow: hidden; will-change: transform, opacity; transition: opacity .28s cubic-bezier(.4,0,.2,1), transform .62s cubic-bezier(.16,1.02,.24,1)">
+    <img src="assets/stage-discovery.svg" alt="Discovery" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; opacity: {{ vis0 }}">
+    <img src="assets/stage-delivery.jpg" alt="Delivery" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; opacity: {{ vis1 }}">
+    <img src="assets/stage-distribution.jpg" alt="Distribution" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; opacity: {{ vis2 }}">
+    <img src="assets/stage-iteration.jpg" alt="Iteration" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; opacity: {{ vis3 }}">
+    <sc-for list="{{ stageLogos }}" as="t" hint-placeholder-count="4">
+      <img ref="{{ t.ref }}" alt="{{ t.name }}" title="{{ t.name }}" style="position: absolute; top: {{ t.top }}; left: {{ t.left }}; width: {{ t.size }}; height: {{ t.size }}; display: block; opacity: .85"></sc-for>
+  </div>
+
+  <div style="position: absolute; top: 2959.4px; left: 0; width: 1512px; height: 842.7px; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0, #000 252px, #000 640px, rgba(0,0,0,0) 842px); mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0, #000 252px, #000 640px, rgba(0,0,0,0) 842px)">
+    <img src="assets/story-a.png" alt="Workshop, Manipal" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(.35) contrast(1.05) brightness(.85); animation: om-xfa 16s ease-in-out infinite">
+    <img src="assets/story-b.png" alt="Kart build, Manipal" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: grayscale(.35) contrast(1.05) brightness(.85); animation: om-xfb 16s ease-in-out infinite">
+  </div>
+
+  <p data-reveal="7" style="position: absolute; top: 3847.5px; left: 335px; width: 842px; margin: 0; font-size: 18px; line-height: 32px; color: #7c7c7c; text-align: center; text-wrap: pretty">Grew up in Manipal taking things apart. Everything worth building since has needed more than one pair of hands.</p>
+
+  <div data-reveal="8" style="position: absolute; top: 4028.7px; left: 264.6px; width: 961px; font-size: 18px; line-height: 33.5px">
+    <p style="margin: 0; color: #7c7c7c; text-wrap: pretty">Manipal, second year. <span style="color: #f3f3f3">The go-kart team</span> had a car, 15 people, and a competition date. They put me on <span style="color: #f3f3f3">design, marketing &amp; budgets</span>.</p>
+    <p style="margin: 0; color: #7c7c7c; text-wrap: pretty">I managed sponsors, budget, calendar, and a workshop full of engineers who each knew their subsystem deserved the extra week.</p>
+    <p style="margin: 0; color: #7c7c7c; text-wrap: pretty"><span style="color: #f3f3f3">8 months later</span> the kart ran at <span style="color: #f3f3f3">Buddh International Circuit</span>, the track India built for Formula 1, and we finished 4th overall.</p>
+    <p style="margin: 0; color: #7c7c7c; text-wrap: pretty">None of that came from me being the best engineer in the room; it came from getting the room to agree what “done” meant before anyone cut metal. I've used that on every project since.</p>
+  </div>
+
+  <div data-reveal="9" style="position: absolute; top: 4343.2px; left: 264.6px; width: 979px; font-size: 18px; line-height: 56.5px">
+    <sc-for list="{{ timeline }}" as="r" hint-placeholder-count="5">
+      <div style="display: grid; grid-template-columns: 288.4px 348px 1fr; height: 56.5px">
+        <div style="color: #676767">{{ r.when }}</div>
+        <div style="color: #676767; overflow: hidden; white-space: nowrap">------------------</div>
+        <div style="color: #898989; white-space: nowrap">{{ r.what }}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div data-reveal="10" style="position: absolute; top: 4746px; left: 264.6px; width: 1000px; font-size: 18px; line-height: 33.5px">
+    <p style="margin: 0; color: #7c7c7c; text-wrap: pretty">Not everything is on that list.</p>
+    <p style="margin: 0; color: #7c7c7c; text-wrap: pretty">I've freelanced since second year, mostly behind a camera &mdash; <a href="#" style="color: #f3f3f3; text-decoration: underline; text-underline-offset: 3px" style-hover="color: #bdbbff">Superteam India</a>, <a href="#" style="color: #f3f3f3; text-decoration: underline; text-underline-offset: 3px" style-hover="color: #bdbbff">GoatFish</a>, <a href="#" style="color: #f3f3f3; text-decoration: underline; text-underline-offset: 3px" style-hover="color: #bdbbff">Little Unusual</a>, and a few people who found me through them. This gig took me places and I met people.</p>
+    <p style="margin: 0; color: #7c7c7c; text-wrap: pretty">It's the same muscle as product work. Photography just makes it obvious &mdash; one afternoon, someone else's vision, and a room waiting on you to call it.</p>
+    <p style="margin: 33.5px 0 0; color: #7c7c7c; text-wrap: pretty">Nothing on this site was handed to me as a brief. Nothing on it got built alone, either.</p>
+  </div>
+
+  <h2 data-reveal="11" style="position: absolute; top: 5115.8px; left: 230.5px; margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Notes</h2>
+  <div style="position: absolute; top: 5257.5px; left: 0; width: 1512px; height: 1px; background: #414141"></div>
+
+  <div style="position: absolute; top: 5422.3px; left: 230.5px; width: 1051px">
+    <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3">
+      <a href="{{ n.href }}" style="height: 135.5px; display: grid; grid-template-columns: 180.5px 760px 1fr; align-items: baseline; color: inherit" style-hover="opacity: .78">
+        <div style="font-size: 14px; line-height: 32px; letter-spacing: 0.12em; color: #7d7d7d">ARTICLE</div>
+        <div style="font-size: 24px; line-height: 32px; letter-spacing: -0.01em; color: #ffffff; text-wrap: pretty">{{ n.title }}</div>
+        <div style="font-size: 18px; line-height: 32px; color: #bdbbff">Read →</div>
+      </a>
+    </sc-for>
+  </div>
+
+  <h2 data-reveal="12" style="position: absolute; top: 6235.8px; left: 230.5px; margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Worked with</h2>
+  <div style="position: absolute; top: 6377.4px; left: 0; width: 1512px; height: 1px; background: #414141"></div>
+
+  <div style="position: absolute; top: 6466.5px; left: 0; width: 1512px; overflow: hidden">
+    <div style="display: flex; width: max-content; animation: om-marquee 34s linear infinite; will-change: transform">
+      <div style="display: flex; align-items: baseline; gap: 64px; padding-right: 64px; font-size: 40px; line-height: 48px; letter-spacing: -0.02em; color: #ffffff; white-space: nowrap">
+        <span style="color: #bdbbff">∗</span><span>MIT Manipal</span>
+        <span style="color: #bdbbff">∗</span><span>KMC Manipal</span>
+        <span style="color: #bdbbff">∗</span><span>Superteam India</span>
+        <span style="color: #bdbbff">∗</span><span>Little Unusual</span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 64px; padding-right: 64px; font-size: 40px; line-height: 48px; letter-spacing: -0.02em; color: #ffffff; white-space: nowrap">
+        <span style="color: #bdbbff">∗</span><span>MIT Manipal</span>
+        <span style="color: #bdbbff">∗</span><span>KMC Manipal</span>
+        <span style="color: #bdbbff">∗</span><span>Superteam India</span>
+        <span style="color: #bdbbff">∗</span><span>Little Unusual</span>
+      </div>
+    </div>
+  </div>
+
+  <div ref="{{ footRef }}" style="position: absolute; top: 6660px; left: 0; width: 1512px; height: 1240px">
+    <div style="position: absolute; top: 0; left: 0; width: 1512px; height: 1px; background: #414141"></div>
+
+    <div style="position: absolute; top: 1px; left: 0; width: 1512px; height: 520px; overflow: hidden">
+      <pre ref="{{ ditherDimRef }}" aria-hidden="true" style="position: absolute; top: 0; left: 0; margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 13px; letter-spacing: 1.5px; color: #202020; white-space: pre; user-select: none; pointer-events: none"></pre>
+      <pre ref="{{ ditherLitRef }}" aria-hidden="true" style="position: absolute; top: 0; left: 0; margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 13px; letter-spacing: 1.5px; color: #bdbbff; white-space: pre; user-select: none; pointer-events: none; -webkit-mask-image: radial-gradient(220px 220px at -400px -400px, #000 0%, rgba(0,0,0,.55) 42%, transparent 72%); mask-image: radial-gradient(220px 220px at -400px -400px, #000 0%, rgba(0,0,0,.55) 42%, transparent 72%)"></pre>
+      <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11,11,11,.72) 0%, rgba(11,11,11,.1) 38%, rgba(11,11,11,.86) 100%); pointer-events: none"></div>
+
+      <div style="position: absolute; top: 96px; left: 230.5px; width: 1051px">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; line-height: 10px; letter-spacing: 0.24em; color: #8a8a8a">SAY HELLO</div>
+        <a ref="{{ mailRef }}" href="mailto:hello@gg.studio" onClick="{{ copyMail }}" style="display: block; margin-top: 26px; font-family: Newsreader, serif; font-size: 116px; line-height: 106px; font-weight: 300; letter-spacing: -0.03em; color: #ffffff; transition: color .4s ease" style-hover="color: #bdbbff">{{ mailLabel }}</a>
+        <div style="margin-top: 30px; display: flex; align-items: baseline; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">
+          <span style="color: #d10000">&#9679;</span><span>{{ copyHint }}</span>
+        </div>      </div>
+    </div>
+
+    <div style="position: absolute; top: 521px; left: 0; width: 1512px; height: 1px; background: #1c1c1c"></div>
+
+    <div style="position: absolute; top: 601px; left: 230.5px; width: 1051px; display: grid; grid-template-columns: 300px 300px 1fr; gap: 40px">
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">INDEX</div>
+        <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 16px">
+          <sc-for list="{{ footIndex }}" as="l" hint-placeholder-count="4">
+            <a href="{{ l.href }}" style="display: flex; align-items: baseline; gap: 12px; font-size: 24px; line-height: 30px; letter-spacing: -0.01em; color: #f3f3f3; transition: color .3s ease" style-hover="color: #bdbbff">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #5c5c5c">{{ l.num }}</span><span>{{ l.name }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">ELSEWHERE</div>
+        <div style="margin-top: 26px; display: flex; flex-direction: column; gap: 16px">
+          <sc-for list="{{ footSocial }}" as="s" hint-placeholder-count="4">
+            <a href="{{ s.href }}" style="display: flex; align-items: baseline; gap: 12px; font-size: 24px; line-height: 30px; letter-spacing: -0.01em; color: #f3f3f3; transition: color .3s ease" style-hover="color: #bdbbff">
+              <span>{{ s.name }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">CURRENTLY</div>
+        <div style="margin-top: 26px; font-family: Newsreader, serif; font-style: italic; font-size: 27px; line-height: 34px; font-weight: 300; color: #f4f4f4; text-wrap: pretty">Open to product design work, and to arguments about scope.</div>
+        <div style="margin-top: 28px; display: grid; grid-template-columns: 120px 1fr; row-gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; color: #8a8a8a">
+          <span style="color: #5c5c5c">MANIPAL, IN</span><span style="color: #f3f3f3">{{ clock }}</span>
+          <span style="color: #5c5c5c">REPLIES IN</span><span style="color: #f3f3f3">UNDER 24H</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="position: absolute; top: 1052px; left: 0; width: 1512px; height: 1px; background: #1c1c1c"></div>
+
+    <div style="position: absolute; top: 1112px; left: 230.5px; width: 1051px; display: flex; align-items: baseline; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #5c5c5c">
+      <span style="font-family: Allison, cursive; font-size: 40px; line-height: 11px; letter-spacing: 0; color: #d10000">GG</span>
+      <span style="margin-left: 30px">&copy; 2026 &mdash; ALL RIGHTS RESERVED</span>
+      <span style="margin-left: auto; color: #8a8a8a">BUILT IN MANIPAL</span>
+      <a href="#" onClick="{{ toTop }}" style="margin-left: 48px; color: #f3f3f3" style-hover="color: #bdbbff">BACK TO TOP &uarr;</a>
+    </div>
+  </div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1512,&quot;height&quot;:1000}}">
+const PROJECTS = [
+  {
+    num: '01', title: 'Sachetana', tag: '',
+    cards: [
+      { label: 'PREMISE', title: 'A civic-reporting flow for one Manipal ward.', body: 'Built so a first-time user finishes a report in under 90 seconds, on a bad connection.' },
+      { label: 'BEHIND THE SCENES', img: 'assets/sachetana.jpg', alt: 'Sachetana in use' },
+      { label: 'A DECISION, AND WHY', title: 'Photo first, form second.', body: 'The camera opens on launch. Time, place and category are read off the photo, so the form starts three quarters filled.' },
+      { label: 'WHAT WE DIDN\u2019T SHIP', title: 'A map-pin picker.', body: 'Testing showed people report where they are standing, not where they are pointing. The pin only added a step to get wrong.' }
+    ]
+  },
+  {
+    num: '02', title: 'Wylde', tag: '',
+    cards: [
+      { label: 'PREMISE', title: 'An app for fun times.', body: 'One tap from \u201csomeone should do something\u201d to a plan with a time on it. No group chat required.' },
+      { label: 'BEHIND THE SCENES', placeholder: '// drop a build screenshot or\n// a shot of the wall of stickies here' },
+      { label: 'A DECISION, AND WHY', title: 'Plans expire.', body: 'Anything not confirmed within two hours disappears. The feed is never a graveyard, so opening it always costs nothing.' },
+      { label: 'WHAT WE DIDN\u2019T SHIP', title: 'Groups you create up front.', body: 'It moved all the work back onto the organiser \u2014 which is exactly the friction we started out to remove.' }
+    ]
+  },
+  {
+    num: '03', title: 'Lucky Day', tag: '',
+    cards: [
+      { label: 'PREMISE', title: 'A card game for the ten minutes after everyone sits down and nobody talks.', body: 'One deck, one loop, no rules to read out loud.', metric: '146+ beta users' },
+      { label: 'BEHIND THE SCENES', placeholder: '// drop a photo of the printed\n// paper prototype deck here' },
+      { label: 'A DECISION, AND WHY', title: 'No rulebook.', body: 'The first three cards teach the loop by making you play it, so the game explains itself and nobody has to be the referee.' },
+      { label: 'WHAT WE DIDN\u2019T SHIP', title: 'Scoring.', body: 'Points turned a warm-up into a competition. People started playing to win and stopped talking to each other.' }
+    ]
+  }
+];
+
+const LOGO = (slug, name) => ({ src: 'https://cdn.simpleicons.org/' + slug + '/9a9a9a', name: name });
+
+// Logo slots reserved inside each artwork, in the SVG's own user units.
+// dx shifts for cards narrower than 374 (object-fit: contain centres them).
+const STAGE_SLOTS = [
+  { w: 374, scale: 1.14, slots: [[28.2, 124, 20], [70, 124, 18.7], [110.6, 124.9, 19.1], [151.5, 124, 18.7]] },
+  { w: 366, scale: 1.32, slots: [] },
+  { w: 374, scale: 1.04, slots: [] },
+  { w: 374, scale: 1.22, slots: [] }
+];
+
+const STAGE_ART = [
+  'assets/stage-discovery.svg',
+  'assets/stage-delivery.jpg',
+  'assets/stage-distribution.jpg',
+  'assets/stage-iteration.jpg'
+];
+
+const STAGES = [
+  { num: '01', title: 'Discovery',
+    question: 'What would have to be true for this to be worth building at all?',
+    call: 'I write the kill condition before the brief.',
+    why: 'One line at the top of page one: if this turns out true, we stop. It has to be falsifiable by five conversations, not by a quarter of building \u2014 3 of the last 7 ideas died here, before a single screen was designed.',
+    tools: [LOGO('notion', 'Notion'), LOGO('figma', 'Figma'), LOGO('miro', 'Miro'), LOGO('claude', 'Claude')],
+    metric: '3 of 7 ideas killed before design' },
+  { num: '02', title: 'Delivery',
+    question: 'What can ship this week without a meeting to unblock it?',
+    call: 'Ship the ugly version first, behind a flag.',
+    why: 'Five real users on a rough build tell you more in a day than a design review does in a week. Polish is a reward for evidence, not a prerequisite \u2014 it holds the median from idea to working prototype at nine days.',
+    tools: [LOGO('figma', 'Figma'), LOGO('github', 'GitHub'), LOGO('linear', 'Linear'), LOGO('vercel', 'Vercel')],
+    metric: '9-day median, idea to prototype' },
+  { num: '03', title: 'Distribution',
+    question: 'Who tells the next ten people, and why would they bother?',
+    call: 'One channel, seeded properly, instead of five announced at once.',
+    why: 'I go where people already argue about the problem. A launch that only works on launch day is a launch that did not work \u2014 one seeded channel carried Lucky Day to 146+ beta users on zero ad spend.',
+    tools: [LOGO('apple', 'TestFlight'), LOGO('instagram', 'Instagram'), LOGO('x', 'X'), LOGO('posthog', 'PostHog')],
+    metric: '146+ beta users, zero ad spend' },
+  { num: '04', title: 'Iteration',
+    question: 'Did the friction actually go away, or did we just move it?',
+    call: 'I delete features that tested well.',
+    why: 'Two of ours were opened once and never again, so both got cut and retention went up. One number per week, and anything that is not moving it is a candidate for removal.',
+    tools: [LOGO('posthog', 'PostHog'), LOGO('metabase', 'Metabase'), LOGO('linear', 'Linear'), LOGO('googlesheets', 'Sheets')],
+    metric: '2 features cut, retention up' }
+];
+
+const TIMELINE = [
+  { when: '2026\u2019July', what: 'Risk Advisory, GRCS @ KPMG' },
+  { when: '2025-2026', what: 'Designer + Developer @ MIT x KMC Manipal' },
+  { when: '2025\u2019Feb', what: 'Designer @ MIT Manipal' },
+  { when: '2022-2023', what: 'Management @ Team Karting Manipal' },
+  { when: '2022\u2019Sept', what: 'Marketing @ Vennbrd' }
+];
+
+const NOTES = [
+  { title: 'How a constraint changes the shape of a product' },
+  { title: 'What I look for before I start prototyping' },
+  { title: 'The smallest thing that removes the friction' }
+];
+
+const DITHER_COLS = 188;
+const DITHER_ROWS = 40;
+const RAMP = ' .:-=+*#%@';
+
+class Component extends DCLogic {
+  state = { active: 0, card: 0, pinned: -1, stage: 0, stageVis: 0, menu: false, hello: false, hold: false, copied: false, clock: '' };
+
+  startFooter() {
+    const tick = () => {
+      const d = new Date();
+      const ist = new Date(d.getTime() + (d.getTimezoneOffset() + 330) * 60000);
+      const p = n => String(n).padStart(2, '0');
+      this.setState({ clock: p(ist.getHours()) + ':' + p(ist.getMinutes()) + ':' + p(ist.getSeconds()) + ' IST' });
+    };
+    tick();
+    this.clockId = setInterval(tick, 1000);
+
+    let t = 0;
+    const draw = () => {
+      let out = '';
+      for (let y = 0; y < DITHER_ROWS; y++) {
+        for (let x = 0; x < DITHER_COLS; x++) {
+          const v = Math.sin(x * 0.19 + t) * Math.cos(y * 0.31 - t * 0.7)
+                  + Math.sin((x * 0.07 + y * 0.11) * 1.7 + t * 0.4);
+          const n = (v + 2) / 4;
+          const bayer = ((x & 1) ^ (y & 1)) * 0.06;
+          out += RAMP[Math.max(0, Math.min(RAMP.length - 1, Math.round((n + bayer) * (RAMP.length - 1))))];
+        }
+        out += '\n';
+      }
+      if (this.dimEl) this.dimEl.textContent = out;
+      if (this.litEl) this.litEl.textContent = out;
+      t += 0.021;
+      this.raf = requestAnimationFrame(draw);
+    };
+    draw();
+
+    this.onMove = e => {
+      if (!this.footEl || !this.litEl) return;
+      const r = this.footEl.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top - 1;
+      const m = 'radial-gradient(240px 240px at ' + x + 'px ' + y + 'px, #000 0%, rgba(0,0,0,.5) 44%, transparent 74%)';
+      this.litEl.style.webkitMaskImage = m;
+      this.litEl.style.maskImage = m;
+    };
+    window.addEventListener('pointermove', this.onMove, { passive: true });
+  }
+
+  componentDidMount() {
+    window.__omMounted = (window.__omMounted || 0) + 1;
+    this.reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.io = window.IntersectionObserver ? new IntersectionObserver(es => {
+      es.forEach(e => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('om-in');
+        this.io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px' }) : null;
+    this.setup = () => {
+      if (!this.navEl) this.navEl = document.querySelector('nav');
+      if (this.io && !this.reduced) {
+        document.querySelectorAll('[data-reveal]:not([data-om-seen])').forEach(n => {
+          n.setAttribute('data-om-seen', '1');
+          this.io.observe(n);
+        });
+      }
+    };
+    this.setup();
+    STAGE_ART.forEach(src => { const i = new Image(); i.src = src; });
+    this.startFooter();
+    this.pollN = 0;
+    this.poll = setInterval(() => { this.setup(); if (++this.pollN > 20) clearInterval(this.poll); }, 250);
+    this.onScroll = () => {
+      const y = window.scrollY || window.pageYOffset || 0;
+      const n = this.navEl || (this.navEl = document.querySelector('nav'));
+      if (!n) return;
+      n.style.top = Math.max(103.2 - y, 24) + 'px';
+      const host = n.parentNode;
+      if (host && host.getBoundingClientRect) n.style.left = host.getBoundingClientRect().left + 'px';
+      if (this.state.menu || this.state.hello) this.setState({ menu: false, hello: false });
+      if (y > 60 && !this.reduced) {
+        n.style.opacity = '0';
+        n.style.transform = 'translate3d(0,-10px,0)';
+      }
+      clearTimeout(this.settle);
+      this.settle = setTimeout(() => {
+        n.style.opacity = '1';
+        n.style.transform = 'translate3d(0,0,0)';
+      }, 240);
+    };
+    this.onResize = () => {
+      const n = this.navEl || (this.navEl = document.querySelector('nav'));
+      if (n && n.parentNode) n.style.left = n.parentNode.getBoundingClientRect().left + 'px';
+    };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    window.addEventListener('resize', this.onResize);
+    this.onResize();
+    if (!this.reduced) {
+      this.timer = setInterval(() => {
+        if (this.state.pinned >= 0 || this.state.hold) return;
+        const n = PROJECTS[this.state.active].cards.length;
+        this.setState(s => ({ card: (s.card + 1) % n }));
+      }, 1700);
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.clockId);
+    cancelAnimationFrame(this.raf);
+    window.removeEventListener('pointermove', this.onMove);
+    clearInterval(this.timer);
+    clearTimeout(this.settle);
+    clearTimeout(this.leave);
+    clearTimeout(this.menuT);
+    clearTimeout(this.helloT);
+    clearInterval(this.poll);
+    if (this.io) this.io.disconnect();
+    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  setStage(i) {
+    clearTimeout(this.leave);
+    this.setState({ stage: i, stageVis: 1 });
+  }
+
+  closeStage() {
+    clearTimeout(this.leave);
+    this.leave = setTimeout(() => this.setState({ stageVis: 0 }), 90);
+  }
+
+  renderVals() {
+    const { active, card, pinned, stage, stageVis, menu, hello } = this.state;
+    const cards = PROJECTS[active].cards;
+    const topRow = stage < 2;
+    return {
+      rootRef: el => { this.root = el; },
+      navRef: el => { this.navEl = el; },
+      openWorkMenu: () => { clearTimeout(this.menuT); this.setState({ menu: true }); },
+      closeWorkMenu: () => { clearTimeout(this.menuT); this.menuT = setTimeout(() => this.setState({ menu: false }), 120); },
+      workNavColor: menu ? '#f3f3f3' : '#8a8a8a',
+      workMenuOpacity: menu ? 1 : 0,
+      workMenuShift: menu ? 'translate3d(0,0,0) scale(1)' : 'translate3d(0,-6px,0) scale(.9)',
+      workMenuEvents: menu ? 'auto' : 'none',
+      workMenuRule: menu ? '100%' : '0%',
+      dismissWorkMenu: e => { e.preventDefault(); clearTimeout(this.menuT); this.setState({ menu: false }); },
+      openHelloMenu: () => { clearTimeout(this.helloT); this.setState({ hello: true }); },
+      closeHelloMenu: () => { clearTimeout(this.helloT); this.helloT = setTimeout(() => this.setState({ hello: false }), 120); },
+      helloNavColor: hello ? '#f3f3f3' : '#8a8a8a',
+      helloMenuOpacity: hello ? 1 : 0,
+      helloMenuShift: hello ? 'translate3d(0,0,0) scale(1)' : 'translate3d(0,-6px,0) scale(.9)',
+      helloMenuEvents: hello ? 'auto' : 'none',
+      workMenu: [
+        { num: '01', title: 'Sachetana', sub: 'Civic reporting', href: 'Work.dc.html',
+          thumbRef: el => { if (el) el.style.backgroundImage = 'url("assets/sachetana.jpg")'; } },
+        { num: '02', title: 'Wylde', sub: 'Playful interaction', href: 'Work.dc.html',
+          thumbRef: el => { if (el) el.style.backgroundImage = 'linear-gradient(135deg,#bdbbff 0%,#5a58a8 48%,#d10000 100%)'; } },
+        { num: '03', title: 'Lucky Day', sub: 'Small useful thing', href: 'Work.dc.html',
+          thumbRef: el => { if (el) el.style.backgroundImage = 'linear-gradient(135deg,#d10000 0%,#6b1a1a 46%,#bdbbff 100%)'; } }
+      ],
+      stageCardTop: (topRow ? 2317 : 2642) + 'px',
+      stageCardLeft: (stage % 2 === 0 ? 230.5 : 681.5) + 'px',
+      stageVis: stageVis ? '1' : '0',
+      stageRule: stageVis ? '100%' : '0%',
+      stageShift: stageVis ? 'translate3d(0,0,0) scale(1)' : 'translate3d(0,0,0) scale(.24)',
+      stageOrigin: (stage % 2 === 0 ? '48px' : '225px') + ' -14px',
+      onStageGridLeave: () => this.closeStage(),
+      projects: PROJECTS.map((p, i) => ({
+        num: p.num,
+        title: p.title,
+        tag: p.tag || false,
+        size: i === active ? '44px' : '40px',
+        numColor: i === active ? '#8f8f8f' : '#464646',
+        titleColor: i === active ? '#ffffff' : '#716e6e',
+        hover: () => { if (i !== active) this.setState({ active: i, card: 0, pinned: -1 }); }
+      })),
+      onListLeave: () => {},
+      onPanelEnter: () => this.setState({ hold: true }),
+      onPanelLeave: () => this.setState({ hold: false }),
+      cards: cards.map(c => ({
+        label: c.label,
+        title: c.title || false,
+        body: c.body || false,
+        img: c.img || false,
+        imgRef: el => { if (el && c.img) el.style.backgroundImage = 'url("' + c.img + '")'; },
+        alt: c.alt || '',
+        placeholder: c.placeholder || false,
+        metric: c.metric || false
+      })),
+      trackTransform: 'translate3d(-' + (card * 404) + 'px,0,0)',
+      ticks: cards.map((c, i) => ({
+        color: i === card ? '#6b6b6b' : '#000000',
+        pin: () => this.setState({ card: i, pinned: i })
+      })),
+      stages: STAGES.map((s, i) => ({
+        num: s.num,
+        title: s.title,
+        numColor: i === stage && stageVis ? '#8f8f8f' : '#464646',
+        titleColor: i === stage && stageVis ? '#ffffff' : '#716e6e',
+        underline: i === stage && stageVis ? '100%' : '0%',
+        hover: () => this.setStage(i)
+      })),
+      stage: STAGES[stage],
+      vis0: stage === 0 ? '1' : '0',
+      vis1: stage === 1 ? '1' : '0',
+      vis2: stage === 2 ? '1' : '0',
+      vis3: stage === 3 ? '1' : '0',
+      stageCardW: (STAGE_SLOTS[stage].w * STAGE_SLOTS[stage].scale).toFixed(1) + 'px',
+      stageCardH: (180 * STAGE_SLOTS[stage].scale).toFixed(1) + 'px',
+      stageLogos: STAGE_SLOTS[stage].slots.map((sl, i) => {
+        const k = STAGE_SLOTS[stage].scale;
+        const t = STAGES[stage].tools[i];
+        return {
+          name: t.name,
+          left: (sl[0] * k) + 'px',
+          top: (sl[1] * k) + 'px',
+          size: (sl[2] * k) + 'px',
+          ref: el => { if (el && el.getAttribute('src') !== t.src) el.setAttribute('src', t.src); }
+        };
+      }),
+      timeline: TIMELINE,
+      notes: NOTES.map((n, i) => ({ title: n.title || n, href: 'Notes.dc.html#' + ['kill-condition', 'two-hours', 'definition-of-done', 'evals-first', 'photography', 'nine-days'][i % 6] })),
+      footRef: el => { this.footEl = el; },
+      ditherDimRef: el => { this.dimEl = el; },
+      ditherLitRef: el => { this.litEl = el; },
+      mailLabel: this.state.copied ? 'copied \u2713' : 'hello@gg.studio',
+      copyHint: this.state.copied ? 'ADDRESS ON YOUR CLIPBOARD' : '',
+      copyMail: e => {
+        e.preventDefault();
+        const addr = 'hello@gg.studio';
+        if (navigator.clipboard) navigator.clipboard.writeText(addr).catch(() => {});
+        clearTimeout(this.copyT);
+        this.setState({ copied: true });
+        this.copyT = setTimeout(() => this.setState({ copied: false }), 1900);
+      },
+      clock: this.state.clock || '--:--:-- IST',
+      toTop: e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+      footIndex: [
+        { num: '01', name: 'Selected work', href: 'Work.dc.html' },
+        { num: '02', name: 'Labs', href: 'Labs.dc.html' },
+        { num: '03', name: 'Notes', href: '#' },
+        { num: '04', name: 'My story', href: '#' }
+      ],
+      footSocial: [
+        { name: 'X', handle: '@gg', href: '#' },
+        { name: 'GitHub', handle: '/gg', href: '#' },
+        { name: 'Read.cv', handle: '/gg', href: '#' },
+        { name: 'Instagram', handle: '@gg', href: '#' }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>

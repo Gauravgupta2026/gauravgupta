@@ -2,7 +2,7 @@ import type { ElementType, ReactNode } from "react";
 
 /**
  * Centered content column: max 1180px with responsive side padding
- * (48px desktop / 22px mobile, via the --side-pad CSS var). Every section
+ * (160px desktop / 50px mobile, via the --side-pad CSS var). Every section
  * wraps its content in a Shell so horizontal rhythm stays consistent.
  */
 export function Shell({

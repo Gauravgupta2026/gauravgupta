@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./theme.js" defer></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&amp;family=Allison&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #0b0b0b; }
+  body { font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #bdbbff; text-decoration: none; }
+  a:hover { color: #d6d5ff; }
+  ::selection { background: #bdbbff; color: #0b0b0b; }
+  ::placeholder { color: #5c5c5c; }
+  @keyframes om-rise { from { opacity: 0; transform: translate3d(0,20px,0); } to { opacity: 1; transform: none; } }
+  .om-r { animation: om-rise .8s cubic-bezier(.22,1,.36,1) both; }
+  .g-tile { opacity: 0; transform: translateY(36px); transition: opacity 1s cubic-bezier(.22,1,.36,1), transform 1s cubic-bezier(.22,1,.36,1); }
+  .g-tile.in { opacity: 1; transform: none; }
+</style>
+</helmet>
+
+<div style="position: relative; width: 1512px; margin: 0 auto; background: #0b0b0b; color: #f3f3f3; overflow: hidden">
+
+  <nav style="position: fixed; top: 103.2px; left: 0; width: 1512px; height: 16px; z-index: 60; font-size: 16px; line-height: 16px; letter-spacing: 0.06em; color: #8a8a8a">
+    <a href="Landing.dc.html" title="Back to home" style="position: absolute; left: 230.5px; top: -18px; font-family: Allison, cursive; font-size: 46px; line-height: 46px; color: #d10000; transition: color .35s ease" style-hover="color: #f3f3f3">GG</a>
+    <a href="Work.dc.html" style="position: absolute; left: 340.5px; top: 0; color: #8a8a8a" style-hover="color: #f3f3f3">WORK</a>
+    <a href="Labs.dc.html" style="position: absolute; left: 502.9px; top: 0; color: #8a8a8a" style-hover="color: #f3f3f3">LABS</a>
+    <a href="Contact.dc.html" style="position: absolute; left: 1195.1px; top: 0; color: #f3f3f3; white-space: nowrap">SAY&nbsp;&nbsp;HELLO</a>
+  </nav>
+
+  <div class="om-r" style="padding: 292px 230.5px 0; width: 1051px">
+    <div style="display: flex; align-items: baseline; gap: 22px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; color: #5c5c5c">
+      <span style="color: #d10000">&#9679;</span><span>SAY HELLO</span><span>&mdash;</span><span>GET IN TOUCH</span>
+    </div>
+    <h1 style="margin: 34px 0 0; width: 980px; font-family: Newsreader, serif; font-size: 82px; line-height: 82px; font-weight: 300; letter-spacing: -0.025em; color: #ffffff; text-wrap: pretty">Tell me what&rsquo;s stuck.</h1>
+    <p style="margin: 38px 0 0; width: 720px; font-family: Newsreader, serif; font-style: italic; font-size: 27px; line-height: 39px; font-weight: 300; color: #f4f4f4; text-wrap: pretty">The best notes name one problem and one deadline. Skip the throat-clearing &mdash; I read every message myself and reply within a day.</p>
+  </div>
+
+  <div style="margin-top: 92px; width: 1512px; height: 1px; background: #414141"></div>
+
+  <div style="padding: 90px 230.5px 0; width: 1051px; display: grid; grid-template-columns: 384px 1fr; column-gap: 90px; align-items: start">
+
+    <div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">DIRECT</div>
+      <a href="mailto:hello@gg.studio" onClick="{{ copyMail }}" style="display: block; margin-top: 22px; font-family: Newsreader, serif; font-size: 40px; line-height: 46px; font-weight: 300; letter-spacing: -0.02em; color: #ffffff; transition: color .35s ease; text-wrap: pretty" style-hover="color: #bdbbff">{{ mailLabel }}</a>
+      <div style="margin-top: 16px; display: flex; align-items: center; gap: 11px; height: 13px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #bdbbff">{{ copyHint }}</div>
+
+      <div style="margin-top: 40px; height: 1px; background: #1c1c1c"></div>
+
+      <div style="margin-top: 34px; display: grid; grid-template-columns: 108px 1fr; row-gap: 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em">
+        <span style="color: #5c5c5c">LOCATION</span><span style="color: #f3f3f3">MANIPAL, IN</span>
+        <span style="color: #5c5c5c">LOCAL</span><span style="color: #f3f3f3">{{ clock }}</span>
+        <span style="color: #5c5c5c">REPLIES</span><span style="color: #f3f3f3">UNDER 24H</span>
+        <span style="color: #5c5c5c">STATUS</span><span style="color: #bdbbff">OPEN TO PRODUCT WORK</span>
+      </div>
+
+      <div style="margin-top: 44px; height: 1px; background: #1c1c1c"></div>
+
+      <div style="margin-top: 34px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">ELSEWHERE</div>
+      <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 16px">
+        <sc-for list="{{ social }}" as="s" hint-placeholder-count="4">
+          <a href="{{ s.href }}" style="display: flex; align-items: baseline; justify-content: space-between; font-size: 20px; line-height: 24px; letter-spacing: -0.01em; color: #f3f3f3; transition: color .3s ease" style-hover="color: #bdbbff">
+            <span>{{ s.name }}</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #5c5c5c">{{ s.handle }}</span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="padding: 40px 44px 42px; background: #111111; border: 1px solid #242424; box-sizing: border-box; display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #8a8a8a">NEW MESSAGE</div>
+        <div aria-hidden="true" style="width: 44px; height: 31px; border: 1px solid #3a3a3a; border-radius: 4px; background: linear-gradient(to bottom right, transparent calc(50% - 0.6px), #3a3a3a calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) left top / 50% 62% no-repeat, linear-gradient(to bottom left, transparent calc(50% - 0.6px), #3a3a3a calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px)) right top / 50% 62% no-repeat"></div>
+      </div>
+
+      <div style="margin-top: 30px; display: flex; align-items: baseline; gap: 18px">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: #5c5c5c">ABOUT</span>
+        <div style="display: flex; gap: 10px">
+          <sc-for list="{{ topics }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.pick }}" style="padding: 9px 16px; border: 1px solid {{ t.border }}; background: {{ t.bg }}; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: {{ t.fg }}; cursor: pointer; transition: background-color .3s ease, color .3s ease, border-color .3s ease">{{ t.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top: 28px; display: grid; grid-template-columns: 84px 1fr; align-items: center; height: 56px; border-bottom: 1px solid {{ fromLine }}; transition: border-color .35s ease">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.24em; color: {{ fromLabel }}; transition: color .35s ease">FROM</span>
+        <input value="{{ from }}" onChange="{{ onFrom }}" onFocus="{{ focusFrom }}" onBlur="{{ blur }}" placeholder="you@somewhere.com" style="width: 100%; border: none; background: transparent; font-family: Inter, system-ui, sans-serif; font-size: 16px; line-height: 22px; color: #f3f3f3; outline: none">
+      </div>
+
+      <textarea value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onKey }}" onFocus="{{ focusBody }}" onBlur="{{ blur }}" placeholder="One problem, one deadline. What&#39;s stuck, and when is it due?" style="width: 100%; box-sizing: border-box; resize: none; height: 184px; padding: 26px 0 22px; border: none; border-bottom: 1px solid {{ bodyLine }}; background: transparent; font-family: Inter, system-ui, sans-serif; font-size: 17px; line-height: 29px; color: #f3f3f3; outline: none; transition: border-color .35s ease"></textarea>
+
+      <div style="padding-top: 26px; display: flex; align-items: center; gap: 26px">
+        <button onClick="{{ send }}" style="padding: 16px 38px; border: 1px solid {{ sendBorder }}; background: {{ sendBg }}; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: {{ sendFg }}; cursor: {{ sendCursor }}; transition: background-color .35s ease, color .35s ease, border-color .35s ease" style-hover="background: #bdbbff; border-color: #bdbbff; color: #0b0b0b">SEND MESSAGE</button>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: #bdbbff; text-wrap: pretty">{{ mailStatus }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 150px">
+    <div style="width: 1512px; height: 1px; background: #414141"></div>
+  </div>
+
+  <div id="om-sheet" role="dialog" aria-label="Photo archive" style="position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 300; overflow-y: auto; overflow-x: hidden; background: rgba(11,11,11,0.55); backdrop-filter: blur(34px) saturate(1.25); -webkit-backdrop-filter: blur(34px) saturate(1.25); border-top: 1px solid #2a2a2a; transform: {{ sheetShift }}; opacity: {{ sheetOpacity }}; pointer-events: {{ sheetEvents }}; transition: transform .82s cubic-bezier(.16,1,.3,1), opacity .5s ease">
+
+    <div style="position: sticky; top: 0; z-index: 10; width: 1512px; margin: 0 auto; padding: 30px 230.5px 22px; box-sizing: border-box; display: flex; align-items: baseline; gap: 20px; background: linear-gradient(to bottom, rgba(11,11,11,.82), rgba(11,11,11,0))">
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.24em; color: #8a8a8a">FRAMES</span>
+      <span style="font-family: Newsreader, serif; font-style: italic; font-size: 30px; line-height: 30px; font-weight: 300; color: #ffffff">Archive</span>
+      <button onClick="{{ closeSheet }}" style="margin-left: auto; padding: 10px 18px; border: 1px solid #2f2f2f; background: transparent; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #8a8a8a; cursor: pointer; transition: color .3s ease, border-color .3s ease" style-hover="color: #f3f3f3; border-color: #6f6f6f">CLOSE &times;</button>
+    </div>
+
+    <div style="position: relative; width: 1512px; height: 1230px; margin: 0 auto; overflow: hidden">
+
+      <div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none">
+        <img src="https://picsum.photos/seed/frame-super/600/700" alt="" style="position: absolute; left: 60px; top: 40px; width: 720px; height: 720px; object-fit: cover; filter: blur(92px) saturate(1.1); opacity: .5">
+        <img src="https://picsum.photos/seed/frame-lu/600/700" alt="" style="position: absolute; left: 700px; top: -60px; width: 760px; height: 700px; object-fit: cover; filter: blur(96px) saturate(1.05); opacity: .42">
+        <img src="https://picsum.photos/seed/frame-still/600/700" alt="" style="position: absolute; left: 880px; top: 560px; width: 760px; height: 760px; object-fit: cover; filter: blur(100px) saturate(1.1); opacity: .46">
+        <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11,11,11,.74) 0%, rgba(11,11,11,.52) 42%, rgba(11,11,11,.82) 100%)"></div>
+      </div>
+
+      <figure class="g-tile" style="position: absolute; left: 230.5px; top: 34px; width: 452px; margin: 0; transition-delay: 0s">
+        <div style="width: 452px; height: 566px; overflow: hidden; background: #131313"><img src="https://picsum.photos/seed/frame-super/900/1150" alt="Superteam India, Bangalore" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.32) contrast(1.05) brightness(.86)"></div>
+        <figcaption style="margin-top: 16px; display: flex; align-items: baseline; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: #f3f3f3">
+          <span>SUPERTEAM INDIA</span><span style="color: #5c5c5c">BANGALORE &middot; 2024</span>
+        </figcaption>
+      </figure>
+
+      <figure class="g-tile" style="position: absolute; left: 728px; top: 128px; width: 300px; margin: 0; transition-delay: .09s">
+        <div style="width: 300px; height: 384px; overflow: hidden; background: #131313"><img src="https://picsum.photos/seed/frame-goat/700/900" alt="GoatFish set day" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.32) contrast(1.05) brightness(.86)"></div>
+        <figcaption style="margin-top: 16px; display: flex; align-items: baseline; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: #f3f3f3">
+          <span>GOATFISH</span><span style="color: #5c5c5c">SET DAY &middot; 2023</span>
+        </figcaption>
+      </figure>
+
+      <figure class="g-tile" style="position: absolute; left: 1058px; top: 64px; width: 223px; margin: 0; transition-delay: .18s">
+        <div style="width: 223px; height: 292px; overflow: hidden; background: #131313"><img src="https://picsum.photos/seed/frame-lu/600/800" alt="Little Unusual campaign" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.32) contrast(1.05) brightness(.86)"></div>
+        <figcaption style="margin-top: 16px; display: flex; flex-direction: column; gap: 5px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: #f3f3f3">
+          <span>LITTLE UNUSUAL</span><span style="color: #5c5c5c">CAMPAIGN &middot; 2023</span>
+        </figcaption>
+      </figure>
+
+      <figure class="g-tile" style="position: absolute; left: 230.5px; top: 700px; width: 316px; margin: 0; transition-delay: .27s">
+        <div style="width: 316px; height: 312px; overflow: hidden; background: #131313"><img src="https://picsum.photos/seed/frame-manipal/800/800" alt="Manipal workshop" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.32) contrast(1.05) brightness(.86)"></div>
+        <figcaption style="margin-top: 16px; display: flex; align-items: baseline; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: #f3f3f3">
+          <span>MANIPAL</span><span style="color: #5c5c5c">WORKSHOP &middot; 2022</span>
+        </figcaption>
+      </figure>
+
+      <figure class="g-tile" style="position: absolute; left: 592px; top: 764px; width: 348px; margin: 0; transition-delay: .36s">
+        <div style="width: 348px; height: 426px; overflow: hidden; background: #131313"><img src="https://picsum.photos/seed/frame-buddh/900/1100" alt="Buddh Circuit race weekend" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.32) contrast(1.05) brightness(.86)"></div>
+        <figcaption style="margin-top: 16px; display: flex; flex-direction: column; gap: 5px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: #f3f3f3">
+          <span>BUDDH CIRCUIT</span><span style="color: #5c5c5c">RACE WEEKEND &middot; 2023</span>
+        </figcaption>
+      </figure>
+
+      <figure class="g-tile" style="position: absolute; left: 986px; top: 588px; width: 295px; margin: 0; transition-delay: .45s">
+        <div style="width: 295px; height: 476px; overflow: hidden; background: #131313"><img src="https://picsum.photos/seed/frame-still/800/1200" alt="Studio still life" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(.32) contrast(1.05) brightness(.86)"></div>
+        <figcaption style="margin-top: 16px; display: flex; align-items: baseline; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: #f3f3f3">
+          <span>STILL LIFE</span><span style="color: #5c5c5c">STUDIO &middot; 2024</span>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div style="height: 160px"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1512,&quot;height&quot;:1100}}">
+const SOCIAL = [
+  { name: 'X', handle: '@gg', href: '#' },
+  { name: 'GitHub', handle: '/gg', href: '#' },
+  { name: 'Read.cv', handle: '/gg', href: '#' },
+  { name: 'Instagram', handle: '@gg', href: '#' }
+];
+const TOPICS = ['A project', 'A role', 'Scope argument'];
+const ADDR = 'hello@gg.studio';
+
+class Component extends DCLogic {
+  state = { from: '', draft: '', topic: '', focus: '', sent: false, copied: false, clock: '', sheet: false, pull: 0 };
+
+  componentDidMount() {
+    const p = n => String(n).padStart(2, '0');
+    const tick = () => {
+      const d = new Date();
+      const ist = new Date(d.getTime() + (d.getTimezoneOffset() + 330) * 60000);
+      this.setState({ clock: p(ist.getHours()) + ':' + p(ist.getMinutes()) + ':' + p(ist.getSeconds()) + ' IST' });
+    };
+    tick();
+    this.clockId = setInterval(tick, 1000);
+
+    const PULL = 260;
+    const sheetEl = () => document.getElementById('om-sheet');
+    const atBottom = () => window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 3;
+
+    this.openSheet = () => {
+      if (this.state.sheet) return;
+      this.setState({ sheet: true, pull: PULL });
+      setTimeout(() => document.querySelectorAll('.g-tile').forEach(t => t.classList.add('in')), 60);
+    };
+    this.shutSheet = () => {
+      if (!this.state.sheet) return;
+      const s = sheetEl(); if (s) s.scrollTop = 0;
+      this.setState({ sheet: false, pull: 0 });
+    };
+
+    this.onWheel = e => {
+      if (this.state.sheet) {
+        const s = sheetEl();
+        if (e.deltaY < 0 && s && s.scrollTop <= 0) {
+          this.pullUp = (this.pullUp || 0) - e.deltaY;
+          if (this.pullUp > 150) { this.pullUp = 0; this.shutSheet(); }
+        } else this.pullUp = 0;
+        return;
+      }
+      if (e.deltaY > 0 && atBottom()) {
+        const next = Math.min(PULL, this.state.pull + e.deltaY);
+        if (next >= PULL) this.openSheet();
+        else this.setState({ pull: next });
+      } else if (e.deltaY < 0 && this.state.pull) {
+        this.setState({ pull: Math.max(0, this.state.pull + e.deltaY) });
+      }
+    };
+
+    this.onKeyEsc = e => { if (e.key === 'Escape') this.shutSheet(); };
+    this.onTouchStart = e => { this.ty = e.touches[0].clientY; };
+    this.onTouchMove = e => {
+      if (this.ty == null) return;
+      const dy = this.ty - e.touches[0].clientY;
+      this.ty = e.touches[0].clientY;
+      this.onWheel({ deltaY: dy * 2.2 });
+    };
+
+    window.addEventListener('wheel', this.onWheel, { passive: true });
+    window.addEventListener('touchstart', this.onTouchStart, { passive: true });
+    window.addEventListener('touchmove', this.onTouchMove, { passive: true });
+    window.addEventListener('keydown', this.onKeyEsc);
+
+    if (window.IntersectionObserver) {
+      this.gio = new IntersectionObserver(es => es.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); this.gio.unobserve(e.target); }
+      }), { rootMargin: '0px 0px -12% 0px' });
+      let n = 0;
+      this.gpoll = setInterval(() => {
+        const tiles = document.querySelectorAll('.g-tile:not([data-seen])');
+        tiles.forEach(t => { t.setAttribute('data-seen', '1'); this.gio.observe(t); });
+        if (tiles.length || ++n > 20) clearInterval(this.gpoll);
+      }, 120);
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.clockId);
+    clearTimeout(this.copyT);
+    clearInterval(this.gpoll);
+    if (this.gio) this.gio.disconnect();
+    window.removeEventListener('wheel', this.onWheel);
+    window.removeEventListener('touchstart', this.onTouchStart);
+    window.removeEventListener('touchmove', this.onTouchMove);
+    window.removeEventListener('keydown', this.onKeyEsc);
+  }
+
+  renderVals() {
+    const has = (this.state.draft || '').trim();
+    const topic = this.state.topic;
+    return {
+      social: SOCIAL,
+      topics: TOPICS.map(t => ({
+        label: t,
+        pick: () => this.setState({ topic: t === topic ? '' : t }),
+        bg: t === topic ? '#bdbbff' : 'transparent',
+        fg: t === topic ? '#0b0b0b' : '#c8c8c8',
+        border: t === topic ? '#bdbbff' : '#333333'
+      })),
+      from: this.state.from,
+      draft: this.state.draft,
+      onFrom: e => this.setState({ from: e.target.value }),
+      onDraft: e => this.setState({ draft: e.target.value }),
+      onKey: e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); if (has) this.setState({ sent: true, draft: '' }); } },
+      send: () => { if (has) this.setState({ sent: true, draft: '' }); },
+      focusFrom: () => this.setState({ focus: 'from' }),
+      focusBody: () => this.setState({ focus: 'body' }),
+      blur: () => this.setState({ focus: '' }),
+      fromLine: this.state.focus === 'from' ? '#3a3a3a' : '#1c1c1c',
+      bodyLine: this.state.focus === 'body' ? '#3a3a3a' : '#1c1c1c',
+      fromLabel: this.state.focus === 'from' ? '#bdbbff' : '#5c5c5c',
+      sendBg: has ? '#bdbbff' : 'transparent',
+      sendFg: has ? '#0b0b0b' : '#5c5c5c',
+      sendBorder: has ? '#bdbbff' : '#262626',
+      sendCursor: has ? 'pointer' : 'default',
+      mailStatus: this.state.sent ? 'SENT \u2014 I\u2019LL REPLY WITHIN A DAY' : '',
+      mailLabel: this.state.copied ? 'copied \u2713' : ADDR,
+      copyHint: this.state.copied ? 'ADDRESS ON YOUR CLIPBOARD' : '',
+      copyMail: e => {
+        e.preventDefault();
+        if (navigator.clipboard) navigator.clipboard.writeText(ADDR).catch(() => {});
+        clearTimeout(this.copyT);
+        this.setState({ copied: true });
+        this.copyT = setTimeout(() => this.setState({ copied: false }), 1900);
+      },
+      clock: this.state.clock || '--:--:-- IST',
+      sheetShift: this.state.sheet ? 'translate3d(0,0,0)' : 'translate3d(0,100%,0)',
+      sheetOpacity: this.state.sheet ? 1 : 0,
+      sheetEvents: this.state.sheet ? 'auto' : 'none',
+      closeSheet: () => this.shutSheet(),
+      pullWidth: Math.round((Math.min(this.state.pull, 260) / 260) * 74) + 'px',
+      pullLabel: this.state.sheet ? 'ESC TO CLOSE' : (this.state.pull > 20 ? 'ALMOST' : '')
+    };
+  }
+}
+</script>
+</body>
+</html>
