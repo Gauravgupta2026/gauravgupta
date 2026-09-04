@@ -30,18 +30,55 @@
   --spacing-shell: 1180px; /* max content width */
 }
 
+/* Light theme — toggled via [data-theme="light"] on <html> (ThemeToggle).
+   Dark (the @theme block above) is the default; this block is intentionally
+   unlayered so it wins over Tailwind's @theme output regardless of source
+   order. Same token roles, same red/lilac brand hues — lilac shifts darker
+   here since the light-on-dark tint from @theme has no contrast on a light
+   ground. */
+:root[data-theme="light"] {
+  --color-bg: #faf9f6;
+  --color-ink: #17171a;
+  --color-white: #0a0a0a;
+  --color-red: #d10000;
+  --color-lilac: #5b52e0;
+  --color-lilac-soft: #433ac4;
+  --color-soft-ink: #2c2c30;
+  --color-mute: #6b6b6e;
+  --color-mute-2: #58585c;
+  --color-mute-3: #86868a;
+  --color-faint: #aeaeb2;
+  --color-border: #e6e4de;
+  --color-border-2: #ece9e2;
+  --color-divider: #cfccc2;
+  --color-surface: #f2f0ea;
+}
+
 :root {
-  --side-pad: 42px;
+  --side-pad: 160px;
 }
 
 @media (max-width: 768px) {
   :root {
-    --side-pad: 22px;
+    --side-pad: 50px;
   }
 }
 
 * {
   box-sizing: border-box;
+}
+
+.no-scrollbar{ scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar{ display: none; }
+
+/* Stack-logo SVGs ship baked near-black (fill="#14130F") — invert for
+   legibility on the dark ground; the light theme wants them as-authored. */
+.icon-mono {
+  filter: invert(1) brightness(1.15) saturate(0.4);
+}
+
+:root[data-theme="light"] .icon-mono {
+  filter: none;
 }
 
 html {

@@ -57,7 +57,7 @@ export function SiteFooter() {
                 rel="noreferrer"
                 className="inline-flex h-[38px] items-center rounded-full border border-border px-[16px] text-[13px] font-medium text-ink no-underline transition-colors duration-200 hover:border-divider hover:text-white"
               >
-                Check GitHub
+                Check GitHub.
               </a>
             </div>
           </div>
@@ -130,7 +130,7 @@ export function SiteFooter() {
             CURRENTLY
           </div>
           <div className="mt-[24px] text-pretty font-display text-[22px] italic font-light leading-[1.3] text-[#f4f4f4] md:mt-[26px] md:text-[27px]">
-            Open to product design work, and to arguments about scope.
+            Building, mostly. Reading, sometimes. Sleeping, rarely.
           </div>
           <div className="mt-[24px] grid grid-cols-[110px_1fr] gap-y-[12px] font-mono text-[11px] tracking-[0.14em] text-mute md:mt-[28px]">
             <span className="text-faint">MANIPAL, IN</span>

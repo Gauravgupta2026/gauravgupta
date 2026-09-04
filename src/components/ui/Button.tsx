@@ -19,7 +19,7 @@ export function Button({
   className?: string;
 }) {
   const base =
-    "inline-flex items-center justify-center font-mono text-[12px] no-underline transition-colors duration-300 px-[22px] py-[12px] min-h-[44px]";
+    "inline-flex items-center justify-center font-mono text-[10px] no-underline transition-colors duration-300 px-[22px] py-[12px] min-h-[44px]";
   const styles =
     variant === "primary"
       ? "bg-blue text-cream hover:bg-blue-deep"

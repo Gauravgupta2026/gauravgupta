@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
 import { SectionDivider } from "@/components/ui/SectionDivider";
@@ -46,8 +47,8 @@ export function Projects() {
   };
 
   return (
-    <Shell as="section" id="work" wide className="pt-[80px] md:pt-[130px]">
-      <Reveal as="h2" className="m-0 font-display text-[34px] font-light leading-[1.05] tracking-[-0.008em] text-soft-ink md:text-[50px]">
+    <Shell as="section" id="work" wide className="pt-[96px] md:pt-[130px]">
+      <Reveal as="h2" className="m-0 font-display text-[27px] font-light leading-[1.05] tracking-[-0.008em] text-soft-ink md:text-[40px]">
         Selected Work
       </Reveal>
       <SectionDivider className="mt-[26px] md:mt-[45px]" />
@@ -55,30 +56,29 @@ export function Projects() {
       <div className="mt-[40px] grid grid-cols-1 gap-[32px] md:mt-[70px] md:grid-cols-[1fr_1fr] md:gap-[42px]">
         <div className="flex flex-col">
           {selectedWork.map((p, i) => (
-            <button
+            <Link
               key={p.slug}
-              type="button"
+              href={`/projects/${p.slug}`}
               onMouseEnter={() => selectProject(i)}
-              onClick={() => selectProject(i)}
-              className="flex items-baseline gap-0 border-b border-border-2 py-[20px] text-left md:h-[147px] md:border-0 md:py-0"
+              className="flex items-baseline gap-0 border-b border-border-2 py-[20px] text-left no-underline md:h-[147px] md:border-0 md:py-0"
             >
               <span
-                className={`w-[52px] font-mono text-[16px] leading-[40px] transition-colors duration-[450ms] md:w-[90px] md:text-[24px] ${
+                className={`w-[52px] font-mono text-[13px] leading-[32px] transition-colors duration-[450ms] md:w-[90px] md:text-[19px] ${
                   i === active ? "text-mute" : "text-faint"
                 }`}
               >
                 {p.num}
               </span>
               <span
-                className={`font-display font-light leading-[40px] tracking-[-0.005em] transition-[color,font-size] duration-[450ms] ${
+                className={`font-display font-light leading-[32px] tracking-[-0.005em] transition-[color,font-size] duration-[450ms] ${
                   i === active
-                    ? "text-[28px] text-white md:text-[44px]"
-                    : "text-[24px] text-mute-3 md:text-[40px]"
+                    ? "text-[22px] text-white md:text-[35px]"
+                    : "text-[19px] text-mute-3 md:text-[32px]"
                 }`}
               >
                 {p.title}
               </span>
-            </button>
+            </Link>
           ))}
         </div>
 
@@ -96,30 +96,30 @@ export function Projects() {
                 key={i}
                 className="box-border flex h-full w-full min-w-0 flex-shrink-0 flex-col overflow-hidden bg-bg p-[24px] md:p-[32px]"
               >
-                <div className="font-mono text-[10px] font-medium leading-[10px] tracking-[0.14em] text-mute-3 md:text-[11px] md:leading-[11px]">
+                <div className="font-mono text-[8px] font-medium leading-[8px] tracking-[0.14em] text-mute-3 md:text-[9px] md:leading-[9px]">
                   {c.label}
                 </div>
 
                 {c.placeholder && (
                   <div className="mt-[20px] flex flex-1 items-end bg-[repeating-linear-gradient(135deg,#0a0a0a_0_8px,#141414_8px_16px)] p-[16px] md:mt-[24px]">
-                    <div className="whitespace-pre-line font-mono text-[11px] leading-[16px] text-[#6f6f6f]">
+                    <div className="whitespace-pre-line font-mono text-[9px] leading-[13px] text-[#6f6f6f]">
                       {c.placeholder}
                     </div>
                   </div>
                 )}
 
                 {c.title && (
-                  <div className="mt-[20px] text-pretty text-[18px] font-normal leading-[24px] tracking-[-0.01em] text-ink md:mt-[24px] md:text-[20px] md:leading-[27px]">
+                  <div className="mt-[20px] text-pretty text-[14px] font-normal leading-[19px] tracking-[-0.01em] text-ink md:mt-[24px] md:text-[16px] md:leading-[22px]">
                     {c.title}
                   </div>
                 )}
                 {c.body && (
-                  <div className="mt-[12px] text-pretty text-[13px] leading-[19px] text-[#9a9a9a] md:mt-[14px] md:text-[14px] md:leading-[21px]">
+                  <div className="mt-[12px] text-pretty text-[10px] leading-[15px] text-[#9a9a9a] md:mt-[14px] md:text-[11px] md:leading-[17px]">
                     {c.body}
                   </div>
                 )}
                 {c.metric && (
-                  <div className="mt-auto pt-[16px] text-[13px] leading-[13px] text-lilac md:pt-[20px] md:text-[14px] md:leading-[14px]">
+                  <div className="mt-auto pt-[16px] text-[10px] leading-[10px] text-lilac md:pt-[20px] md:text-[11px] md:leading-[11px]">
                     {c.metric}
                   </div>
                 )}
