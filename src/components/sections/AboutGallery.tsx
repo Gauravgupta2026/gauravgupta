@@ -42,7 +42,7 @@ export function AboutGallery() {
             key={photo.id}
             type="button"
             onClick={() => setOpen(photo)}
-            className="group relative h-[220px] w-[160px] flex-shrink-0 snap-start overflow-hidden border border-border md:h-[340px] md:w-[250px]"
+            className="group relative h-[165px] w-[120px] flex-shrink-0 snap-start overflow-hidden border border-border md:h-[255px] md:w-[188px]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -52,7 +52,7 @@ export function AboutGallery() {
               className="absolute inset-0 h-full w-full object-cover grayscale transition-[filter] duration-500 group-hover:grayscale-0"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-            <span className="absolute bottom-[12px] left-[12px] font-mono text-[9px] tracking-[0.14em] text-mute-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span className="absolute bottom-[12px] left-[12px] font-mono text-[10px] tracking-[0.14em] text-mute-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               {photo.caption}
             </span>
           </button>
@@ -79,7 +79,7 @@ export function AboutGallery() {
               className="absolute inset-0 h-full w-full object-cover"
             />
           )}
-          <div className="absolute bottom-[-32px] left-0 font-mono text-[10px] tracking-[0.2em] text-mute">
+          <div className="absolute bottom-[-32px] left-0 font-mono text-[12px] tracking-[0.2em] text-mute">
             {open?.caption}
           </div>
         </div>

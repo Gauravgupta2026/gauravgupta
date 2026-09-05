@@ -1,20 +1,23 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ElementType,
-  type ReactNode,
-} from "react";
+import { m, useReducedMotion, type Transition } from "framer-motion";
+import { useMemo, type ElementType, type ReactNode } from "react";
+
+const EASE: Transition["ease"] = [0.16, 0.7, 0.2, 1];
 
 /**
- * Scroll-in fade + rise. Mirrors the reference IntersectionObserver:
- * threshold 0.12, rootMargin trims the bottom 7% so reveals fire slightly
- * before the element is fully on screen. Unobserves after first reveal.
+ * Scroll-in fade + rise, driven by Framer Motion's `whileInView` instead of a
+ * hand-rolled IntersectionObserver — same trigger point (12% visible, bottom
+ * 7% trimmed) but interpolated on the compositor, so it stays smooth even
+ * when several reveals fire in the same frame (e.g. a fast scroll past a
+ * stacked list). `once: true` mirrors the old unobserve-after-first-reveal.
  *
- * The `.reveal` base + `.is-visible` classes live in globals.css, which also
- * neutralizes the effect under prefers-reduced-motion.
+ * Only animates `opacity`/`transform` (compositor-only, no layout/paint) and
+ * disconnects its observer after firing once — no ongoing per-frame cost.
+ * Uses the `m` component (not `motion`) paired with `<LazyMotion>` in
+ * layout.tsx, which loads only the `domAnimation` feature set instead of
+ * Framer Motion's full bundle — this is the one animated primitive on the
+ * site, so keep it on the lightweight import path.
  */
 export function Reveal({
   as: Tag = "div",
@@ -29,35 +32,31 @@ export function Reveal({
   delay?: number;
   children: ReactNode;
 } & Record<string, unknown>) {
-  const ref = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
+  const reducedMotion = useReducedMotion();
+  // Memoized on Tag: m.create() returns a new component identity on every
+  // call, and recreating it per-render would make React remount the element
+  // each time — resetting whileInView mid-animation into an abrupt pop
+  // instead of a smooth transition.
+  const MotionTag = useMemo(() => m.create(Tag), [Tag]);
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -7% 0px" },
+  if (reducedMotion) {
+    return (
+      <Tag className={className} {...rest}>
+        {children}
+      </Tag>
     );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+  }
 
   return (
-    <Tag
-      ref={ref}
-      className={`reveal ${visible ? "is-visible" : ""} ${className}`}
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+    <MotionTag
+      className={className}
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.12, margin: "0px 0px -7% 0px" }}
+      transition={{ duration: 0.9, ease: EASE, delay: delay / 1000 }}
       {...rest}
     >
       {children}
-    </Tag>
+    </MotionTag>
   );
 }

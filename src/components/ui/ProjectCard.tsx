@@ -50,24 +50,24 @@ export function ProjectCard({ project }: { project: Project }) {
       {/* left — copy */}
       <div className="flex flex-col p-[24px] md:p-[34px]">
         <div
-          className={`mb-[22px] font-mono text-[9px] uppercase tracking-[0.2em] ${
+          className={`mb-[22px] font-mono text-[10px] uppercase tracking-[0.2em] ${
             accentAct ? "text-blue" : "text-mute"
           }`}
         >
           {act}
         </div>
-        <h3 className="m-0 mb-[8px] font-display text-[28px] font-medium text-ink md:text-[34px]">
+        <h3 className="m-0 mb-[8px] font-display text-[32px] font-medium text-ink md:text-[34px]">
           {title}
         </h3>
-        <div className="mb-[20px] font-mono text-[11px] text-soft-ink">
+        <div className="mb-[20px] font-mono text-[13px] text-soft-ink">
           {subtitle}
         </div>
-        <p className="m-0 mb-auto font-display text-[16px] italic leading-[1.55] text-[#46443e]">
+        <p className="m-0 mb-auto font-display text-[18px] italic leading-[1.55] text-[#46443e]">
           &ldquo;{quote}&rdquo;
         </p>
         <Link
           href={target}
-          className="group/cta mt-[26px] inline-flex items-center gap-[7px] font-mono text-[11px] tracking-[0.08em] text-blue no-underline"
+          className="group/cta mt-[26px] inline-flex items-center gap-[7px] font-mono text-[13px] tracking-[0.08em] text-blue no-underline"
         >
           {cta}
           <span className="transition-transform duration-300 group-hover/cta:translate-x-[5px]">
@@ -87,14 +87,14 @@ export function ProjectCard({ project }: { project: Project }) {
       <div className="flex flex-col border-t border-ink/12 md:border-t-0">
         {meta.map((m) => (
           <div key={m.label} className="border-b border-ink/10 p-[22px_24px] md:p-[26px_28px]">
-            <div className="mb-[10px] font-mono text-[9px] uppercase tracking-[0.2em] text-mute">
+            <div className="mb-[10px] font-mono text-[10px] uppercase tracking-[0.2em] text-mute">
               {m.label}
             </div>
-            <div className="font-display text-[20px] text-ink">{m.value}</div>
+            <div className="font-display text-[23px] text-ink">{m.value}</div>
           </div>
         ))}
         <div className="p-[22px_24px] md:p-[26px_28px]">
-          <div className="mb-[16px] font-mono text-[9px] uppercase tracking-[0.2em] text-mute">
+          <div className="mb-[16px] font-mono text-[10px] uppercase tracking-[0.2em] text-mute">
             Stack
           </div>
           <div className="flex flex-wrap gap-x-[18px] gap-y-[14px]">
@@ -114,7 +114,7 @@ export function ProjectCard({ project }: { project: Project }) {
                     className="h-[6px] w-[6px] rounded-full bg-ink/25"
                   />
                 )}
-                <span className="font-mono text-[11px] text-soft-ink">
+                <span className="font-mono text-[13px] text-soft-ink">
                   {s.name}
                 </span>
               </div>

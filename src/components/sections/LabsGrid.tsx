@@ -10,9 +10,9 @@ const COLUMNS: LabItem[][] = [0, 1, 2].map((col) =>
 
 /** Mobile tiles run shorter than desktop — keyed by the reference's `h` value. */
 const HEIGHT_CLASS: Record<number, string> = {
-  447: "h-[220px] md:h-[313px]",
-  363: "h-[180px] md:h-[254px]",
-  279: "h-[140px] md:h-[195px]",
+  447: "h-[154px] md:h-[219px]",
+  363: "h-[126px] md:h-[178px]",
+  279: "h-[98px] md:h-[137px]",
 };
 
 /**
@@ -50,13 +50,13 @@ export function LabsGrid() {
                   className="absolute inset-0 h-full w-full"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end gap-[4px] bg-gradient-to-t from-[rgba(6,6,6,.86)] via-[rgba(6,6,6,.2)] via-46% to-[rgba(6,6,6,0)] p-[12px_14px] opacity-100 transition-opacity duration-300 md:gap-[8px] md:p-[20px_22px] md:opacity-0 md:group-hover:opacity-100">
-                  <div className="font-mono text-[7px] tracking-[0.24em] text-mute md:text-[8px]">
+                  <div className="font-mono text-[8px] tracking-[0.24em] text-mute md:text-[8px]">
                     {item.kind}
                   </div>
-                  <div className="font-display text-[13px] font-light leading-[16px] text-white md:text-[22px] md:leading-[22px]">
+                  <div className="font-display text-[15px] font-light leading-[18px] text-white md:text-[22px] md:leading-[22px]">
                     {item.title}
                   </div>
-                  <div className="text-[9px] leading-[9px] text-lilac md:text-[10px] md:leading-[10px]">
+                  <div className="text-[10px] leading-[10px] text-lilac md:text-[10px] md:leading-[10px]">
                     {item.state}
                   </div>
                 </div>
@@ -86,13 +86,13 @@ export function LabsGrid() {
             />
           )}
           <div className="absolute bottom-[-40px] left-0 right-0 flex flex-wrap items-baseline gap-[10px] md:bottom-[-54px] md:gap-[20px]">
-            <span className="font-display text-[15px] font-light leading-[18px] text-white md:text-[22px] md:leading-[22px]">
+            <span className="font-display text-[17px] font-light leading-[21px] text-white md:text-[22px] md:leading-[22px]">
               {open?.title}
             </span>
-            <span className="font-mono text-[7px] tracking-[0.24em] text-mute md:text-[8px]">
+            <span className="font-mono text-[8px] tracking-[0.24em] text-mute md:text-[8px]">
               {open?.kind}
             </span>
-            <span className="ml-auto font-mono text-[8px] tracking-[0.2em] text-lilac md:text-[9px]">
+            <span className="ml-auto font-mono text-[9px] tracking-[0.2em] text-lilac md:text-[9px]">
               {open?.state}
             </span>
           </div>

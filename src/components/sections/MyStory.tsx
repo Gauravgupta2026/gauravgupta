@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
 import { timeline } from "@/content/story";
@@ -10,17 +11,19 @@ import { timeline } from "@/content/story";
 export function MyStory() {
   return (
     <section id="story" className="pt-[80px] md:pt-[130px]">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src="/photos/beach-manipal.png"
         alt="Beach night, Manipal"
+        width={1512}
+        height={843}
+        sizes="100vw"
         className="block h-auto w-full"
       />
 
       <Shell wide className="pt-[56px] md:pt-[90px]">
         <Reveal
           as="p"
-          className="m-0 mx-auto max-w-[700px] text-pretty text-center font-body text-[13px] leading-[22px] text-mute-3 md:text-[14px] md:leading-[26px]"
+          className="m-0 mx-auto max-w-[700px] text-pretty text-center font-body text-[15px] leading-[25px] text-mute-3 md:text-[14px] md:leading-[26px]"
         >
           Grew up in Manipal taking things apart. Everything worth building
           since has needed more than one pair of hands.
@@ -29,7 +32,7 @@ export function MyStory() {
         <Reveal
           as="div"
           delay={80}
-          className="mx-auto mt-[36px] max-w-[820px] text-[13px] leading-[21px] md:mt-[56px] md:text-[14px] md:leading-[33.5px]"
+          className="mx-auto mt-[36px] max-w-[820px] text-[15px] leading-[24px] md:mt-[56px] md:text-[14px] md:leading-[33.5px]"
         >
           <p className="m-0 text-pretty text-mute-3">
             Manipal, second year. <span className="text-ink">The go-kart team</span> had a
@@ -56,7 +59,7 @@ export function MyStory() {
         <Reveal
           as="div"
           delay={160}
-          className="mx-auto mt-[44px] max-w-[820px] font-mono text-[10px] md:mt-[64px] md:text-[12px]"
+          className="mx-auto mt-[44px] max-w-[820px] font-mono text-[12px] md:mt-[64px] md:text-[12px]"
         >
           {timeline.map((r) => (
             <div
@@ -80,7 +83,7 @@ export function MyStory() {
         <Reveal
           as="div"
           delay={240}
-          className="mx-auto mt-[44px] max-w-[820px] text-[13px] leading-[21px] md:mt-[64px] md:text-[14px] md:leading-[33.5px]"
+          className="mx-auto mt-[44px] max-w-[820px] text-[15px] leading-[24px] md:mt-[64px] md:text-[14px] md:leading-[33.5px]"
         >
           <p className="m-0 text-pretty text-mute-3">
             Not everything is on that list.

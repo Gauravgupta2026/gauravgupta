@@ -16,7 +16,7 @@ export function ArticleBody({ body }: { body: Block[] }) {
             return (
               <p
                 key={i}
-                className="m-0 font-display text-[17px] leading-[1.75] text-ink/90 md:text-[19px]"
+                className="m-0 font-display text-[20px] leading-[1.75] text-ink/90 md:text-[19px]"
               >
                 {block.text}
               </p>
@@ -26,7 +26,7 @@ export function ArticleBody({ body }: { body: Block[] }) {
             return (
               <h2
                 key={i}
-                className="m-0 mt-[22px] font-display text-[23px] font-medium leading-[1.2] text-ink md:text-[27px]"
+                className="m-0 mt-[22px] font-display text-[26px] font-medium leading-[1.2] text-ink md:text-[27px]"
               >
                 {block.text}
               </h2>
@@ -38,11 +38,11 @@ export function ArticleBody({ body }: { body: Block[] }) {
                 key={i}
                 className="my-[14px] border-l-2 border-blue pl-[24px]"
               >
-                <blockquote className="m-0 font-display text-[20px] italic leading-[1.5] text-ink md:text-[23px]">
+                <blockquote className="m-0 font-display text-[23px] italic leading-[1.5] text-ink md:text-[23px]">
                   {block.text}
                 </blockquote>
                 {block.cite ? (
-                  <figcaption className="mt-[12px] font-mono text-[11px] uppercase tracking-[0.14em] text-mute">
+                  <figcaption className="mt-[12px] font-mono text-[13px] uppercase tracking-[0.14em] text-mute">
                     {block.cite}
                   </figcaption>
                 ) : null}
@@ -55,7 +55,7 @@ export function ArticleBody({ body }: { body: Block[] }) {
                 {block.items.map((item, j) => (
                   <li
                     key={j}
-                    className="font-display text-[18px] leading-[1.65] text-ink/90 marker:text-blue"
+                    className="font-display text-[21px] leading-[1.65] text-ink/90 marker:text-blue"
                   >
                     {item}
                   </li>
@@ -87,7 +87,7 @@ export function ArticleBody({ body }: { body: Block[] }) {
                   />
                 )}
                 {block.caption ? (
-                  <figcaption className="mt-[12px] text-center font-mono text-[11px] leading-[1.6] text-soft-ink">
+                  <figcaption className="mt-[12px] text-center font-mono text-[13px] leading-[1.6] text-soft-ink">
                     {block.caption}
                   </figcaption>
                 ) : null}

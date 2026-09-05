@@ -17,16 +17,16 @@ export function Hero() {
       as="header"
       id="top"
       wide
-      className="min-h-dvh pb-[88px] pt-[96px] md:pb-[80px] md:pt-[145px]"
+      className="min-h-dvh pb-[48px] pt-[96px] md:pb-[48px] md:pt-[145px]"
     >
-      <div className="font-logo text-[35px] leading-none text-red md:text-[51px]">
+      <div className="font-logo text-[40px] leading-none text-red md:text-[51px]">
         GG
       </div>
 
       <Reveal
         as="div"
         delay={0}
-        className="mt-[56px] font-body text-[13px] leading-[21px] md:mt-[110px] md:text-[14px] md:leading-[23px]"
+        className="mt-[56px] font-body text-[15px] leading-[24px] md:mt-[110px] md:text-[14px] md:leading-[23px]"
       >
         <div className="text-ink">Gaurav Gupta</div>
         <div className="text-mute-2">Product &amp; design &middot; Bengaluru</div>
@@ -35,7 +35,7 @@ export function Hero() {
       <Reveal
         as="p"
         delay={80}
-        className="m-0 mt-[22px] max-w-[1051px] text-pretty font-body text-[13px] leading-[22px] text-ink md:mt-[28px] md:text-[14px] md:leading-[26px]"
+        className="m-0 mt-[22px] max-w-[1051px] text-pretty font-body text-[15px] leading-[25px] text-ink md:mt-[28px] md:text-[14px] md:leading-[26px]"
       >
         I find the friction, build the smallest thing that removes it, then
         check whether it worked. I focus on accessibility, performance and
@@ -45,7 +45,7 @@ export function Hero() {
       <Reveal
         as="p"
         delay={160}
-        className="m-0 mt-[14px] max-w-[1051px] text-pretty font-body text-[13px] leading-[22px] text-ink md:mt-[16px] md:text-[14px] md:leading-[26px]"
+        className="m-0 mt-[14px] max-w-[1051px] text-pretty font-body text-[15px] leading-[25px] text-ink md:mt-[16px] md:text-[14px] md:leading-[26px]"
       >
         I am currently working on:{" "}
         <Link href="/projects/wylde" className="font-medium text-ink">
@@ -59,7 +59,7 @@ export function Hero() {
       <Reveal
         as="p"
         delay={240}
-        className="m-0 mt-[14px] max-w-[1051px] font-body text-[13px] leading-[22px] text-mute-2 md:mt-[16px] md:text-[14px] md:leading-[26px]"
+        className="m-0 mt-[14px] max-w-[1051px] font-body text-[15px] leading-[25px] text-mute-2 md:mt-[16px] md:text-[14px] md:leading-[26px]"
       >
         Previously at KPMG, on operational risk controls and an
         evidence-gated decision engine.
@@ -68,7 +68,7 @@ export function Hero() {
       <Reveal
         as="p"
         delay={320}
-        className="m-0 mt-[14px] max-w-[1051px] text-pretty font-body text-[13px] leading-[22px] text-ink md:mt-[16px] md:text-[14px] md:leading-[26px]"
+        className="m-0 mt-[14px] max-w-[1051px] text-pretty font-body text-[15px] leading-[25px] text-ink md:mt-[16px] md:text-[14px] md:leading-[26px]"
       >
         Available for product management roles.
         <br />

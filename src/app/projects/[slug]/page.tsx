@@ -82,7 +82,7 @@ export default async function ProjectPage({
       <Nav />
 
       <Shell as="header" wide className="pb-[28px] pt-[80px] md:pb-[56px] md:pt-[145px]">
-        <nav className="flex items-center gap-[8px] font-mono text-[8px] uppercase tracking-[0.14em] md:text-[9px]">
+        <nav className="flex items-center gap-[8px] font-mono text-[9px] uppercase tracking-[0.14em] md:text-[9px]">
           <Link
             href="/"
             className="text-mute no-underline transition-colors duration-300 hover:text-lilac"
@@ -98,14 +98,14 @@ export default async function ProjectPage({
         <Reveal
           as="h1"
           delay={60}
-          className="m-0 mt-[16px] text-pretty font-display text-[26px] font-light leading-[1.08] tracking-[-0.02em] text-white md:mt-[34px] md:text-[64px] md:leading-[61px]"
+          className="m-0 mt-[16px] text-pretty font-display text-[30px] font-light leading-[1.08] tracking-[-0.02em] text-white md:mt-[34px] md:text-[64px] md:leading-[61px]"
         >
           {project.title}
         </Reveal>
         <Reveal
           as="p"
           delay={120}
-          className="m-0 mt-[12px] max-w-[677px] text-pretty text-[11px] leading-[17px] text-mute-2 md:mt-[28px] md:text-[16px] md:leading-[26px]"
+          className="m-0 mt-[12px] max-w-[677px] text-pretty text-[13px] leading-[20px] text-mute-2 md:mt-[28px] md:text-[16px] md:leading-[26px]"
         >
           {project.tagline}
         </Reveal>
@@ -137,24 +137,24 @@ export default async function ProjectPage({
       <Shell wide className="mt-[36px] md:mt-[80px]">
         <div className="grid grid-cols-1 gap-[18px] border-t border-border-2 pt-[20px] sm:grid-cols-2 sm:gap-[40px] md:pt-[36px]">
           <div>
-            <h2 className="m-0 mb-[10px] font-mono text-[7px] tracking-[0.24em] text-mute md:mb-[18px] md:text-[8px]">
+            <h2 className="m-0 mb-[10px] font-mono text-[8px] tracking-[0.24em] text-mute md:mb-[18px] md:text-[8px]">
               Tech stack
             </h2>
             <ul className="m-0 flex list-none flex-col gap-[6px] p-0 md:gap-[10px]">
               {project.techStack.map((t) => (
-                <li key={t} className="text-[10px] text-soft-ink md:text-[12px]">
+                <li key={t} className="text-[12px] text-soft-ink md:text-[12px]">
                   {t}
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <h2 className="m-0 mb-[10px] font-mono text-[7px] tracking-[0.24em] text-mute md:mb-[18px] md:text-[8px]">
+            <h2 className="m-0 mb-[10px] font-mono text-[8px] tracking-[0.24em] text-mute md:mb-[18px] md:text-[8px]">
               Stakeholders
             </h2>
             <ul className="m-0 flex list-none flex-col gap-[6px] p-0 md:gap-[10px]">
               {project.stakeholders.map((s) => (
-                <li key={s} className="text-[10px] text-soft-ink md:text-[12px]">
+                <li key={s} className="text-[12px] text-soft-ink md:text-[12px]">
                   {s}
                 </li>
               ))}
@@ -165,7 +165,7 @@ export default async function ProjectPage({
 
       {/* statement pull-quote */}
       <Shell wide className="mt-[32px] md:mt-[72px]">
-        <p className="m-0 max-w-[820px] text-pretty font-display text-[15px] font-light italic leading-[1.35] text-white md:text-[26px]">
+        <p className="m-0 max-w-[820px] text-pretty font-display text-[17px] font-light italic leading-[1.35] text-white md:text-[26px]">
           &ldquo;{project.statement}&rdquo;
         </p>
       </Shell>
@@ -187,7 +187,7 @@ export default async function ProjectPage({
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-mono text-[8px] uppercase tracking-[0.14em] text-lilac no-underline transition-opacity hover:opacity-70 md:text-[9px]"
+                      className="font-mono text-[9px] uppercase tracking-[0.14em] text-lilac no-underline transition-opacity hover:opacity-70 md:text-[9px]"
                     >
                       {PROOF_LABELS[key]} &rarr;
                     </a>
@@ -196,7 +196,7 @@ export default async function ProjectPage({
               </div>
             )}
             {project.proof.feedback && (
-              <p className="m-0 text-[10px] leading-[15px] text-mute-2 md:text-[10px] md:leading-[18px]">
+              <p className="m-0 text-[12px] leading-[17px] text-mute-2 md:text-[10px] md:leading-[18px]">
                 {project.proof.feedback}
               </p>
             )}
@@ -215,7 +215,7 @@ export default async function ProjectPage({
               {section.body.map((para, i) => (
                 <p
                   key={i}
-                  className="m-0 text-pretty text-[13px] leading-[21px] text-soft-ink md:text-[15px] md:leading-[24px]"
+                  className="m-0 text-pretty text-[15px] leading-[24px] text-soft-ink md:text-[15px] md:leading-[24px]"
                 >
                   {para}
                 </p>
@@ -261,7 +261,7 @@ export default async function ProjectPage({
         <SectionDivider className="mb-[56px] md:mb-[72px]" />
         <Reveal
           as="h2"
-          className="m-0 mb-[24px] font-display text-[21px] font-light text-white md:mb-[28px] md:text-[27px]"
+          className="m-0 mb-[24px] font-display text-[24px] font-light text-white md:mb-[28px] md:text-[27px]"
         >
           Next project
         </Reveal>
@@ -277,7 +277,7 @@ export default async function ProjectPage({
                 seed={`${p.slug}-next`}
                 className="aspect-[4/3] w-full"
               />
-              <span className="absolute bottom-[16px] left-[16px] inline-flex border border-border bg-bg px-[14px] py-[7px] font-mono text-[9px] text-ink">
+              <span className="absolute bottom-[16px] left-[16px] inline-flex border border-border bg-bg px-[14px] py-[7px] font-mono text-[10px] text-ink">
                 {p.title}
               </span>
             </Link>

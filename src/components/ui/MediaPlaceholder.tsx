@@ -40,7 +40,7 @@ export function MediaPlaceholder({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-black/25" />
         <div className={`absolute inset-0 flex ${placement}`}>
-          <span className="font-mono text-[7px] uppercase tracking-[0.22em] text-[#e6e6e6]">
+          <span className="font-mono text-[8px] uppercase tracking-[0.22em] text-[#e6e6e6]">
             {label}
           </span>
         </div>
@@ -53,7 +53,7 @@ export function MediaPlaceholder({
       className={`flex ${placement} bg-[#0c0c0c] ${className}`}
       style={{ backgroundImage: stripes, ...style }}
     >
-      <span className="font-mono text-[7px] uppercase tracking-[0.22em] text-[#5a5a5a]">
+      <span className="font-mono text-[8px] uppercase tracking-[0.22em] text-[#5a5a5a]">
         {label}
       </span>
     </div>

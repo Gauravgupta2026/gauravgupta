@@ -29,9 +29,9 @@ function pseudoRandom(n: number) {
 // `floor` keeps a light dusting everywhere else so it still reads as
 // covering the full card rather than one corner.
 function draw(canvas: HTMLCanvasElement) {
-  const isLight = document.documentElement.getAttribute("data-theme") === "light";
-  const [dotA, dotB, dotC] = isLight ? LIGHT_PALETTE : DARK_PALETTE;
-  const { cell, maxRadius, floor, alphaMin, alphaMax } = isLight ? LIGHT_TUNING : DARK_TUNING;
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  const [dotA, dotB, dotC] = isDark ? DARK_PALETTE : LIGHT_PALETTE;
+  const { cell, maxRadius, floor, alphaMin, alphaMax } = isDark ? DARK_TUNING : LIGHT_TUNING;
 
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const w = canvas.clientWidth;
