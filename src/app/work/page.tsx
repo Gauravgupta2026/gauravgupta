@@ -19,14 +19,14 @@ export default function WorkPage() {
       <Shell as="header" wide className="pb-[28px] pt-[80px] md:pb-[56px] md:pt-[145px]">
         <Reveal
           as="h1"
-          className="m-0 font-display text-[26px] font-light leading-[1.05] tracking-[-0.008em] text-white md:text-[40px]"
+          className="m-0 font-display text-[30px] font-light leading-[1.05] tracking-[-0.008em] text-white md:text-[40px]"
         >
           Work
         </Reveal>
         <Reveal
           as="p"
           delay={80}
-          className="m-0 mt-[14px] max-w-[677px] text-pretty font-body text-[11px] leading-[18px] text-mute-2 md:mt-[28px] md:text-[14px] md:leading-[23px]"
+          className="m-0 mt-[14px] max-w-[677px] text-pretty font-body text-[13px] leading-[21px] text-mute-2 md:mt-[28px] md:text-[14px] md:leading-[23px]"
         >
           Case studies in full — the constraint, what shipped, and whether it
           worked. Three write-ups in progress.

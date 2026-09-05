@@ -33,10 +33,10 @@ export function ContactCard() {
         className="grid grid-cols-1 gap-[40px] py-[64px] sm:grid-cols-[1fr_1.3fr_1fr] md:gap-[32px] md:py-[96px]"
       >
         <div>
-          <span className="font-logo text-[36px] leading-none text-red md:text-[42px]">
+          <span className="font-logo text-[41px] leading-none text-red md:text-[42px]">
             GG
           </span>
-          <div className="mt-[26px] font-mono text-[10px] tracking-[0.24em] text-mute">
+          <div className="mt-[26px] font-mono text-[12px] tracking-[0.24em] text-mute">
             INDEX
           </div>
           <div className="mt-[22px] flex flex-col gap-[14px]">
@@ -44,7 +44,7 @@ export function ContactCard() {
               <a
                 key={l.name}
                 href={l.href}
-                className="text-[14px] text-soft-ink no-underline transition-colors duration-300 hover:text-lilac"
+                className="text-[16px] text-soft-ink no-underline transition-colors duration-300 hover:text-lilac"
               >
                 {l.name}
               </a>
@@ -58,7 +58,7 @@ export function ContactCard() {
             style={{ borderColor: focus === "from" ? "#3a3a3a" : "#1c1c1c" }}
           >
             <span
-              className="font-mono text-[8px] tracking-[0.24em] transition-colors duration-300"
+              className="font-mono text-[9px] tracking-[0.24em] transition-colors duration-300"
               style={{ color: focus === "from" ? "#bdbbff" : "#5c5c5c" }}
             >
               FROM
@@ -69,7 +69,7 @@ export function ContactCard() {
               onFocus={() => setFocus("from")}
               onBlur={() => setFocus("")}
               placeholder="you@somewhere.com"
-              className="w-full border-none bg-transparent font-body text-[12px] text-ink outline-none placeholder:text-faint md:text-[13px]"
+              className="w-full border-none bg-transparent font-body text-[14px] text-ink outline-none placeholder:text-faint md:text-[13px]"
             />
           </div>
 
@@ -85,7 +85,7 @@ export function ContactCard() {
               }
             }}
             placeholder="Tell me where I got it wrong."
-            className="h-[80px] w-full resize-none border-0 border-b bg-transparent py-[14px] font-body text-[13px] leading-[21px] text-ink outline-none transition-colors duration-300 placeholder:text-mute md:h-[90px] md:text-[14px] md:leading-[23px]"
+            className="h-[80px] w-full resize-none border-0 border-b bg-transparent py-[14px] font-body text-[15px] leading-[24px] text-ink outline-none transition-colors duration-300 placeholder:text-mute md:h-[90px] md:text-[14px] md:leading-[23px]"
             style={{ borderColor: focus === "body" ? "#3a3a3a" : "#1c1c1c" }}
           />
 
@@ -94,7 +94,7 @@ export function ContactCard() {
               type="button"
               onClick={send}
               disabled={!canSend}
-              className="border px-[20px] py-[9px] font-mono text-[9px] tracking-[0.2em] transition-colors duration-300"
+              className="border px-[20px] py-[9px] font-mono text-[10px] tracking-[0.2em] transition-colors duration-300"
               style={{
                 borderColor: canSend ? "#bdbbff" : "#262626",
                 background: canSend ? "#bdbbff" : "transparent",
@@ -104,14 +104,14 @@ export function ContactCard() {
             >
               SEND
             </button>
-            <span className="font-mono text-[8px] tracking-[0.2em] text-lilac">
+            <span className="font-mono text-[9px] tracking-[0.2em] text-lilac">
               {sent ? "SENT — I'LL REPLY WITHIN A DAY" : ""}
             </span>
           </div>
         </div>
 
         <div className="sm:text-right">
-          <div className="font-mono text-[10px] tracking-[0.24em] text-mute">
+          <div className="font-mono text-[12px] tracking-[0.24em] text-mute">
             ELSEWHERE
           </div>
           <div className="mt-[22px] flex flex-col gap-[14px]">
@@ -119,7 +119,7 @@ export function ContactCard() {
               <a
                 key={s.name}
                 href={s.href}
-                className="text-[14px] text-soft-ink no-underline transition-colors duration-300 hover:text-lilac"
+                className="text-[16px] text-soft-ink no-underline transition-colors duration-300 hover:text-lilac"
               >
                 {s.name}
               </a>
@@ -130,7 +130,7 @@ export function ContactCard() {
 
       <Shell
         wide
-        className="flex flex-wrap items-center gap-x-[20px] gap-y-[10px] py-[28px] font-mono text-[10px] tracking-[0.18em] text-faint md:py-[36px]"
+        className="flex flex-wrap items-center gap-x-[20px] gap-y-[10px] py-[28px] font-mono text-[12px] tracking-[0.18em] text-faint md:py-[36px]"
       >
         <span>&copy; 2026 Gaurav Gupta</span>
         <span className="sm:ml-auto">DESIGNED &amp; BUILT SOLO</span>

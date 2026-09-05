@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Newsreader, Inter, JetBrains_Mono, Allison } from "next/font/google";
+import { LazyMotion, domAnimation } from "framer-motion";
 import "./globals.css";
 import { PostHogProvider } from "@/components/PostHogProvider";
 
@@ -72,13 +73,22 @@ export default function RootLayout({
     >
       <body>
         <script
-          // Runs before paint so a stored "light" choice never flashes dark first.
+          // Runs before paint so a stored "dark" choice never flashes light first.
           dangerouslySetInnerHTML={{
             __html:
-              "try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}",
+              "try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}",
           }}
         />
-        <PostHogProvider>{children}</PostHogProvider>
+        <PostHogProvider>
+          {/* strict: throws if any component reaches for `motion` (full
+              bundle) instead of `m` — keeps the site on the small
+              domAnimation feature set (whileInView + basic transitions
+              only, no gestures/layout/drag) instead of Framer Motion's
+              full ~35kb bundle. */}
+          <LazyMotion features={domAnimation} strict>
+            {children}
+          </LazyMotion>
+        </PostHogProvider>
       </body>
     </html>
   );

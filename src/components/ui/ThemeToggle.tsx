@@ -3,23 +3,23 @@
 import { useEffect, useState } from "react";
 
 /** Minimal sun/moon icon button. Persists to localStorage, no system-theme
- *  detection — this site is dark by default until the viewer opts out. */
+ *  detection — this site is light by default until the viewer opts in. */
 export function ThemeToggle() {
-  const [light, setLight] = useState(false);
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
-    setLight(document.documentElement.getAttribute("data-theme") === "light");
+    setDark(document.documentElement.getAttribute("data-theme") === "dark");
   }, []);
 
   const toggle = () => {
-    const next = !light;
-    setLight(next);
+    const next = !dark;
+    setDark(next);
     if (next) {
-      document.documentElement.setAttribute("data-theme", "light");
-      localStorage.setItem("theme", "light");
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
     } else {
       document.documentElement.removeAttribute("data-theme");
-      localStorage.setItem("theme", "dark");
+      localStorage.setItem("theme", "light");
     }
     // Canvas-drawn graphics (e.g. HalftoneField) can't react to the
     // [data-theme] attribute via CSS — they redraw on this event instead.
@@ -30,10 +30,10 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      aria-label={light ? "Switch to dark mode" : "Switch to light mode"}
+      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
       className="-m-[10px] flex items-center justify-center p-[10px] text-mute transition-colors duration-300 hover:text-ink"
     >
-      {light ? (
+      {dark ? (
         <svg
           width="14"
           height="14"

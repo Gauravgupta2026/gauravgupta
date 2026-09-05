@@ -44,12 +44,12 @@ export default async function NotePage({
         <div className="mx-auto max-w-[720px]">
           <Link
             href="/#notes"
-            className="font-mono text-[11px] uppercase tracking-[0.18em] text-soft-ink no-underline transition-colors duration-300 hover:text-blue"
+            className="font-mono text-[13px] uppercase tracking-[0.18em] text-soft-ink no-underline transition-colors duration-300 hover:text-blue"
           >
             &larr; Notes
           </Link>
 
-          <div className="mt-[34px] flex items-center gap-[10px] font-mono text-[11px] uppercase tracking-[0.16em] text-mute">
+          <div className="mt-[34px] flex items-center gap-[10px] font-mono text-[13px] uppercase tracking-[0.16em] text-mute">
             <SourceIcon source={article.source} />
             <span>{SOURCE_NAME[article.source]}</span>
             <span className="opacity-50">&middot;</span>
@@ -62,7 +62,7 @@ export default async function NotePage({
             {article.title}
           </h1>
 
-          <p className="m-0 mt-[22px] font-display text-[18px] leading-[1.5] text-soft-ink md:text-[21px]">
+          <p className="m-0 mt-[22px] font-display text-[21px] leading-[1.5] text-soft-ink md:text-[21px]">
             {article.dek}
           </p>
 
@@ -74,13 +74,13 @@ export default async function NotePage({
           <div className="flex items-center justify-between py-[28px]">
             <Link
               href="/#notes"
-              className="font-mono text-[11px] uppercase tracking-[0.18em] text-soft-ink no-underline transition-colors duration-300 hover:text-blue"
+              className="font-mono text-[13px] uppercase tracking-[0.18em] text-soft-ink no-underline transition-colors duration-300 hover:text-blue"
             >
               &larr; All notes
             </Link>
             <Link
               href="/#cta"
-              className="font-mono text-[11px] text-blue no-underline"
+              className="font-mono text-[13px] text-blue no-underline"
             >
               Work with me &rarr;
             </Link>

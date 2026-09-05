@@ -18,7 +18,7 @@ export function ContactBand({
         </h2>
         <a
           href={`mailto:${email}`}
-          className="mt-[22px] inline-block font-mono text-[12px] tracking-[0.04em] text-blue underline underline-offset-4"
+          className="mt-[22px] inline-block font-mono text-[14px] tracking-[0.04em] text-blue underline underline-offset-4"
         >
           Send over an email &rarr;
         </a>

@@ -100,9 +100,9 @@ function ShowcaseRow({ entry }: { entry: (typeof workIndex)[number] }) {
       {/* info — index/status up top, name/stack down bottom */}
       <div className="flex flex-col justify-between md:min-h-[380px]">
         <div className="flex items-start justify-between gap-[20px]">
-          <span className="flex items-center gap-[10px] font-mono text-[10px] tracking-[0.2em] text-faint">
+          <span className="flex items-center gap-[10px] font-mono text-[12px] tracking-[0.2em] text-faint">
             {entry.num}
-            <span className="flex items-center gap-[6px] text-[8px] tracking-[0.14em] text-mute">
+            <span className="flex items-center gap-[6px] text-[9px] tracking-[0.14em] text-mute">
               {isLive && <span className="h-[4px] w-[4px] rounded-full bg-red" />}
               {entry.status}
             </span>
@@ -110,16 +110,16 @@ function ShowcaseRow({ entry }: { entry: (typeof workIndex)[number] }) {
           <div className="flex flex-col items-end gap-[4px] text-right">
             {role && (
               <>
-                <span className="font-mono text-[9px] tracking-[0.24em] text-mute">
+                <span className="font-mono text-[10px] tracking-[0.24em] text-mute">
                   ROLE
                 </span>
-                <span className="text-[13px] leading-[18px] text-ink md:text-[14px]">
+                <span className="text-[15px] leading-[21px] text-ink md:text-[14px]">
                   {role}
                 </span>
               </>
             )}
             {timeline && (
-              <span className="text-[13px] leading-[18px] text-mute-2 md:text-[14px]">
+              <span className="text-[15px] leading-[21px] text-mute-2 md:text-[14px]">
                 {timeline}
               </span>
             )}
@@ -128,20 +128,20 @@ function ShowcaseRow({ entry }: { entry: (typeof workIndex)[number] }) {
 
         <div className="mt-[20px] flex items-end justify-between gap-[20px] md:mt-0">
           <div>
-            <div className="flex items-baseline gap-[10px] font-display text-[24px] font-light leading-[1.1] text-white md:text-[34px]">
+            <div className="flex items-baseline gap-[10px] font-display text-[28px] font-light leading-[1.1] text-white md:text-[34px]">
               {entry.title}
               {isLive && (
-                <span className="text-[16px] text-red opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:text-[22px]">
+                <span className="text-[18px] text-red opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:text-[22px]">
                   &#8599;
                 </span>
               )}
             </div>
-            <p className="m-0 mt-[8px] max-w-[400px] text-pretty font-display text-[12px] italic leading-[17px] text-mute-2 md:text-[13px] md:leading-[19px]">
+            <p className="m-0 mt-[8px] max-w-[400px] text-pretty font-display text-[14px] italic leading-[20px] text-mute-2 md:text-[13px] md:leading-[19px]">
               &ldquo;{project.statement}&rdquo;
             </p>
           </div>
           <div className="flex flex-col items-end gap-[8px] text-right">
-            <span className="font-mono text-[9px] tracking-[0.24em] text-mute">
+            <span className="font-mono text-[10px] tracking-[0.24em] text-mute">
               STACK
             </span>
             <div className="flex items-center gap-[10px]">

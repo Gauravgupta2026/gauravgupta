@@ -78,12 +78,12 @@ export function DitherField() {
       <pre
         ref={dimRef}
         aria-hidden
-        className="absolute inset-0 m-0 select-none whitespace-pre font-mono text-[7px] leading-[9px] tracking-[1.5px] text-[#1c1c1c] md:text-[9px] md:leading-[10px]"
+        className="absolute inset-0 m-0 select-none whitespace-pre font-mono text-[8px] leading-[10px] tracking-[1.5px] text-[#1c1c1c] md:text-[9px] md:leading-[10px]"
       />
       <pre
         ref={litRef}
         aria-hidden
-        className="absolute inset-0 m-0 select-none whitespace-pre font-mono text-[7px] leading-[9px] tracking-[1.5px] text-lilac md:text-[9px] md:leading-[10px]"
+        className="absolute inset-0 m-0 select-none whitespace-pre font-mono text-[8px] leading-[10px] tracking-[1.5px] text-lilac md:text-[9px] md:leading-[10px]"
         style={{
           WebkitMaskImage:
             "radial-gradient(220px 220px at -400px -400px, #000 0%, rgba(0,0,0,.55) 42%, transparent 72%)",
