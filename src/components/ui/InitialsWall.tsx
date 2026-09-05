@@ -87,11 +87,11 @@ export function InitialsWall() {
           onChange={(e) => setValue(e.target.value.slice(0, MAX_LEN))}
           placeholder="YOU"
           maxLength={MAX_LEN}
-          className="h-[34px] w-[74px] border border-border-2 bg-transparent px-[10px] text-center font-mono text-[13px] uppercase tracking-[0.1em] text-ink outline-none placeholder:text-faint focus:border-lilac"
+          className="h-[34px] w-[74px] border border-border-2 bg-transparent px-[10px] text-center font-mono text-[15px] uppercase tracking-[0.1em] text-ink outline-none placeholder:text-faint focus:border-lilac"
         />
         <button
           type="submit"
-          className="h-[34px] border border-border-2 px-[16px] font-mono text-[9px] tracking-[0.2em] text-mute transition-colors duration-300 hover:border-lilac hover:text-ink"
+          className="h-[34px] border border-border-2 px-[16px] font-mono text-[10px] tracking-[0.2em] text-mute transition-colors duration-300 hover:border-lilac hover:text-ink"
         >
           LEAVE YOUR MARK
         </button>

@@ -35,7 +35,7 @@ export function PhotoFrame({
       className={`flex items-center justify-center rounded-[16px] border border-ink/10 bg-card ${className}`}
       style={style}
     >
-      <span className="font-mono text-[11px] tracking-[0.12em] text-mute">
+      <span className="font-mono text-[13px] tracking-[0.12em] text-mute">
         {label}
       </span>
     </div>

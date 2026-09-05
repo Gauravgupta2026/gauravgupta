@@ -17,7 +17,7 @@ export function Eyebrow({
   const color = tone === "blue" ? "text-blue" : "text-mute";
   return (
     <span
-      className={`font-mono text-[9px] uppercase tracking-[0.24em] ${color} ${className}`}
+      className={`font-mono text-[10px] uppercase tracking-[0.24em] ${color} ${className}`}
     >
       {children}
     </span>

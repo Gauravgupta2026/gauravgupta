@@ -14,7 +14,7 @@ export function Chip({
     tone === "dark" ? "border-cream/30 text-cream" : "border-ink/30 text-ink";
   return (
     <span
-      className={`inline-flex rounded-full border px-[13px] py-[7px] font-mono text-[9px] ${color} ${className}`}
+      className={`inline-flex rounded-full border px-[13px] py-[7px] font-mono text-[10px] ${color} ${className}`}
     >
       {children}
     </span>
@@ -27,7 +27,7 @@ export function Chip({
  */
 export function Tag({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex rounded-[4px] border border-ink/15 px-[9px] py-[4px] font-mono text-[8px] text-[#46443e]">
+    <span className="inline-flex rounded-[4px] border border-ink/15 px-[9px] py-[4px] font-mono text-[9px] text-[#46443e]">
       {children}
     </span>
   );

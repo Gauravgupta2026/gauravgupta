@@ -31,7 +31,7 @@ export function ProjectPreviewLink({
             style={{ backgroundImage: STRIPES }}
           />
         </span>
-        <span className="mt-[6px] block text-center font-mono text-[8px] uppercase tracking-[0.18em] text-mute">
+        <span className="mt-[6px] block text-center font-mono text-[9px] uppercase tracking-[0.18em] text-mute">
           {label}
         </span>
       </span>

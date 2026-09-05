@@ -5,21 +5,21 @@
    `@theme` vars to generate utilities (e.g. --color-blue → bg-blue/text-blue).
 ---------------------------------------------------------------------------- */
 @theme {
-  --color-bg: #0b0b0b; /* page background */
-  --color-ink: #f3f3f3; /* primary text */
-  --color-white: #ffffff; /* headings / high-emphasis text */
+  --color-bg: #faf9f6; /* page background */
+  --color-ink: #17171a; /* primary text */
+  --color-white: #0a0a0a; /* headings / high-emphasis text */
   --color-red: #d10000; /* signature accent — logo mark, links, CTAs */
-  --color-lilac: #bdbbff; /* link hover / secondary accent */
-  --color-lilac-soft: #d6d5ff; /* link hover, lighter step */
-  --color-soft-ink: #dcdcdc; /* secondary headings */
-  --color-mute: #8a8a8a; /* nav labels, meta text */
-  --color-mute-2: #929292; /* body copy on dark */
-  --color-mute-3: #7c7c7c; /* quieter meta */
-  --color-faint: #5c5c5c; /* numerals, faint labels */
-  --color-border: #1e1e1e; /* card borders */
-  --color-border-2: #1c1c1c; /* row dividers */
-  --color-divider: #414141; /* section rule lines */
-  --color-surface: #0d0d0d; /* raised card surface on bg */
+  --color-lilac: #5b52e0; /* link hover / secondary accent */
+  --color-lilac-soft: #433ac4; /* link hover, lighter step */
+  --color-soft-ink: #2c2c30; /* secondary headings */
+  --color-mute: #6b6b6e; /* nav labels, meta text */
+  --color-mute-2: #58585c; /* body copy */
+  --color-mute-3: #86868a; /* quieter meta */
+  --color-faint: #aeaeb2; /* numerals, faint labels */
+  --color-border: #e6e4de; /* card borders */
+  --color-border-2: #ece9e2; /* row dividers */
+  --color-divider: #cfccc2; /* section rule lines */
+  --color-surface: #f2f0ea; /* raised card surface on bg */
 
   --font-display: var(--font-newsreader), Georgia, serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
@@ -30,28 +30,28 @@
   --spacing-shell: 1180px; /* max content width */
 }
 
-/* Light theme — toggled via [data-theme="light"] on <html> (ThemeToggle).
-   Dark (the @theme block above) is the default; this block is intentionally
+/* Dark theme — toggled via [data-theme="dark"] on <html> (ThemeToggle).
+   Light (the @theme block above) is the default; this block is intentionally
    unlayered so it wins over Tailwind's @theme output regardless of source
-   order. Same token roles, same red/lilac brand hues — lilac shifts darker
-   here since the light-on-dark tint from @theme has no contrast on a light
+   order. Same token roles, same red/lilac brand hues — lilac shifts lighter
+   here since the dark-on-light tint from @theme has no contrast on a dark
    ground. */
-:root[data-theme="light"] {
-  --color-bg: #faf9f6;
-  --color-ink: #17171a;
-  --color-white: #0a0a0a;
+:root[data-theme="dark"] {
+  --color-bg: #0b0b0b;
+  --color-ink: #f3f3f3;
+  --color-white: #ffffff;
   --color-red: #d10000;
-  --color-lilac: #5b52e0;
-  --color-lilac-soft: #433ac4;
-  --color-soft-ink: #2c2c30;
-  --color-mute: #6b6b6e;
-  --color-mute-2: #58585c;
-  --color-mute-3: #86868a;
-  --color-faint: #aeaeb2;
-  --color-border: #e6e4de;
-  --color-border-2: #ece9e2;
-  --color-divider: #cfccc2;
-  --color-surface: #f2f0ea;
+  --color-lilac: #bdbbff;
+  --color-lilac-soft: #d6d5ff;
+  --color-soft-ink: #dcdcdc;
+  --color-mute: #8a8a8a;
+  --color-mute-2: #929292;
+  --color-mute-3: #7c7c7c;
+  --color-faint: #5c5c5c;
+  --color-border: #1e1e1e;
+  --color-border-2: #1c1c1c;
+  --color-divider: #414141;
+  --color-surface: #0d0d0d;
 }
 
 :root {
@@ -71,26 +71,26 @@
 .no-scrollbar{ scrollbar-width: none; -ms-overflow-style: none; }
 .no-scrollbar::-webkit-scrollbar{ display: none; }
 
-/* Stack-logo SVGs ship baked near-black (fill="#14130F") — invert for
-   legibility on the dark ground; the light theme wants them as-authored. */
+/* Stack-logo SVGs ship baked near-black (fill="#14130F") — light theme
+   wants them as-authored; invert for legibility on the dark ground. */
 .icon-mono {
-  filter: invert(1) brightness(1.15) saturate(0.4);
-}
-
-:root[data-theme="light"] .icon-mono {
   filter: none;
 }
 
-/* Footer CTA card ground — dark theme keeps the moody `surface` tone;
-   light theme goes plain white so the magenta/blue halftone graphic has
-   real contrast to sit on top of (the cream `surface` tone read as a dull
-   smudge next to it). */
-.cta-band {
-  background: var(--color-surface);
+:root[data-theme="dark"] .icon-mono {
+  filter: invert(1) brightness(1.15) saturate(0.4);
 }
 
-:root[data-theme="light"] .cta-band {
+/* Footer CTA card ground — light theme goes plain white so the
+   magenta/blue halftone graphic has real contrast to sit on top of (the
+   cream `surface` tone read as a dull smudge next to it); dark theme keeps
+   the moody `surface` tone. */
+.cta-band {
   background: #ffffff;
+}
+
+:root[data-theme="dark"] .cta-band {
+  background: var(--color-surface);
 }
 
 /* Selected-Work progress ticks — rest blends into the page background
@@ -102,11 +102,11 @@
 }
 
 .progress-tick-active {
-  background: #6b6b6b;
+  background: #e2726b;
 }
 
-:root[data-theme="light"] .progress-tick-active {
-  background: #e2726b;
+:root[data-theme="dark"] .progress-tick-active {
+  background: #6b6b6b;
 }
 
 html {
@@ -320,31 +320,12 @@ html {
   animation: blink 1.6s ease-in-out infinite;
 }
 
-/* Scroll-in fade + rise (driven by IntersectionObserver in <Reveal>) */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.9s cubic-bezier(0.16, 0.7, 0.2, 1),
-    transform 0.9s cubic-bezier(0.16, 0.7, 0.2, 1);
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
   .animate-blink {
     animation: none;
-  }
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
   *,
   *::before,

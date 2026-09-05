@@ -52,7 +52,7 @@ export function Nav() {
 
   return (
     <nav
-      className="fixed left-0 top-0 z-[60] w-full border-b border-border-2/60 bg-bg/70 py-[18px] font-mono text-[10px] font-normal tracking-[0.06em] text-mute backdrop-blur-md transition-[opacity,transform] duration-300 md:py-[24px] md:text-[13px]"
+      className="fixed left-0 top-0 z-[60] w-full border-b border-border-2/60 bg-bg/70 py-[18px] font-mono text-[12px] font-normal tracking-[0.06em] text-mute backdrop-blur-md transition-[opacity,transform] duration-300 md:py-[24px] md:text-[13px]"
       style={
         hidden
           ? { opacity: 0, transform: "translate3d(0,-10px,0)" }
@@ -65,7 +65,7 @@ export function Nav() {
             <Link
               href="/"
               title="Back to home"
-              className="font-logo text-[28px] leading-none text-red no-underline transition-colors duration-300 hover:text-ink md:text-[34px]"
+              className="font-logo text-[32px] leading-none text-red no-underline transition-colors duration-300 hover:text-ink md:text-[34px]"
             >
               GG
             </Link>
@@ -108,10 +108,10 @@ export function Nav() {
                         backgroundImage: `url(${imageFor(`nav-${p.slug}`, 68, 68)})`,
                       }}
                     />
-                    <span className="min-w-0 flex-1 truncate text-[11px] text-ink">
+                    <span className="min-w-0 flex-1 truncate text-[13px] text-ink">
                       {p.title}
                     </span>
-                    <span className="font-mono text-[9px] tracking-[0.1em] text-faint">
+                    <span className="font-mono text-[10px] tracking-[0.1em] text-faint">
                       {p.act.replace("Act.", "")}
                     </span>
                   </Link>
@@ -119,7 +119,7 @@ export function Nav() {
 
                 <Link
                   href="/work"
-                  className="mt-[4px] flex items-center justify-between rounded-lg px-[6px] py-[8px] font-mono text-[9px] tracking-[0.14em] text-mute no-underline transition-colors hover:bg-white/5 hover:text-ink"
+                  className="mt-[4px] flex items-center justify-between rounded-lg px-[6px] py-[8px] font-mono text-[10px] tracking-[0.14em] text-mute no-underline transition-colors hover:bg-white/5 hover:text-ink"
                 >
                   <span>ALL WORK</span>
                   <span className="text-red">&#8599;</span>
