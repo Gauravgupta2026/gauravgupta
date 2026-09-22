@@ -14,7 +14,6 @@ export function ManipalClock() {
   const [time, setTime] = useState<string | null>(null);
 
   useEffect(() => {
-    setTime(istTime());
     const id = setInterval(() => setTime(istTime()), 1000);
     return () => clearInterval(id);
   }, []);

@@ -1,9 +1,22 @@
 "use client";
 
 import { m, useReducedMotion, type Transition } from "framer-motion";
-import { useMemo, type ElementType, type ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 
 const EASE: Transition["ease"] = [0.16, 0.7, 0.2, 1];
+
+const MOTION_TAGS = {
+  article: m.article,
+  div: m.div,
+  figure: m.figure,
+  h1: m.h1,
+  h2: m.h2,
+  h3: m.h3,
+  p: m.p,
+  span: m.span,
+} as const;
+
+type RevealTag = keyof typeof MOTION_TAGS;
 
 /**
  * Scroll-in fade + rise, driven by Framer Motion's `whileInView` instead of a
@@ -26,18 +39,14 @@ export function Reveal({
   children,
   ...rest
 }: {
-  as?: ElementType;
+  as?: RevealTag;
   className?: string;
   /** Optional stagger, in ms. */
   delay?: number;
   children: ReactNode;
 } & Record<string, unknown>) {
   const reducedMotion = useReducedMotion();
-  // Memoized on Tag: m.create() returns a new component identity on every
-  // call, and recreating it per-render would make React remount the element
-  // each time — resetting whileInView mid-animation into an abrupt pop
-  // instead of a smooth transition.
-  const MotionTag = useMemo(() => m.create(Tag), [Tag]);
+  const MotionTag = MOTION_TAGS[Tag] as ElementType;
 
   if (reducedMotion) {
     return (

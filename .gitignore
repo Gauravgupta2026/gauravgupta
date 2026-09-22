@@ -45,3 +45,8 @@ next-env.d.ts
 !.vscode/extensions.json
 Thumbs.db
 .gstack/
+tmp/
+DESIGN_SYSTEM.md
+design-reports/
+output/
+src/app/prototype/

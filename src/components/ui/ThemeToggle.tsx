@@ -8,7 +8,9 @@ export function ThemeToggle() {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
-    setDark(document.documentElement.getAttribute("data-theme") === "dark");
+    queueMicrotask(() => {
+      setDark(document.documentElement.getAttribute("data-theme") === "dark");
+    });
   }, []);
 
   const toggle = () => {
