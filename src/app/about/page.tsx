@@ -111,21 +111,7 @@ export default function AboutPage() {
 
       <SectionDivider />
 
-      {/* horizontal photo strip — grayscale at rest, tap to focus + color.
-          Full-bleed (no Shell) so the strip runs edge to edge instead of
-          stopping at the shell's max-width; the heading keeps the shell's
-          padding so it still lines up with the rest of the page. */}
-      <div className="py-[56px] md:py-[80px]">
-        <Shell wide>
-          <Reveal
-            as="h2"
-            className="m-0 mb-[24px] font-display text-[20px] font-light text-soft-ink md:mb-[32px] md:text-[27px]"
-          >
-            A few frames
-          </Reveal>
-        </Shell>
-        <AboutGallery />
-      </div>
+      <AboutGallery />
 
       <FooterCTA />
     </main>
