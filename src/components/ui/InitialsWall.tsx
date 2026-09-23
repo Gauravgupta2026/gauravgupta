@@ -53,7 +53,7 @@ export function InitialsWall() {
     try {
       const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
       if (Array.isArray(stored) && stored.length) {
-        setEntries([...SEED, ...stored]);
+        queueMicrotask(() => setEntries([...SEED, ...stored]));
       }
     } catch {
       // ignore malformed storage

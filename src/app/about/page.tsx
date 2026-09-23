@@ -81,7 +81,7 @@ export default function AboutPage() {
           {/* facts rail — offset down on desktop, breaks the symmetric grid.
               Caption typography (bold value line, mono meta line below)
               matches the reference's thumbnail-caption pattern. */}
-          <div className="flex flex-col gap-[28px] md:mt-[6px]">
+          <div id="experience" className="flex flex-col gap-[28px] md:mt-[6px]">
             {FACTS.map((f) => (
               <div key={f.k} className="flex flex-col gap-[4px]">
                 <span className="text-[13px] font-medium tracking-[0.02em] text-ink">

@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import { Newsreader, Inter, JetBrains_Mono, Allison } from "next/font/google";
+import {
+  Newsreader,
+  Inter,
+  JetBrains_Mono,
+  Allison,
+  Benne,
+} from "next/font/google";
+import localFont from "next/font/local";
 import { LazyMotion, domAnimation } from "framer-motion";
 import "./globals.css";
 import { PostHogProvider } from "@/components/PostHogProvider";
@@ -37,6 +44,37 @@ const allison = Allison({
   display: "swap",
 });
 
+/** Editorial nameplate used in the landing hero. */
+const benne = Benne({
+  variable: "--font-benne",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+/** Local Seratonin display face used in the landing hero. */
+const seratonin = localFont({
+  src: "./fonts/Seratonin-Regular.otf",
+  variable: "--font-seratonin-local",
+  display: "swap",
+});
+
+const editorial = localFont({
+  src: [
+    { path: "../../public/fonts/itc-garamond/ITCGaramondStd-Lt.ttf", weight: "300", style: "normal" },
+    { path: "../../public/fonts/itc-garamond/ITCGaramondStd-LtIta.ttf", weight: "300", style: "italic" },
+    { path: "../../public/fonts/itc-garamond/ITCGaramondStd-Bk.ttf", weight: "700", style: "normal" },
+  ],
+  variable: "--font-editorial-local",
+  display: "swap",
+});
+
+const projectWordmark = localFont({
+  src: "../../public/fonts/Pixelta.ttf",
+  variable: "--font-project-local",
+  display: "swap",
+});
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const TITLE = "Gaurav Gupta";
 const DESCRIPTION =
@@ -69,7 +107,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${newsreader.variable} ${inter.variable} ${jetbrainsMono.variable} ${allison.variable}`}
+      className={`${newsreader.variable} ${inter.variable} ${jetbrainsMono.variable} ${allison.variable} ${benne.variable} ${seratonin.variable} ${editorial.variable} ${projectWordmark.variable}`}
     >
       <body>
         <script

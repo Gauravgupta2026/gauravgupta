@@ -1,154 +1,88 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Shell } from "@/components/Shell";
-import { Reveal } from "@/components/Reveal";
-import { SectionDivider } from "@/components/ui/SectionDivider";
-import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { selectedWork } from "@/content/selectedWork";
 
-const AUTOPLAY_MS = 1700;
-
-/**
- * Selected Work — numbered project list on the left, a sliding preview
- * track on the right. Hovering (desktop) or tapping (mobile) a project
- * switches the track; cards inside the active project autoplay unless the
- * panel is hovered or a tick is tapped.
- */
 export function Projects() {
-  const [active, setActive] = useState(0);
-  const [card, setCard] = useState(0);
-  const [holding, setHolding] = useState(false);
-  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const cards = selectedWork[active].cards;
-
-  useEffect(() => {
-    const reduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (reduced) return;
-
-    if (timer.current) clearInterval(timer.current);
-    if (holding) return;
-
-    timer.current = setInterval(() => {
-      setCard((c) => (c + 1) % cards.length);
-    }, AUTOPLAY_MS);
-    return () => {
-      if (timer.current) clearInterval(timer.current);
-    };
-  }, [holding, cards.length, active]);
-
-  const selectProject = (i: number) => {
-    if (i === active) return;
-    setActive(i);
-    setCard(0);
-  };
-
   return (
-    <Shell as="section" id="work" wide className="pt-[64px] md:pt-[88px]">
-      <Reveal as="h2" className="m-0 font-display text-[31px] font-light leading-[1.05] tracking-[-0.008em] text-soft-ink md:text-[40px]">
-        Selected Work
-      </Reveal>
-      <SectionDivider className="mt-[26px] md:mt-[45px]" />
+    <section id="work" className="projects-chapter" aria-labelledby="projects-title">
+      <div className="projects-shell">
+        <header className="projects-heading">
+          <p className="projects-part">part one</p>
+          <h2 id="projects-title">Selected Work</h2>
+          <p className="projects-deck">Work is the story.</p>
+        </header>
 
-      <div className="mt-[40px] grid grid-cols-1 gap-[32px] md:mt-[70px] md:grid-cols-[1fr_1fr] md:gap-[42px]">
-        <div className="flex flex-col">
-          {selectedWork.map((p, i) => (
-            <Link
-              key={p.slug}
-              href={`/projects/${p.slug}`}
-              onMouseEnter={() => selectProject(i)}
-              className="flex items-baseline gap-0 border-b border-border-2 py-[20px] text-left no-underline md:h-[147px] md:border-0 md:py-0"
-            >
-              <span
-                className={`w-[52px] font-mono text-[15px] leading-[37px] transition-colors duration-[450ms] md:w-[90px] md:text-[19px] ${
-                  i === active ? "text-mute" : "text-faint"
-                }`}
+        <div className="projects-list">
+          {selectedWork.map((project) => (
+            <article className="project-record" key={project.slug}>
+              <Link
+                href={`/projects/${project.slug}`}
+                className="project-record-link"
+                aria-label={`Read the ${project.title} case study`}
               >
-                {p.num}
-              </span>
-              <span
-                className={`font-display font-light leading-[37px] tracking-[-0.005em] transition-[color,font-size] duration-[450ms] ${
-                  i === active
-                    ? "text-[25px] text-white md:text-[35px]"
-                    : "text-[22px] text-mute-3 md:text-[32px]"
-                }`}
+                <span className="project-record-number">{project.num}</span>
+
+                <span className="project-record-identity">
+                  <span className="project-record-name">{project.title}</span>
+                  <span className="project-record-gallery" aria-hidden="true">
+                    {project.visuals.map((visual) => (
+                      <span className="project-record-visual" key={visual}>
+                        <span>{visual}</span>
+                      </span>
+                    ))}
+                  </span>
+                </span>
+
+                <span className="project-record-summary">
+                  <span className="project-record-premise">{project.premise}</span>
+                  <span className="project-record-list project-record-facts">
+                    {project.facts.map((fact) => (
+                      <span key={fact}>{fact}</span>
+                    ))}
+                  </span>
+                </span>
+
+                <span className="project-record-list project-record-role">
+                  {project.disciplines.map((discipline) => (
+                    <span key={discipline}>{discipline}</span>
+                  ))}
+                </span>
+
+                <span className="project-record-action" aria-hidden="true">↗</span>
+              </Link>
+
+              <Link
+                href={`/projects/${project.slug}`}
+                className="project-mobile-link"
+                aria-label={`Read the ${project.title} case study`}
               >
-                {p.title}
-              </span>
-            </Link>
+                <span className="project-mobile-number">{project.num}</span>
+                <span
+                  className="project-mobile-image"
+                  role="img"
+                  aria-label={`${project.title} project preview`}
+                >
+                  <span>{project.visuals[0]}</span>
+                </span>
+                <span className="project-mobile-name">{project.title}</span>
+                <span className="project-mobile-description">{project.premise}</span>
+                <span className="project-mobile-subtext">
+                  {project.facts.join(" · ")}
+                </span>
+                <span className="project-tablet-role">
+                  {project.disciplines.join(" · ")}
+                </span>
+              </Link>
+            </article>
           ))}
         </div>
 
-        <div
-          onMouseEnter={() => setHolding(true)}
-          onMouseLeave={() => setHolding(false)}
-        >
-          <div className="relative h-[420px] overflow-hidden md:h-[482px]">
-          <div
-            className="flex h-full transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)]"
-            style={{ transform: `translate3d(-${card * 100}%,0,0)` }}
-          >
-            {cards.map((c, i) => (
-              <div
-                key={i}
-                className="box-border flex h-full w-full min-w-0 flex-shrink-0 flex-col overflow-hidden bg-bg p-[24px] md:p-[32px]"
-              >
-                <div className="font-mono text-[9px] font-medium leading-[9px] tracking-[0.14em] text-mute-3 md:text-[9px] md:leading-[9px]">
-                  {c.label}
-                </div>
-
-                {c.placeholder && (
-                  <MediaPlaceholder
-                    label={c.label}
-                    seed={`${selectedWork[active].slug}-${i}`}
-                    align="bottom-left"
-                    className="mt-[20px] flex-1 md:mt-[24px]"
-                  />
-                )}
-
-                {c.title && (
-                  <div className="mt-[20px] text-pretty text-[16px] font-normal leading-[22px] tracking-[-0.01em] text-ink md:mt-[24px] md:text-[16px] md:leading-[22px]">
-                    {c.title}
-                  </div>
-                )}
-                {c.body && (
-                  <div className="mt-[12px] text-pretty text-[12px] leading-[17px] text-mute-2 md:mt-[14px] md:text-[11px] md:leading-[17px]">
-                    {c.body}
-                  </div>
-                )}
-                {c.metric && (
-                  <div className="mt-auto pt-[16px] text-[12px] leading-[12px] text-lilac md:pt-[20px] md:text-[11px] md:leading-[11px]">
-                    {c.metric}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          </div>
-
-          <div className="mt-[16px] flex gap-[8px]">
-            {cards.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                aria-label={`Show card ${i + 1}`}
-                onClick={() => setCard(i)}
-                className="-my-[16px] flex h-[48px] flex-1 items-center py-[16px]"
-              >
-                <span
-                  className={`h-[2px] w-full transition-colors duration-300 ${
-                    i === card ? "progress-tick-active" : "progress-tick-rest"
-                  }`}
-                />
-              </button>
-            ))}
-          </div>
+        <div className="projects-footer">
+          <span>Three selected projects · 2026</span>
+          <Link href="/work">
+            View the full work index <span aria-hidden="true">→</span>
+          </Link>
         </div>
       </div>
-    </Shell>
+    </section>
   );
 }

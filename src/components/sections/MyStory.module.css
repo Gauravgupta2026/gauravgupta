@@ -1,0 +1,232 @@
+.section {
+  padding: 80px 0 128px;
+  background: var(--editorial-paper);
+  color: var(--editorial-ink);
+}
+
+.shell {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  padding: 0 64px;
+}
+
+.part {
+  margin: 0 0 96px;
+  font-family: var(--font-editorial);
+  font-size: 19px;
+  font-style: italic;
+  line-height: 1;
+  text-align: center;
+}
+
+.statementFrame {
+  display: grid;
+  min-height: 380px;
+  place-items: center;
+  border: 1px solid var(--editorial-hairline);
+  padding: 64px;
+}
+
+.statement {
+  max-width: 1120px;
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(64px, 7.2vw, 104px);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.reflection {
+  width: min(100%, 620px);
+  margin: 96px auto 128px;
+  font-family: var(--font-editorial);
+  font-size: 20px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.reflection p {
+  margin: 0;
+}
+
+.reflection p + p {
+  margin-top: 24px;
+}
+
+.figure {
+  margin: 0;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: saturate(0.82) contrast(0.98);
+}
+
+.figure figcaption {
+  margin-top: 16px;
+  color: var(--editorial-muted);
+  font-family: var(--font-editorial);
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1;
+  text-align: right;
+}
+
+.biography {
+  padding-top: 128px;
+}
+
+.biographyTitle {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(52px, 5vw, 72px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-align: center;
+}
+
+.storyGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  row-gap: 64px;
+  margin-top: 96px;
+}
+
+.storyParagraph {
+  width: 100%;
+  max-width: 390px;
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: 20px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.storyParagraph:nth-child(1) {
+  grid-column: 1 / span 4;
+}
+
+.storyParagraph:nth-child(2) {
+  grid-column: 5 / span 4;
+  margin-top: 80px;
+}
+
+.storyParagraph:nth-child(3) {
+  grid-column: 9 / span 4;
+  margin-top: 160px;
+}
+
+@media (max-width: 1199px) {
+  .section {
+    padding-top: 64px;
+  }
+
+  .shell {
+    padding: 0 48px;
+  }
+
+  .part {
+    margin-bottom: 64px;
+  }
+
+  .statementFrame {
+    min-height: 320px;
+    padding: 48px;
+  }
+
+  .statement {
+    font-size: clamp(52px, 7vw, 76px);
+  }
+
+  .reflection {
+    margin: 80px auto 96px;
+  }
+
+  .biography {
+    padding-top: 96px;
+  }
+
+  .storyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px 64px;
+    margin-top: 64px;
+  }
+
+  .storyParagraph:nth-child(1),
+  .storyParagraph:nth-child(2),
+  .storyParagraph:nth-child(3) {
+    grid-column: auto;
+    margin-top: 0;
+  }
+
+  .storyParagraph:nth-child(3) {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 48px 0 96px;
+  }
+
+  .shell {
+    padding: 0 22px;
+  }
+
+  .part {
+    margin-bottom: 48px;
+    font-size: 17px;
+  }
+
+  .statementFrame {
+    min-height: 250px;
+    padding: 32px 20px;
+  }
+
+  .statement {
+    font-size: clamp(43px, 12.5vw, 58px);
+    line-height: 1.03;
+  }
+
+  .reflection {
+    margin: 64px auto 80px;
+    font-size: 18px;
+    line-height: 1.55;
+  }
+
+  .figure figcaption {
+    margin-top: 12px;
+    font-size: 12px;
+  }
+
+  .biography {
+    padding-top: 80px;
+  }
+
+  .biographyTitle {
+    font-size: 44px;
+    text-align: left;
+  }
+
+  .storyGrid {
+    display: block;
+    margin-top: 48px;
+  }
+
+  .storyParagraph {
+    max-width: 100%;
+    font-size: 18px;
+    line-height: 1.55;
+  }
+
+  .storyParagraph + .storyParagraph {
+    margin-top: 32px;
+  }
+}
