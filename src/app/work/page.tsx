@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/sections/Nav";
-import { FooterCTA } from "@/components/sections/FooterCTA";
+import { AboutFooter } from "@/components/sections/AboutFooter";
 import { WorkShowcase } from "@/components/sections/WorkShowcase";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function WorkPage() {
   return (
-    <main>
+    <main id="top">
       <Nav />
       <Shell as="header" wide className="pb-[28px] pt-[80px] md:pb-[56px] md:pt-[145px]">
         <Reveal
@@ -39,7 +39,7 @@ export default function WorkPage() {
         <WorkShowcase />
       </Shell>
 
-      <FooterCTA />
+      <AboutFooter />
     </main>
   );
 }

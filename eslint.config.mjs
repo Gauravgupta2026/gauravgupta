@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Archived visual reference bundles are not part of the shipped app.
+    "design-reference/**",
   ]),
 ]);
 

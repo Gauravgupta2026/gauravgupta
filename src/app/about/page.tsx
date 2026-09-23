@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/sections/Nav";
-import { FooterCTA } from "@/components/sections/FooterCTA";
+import { AboutFooter } from "@/components/sections/AboutFooter";
 import { AboutGallery } from "@/components/sections/AboutGallery";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
@@ -26,7 +26,7 @@ const EXPERIENCE = [
 
 export default function AboutPage() {
   return (
-    <main>
+    <main id="top" className="about-page">
       <Nav />
 
       {/* masthead — editorial label pair, echoes reference's "JOURNAL —— Archive" */}
@@ -81,7 +81,7 @@ export default function AboutPage() {
           {/* facts rail — offset down on desktop, breaks the symmetric grid.
               Caption typography (bold value line, mono meta line below)
               matches the reference's thumbnail-caption pattern. */}
-          <div className="flex flex-col gap-[28px] md:mt-[6px]">
+          <div id="experience" className="flex flex-col gap-[28px] md:mt-[6px]">
             {FACTS.map((f) => (
               <div key={f.k} className="flex flex-col gap-[4px]">
                 <span className="text-[13px] font-medium tracking-[0.02em] text-ink">
@@ -111,23 +111,9 @@ export default function AboutPage() {
 
       <SectionDivider />
 
-      {/* horizontal photo strip — grayscale at rest, tap to focus + color.
-          Full-bleed (no Shell) so the strip runs edge to edge instead of
-          stopping at the shell's max-width; the heading keeps the shell's
-          padding so it still lines up with the rest of the page. */}
-      <div className="py-[56px] md:py-[80px]">
-        <Shell wide>
-          <Reveal
-            as="h2"
-            className="m-0 mb-[24px] font-display text-[20px] font-light text-soft-ink md:mb-[32px] md:text-[27px]"
-          >
-            A few frames
-          </Reveal>
-        </Shell>
-        <AboutGallery />
-      </div>
+      <AboutGallery />
 
-      <FooterCTA />
+      <AboutFooter />
     </main>
   );
 }

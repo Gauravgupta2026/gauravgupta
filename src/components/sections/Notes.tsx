@@ -1,40 +1,37 @@
 import Link from "next/link";
-import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
-import { SectionDivider } from "@/components/ui/SectionDivider";
 import { notes } from "@/content/notes";
+import styles from "./Notes.module.css";
 
-/** Notes teaser rows — label · title · "Read →". Full copy lands in Phase 3. */
 export function Notes() {
   return (
-    <Shell as="section" id="notes" wide className="pt-[80px] md:pt-[130px]">
-      <Reveal
-        as="h2"
-        className="m-0 font-display text-[31px] font-light leading-[1.05] tracking-[-0.008em] text-white md:text-[40px]"
-      >
-        Notes
-      </Reveal>
-      <SectionDivider className="mt-[26px] md:mt-[45px]" />
+    <section id="notes" className={styles.section} aria-labelledby="notes-title">
+      <div className={styles.shell}>
+        <header className={styles.heading}>
+          <p className={styles.part}>part three</p>
+          <Reveal as="h2" id="notes-title" className={styles.title}>
+            <span>Writing is where I slow down</span>
+          </Reveal>
+        </header>
 
-      <div className="mt-[20px] md:mt-[32px]">
-        {notes.map((note) => (
-          <Link
-            key={note.slug}
-            href={`/notes/${note.slug}`}
-            className="grid grid-cols-1 gap-y-[4px] border-b border-border-2 py-[16px] text-inherit no-underline transition-opacity hover:opacity-78 sm:grid-cols-[140px_1fr_auto] sm:items-baseline sm:gap-y-0 md:py-[22px]"
-          >
-            <div className="font-mono text-[9px] tracking-[0.12em] text-mute-3">
-              ARTICLE
-            </div>
-            <div className="text-pretty text-[14px] tracking-[-0.01em] text-white md:text-[14px]">
-              {note.title}
-            </div>
-            <div className="text-[12px] text-lilac md:text-[11px]">
-              Read &rarr;
-            </div>
-          </Link>
-        ))}
+        <div className={styles.grid}>
+          {notes.map((note, index) => (
+            <Reveal as="article" delay={index * 80} key={note.slug}>
+              <Link
+                href={`/notes/${note.slug}`}
+                className={styles.card}
+                aria-label={`Read ${note.title}`}
+              >
+                <time className={styles.date}>{note.date}</time>
+                <h3 className={styles.cardTitle}>{note.title}</h3>
+                <span className={styles.action}>
+                  Read note <span aria-hidden="true">↗</span>
+                </span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
       </div>
-    </Shell>
+    </section>
   );
 }
