@@ -19,13 +19,15 @@ const MOTION_TAGS = {
 type RevealTag = keyof typeof MOTION_TAGS;
 
 /**
- * Scroll-in fade + rise, driven by Framer Motion's `whileInView` instead of a
+ * Scroll-in rise, driven by Framer Motion's `whileInView` instead of a
  * hand-rolled IntersectionObserver — same trigger point (12% visible, bottom
  * 7% trimmed) but interpolated on the compositor, so it stays smooth even
  * when several reveals fire in the same frame (e.g. a fast scroll past a
  * stacked list). `once: true` mirrors the old unobserve-after-first-reveal.
  *
- * Only animates `opacity`/`transform` (compositor-only, no layout/paint) and
+ * Content stays visible before the observer fires, so a missed or delayed
+ * intersection can never leave page copy hidden. Only `transform` animates
+ * (compositor-only, no layout/paint) and
  * disconnects its observer after firing once — no ongoing per-frame cost.
  * Uses the `m` component (not `motion`) paired with `<LazyMotion>` in
  * layout.tsx, which loads only the `domAnimation` feature set instead of
@@ -59,10 +61,10 @@ export function Reveal({
   return (
     <MotionTag
       className={className}
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 1, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.12, margin: "0px 0px -7% 0px" }}
-      transition={{ duration: 0.9, ease: EASE, delay: delay / 1000 }}
+      transition={{ duration: 0.45, ease: EASE, delay: delay / 1000 }}
       {...rest}
     >
       {children}
