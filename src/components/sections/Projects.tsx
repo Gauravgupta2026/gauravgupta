@@ -6,9 +6,11 @@ export function Projects() {
     <section id="work" className="projects-chapter" aria-labelledby="projects-title">
       <div className="projects-shell">
         <header className="projects-heading">
-          <p className="projects-part">part one</p>
-          <h2 id="projects-title">Selected Work</h2>
-          <p className="projects-deck">Work is the story.</p>
+          <h2 id="projects-title">Every project<br />starts somewhere.</h2>
+          <p className="projects-deck">
+            Scroll through the work at your own pace. Each project gets room to
+            breathe, with its first evidence visible before you open it.
+          </p>
         </header>
 
         <div className="projects-list">

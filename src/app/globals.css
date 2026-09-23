@@ -69,9 +69,9 @@
   --editorial-muted: #686868;
   --editorial-hairline: #c4c1bc;
   --editorial-focus: #8c3528;
-  --nav-height: clamp(68px, 10svh, 84px);
+  --nav-height: clamp(112px, 12.5svh, 136px);
   --side-pad: 160px;
-  --hero-edge: clamp(28px, 4vw, 72px);
+  --hero-edge: clamp(22px, 3vw, 52px);
   --hero-nav-top: clamp(24px, 3.2vh, 40px);
   --hero-title-top: 28vh;
   --hero-seam-top: 50%;
@@ -82,9 +82,9 @@
 
 @media (max-width: 768px) {
   :root {
-    --nav-height: 72px;
+    --nav-height: 96px;
     --side-pad: 50px;
-    --hero-edge: clamp(18px, 5.5vw, 30px);
+    --hero-edge: clamp(16px, 4.8vw, 26px);
     --hero-nav-top: clamp(18px, 3vh, 26px);
     --hero-title-top: 24vh;
     --hero-seam-top: 50%;
@@ -92,6 +92,42 @@
     --hero-copy-top: 66%;
     --hero-foot-bottom: clamp(16px, 2.8vh, 24px);
   }
+}
+
+/* The About route uses the neutral ink / zinc / ivory palette requested for
+   its reading surface, without changing the homepage's editorial palette. */
+.about-page {
+  --color-bg: #ffffff;
+  --color-ink: #18181b;
+  --color-white: #18181b;
+  --color-red: #18181b;
+  --color-lilac: #52525b;
+  --color-lilac-soft: #3f3f46;
+  --color-soft-ink: #27272a;
+  --color-mute: #71717a;
+  --color-mute-2: #52525b;
+  --color-mute-3: #71717a;
+  --color-faint: #a1a1aa;
+  --color-border: #e4e4e7;
+  --color-border-2: #e4e4e7;
+  --color-divider: #d4d4d8;
+  --color-surface: #f4f4f2;
+  --editorial-paper: #ffffff;
+  --editorial-ink: #18181b;
+  --editorial-signature: #18181b;
+  --editorial-charcoal: #18181b;
+  --editorial-reverse: #f4f4f5;
+  --editorial-muted: #71717a;
+  --editorial-hairline: #d4d4d8;
+  --editorial-focus: #52525b;
+
+  background: #ffffff;
+  color: #18181b;
+}
+
+.about-page a:focus-visible,
+.about-page button:focus-visible {
+  outline-color: #52525b;
 }
 
 * {
@@ -252,6 +288,36 @@ html {
 }
 
 .landing-page {
+  --editorial-paper: #ffffff;
+  --editorial-ink: #18181b;
+  --editorial-signature: #18181b;
+  --editorial-muted: #71717a;
+  --editorial-hairline: #d4d4d8;
+  --editorial-focus: #52525b;
+  --editorial-reverse: #ffffff;
+  --color-bg: #ffffff;
+
+  display: flow-root;
+  min-height: 100svh;
+  background: #080808;
+  color: var(--editorial-ink);
+}
+
+.landing-frame {
+  --frame-open-progress: 0;
+  --frame-return-progress: 0;
+  --frame-edge: clamp(10px, 1.4vw, 24px);
+  --frame-top: clamp(28px, 5vh, 58px);
+  --frame-expansion: calc(1 - var(--frame-open-progress) + var(--frame-return-progress));
+
+  margin-top: calc(var(--frame-top) * (1 - var(--frame-open-progress)));
+  margin-right: calc(var(--frame-edge) * var(--frame-expansion));
+  margin-bottom: calc(var(--frame-edge) * var(--frame-return-progress));
+  margin-left: calc(var(--frame-edge) * var(--frame-expansion));
+  position: relative;
+  z-index: 1;
+  overflow: clip;
+  border-radius: calc(30px * var(--frame-expansion));
   background: var(--editorial-paper);
   color: var(--editorial-ink);
 }
@@ -340,7 +406,8 @@ html {
 .hero-stage {
   position: relative;
   width: 100%;
-  height: 100svh;
+  height: calc(100svh - var(--frame-top));
+  min-height: 480px;
   overflow: clip;
   background: var(--editorial-paper);
   color: var(--editorial-ink);
@@ -490,22 +557,22 @@ html {
 /* Note from the desk ----------------------------------------------------- */
 .desk-note {
   padding: clamp(24px, 3.4vw, 48px);
-  background: var(--editorial-charcoal);
-  color: var(--editorial-reverse);
+  background: #080808;
+  color: #ffffff;
 }
 
 .desk-note-frame {
   display: grid;
-  min-height: min(720px, 78svh);
+  min-height: min(560px, 62svh);
   place-items: center;
-  border: 1px solid var(--editorial-hairline);
-  padding: clamp(48px, 5vw, 64px) 24px;
+  border: 1px solid rgb(255 255 255 / 24%);
+  padding: clamp(40px, 4vw, 54px) 24px;
 }
 
 .desk-note-copy {
-  width: min(100%, 680px);
+  width: min(100%, 620px);
   font-family: var(--font-editorial);
-  font-size: clamp(19px, 1.55vw, 23px);
+  font-size: clamp(17px, 1.35vw, 20px);
   font-weight: 300;
   line-height: 1.55;
   text-align: center;
@@ -541,10 +608,89 @@ html {
   font-weight: 300;
 }
 
+/* The work method -------------------------------------------------------- */
+.work-method {
+  padding: clamp(92px, 12vw, 160px) clamp(24px, 4.45vw, 64px);
+  background: var(--editorial-paper);
+  color: var(--editorial-ink);
+  text-align: center;
+}
+
+.work-method-heading > span,
+.work-method-number {
+  color: var(--editorial-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.work-method-heading h2 {
+  margin: 20px 0 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(38px, 5vw, 64px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.work-method-circles {
+  width: min(100%, 1050px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: clamp(52px, 7vw, 88px) auto 0;
+}
+
+.work-method-circle {
+  aspect-ratio: 1;
+  display: flex;
+  padding: clamp(24px, 3vw, 42px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--editorial-hairline);
+  border-radius: 50%;
+}
+
+.work-method-circle + .work-method-circle {
+  position: relative;
+  margin-left: -12%;
+}
+
+.work-method-circle:nth-child(2) { z-index: 1; }
+.work-method-circle:nth-child(3) { z-index: 2; }
+.work-method-circle h3 {
+  margin: 20px 0 10px;
+  font-family: var(--font-editorial);
+  font-size: clamp(24px, 3vw, 38px);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.work-method-circle p {
+  max-width: 23ch;
+  margin: 0;
+  color: var(--editorial-muted);
+  font-size: clamp(12px, 1.15vw, 15px);
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+.work-method-throughline {
+  max-width: 48ch;
+  margin: clamp(36px, 5vw, 60px) auto 0;
+  color: var(--editorial-muted);
+  font-family: var(--font-editorial);
+  font-size: clamp(17px, 1.5vw, 21px);
+  font-style: italic;
+  line-height: 1.45;
+}
+
 /* Selected work --------------------------------------------------------- */
 .projects-chapter {
   padding: clamp(112px, 13vw, 184px) 0 clamp(104px, 12vw, 168px);
-  background: #f7f6f2;
+  background: var(--editorial-paper);
   color: #443322;
 }
 
@@ -562,14 +708,6 @@ html {
   text-align: center;
 }
 
-.projects-part {
-  margin: 0 0 24px;
-  font-family: var(--font-editorial);
-  font-size: 19px;
-  font-style: italic;
-  line-height: 1;
-}
-
 .projects-heading h2 {
   margin: 0;
   color: #3c0600;
@@ -581,11 +719,14 @@ html {
 }
 
 .projects-deck {
-  margin: 48px 0 0;
+  max-width: 42rem;
+  margin: 34px 0 0;
   font-family: var(--font-editorial);
   font-size: clamp(21px, 1.8vw, 27px);
   font-style: italic;
   font-weight: 300;
+  line-height: 1.35;
+  text-wrap: balance;
 }
 
 .projects-list {
@@ -981,11 +1122,6 @@ html {
     margin-bottom: 56px;
   }
 
-  .projects-part {
-    margin-bottom: 16px;
-    font-size: 17px;
-  }
-
   .projects-heading h2 {
     font-size: clamp(46px, 14vw, 62px);
   }
@@ -1220,18 +1356,27 @@ html {
     font-size: clamp(8px, 2.5vw, 10px);
   }
 
-  .desk-note {
-    padding: 20px;
-  }
+  .desk-note { padding: 18px; }
 
   .desk-note-frame {
     min-height: auto;
-    padding: 48px 20px;
+    padding: 40px 20px;
   }
 
   .desk-note-salutation span {
     white-space: normal;
   }
+
+  .work-method { padding: 80px 22px; }
+  .work-method-heading h2 { font-size: clamp(34px, 9vw, 46px); }
+  .work-method-circles { grid-template-columns: 1fr; gap: 12px; margin-top: 42px; }
+  .work-method-circle {
+    width: min(100%, 310px);
+    aspect-ratio: 1 / .82;
+    margin-inline: auto;
+    padding: 28px;
+  }
+  .work-method-circle + .work-method-circle { margin-left: auto; }
 }
 
 @media (max-height: 560px) {
@@ -1266,6 +1411,24 @@ html {
     transition: none;
   }
 }
+
+.landing-page .projects-chapter,
+.landing-page .project-record-link,
+.landing-page .project-mobile-link,
+.landing-page .project-record-name,
+.landing-page .projects-footer a { color: #18181b; }
+.landing-page .projects-heading h2,
+.landing-page .project-record-action,
+.landing-page .projects-footer a:hover { color: #27272a; }
+.landing-page .project-record-number,
+.landing-page .project-record-facts,
+.landing-page .projects-footer,
+.landing-page .project-mobile-number,
+.landing-page .project-mobile-subtext,
+.landing-page .project-tablet-role { color: #71717a; }
+.landing-page .project-record-link:focus-visible,
+.landing-page .projects-footer a:focus-visible,
+.landing-page .project-mobile-link:focus-visible { outline-color: #52525b; }
 
 @layer base {
   body {

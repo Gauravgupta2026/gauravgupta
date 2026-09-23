@@ -7,18 +7,23 @@ import { Projects } from "@/components/sections/Projects";
 // import { HowIWork } from "@/components/sections/HowIWork";
 import { MyStory } from "@/components/sections/MyStory";
 import { Notes } from "@/components/sections/Notes";
-import { FooterCTA } from "@/components/sections/FooterCTA";
+import { AboutFooter } from "@/components/sections/AboutFooter";
+import { LandingFrame } from "@/components/sections/LandingFrame";
+import { WorkMethod } from "@/components/sections/WorkMethod";
 
 export default function Home() {
   return (
     <main className="landing-page">
-      <Nav />
-      <Hero />
-      <DeskNote />
-      <Projects />
-      <MyStory />
-      <Notes />
-      <FooterCTA showImage />
+      <LandingFrame>
+        <Nav />
+        <Hero />
+        <DeskNote />
+        <Projects />
+        <WorkMethod />
+        <MyStory />
+        <Notes />
+      </LandingFrame>
+      <AboutFooter />
     </main>
   );
 }

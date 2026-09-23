@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/sections/Nav";
-import { FooterCTA } from "@/components/sections/FooterCTA";
+import { AboutFooter } from "@/components/sections/AboutFooter";
 import { AboutGallery } from "@/components/sections/AboutGallery";
 import { Shell } from "@/components/Shell";
 import { Reveal } from "@/components/Reveal";
@@ -26,7 +26,7 @@ const EXPERIENCE = [
 
 export default function AboutPage() {
   return (
-    <main>
+    <main id="top" className="about-page">
       <Nav />
 
       {/* masthead — editorial label pair, echoes reference's "JOURNAL —— Archive" */}
@@ -113,7 +113,7 @@ export default function AboutPage() {
 
       <AboutGallery />
 
-      <FooterCTA />
+      <AboutFooter />
     </main>
   );
 }
