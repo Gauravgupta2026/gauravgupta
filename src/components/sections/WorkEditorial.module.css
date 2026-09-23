@@ -1,0 +1,256 @@
+.page {
+  --work-ink: #080808;
+  --work-paper: #ffffff;
+  background: var(--work-paper);
+  color: var(--work-ink);
+  font-family: var(--font-inter), Arial, sans-serif;
+}
+
+.paper {
+  max-width: 1512px;
+  margin: 0 auto;
+  overflow: hidden;
+  padding-top: clamp(132px, 16.47vw, 249px);
+}
+
+.title {
+  margin: 0;
+  padding-inline: clamp(24px, 5.42vw, 82px);
+  text-align: center;
+  font-family: var(--font-seratonin), cursive;
+  font-size: clamp(58px, 7.15vw, 108px);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+}
+
+.projects {
+  margin-top: clamp(102px, 8.2vw, 124px);
+  padding-inline: clamp(24px, 5.42vw, 82px);
+}
+
+.project + .project {
+  margin-top: clamp(220px, 18.5vw, 280px);
+}
+
+.projectLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.projectLink:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 8px;
+}
+
+.mediaGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(16px, 1.58vw, 24px);
+  align-items: start;
+}
+
+.media {
+  position: relative;
+  grid-row: 1;
+  margin: 0;
+  overflow: hidden;
+  background: #e9e9e9;
+}
+
+.primaryMedia {
+  grid-column: 1 / span 7;
+  aspect-ratio: 770 / 438;
+}
+
+.secondaryMedia {
+  grid-column: 8 / -1;
+  aspect-ratio: 504 / 255;
+}
+
+.reverse .primaryMedia {
+  grid-column: 6 / -1;
+}
+
+.reverse .secondaryMedia {
+  grid-column: 1 / span 5;
+}
+
+.media img {
+  object-fit: cover;
+  transition: transform 700ms cubic-bezier(0.2, 0.7, 0, 1);
+}
+
+.projectLink:hover .media img {
+  transform: scale(1.018);
+}
+
+.projectCopy {
+  width: 58.333%;
+  margin-top: 34px;
+}
+
+.copyLeft {
+  margin-right: auto;
+}
+
+.copyRight {
+  margin-left: 41.667%;
+}
+
+.projectCopy h2 {
+  margin: 0;
+  font-family: var(--font-work-newsreader), Georgia, serif;
+  font-size: clamp(30px, 2.3vw, 36px);
+  font-variation-settings: "opsz" 50;
+  font-weight: 520;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.projectCopy > p:not(.meta) {
+  max-width: 520px;
+  margin: 11px 0 0;
+  font-family: var(--font-work-newsreader), Georgia, serif;
+  font-size: clamp(20px, 1.85vw, 28px);
+  font-variation-settings: "opsz" 32;
+  font-weight: 360;
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  margin: 22px 0 0;
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  text-transform: lowercase;
+}
+
+.thesis {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: clamp(362px, 29vw, 438px) auto clamp(340px, 25.8vw, 390px);
+  font-family: var(--font-seratonin), cursive;
+  font-size: clamp(112px, 13.1vw, 198px);
+  font-weight: 400;
+  line-height: 1.03;
+  letter-spacing: -0.035em;
+}
+
+.reflection {
+  display: grid;
+  min-height: min(1238px, 81.88vw);
+  padding: 120px 24px;
+  place-items: center;
+  background: #09090b;
+  color: #ffffff;
+}
+
+.reflection p {
+  max-width: 650px;
+  margin: 0;
+  text-align: center;
+  font-size: clamp(18px, 1.52vw, 23px);
+  font-weight: 450;
+  line-height: 1.35;
+  letter-spacing: -0.026em;
+}
+
+@media (max-width: 960px) {
+  .paper {
+    padding-top: 132px;
+  }
+
+  .project + .project {
+    margin-top: 180px;
+  }
+
+  .thesis {
+    margin-block: 280px;
+    font-size: clamp(90px, 15vw, 144px);
+  }
+
+  .reflection {
+    min-height: 780px;
+  }
+}
+
+@media (max-width: 720px) {
+  .paper {
+    padding-top: 96px;
+  }
+
+  .title {
+    padding-inline: 20px;
+    font-size: clamp(52px, 16vw, 72px);
+    line-height: 0.96;
+  }
+
+  .projects {
+    margin-top: 72px;
+    padding-inline: 20px;
+  }
+
+  .project + .project {
+    margin-top: 132px;
+  }
+
+  .mediaGrid {
+    display: block;
+  }
+
+  .primaryMedia,
+  .secondaryMedia,
+  .reverse .primaryMedia,
+  .reverse .secondaryMedia {
+    aspect-ratio: 1.25 / 1;
+  }
+
+  .secondaryMedia {
+    margin-top: 32px;
+  }
+
+  .projectCopy,
+  .copyLeft,
+  .copyRight {
+    width: 100%;
+    margin: 25px 0 0;
+  }
+
+  .projectCopy h2 {
+    font-size: 31px;
+  }
+
+  .projectCopy > p:not(.meta) {
+    font-size: 22px;
+  }
+
+  .thesis {
+    align-items: flex-start;
+    margin: 190px 20px 180px;
+    font-size: clamp(68px, 22vw, 96px);
+    line-height: 1;
+  }
+
+  .reflection {
+    min-height: 86svh;
+    padding: 96px 30px;
+  }
+
+  .reflection p {
+    max-width: 420px;
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media img {
+    transition: none;
+  }
+}
