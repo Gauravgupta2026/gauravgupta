@@ -16,12 +16,15 @@ export function ViewportThemeColor() {
     const update = () => {
       cancelAnimationFrame(animationFrame);
       animationFrame = requestAnimationFrame(() => {
+        const dark = document.documentElement.getAttribute("data-theme") === "dark";
         const sampleY = Math.min(80, window.innerHeight * 0.08);
         const activeSection = sections.find((section) => {
           const bounds = section.getBoundingClientRect();
           return bounds.top <= sampleY && bounds.bottom > sampleY;
         });
-        const color = activeSection?.dataset.browserThemeColor ?? DEFAULT_THEME_COLOR;
+        const color = dark
+          ? DEFAULT_THEME_COLOR
+          : activeSection?.dataset.browserThemeColor ?? DEFAULT_THEME_COLOR;
 
         if (meta?.content !== color) meta?.setAttribute("content", color);
         document.documentElement.style.backgroundColor = color;
@@ -31,11 +34,13 @@ export function ViewportThemeColor() {
     update();
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update, { passive: true });
+    window.addEventListener("themechange", update);
 
     return () => {
       cancelAnimationFrame(animationFrame);
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
+      window.removeEventListener("themechange", update);
       document.documentElement.style.backgroundColor = "";
     };
   }, []);

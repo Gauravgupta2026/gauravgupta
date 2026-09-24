@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const COLLAPSE_SCROLL_Y = 48;
 
@@ -79,20 +80,23 @@ export function Nav() {
         <Link href="/#contact" onClick={closeMenu}>Say hello</Link>
       </div>
 
-      <button
-        ref={menuButtonRef}
-        type="button"
-        className="site-nav-menu-toggle"
-        aria-expanded={menuOpen}
-        aria-controls="mobile-navigation"
-        onClick={() => setMenuOpen((current) => !current)}
-      >
-        <span className="site-nav-menu-label">Menu</span>
-        <span className="site-nav-menu-icon" aria-hidden="true">
-          <span />
-          <span />
-        </span>
-      </button>
+      <div className="site-nav-controls">
+        <ThemeToggle className="site-nav-theme-toggle" />
+        <button
+          ref={menuButtonRef}
+          type="button"
+          className="site-nav-menu-toggle"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
+          onClick={() => setMenuOpen((current) => !current)}
+        >
+          <span className="site-nav-menu-label">Menu</span>
+          <span className="site-nav-menu-icon" aria-hidden="true">
+            <span />
+            <span />
+          </span>
+        </button>
+      </div>
 
       <div
         id="mobile-navigation"

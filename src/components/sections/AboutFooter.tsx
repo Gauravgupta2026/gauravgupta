@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { m, useReducedMotion } from "framer-motion";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import styles from "./AboutFooter.module.css";
 
 export function AboutFooter() {
@@ -87,6 +88,7 @@ export function AboutFooter() {
           <div className={styles.footerLocation}>
             <span>Based in Bengaluru</span>
             <a href="mailto:hey@gauravguptas.com">hey@gauravguptas.com</a>
+            <ThemeToggle className={styles.footerThemeToggle} showLabel />
           </div>
           <div className={styles.footerMenu}>
             <a href="/work">Work</a>

@@ -35,18 +35,16 @@
 }
 
 /* Dark theme — toggled via [data-theme="dark"] on <html> (ThemeToggle).
-   Light (the @theme block above) is the default; this block is intentionally
-   unlayered so it wins over Tailwind's @theme output regardless of source
-   order. Same token roles, same red/lilac brand hues — lilac shifts lighter
-   here since the dark-on-light tint from @theme has no contrast on a dark
-   ground. */
+   Light is the default. Dark mode preserves the same semantic roles while
+   shifting interactive selection, focus, and active states to blue. */
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --color-bg: #0b0b0b;
   --color-ink: #f3f3f3;
   --color-white: #ffffff;
   --color-red: #d10000;
-  --color-lilac: #bdbbff;
-  --color-lilac-soft: #d6d5ff;
+  --color-lilac: #6ea0ff;
+  --color-lilac-soft: #9abcff;
   --color-soft-ink: #dcdcdc;
   --color-mute: #8a8a8a;
   --color-mute-2: #929292;
@@ -56,6 +54,14 @@
   --color-border-2: #1c1c1c;
   --color-divider: #414141;
   --color-surface: #0d0d0d;
+  --editorial-paper: #0b0b0c;
+  --editorial-ink: #f3f3f4;
+  --editorial-signature: #6ea0ff;
+  --editorial-charcoal: #171719;
+  --editorial-reverse: #f3f3f4;
+  --editorial-muted: #9b9ba1;
+  --editorial-hairline: #343438;
+  --editorial-focus: #6ea0ff;
 }
 
 :root {
@@ -130,6 +136,39 @@
   outline-color: #52525b;
 }
 
+:root[data-theme="dark"] .about-page {
+  --color-bg: #0b0b0c;
+  --color-ink: #f3f3f4;
+  --color-white: #ffffff;
+  --color-red: #6ea0ff;
+  --color-lilac: #6ea0ff;
+  --color-lilac-soft: #9abcff;
+  --color-soft-ink: #dedee2;
+  --color-mute: #9b9ba1;
+  --color-mute-2: #b1b1b6;
+  --color-mute-3: #8b8b91;
+  --color-faint: #6f6f75;
+  --color-border: #303034;
+  --color-border-2: #29292d;
+  --color-divider: #38383d;
+  --color-surface: #171719;
+  --editorial-paper: #0b0b0c;
+  --editorial-ink: #f3f3f4;
+  --editorial-signature: #6ea0ff;
+  --editorial-charcoal: #171719;
+  --editorial-reverse: #f3f3f4;
+  --editorial-muted: #9b9ba1;
+  --editorial-hairline: #343438;
+  --editorial-focus: #6ea0ff;
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+:root[data-theme="dark"] .about-page a:focus-visible,
+:root[data-theme="dark"] .about-page button:focus-visible {
+  outline-color: var(--editorial-focus);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -172,7 +211,7 @@
 }
 
 :root[data-theme="dark"] .progress-tick-active {
-  background: #6b6b6b;
+  background: #6ea0ff;
 }
 
 .about-gallery-screen {
@@ -201,8 +240,8 @@
   height: min(74svh, 700px);
   min-height: 500px;
   padding: clamp(30px, 4vw, 54px);
-  border: 1px solid #e6e6e8;
-  background: #f4f4f5;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   box-shadow:
     0 22px 58px rgba(24, 24, 27, 0.05),
     0 3px 10px rgba(24, 24, 27, 0.03);
@@ -222,7 +261,7 @@
   min-height: 0;
   margin: 0;
   overflow: hidden;
-  background: #f1f1f2;
+  background: var(--color-border-2);
 }
 
 .about-gallery-photo img {
@@ -299,6 +338,17 @@ html {
   color: var(--editorial-ink);
 }
 
+:root[data-theme="dark"] .landing-page {
+  --editorial-paper: #0b0b0c;
+  --editorial-ink: #f3f3f4;
+  --editorial-signature: #6ea0ff;
+  --editorial-muted: #9b9ba1;
+  --editorial-hairline: #343438;
+  --editorial-focus: #6ea0ff;
+  --editorial-reverse: #f3f3f4;
+  --color-bg: #0b0b0c;
+}
+
 .landing-frame {
   width: 100%;
   margin: var(--device-top) 0 0;
@@ -317,7 +367,7 @@ html {
 
 /* Primary navigation ----------------------------------------------------- */
 .site-nav {
-  --nav-surface: #ffffff;
+  --nav-surface: var(--color-bg);
   position: sticky;
   z-index: 100;
   top: 0;
@@ -334,7 +384,7 @@ html {
   font-family: var(--font-mono);
   font-size: clamp(12px, 1vw, 15px);
   letter-spacing: 0.04em;
-  color: #080808;
+  color: var(--color-ink);
   opacity: 1;
 }
 
@@ -350,7 +400,7 @@ html {
   padding: 6px 10px 6px 18px;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid rgb(8 8 8 / 6%);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   box-shadow: 0 12px 28px rgb(24 24 27 / 11%);
   transform: translateX(-50%);
@@ -423,8 +473,15 @@ html {
 }
 
 .site-nav-menu-toggle,
-.site-nav-mobile-menu {
+.site-nav-mobile-menu,
+.site-nav-controls,
+.site-nav-theme-toggle {
   display: none;
+}
+
+.site-nav-controls {
+  align-items: center;
+  gap: 2px;
 }
 
 .site-nav-menu-toggle {
@@ -436,7 +493,7 @@ html {
   border: 0;
   padding: 0;
   background: transparent;
-  color: #080808;
+  color: var(--color-ink);
   cursor: pointer;
 }
 
@@ -444,6 +501,72 @@ html {
   display: inline-flex;
   align-self: center;
   flex: 0 0 44px;
+}
+
+.site-nav.is-collapsed .site-nav-controls,
+.site-nav.is-collapsed .site-nav-theme-toggle {
+  display: flex;
+}
+
+.theme-toggle {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  padding: 0;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.theme-toggle.site-nav-theme-toggle {
+  display: none;
+}
+
+.site-nav.is-collapsed .theme-toggle.site-nav-theme-toggle {
+  display: inline-flex;
+}
+
+.theme-toggle-track {
+  width: 34px;
+  height: 18px;
+  display: inline-flex;
+  padding: 2px;
+  align-items: center;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  opacity: .72;
+}
+
+.theme-toggle-thumb {
+  width: 12px;
+  height: 12px;
+  display: block;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translateX(0);
+  transition: transform 220ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.theme-toggle[data-dark="true"] .theme-toggle-thumb {
+  transform: translateX(16px);
+}
+
+.theme-toggle[data-dark="true"] .theme-toggle-track {
+  color: var(--editorial-focus);
+  opacity: 1;
+}
+
+.theme-toggle-label {
+  white-space: nowrap;
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--editorial-focus);
+  outline-offset: 3px;
 }
 
 .site-nav-menu-label {
@@ -1476,11 +1599,13 @@ html {
     font-size: clamp(24px, 7vw, 29px);
   }
 
-  .site-nav-menu-toggle {
-    display: inline-flex;
+  .site-nav-controls {
+    display: flex;
     grid-column: 3;
     justify-self: end;
   }
+
+  .site-nav-menu-toggle { display: inline-flex; }
 
   .site-nav-menu-icon {
     width: 20px;
@@ -1501,6 +1626,10 @@ html {
 
   .site-nav.is-collapsed .site-nav-name {
     font-size: 16px;
+  }
+
+  .site-nav-theme-toggle {
+    min-width: 38px;
   }
 
   .site-nav-mobile-menu {
@@ -1660,6 +1789,16 @@ html {
     background: var(--color-lilac);
     color: var(--color-bg);
   }
+}
+
+:root[data-theme="dark"] ::selection,
+:root[data-theme="dark"] .landing-page ::selection {
+  background: #6ea0ff;
+  color: #080808;
+}
+
+:root[data-theme="dark"] :focus-visible {
+  outline-color: #6ea0ff;
 }
 
 /* Looping motion for the project-link hover preview's placeholder graphic
