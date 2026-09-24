@@ -9,8 +9,9 @@ export function Hero() {
       data-browser-theme-color="#080808"
     >
       <h1 id="hero-title" className="hero-statement">
-        <span>I believe good work</span>
-        <span>is making them feel good.</span>
+        <span>I believe</span>
+        <span>good work is</span>
+        <span>making them feel good.</span>
       </h1>
 
       <div className="hero-intro">

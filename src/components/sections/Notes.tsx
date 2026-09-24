@@ -12,28 +12,31 @@ export function Notes() {
       data-browser-theme-color="#ffffff"
     >
       <div className={styles.shell}>
-        <header className={styles.heading}>
+        <header className={styles.introScreen}>
           <Reveal as="p" className={styles.kicker} variant="chapter">
             This is where i slow down
           </Reveal>
-          <Reveal as="h2" id="notes-title" className={styles.title} variant="chapter" delay={100}>
-            Notes
-          </Reveal>
         </header>
 
-        <div className={styles.grid}>
-          {notes.map((note, index) => (
-            <Reveal as="article" delay={index * 80} key={note.slug}>
-              <Link
-                href={`/notes/${note.slug}`}
-                className={styles.card}
-                aria-label={`Read ${note.title}`}
-              >
-                <time className={styles.date}>{note.date}</time>
-                <h3 className={styles.cardTitle}>{note.title}</h3>
-              </Link>
-            </Reveal>
-          ))}
+        <div className={styles.notesContent}>
+          <Reveal as="h2" id="notes-title" className={styles.title} variant="chapter">
+            Notes
+          </Reveal>
+
+          <div className={styles.grid}>
+            {notes.map((note, index) => (
+              <Reveal as="article" delay={index * 80} key={note.slug}>
+                <Link
+                  href={`/notes/${note.slug}`}
+                  className={styles.card}
+                  aria-label={`Read ${note.title}`}
+                >
+                  <time className={styles.date}>{note.date}</time>
+                  <h3 className={styles.cardTitle}>{note.title}</h3>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -29,7 +29,6 @@ export function AboutFooter() {
           viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.72, ease: [0.16, 0.7, 0.2, 1] }}
         >
-          <p className={styles.eyebrow}>Stay in touch</p>
           <h2 id="about-contact-title">
             Creativity and ideas travel further <em>together.</em>
           </h2>
@@ -38,13 +37,13 @@ export function AboutFooter() {
           </p>
 
           <form className={styles.contactForm} onSubmit={sendMessage}>
-            <div className={styles.mailTo}>
-              <span>To</span>
+            <div className={`${styles.mailboxField} ${styles.mailTo}`}>
+              <span>To:</span>
               <strong>hey@gauravguptas.com</strong>
             </div>
 
-            <label className={styles.field}>
-              <span>From</span>
+            <label className={`${styles.mailboxField} ${styles.field}`}>
+              <span>From:</span>
               <input
                 autoComplete="email"
                 name="from"
@@ -56,8 +55,8 @@ export function AboutFooter() {
               />
             </label>
 
-            <label className={`${styles.field} ${styles.messageField}`}>
-              <span>Message</span>
+            <label className={`${styles.mailboxField} ${styles.field} ${styles.messageField}`}>
+              <span>Message:</span>
               <textarea
                 name="message"
                 onChange={(event) => setMessage(event.target.value)}
@@ -74,14 +73,27 @@ export function AboutFooter() {
               type="submit"
               aria-label="Send message"
             >
-              Send
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m3 11 17-8-7 18-2-7-8-3Z" />
+                <path d="m11 14 9-11" />
+              </svg>
             </button>
           </form>
         </m.div>
       </section>
 
       <footer className={styles.footerSheet} id="contact" data-browser-theme-color="#080808">
-        <p>buildin with creativity</p>
+        <nav className={styles.footerNav} aria-label="Footer navigation">
+          <div>
+            <a href="/work">Work</a>
+            <a href="/about">About</a>
+          </div>
+          <div>
+            <a href="/work">Projects</a>
+            <a href="/about#experience">Resume</a>
+          </div>
+        </nav>
+        <p>building with creativity</p>
       </footer>
     </div>
   );

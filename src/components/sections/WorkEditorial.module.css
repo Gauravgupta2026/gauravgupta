@@ -155,8 +155,6 @@
 .projectCopy {
   width: 58.333%;
   margin-top: 30px;
-  padding-top: 22px;
-  border-top: 1px solid rgba(8, 8, 8, 0.2);
 }
 
 .copyLeft {
@@ -311,7 +309,6 @@
   .copyRight {
     width: 100%;
     margin: 25px 0 0;
-    padding-top: 18px;
   }
 
   .projectCopy h2 {

@@ -1,5 +1,5 @@
 .section {
-  padding: clamp(112px, 12vw, 176px) 0;
+  padding: 0 0 clamp(112px, 12vw, 176px);
   background: #ffffff;
   color: #18181b;
 }
@@ -10,7 +10,10 @@
   padding: 0 clamp(24px, 5.42vw, 82px);
 }
 
-.heading {
+.introScreen {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
   text-align: center;
 }
 
@@ -24,12 +27,17 @@
 }
 
 .title {
-  margin: 30px 0 clamp(64px, 7vw, 96px);
+  margin: 0 0 clamp(64px, 7vw, 96px);
   font-family: var(--font-display);
   font-size: clamp(42px, 4.7vw, 64px);
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.04em;
+}
+
+.notesContent {
+  padding-top: clamp(88px, 10vw, 144px);
+  text-align: center;
 }
 
 .grid {
@@ -83,7 +91,7 @@
 
 @media (max-width: 900px) {
   .section {
-    padding: 104px 0 136px;
+    padding: 0 0 136px;
   }
 
   .shell {
@@ -91,7 +99,7 @@
   }
 
   .title {
-    margin: 28px 0 72px;
+    margin: 0 0 72px;
   }
 
   .card {
@@ -101,7 +109,7 @@
 
 @media (max-width: 640px) {
   .section {
-    padding: 92px 0 112px;
+    padding: 0 0 112px;
   }
 
   .shell {
@@ -113,8 +121,12 @@
   }
 
   .title {
-    margin: 24px 0 50px;
-    font-size: 44px;
+    margin: 0 0 44px;
+    font-size: 36px;
+  }
+
+  .notesContent {
+    padding-top: 72px;
   }
 
   .card {
@@ -125,6 +137,6 @@
   }
 
   .cardTitle {
-    font-size: 23px;
+    font-size: 19px;
   }
 }

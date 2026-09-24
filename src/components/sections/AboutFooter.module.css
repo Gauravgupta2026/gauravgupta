@@ -20,19 +20,9 @@
   width: min(100%, 820px);
 }
 
-.eyebrow {
-  margin: 0;
-  color: #71717a;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: .12em;
-  text-align: center;
-  text-transform: uppercase;
-}
-
 .contactCopy h2 {
   max-width: 760px;
-  margin: 28px auto 0;
+  margin: 0 auto;
   font-family: var(--font-display);
   font-size: clamp(46px, 6vw, 82px);
   font-variation-settings: "opsz" 64;
@@ -57,22 +47,17 @@
 
 .contactForm {
   width: min(100%, 720px);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   margin: clamp(56px, 6vw, 80px) auto 0;
-  overflow: hidden;
-  border: 1px solid #d4d4d8;
-  border-radius: 6px;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.mailTo {
-  grid-column: 1 / -1;
+.mailboxField {
   display: flex;
-  min-height: 54px;
-  padding: 0 20px;
-  align-items: center;
-  gap: 18px;
-  border-bottom: 1px solid #d4d4d8;
+  border: 1px solid #e4e4e7;
+  border-radius: 10px;
+  background: #f4f4f5;
 }
 
 .mailTo span,
@@ -84,21 +69,29 @@
   text-transform: uppercase;
 }
 
+.mailTo {
+  min-height: 52px;
+  padding: 0 18px;
+  align-items: center;
+  gap: 14px;
+  border-color: #d4d4d8;
+  background: #e9e9ec;
+}
+
+.mailTo span { color: #18181b; font-weight: 500; }
 .mailTo strong { font-family: var(--font-geist-mono), monospace; font-size: 12px; font-weight: 450; }
 
 .field {
   display: flex;
   min-width: 0;
-  padding: 24px 24px 22px 0;
+  min-height: 76px;
+  padding: 16px 18px;
   flex-direction: column;
   gap: 14px;
-  border-bottom: 0;
 }
 
 .messageField {
-  padding-right: 0;
-  padding-left: 24px;
-  border-left: 1px solid #d4d4d8;
+  min-height: 180px;
 }
 
 .field input,
@@ -120,25 +113,21 @@
 .field:focus-within > span { color: #18181b; }
 
 .sendButton {
-  grid-column: 1 / -1;
-  min-height: 50px;
-  display: flex;
-  margin: 0;
-  padding: 0 18px;
-  align-items: center;
-  justify-content: flex-start;
-  border: 0;
-  border-top: 1px solid #d4d4d8;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  margin: 4px 0 0 auto;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #d4d4d8;
+  border-radius: 50%;
   background: #f4f4f5;
   color: #a1a1aa;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
   cursor: pointer;
   transition: background-color 240ms ease, color 240ms ease;
 }
 
+.sendButton svg { width: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .sendButton[data-active="true"] { background: #3c0600; color: #ffffff; }
 .sendButton[data-active="true"]:hover { background: #541009; }
 
@@ -154,14 +143,29 @@
   z-index: 1;
   bottom: 0;
   min-height: 64svh;
-  display: grid;
+  display: flex;
   padding: 80px 24px;
-  place-items: center;
+  flex-direction: column;
+  justify-content: space-between;
   background: #080808;
   color: #f4f4f5;
 }
 
+.footerNav {
+  width: min(100%, 1420px);
+  display: grid;
+  margin: 0 auto;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: clamp(48px, 12vw, 180px);
+  align-self: flex-start;
+}
+
+.footerNav div { display: flex; flex-direction: column; align-items: flex-start; }
+.footerNav a { color: #f4f4f5; font-family: var(--font-body); font-size: clamp(18px, 2vw, 28px); line-height: 1.25; text-decoration: none; }
+.footerNav a:hover { color: #a1a1aa; }
+
 .footerSheet p {
+  width: 100%;
   margin: 0;
   font-family: var(--font-seratonin);
   font-size: clamp(58px, 9vw, 132px);
@@ -176,12 +180,12 @@
   .contactStage { padding: 88px 20px 108px; border-radius: 0 0 28px 28px; }
   .contactCopy h2 { font-size: clamp(43px, 13vw, 60px); }
   .invitation { max-width: 300px; }
-  .contactForm { display: block; margin-top: 64px; }
-  .field, .messageField { padding: 22px 0; border-left: 0; }
-  .field { padding-inline: 18px; }
-  .field + .field { border-top: 1px solid #d4d4d8; }
-  .sendButton { width: 100%; }
+  .contactForm { margin-top: 56px; }
+  .field, .messageField { padding: 16px; }
+  .sendButton { width: 42px; }
   .footerSheet { min-height: 58svh; }
+  .footerNav { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .footerNav a { font-size: 18px; }
   .footerSheet p { font-size: clamp(54px, 18vw, 84px); }
 }
 
