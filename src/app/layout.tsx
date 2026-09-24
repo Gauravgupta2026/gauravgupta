@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import {
-  Newsreader,
   Inter,
-  JetBrains_Mono,
   Allison,
   Benne,
+  Geist_Mono,
 } from "next/font/google";
 import localFont from "next/font/local";
 import { LazyMotion, domAnimation } from "framer-motion";
@@ -12,11 +11,12 @@ import "./globals.css";
 import { PostHogProvider } from "@/components/PostHogProvider";
 
 /** Display serif, weight 300 roman — headings only. */
-const newsreader = Newsreader({
+const newsreader = localFont({
+  src: [
+    { path: "./fonts/Newsreader-Variable.ttf", style: "normal" },
+    { path: "./fonts/Newsreader-Italic-Variable.ttf", style: "italic" },
+  ],
   variable: "--font-newsreader",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: ["300", "400", "500"],
   display: "swap",
 });
 
@@ -29,10 +29,19 @@ const inter = Inter({
 });
 
 /** UI / labels / nav / meta. */
-const jetbrainsMono = JetBrains_Mono({
+const dmMono = localFont({
+  src: [
+    { path: "./fonts/DMMono-Light.ttf", weight: "300", style: "normal" },
+    { path: "./fonts/DMMono-Regular.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/DMMono-Medium.ttf", weight: "500", style: "normal" },
+  ],
   variable: "--font-jetbrains",
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
-  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -98,6 +107,11 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#080808",
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -107,7 +121,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${newsreader.variable} ${inter.variable} ${jetbrainsMono.variable} ${allison.variable} ${benne.variable} ${seratonin.variable} ${editorial.variable} ${projectWordmark.variable}`}
+      className={`${newsreader.variable} ${inter.variable} ${dmMono.variable} ${geistMono.variable} ${allison.variable} ${benne.variable} ${seratonin.variable} ${editorial.variable} ${projectWordmark.variable}`}
     >
       <body>
         <script

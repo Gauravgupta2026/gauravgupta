@@ -1,0 +1,135 @@
+.section {
+  overflow: hidden;
+  padding: clamp(104px, 11vw, 168px) 0;
+  background: var(--editorial-paper);
+  color: var(--editorial-ink);
+}
+
+.rail {
+  display: flex;
+  min-height: clamp(300px, 35vw, 500px);
+  align-items: center;
+  gap: clamp(22px, 2.4vw, 36px);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  padding: 0 max(24px, calc((100vw - 1280px) / 2)) 20px;
+  scroll-padding-inline: max(24px, calc((100vw - 1280px) / 2));
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail:focus-visible {
+  outline: 1px solid var(--editorial-hairline);
+  outline-offset: -1px;
+}
+
+.card {
+  flex: 0 0 auto;
+  margin: 0;
+  scroll-snap-align: start;
+}
+
+.small {
+  width: clamp(170px, 16vw, 242px);
+}
+
+.medium {
+  width: clamp(220px, 23vw, 348px);
+}
+
+.large {
+  width: clamp(280px, 29vw, 438px);
+}
+
+.imageFrame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.small .imageFrame {
+  aspect-ratio: 4 / 5;
+}
+
+.large .imageFrame {
+  aspect-ratio: 1 / 1;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.progressWrap {
+  display: flex;
+  width: 6cm;
+  max-width: calc(100vw - 44px);
+  height: 2cm;
+  margin: clamp(40px, 5vw, 72px) auto 0;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progressBar {
+  width: 1px;
+  background: var(--editorial-hairline);
+  transition: background-color 140ms ease, transform 140ms ease;
+}
+
+.activeBar {
+  background: var(--editorial-signature);
+  transform: scaleX(2);
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 96px 0;
+  }
+
+  .rail {
+    min-height: 280px;
+    align-items: center;
+    gap: 14px;
+    padding-inline: 22px;
+    scroll-padding-inline: 22px;
+  }
+
+  .small {
+    width: 40.8vw;
+  }
+
+  .medium {
+    width: 52.7vw;
+  }
+
+  .large {
+    width: 61.2vw;
+  }
+
+  .progressWrap {
+    width: 5.1cm;
+    height: 1.7cm;
+    margin-top: 44px;
+  }
+
+  .progressBar {
+    transform: scaleY(.85);
+  }
+
+  .activeBar {
+    transform: scale(2, .85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressBar {
+    transition: none;
+  }
+}

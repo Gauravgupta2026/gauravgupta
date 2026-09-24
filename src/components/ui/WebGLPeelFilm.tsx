@@ -45,7 +45,7 @@ void main() {
   vec4 story = texture(u_story, v_uv);
   float creaseHighlight = exp(-v_crease * 48.0) * step(0.0001, v_crease) * 0.13;
   float foldedShade = smoothstep(0.05, 0.9, v_fold) * 0.1;
-  vec3 film = vec3(0.978, 0.972, 0.947);
+  vec3 film = vec3(0.965, 0.965, 0.97);
   film = mix(film, story.rgb, story.a * 0.88);
   film += creaseHighlight;
   film -= foldedShade;
@@ -144,7 +144,7 @@ function updateStoryTexture(
     .getPropertyValue("--font-newsreader")
     .trim();
   context.font = `400 ${fontSize}px ${fontFamily || "Georgia"}, Georgia, serif`;
-  context.fillStyle = "rgba(42, 39, 33, 0.82)";
+  context.fillStyle = "rgba(39, 39, 42, 0.82)";
   context.textBaseline = "top";
 
   const lines = wrapStory(context, story, maxWidth);

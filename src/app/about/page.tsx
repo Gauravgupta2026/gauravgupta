@@ -1,118 +1,86 @@
 import type { Metadata } from "next";
-import { Nav } from "@/components/sections/Nav";
+import Image from "next/image";
 import { AboutFooter } from "@/components/sections/AboutFooter";
 import { AboutGallery } from "@/components/sections/AboutGallery";
-import { Shell } from "@/components/Shell";
-import { Reveal } from "@/components/Reveal";
+import { Nav } from "@/components/sections/Nav";
 import { SectionDivider } from "@/components/ui/SectionDivider";
+import styles from "./AboutPage.module.css";
 
 export const metadata: Metadata = {
   title: "About — Gaurav Gupta",
   description:
-    "A future-oriented thinker and fast mover building AI systems and user-facing tools.",
+    "A future-oriented thinker and fast mover building products and user-facing tools.",
 };
 
-/** Condensed to fact pairs — the old placeholder blurbs read as filler, cut
- *  entirely rather than kept as noise. */
-const FACTS = [
-  { k: "LOCATION", v: "Bengaluru, IN" },
-  { k: "FOCUS", v: "Product & design" },
-];
-
-const EXPERIENCE = [
-  { role: "Risk, KPMG", period: "2026" },
-  { role: "Campus Ambassador, Volvo Group", period: "2023 — 2025" },
-];
+const DETAILS = [
+  { primary: "KPMG", secondary: "Risk", period: "2026" },
+  {
+    primary: "Volvo Group",
+    secondary: "Campus Ambassador",
+    period: "2023 — 2025",
+  },
+  {
+    primary: "Product & design",
+    secondary: "Focus",
+    period: "Current",
+  },
+  {
+    primary: "Bengaluru, IN",
+    secondary: "Location",
+    period: "Current",
+  },
+] as const;
 
 export default function AboutPage() {
   return (
-    <main id="top" className="about-page">
+    <main id="top" className={`about-page ${styles.page}`}>
       <Nav />
+      <section className={styles.canvas} aria-labelledby="about-title">
+        <h1 id="about-title" className={styles.title}>About me</h1>
 
-      {/* masthead — editorial label pair, echoes reference's "JOURNAL —— Archive" */}
-      <Shell as="header" wide className="pt-[96px] md:pt-[145px]">
-        <Reveal as="div" className="flex items-baseline gap-[14px]">
-          <span className="font-mono text-[11px] tracking-[0.24em] text-mute md:text-[12px]">
-            ABOUT
-          </span>
-          <span className="text-mute-3">——</span>
-          <span className="font-display text-[18px] italic text-soft-ink md:text-[22px]">
-            Gaurav Gupta
-          </span>
-        </Reveal>
-
-        {/* section label + full-width rule, echoes reference's "FEATURED CREATORS" bar */}
-        <div className="mt-[40px] md:mt-[56px]">
-          <Reveal
-            as="span"
-            delay={40}
-            className="font-mono text-[9px] tracking-[0.24em] text-mute md:text-[10px]"
-          >
-            THE PERSON
-          </Reveal>
-          <div className="mt-[14px] h-px w-full bg-divider" />
+        <div className={styles.statement}>
+          <p>
+            I&rsquo;m a husband, dad to three pets, and a designer who&rsquo;s trying
+            not to take himself too seriously.
+          </p>
+          <p>
+            I am a future-oriented thinker and a fast mover. I like music,
+            reading, the outdoors, poetry, sketching, pen and ink, and making
+            useful tools. I want the work to stay ambitious without losing the
+            vibrant side of me.
+          </p>
         </div>
 
-        {/* asymmetric body — wide story column, narrow offset facts rail */}
-        <div className="mt-[40px] grid grid-cols-1 gap-[40px] pb-[64px] md:mt-[48px] md:grid-cols-[1fr_260px] md:gap-[64px] md:pb-[96px]">
-          <div className="max-w-[600px]">
-            <Reveal
-              as="h1"
-              delay={80}
-              className="m-0 text-pretty font-display text-[28px] font-light leading-[1.25] text-white md:text-[38px]"
-            >
-              I&rsquo;m a husband, dad to three pets, and a designer who&rsquo;s
-              trying not to take himself too seriously.
-            </Reveal>
-            <Reveal
-              as="p"
-              delay={160}
-              className="m-0 mt-[24px] text-pretty text-[14px] leading-[24px] text-mute-2 md:mt-[28px] md:text-[16px] md:leading-[27px]"
-            >
-              I am a future-oriented thinker, and a fast mover. In this
-              journey I don&rsquo;t intend to lose the vibrant side of me. I
-              like music, I like to read and I like to go outdoors. I have a
-              side of me that wishes to indulge in poetry. I have planned a
-              few things for myself for the next five years — I want to
-              sketch, pen &amp; ink, and I want to sell tools. There are more.
-            </Reveal>
+        <figure className={styles.portrait}>
+          <figcaption>
+            <span>(Gaurav Gupta)</span>
+            <span>(Product designer + builder)</span>
+          </figcaption>
+          <div className={styles.imageFrame}>
+            <Image
+              src="/assets/about.jpeg"
+              alt="Gaurav looking across a snow-covered mountain landscape"
+              fill
+              priority
+              sizes="(max-width: 700px) 100vw, 34vw"
+              className={styles.image}
+            />
           </div>
+        </figure>
 
-          {/* facts rail — offset down on desktop, breaks the symmetric grid.
-              Caption typography (bold value line, mono meta line below)
-              matches the reference's thumbnail-caption pattern. */}
-          <div id="experience" className="flex flex-col gap-[28px] md:mt-[6px]">
-            {FACTS.map((f) => (
-              <div key={f.k} className="flex flex-col gap-[4px]">
-                <span className="text-[13px] font-medium tracking-[0.02em] text-ink">
-                  {f.v}
-                </span>
-                <span className="font-mono text-[9px] tracking-[0.2em] text-mute">
-                  {f.k}
-                </span>
-              </div>
-            ))}
-
-            <div className="flex flex-col gap-[20px] border-t border-border-2 pt-[24px]">
-              {EXPERIENCE.map((job) => (
-                <div key={job.role} className="flex flex-col gap-[4px]">
-                  <span className="text-[13px] font-medium tracking-[0.02em] text-ink">
-                    {job.role}
-                  </span>
-                  <span className="font-mono text-[9px] tracking-[0.2em] text-mute">
-                    {job.period}
-                  </span>
-                </div>
-              ))}
+        <div id="experience" className={styles.details}>
+          {DETAILS.map((detail) => (
+            <div className={styles.detailRow} key={`${detail.primary}-${detail.secondary}`}>
+              <span>{detail.primary}</span>
+              <span>{detail.secondary}</span>
+              <span>{detail.period}</span>
             </div>
-          </div>
+          ))}
         </div>
-      </Shell>
+      </section>
 
       <SectionDivider />
-
       <AboutGallery />
-
       <AboutFooter />
     </main>
   );

@@ -17,6 +17,22 @@ const MOTION_TAGS = {
 } as const;
 
 type RevealTag = keyof typeof MOTION_TAGS;
+type RevealVariant = "default" | "chapter" | "project";
+
+const VARIANTS = {
+  default: {
+    initial: { opacity: 1, y: 20, scale: 1 },
+    transition: { duration: 0.45, ease: EASE },
+  },
+  chapter: {
+    initial: { opacity: 0.35, y: 44, scale: 0.985 },
+    transition: { duration: 0.82, ease: EASE },
+  },
+  project: {
+    initial: { opacity: 0.42, y: 54, scale: 0.99 },
+    transition: { duration: 0.72, ease: EASE },
+  },
+} satisfies Record<RevealVariant, { initial: { opacity: number; y: number; scale: number }; transition: Transition }>;
 
 /**
  * Scroll-in rise, driven by Framer Motion's `whileInView` instead of a
@@ -38,6 +54,7 @@ export function Reveal({
   as: Tag = "div",
   className = "",
   delay = 0,
+  variant = "default",
   children,
   ...rest
 }: {
@@ -45,10 +62,13 @@ export function Reveal({
   className?: string;
   /** Optional stagger, in ms. */
   delay?: number;
+  /** A slower chapter or project entrance for major landing-page transitions. */
+  variant?: RevealVariant;
   children: ReactNode;
 } & Record<string, unknown>) {
   const reducedMotion = useReducedMotion();
   const MotionTag = MOTION_TAGS[Tag] as ElementType;
+  const motion = VARIANTS[variant];
 
   if (reducedMotion) {
     return (
@@ -61,10 +81,10 @@ export function Reveal({
   return (
     <MotionTag
       className={className}
-      initial={{ opacity: 1, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.12, margin: "0px 0px -7% 0px" }}
-      transition={{ duration: 0.45, ease: EASE, delay: delay / 1000 }}
+      initial={motion.initial}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: variant === "project" ? 0.3 : 0.22, margin: "0px 0px -7% 0px" }}
+      transition={{ ...motion.transition, delay: delay / 1000 }}
       {...rest}
     >
       {children}

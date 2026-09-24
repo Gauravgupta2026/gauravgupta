@@ -1,37 +1,39 @@
+.statementScreen {
+  min-height: auto;
+  display: grid;
+  padding: clamp(180px, 20vw, 300px) 20px clamp(48px, 6vw, 88px);
+  place-items: center;
+  background: var(--editorial-paper);
+  color: var(--editorial-ink);
+}
+
 .section {
-  padding: 80px 0 128px;
+  padding: 0 0 128px;
   background: var(--editorial-paper);
   color: var(--editorial-ink);
 }
 
 .shell {
-  width: min(100%, 1440px);
+  width: min(100%, 1512px);
   margin: 0 auto;
-  padding: 0 64px;
-}
-
-.part {
-  margin: 0 0 96px;
-  font-family: var(--font-editorial);
-  font-size: 19px;
-  font-style: italic;
-  line-height: 1;
-  text-align: center;
+  padding: 0 20px;
 }
 
 .statementFrame {
+  width: min(calc(100% - 57px), 1455px);
   display: grid;
-  min-height: 380px;
+  aspect-ratio: 2048 / 690;
   place-items: center;
-  border: 1px solid var(--editorial-hairline);
   padding: 64px;
+  overflow: hidden;
+  border: 1px solid var(--editorial-hairline);
 }
 
 .statement {
   max-width: 1120px;
   margin: 0;
   font-family: var(--font-editorial);
-  font-size: clamp(64px, 7.2vw, 104px);
+  font-size: clamp(52px, 5vw, 76px);
   font-weight: 400;
   line-height: 0.98;
   letter-spacing: -0.035em;
@@ -40,10 +42,10 @@
 }
 
 .reflection {
-  width: min(100%, 620px);
-  margin: 96px auto 128px;
+  width: min(100%, 540px);
+  margin: clamp(48px, 5vw, 72px) auto clamp(128px, 12vw, 180px);
   font-family: var(--font-editorial);
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.5;
   text-wrap: pretty;
 }
@@ -52,12 +54,8 @@
   margin: 0;
 }
 
-.reflection p + p {
-  margin-top: 24px;
-}
-
 .figure {
-  margin: 0;
+  margin: 0 44px;
 }
 
 .image {
@@ -67,24 +65,15 @@
   filter: saturate(0.82) contrast(0.98);
 }
 
-.figure figcaption {
-  margin-top: 16px;
-  color: var(--editorial-muted);
-  font-family: var(--font-editorial);
-  font-size: 14px;
-  font-style: italic;
-  line-height: 1;
-  text-align: right;
-}
-
 .biography {
-  padding-top: 128px;
+  margin: 0 44px;
+  padding-top: 112px;
 }
 
 .biographyTitle {
   margin: 0;
   font-family: var(--font-editorial);
-  font-size: clamp(52px, 5vw, 72px);
+  font-size: clamp(48px, 4.4vw, 66px);
   font-style: italic;
   font-weight: 400;
   line-height: 1;
@@ -94,50 +83,27 @@
 
 .storyGrid {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  row-gap: 64px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(40px, 5vw, 80px);
   margin-top: 96px;
 }
 
 .storyParagraph {
   width: 100%;
-  max-width: 390px;
+  max-width: none;
   margin: 0;
   font-family: var(--font-editorial);
-  font-size: 20px;
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 1.55;
   text-wrap: pretty;
 }
 
-.storyParagraph:nth-child(1) {
-  grid-column: 1 / span 4;
-}
-
-.storyParagraph:nth-child(2) {
-  grid-column: 5 / span 4;
-  margin-top: 80px;
-}
-
-.storyParagraph:nth-child(3) {
-  grid-column: 9 / span 4;
-  margin-top: 160px;
-}
-
 @media (max-width: 1199px) {
-  .section {
-    padding-top: 64px;
-  }
-
   .shell {
-    padding: 0 48px;
-  }
-
-  .part {
-    margin-bottom: 64px;
+    padding: 0 20px;
   }
 
   .statementFrame {
-    min-height: 320px;
     padding: 48px;
   }
 
@@ -146,11 +112,16 @@
   }
 
   .reflection {
-    margin: 80px auto 96px;
+    margin: 48px auto 96px;
   }
 
   .biography {
+    margin: 0 28px;
     padding-top: 96px;
+  }
+
+  .figure {
+    margin: 0 28px;
   }
 
   .storyGrid {
@@ -167,26 +138,29 @@
   }
 
   .storyParagraph:nth-child(3) {
-    grid-column: 2;
+    grid-column: 1 / -1;
+    max-width: calc((100% - 64px) / 2);
   }
 }
 
 @media (max-width: 768px) {
+  .statementScreen {
+    min-height: auto;
+    padding: 128px 22px 28px;
+  }
+
   .section {
-    padding: 48px 0 96px;
+    padding: 0 0 96px;
   }
 
   .shell {
     padding: 0 22px;
   }
 
-  .part {
-    margin-bottom: 48px;
-    font-size: 17px;
-  }
-
   .statementFrame {
+    width: 100%;
     min-height: 250px;
+    aspect-ratio: auto;
     padding: 32px 20px;
   }
 
@@ -196,17 +170,17 @@
   }
 
   .reflection {
-    margin: 64px auto 80px;
+    margin: 28px auto 80px;
     font-size: 18px;
     line-height: 1.55;
   }
 
-  .figure figcaption {
-    margin-top: 12px;
-    font-size: 12px;
+  .figure {
+    margin: 0;
   }
 
   .biography {
+    margin: 0;
     padding-top: 80px;
   }
 
@@ -228,5 +202,9 @@
 
   .storyParagraph + .storyParagraph {
     margin-top: 32px;
+  }
+
+  .storyParagraph:nth-child(3) {
+    max-width: 100%;
   }
 }
