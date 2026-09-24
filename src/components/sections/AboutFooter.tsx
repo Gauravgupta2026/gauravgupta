@@ -68,8 +68,13 @@ export function AboutFooter() {
               />
             </label>
 
-            <button className={styles.sendButton} type="submit" aria-label="Send message">
-              <span>Send</span><span aria-hidden="true">↑</span>
+            <button
+              className={styles.sendButton}
+              data-active={message.trim().length > 0 ? "true" : "false"}
+              type="submit"
+              aria-label="Send message"
+            >
+              Send
             </button>
           </form>
         </m.div>

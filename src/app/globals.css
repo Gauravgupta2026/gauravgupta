@@ -625,8 +625,9 @@ html {
   top: var(--hero-title-top);
   left: 50%;
   display: flex;
-  width: calc(100% - (var(--hero-edge) * 2));
+  width: 100%;
   margin: 0;
+  padding-inline: clamp(32px, 7vw, 112px);
   transform: translateX(-50%);
   flex-direction: column;
   align-items: center;
@@ -707,7 +708,7 @@ html {
   max-width: 680px;
   margin: 0 auto;
   font-family: var(--font-mono);
-  font-size: clamp(13px, min(1.2vw, 2vh), 18px);
+  font-size: clamp(15px, min(1.38vw, 2.2vh), 21px);
   font-weight: 500;
   line-height: 1.55;
   letter-spacing: 0.025em;
@@ -1538,7 +1539,8 @@ html {
   }
 
   .hero-statement {
-    width: calc(100% - (var(--hero-edge) * 1.25));
+    width: 100%;
+    padding-inline: clamp(28px, 8vw, 48px);
     font-size: clamp(44px, min(15vw, 11vh), 74px);
     line-height: 0.84;
   }
@@ -1551,7 +1553,7 @@ html {
     right: calc(var(--hero-edge) * 1.2);
     left: calc(var(--hero-edge) * 1.2);
     max-width: 34rem;
-    font-size: clamp(10px, min(3.2vw, 1.9vh), 14px);
+    font-size: clamp(11px, min(3.45vw, 2.1vh), 15px);
     line-height: 1.5;
   }
 

@@ -31,7 +31,6 @@ export function Notes() {
               >
                 <time className={styles.date}>{note.date}</time>
                 <h3 className={styles.cardTitle}>{note.title}</h3>
-                <span className={styles.action} aria-hidden="true" />
               </Link>
             </Reveal>
           ))}

@@ -94,27 +94,37 @@
   }
 
   .rail {
-    min-height: 330px;
+    min-height: 280px;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
     padding-inline: 22px;
     scroll-padding-inline: 22px;
   }
 
   .small {
-    width: 48vw;
+    width: 40.8vw;
   }
 
   .medium {
-    width: 62vw;
+    width: 52.7vw;
   }
 
   .large {
-    width: 72vw;
+    width: 61.2vw;
   }
 
   .progressWrap {
+    width: 5.1cm;
+    height: 1.7cm;
     margin-top: 44px;
+  }
+
+  .progressBar {
+    transform: scaleY(.85);
+  }
+
+  .activeBar {
+    transform: scale(2, .85);
   }
 }
 

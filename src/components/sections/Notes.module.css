@@ -1,5 +1,5 @@
 .section {
-  padding: clamp(160px, 16vw, 240px) 0;
+  padding: clamp(112px, 12vw, 176px) 0;
   background: #ffffff;
   color: #18181b;
 }
@@ -24,16 +24,16 @@
 }
 
 .title {
-  margin: 42px 0 clamp(90px, 10vw, 140px);
+  margin: 30px 0 clamp(64px, 7vw, 96px);
   font-family: var(--font-display);
-  font-size: clamp(52px, 6vw, 82px);
+  font-size: clamp(42px, 4.7vw, 64px);
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
 .grid {
-  width: min(100%, 980px);
+  width: min(100%, 820px);
   margin: 0 auto;
   border-top: 1px solid #18181b;
 }
@@ -44,9 +44,9 @@
 
 .card {
   display: grid;
-  min-height: 132px;
-  padding: 28px 0;
-  grid-template-columns: 120px 1fr 48px;
+  min-height: 96px;
+  padding: 21px 0;
+  grid-template-columns: 104px 1fr;
   align-items: center;
   border-bottom: 1px solid #d4d4d8;
   color: inherit;
@@ -74,31 +74,16 @@
   max-width: 22ch;
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(27px, 2.6vw, 38px);
+  font-size: clamp(23px, 2.1vw, 31px);
   font-weight: 400;
   line-height: 1.08;
   letter-spacing: -0.025em;
   text-wrap: balance;
 }
 
-.action {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  justify-self: end;
-  place-items: center;
-  border: 1px solid #d4d4d8;
-  border-radius: 50%;
-  transition: background-color 240ms ease, color 240ms ease, transform 240ms ease;
-}
-
-.action::after { content: "↗"; font-family: var(--font-geist-mono), monospace; font-size: 14px; }
-
-.card:hover .action, .card:focus-visible .action { background: #18181b; color: #ffffff; transform: translate(2px, -2px); }
-
 @media (max-width: 900px) {
   .section {
-    padding: 140px 0 180px;
+    padding: 104px 0 136px;
   }
 
   .shell {
@@ -106,17 +91,17 @@
   }
 
   .title {
-    margin: 36px 0 96px;
+    margin: 28px 0 72px;
   }
 
   .card {
-    min-height: 120px;
+    min-height: 92px;
   }
 }
 
 @media (max-width: 640px) {
   .section {
-    padding: 120px 0 140px;
+    padding: 92px 0 112px;
   }
 
   .shell {
@@ -128,24 +113,18 @@
   }
 
   .title {
-    margin: 32px 0 64px;
-    font-size: 54px;
+    margin: 24px 0 50px;
+    font-size: 44px;
   }
 
   .card {
-    min-height: 118px;
-    padding: 24px 0;
-    grid-template-columns: 72px 1fr 42px;
+    min-height: 84px;
+    padding: 18px 0;
+    grid-template-columns: 64px 1fr;
     gap: 12px;
   }
 
   .cardTitle {
-    font-size: 27px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .action {
-    transition: none;
+    font-size: 23px;
   }
 }
