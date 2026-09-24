@@ -84,18 +84,19 @@ export function AboutFooter() {
 
       <footer className={styles.footerSheet} id="contact" data-browser-theme-color="#080808">
         <nav className={styles.footerNav} aria-label="Footer navigation">
-          <div>
+          <div className={styles.footerLocation}>
+            <span>Based in Bengaluru</span>
+            <a href="mailto:hey@gauravguptas.com">hey@gauravguptas.com</a>
+          </div>
+          <div className={styles.footerMenu}>
             <a href="/work">Work</a>
             <a href="/about">About</a>
-          </div>
-          <div>
             <a href="/work">Projects</a>
             <a href="/about#experience">Resume</a>
           </div>
-          <div>
+          <div className={styles.footerSocials}>
             <a href="https://github.com/Gauravgupta2026" target="_blank" rel="noreferrer">GitHub</a>
             <a href="https://in.linkedin.com/in/gaurav-gupta-218a08202" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a href="mailto:hey@gauravguptas.com">Email</a>
           </div>
         </nav>
         <p>building with creativity</p>
