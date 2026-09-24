@@ -709,7 +709,7 @@ html {
   max-width: 680px;
   margin: 0 auto;
   font-family: var(--font-mono);
-  font-size: clamp(15px, min(1.38vw, 2.2vh), 21px);
+  font-size: clamp(14px, min(1.28vw, 2.05vh), 19px);
   font-weight: 500;
   line-height: 1.55;
   letter-spacing: 0.025em;
@@ -1555,7 +1555,7 @@ html {
     right: calc(var(--hero-edge) * 1.2);
     left: calc(var(--hero-edge) * 1.2);
     max-width: 34rem;
-    font-size: clamp(11px, min(3.45vw, 2.1vh), 15px);
+    font-size: clamp(10px, min(3.2vw, 1.95vh), 14px);
     line-height: 1.5;
   }
 

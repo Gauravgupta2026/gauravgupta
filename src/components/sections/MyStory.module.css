@@ -1,7 +1,7 @@
 .statementScreen {
   min-height: auto;
   display: grid;
-  padding: clamp(48px, 6vw, 88px) 20px;
+  padding: clamp(180px, 20vw, 300px) 20px clamp(48px, 6vw, 88px);
   place-items: center;
   background: var(--editorial-paper);
   color: var(--editorial-ink);
@@ -158,7 +158,7 @@
 @media (max-width: 768px) {
   .statementScreen {
     min-height: auto;
-    padding: 28px 22px;
+    padding: 128px 22px 28px;
   }
 
   .section {

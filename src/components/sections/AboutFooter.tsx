@@ -55,9 +55,10 @@ export function AboutFooter() {
               />
             </label>
 
-            <label className={`${styles.mailboxField} ${styles.field} ${styles.messageField}`}>
-              <span>Message:</span>
+            <div className={`${styles.mailboxField} ${styles.messageField}`}>
+              <label htmlFor="contact-message">Message:</label>
               <textarea
+                id="contact-message"
                 name="message"
                 onChange={(event) => setMessage(event.target.value)}
                 required
@@ -65,19 +66,18 @@ export function AboutFooter() {
                 placeholder="Write a note..."
                 value={message}
               />
-            </label>
-
-            <button
-              className={styles.sendButton}
-              data-active={message.trim().length > 0 ? "true" : "false"}
-              type="submit"
-              aria-label="Send message"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m3 11 17-8-7 18-2-7-8-3Z" />
-                <path d="m11 14 9-11" />
-              </svg>
-            </button>
+              <button
+                className={styles.sendButton}
+                data-active={message.trim().length > 0 ? "true" : "false"}
+                type="submit"
+                aria-label="Send message"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m3 11 17-8-7 18-2-7-8-3Z" />
+                  <path d="m11 14 9-11" />
+                </svg>
+              </button>
+            </div>
           </form>
         </m.div>
       </section>
@@ -91,6 +91,11 @@ export function AboutFooter() {
           <div>
             <a href="/work">Projects</a>
             <a href="/about#experience">Resume</a>
+          </div>
+          <div>
+            <a href="https://github.com/Gauravgupta2026" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="https://in.linkedin.com/in/gaurav-gupta-218a08202" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="mailto:hey@gauravguptas.com">Email</a>
           </div>
         </nav>
         <p>building with creativity</p>

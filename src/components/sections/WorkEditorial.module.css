@@ -248,6 +248,16 @@
   }
 }
 
+@media (min-width: 721px) and (max-width: 1100px) {
+  .landingProjects .project {
+    min-height: auto;
+  }
+
+  .landingProjects .project + .project {
+    margin-top: 180px;
+  }
+}
+
 @media (max-width: 720px) {
   .paper {
     padding-top: 96px;
@@ -272,6 +282,14 @@
 
   .landingProjects .projects {
     margin-top: 0;
+  }
+
+  .landingProjects .project {
+    min-height: auto;
+  }
+
+  .landingProjects .project + .project {
+    margin-top: 132px;
   }
 
   .title {
