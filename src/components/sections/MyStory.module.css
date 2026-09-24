@@ -20,7 +20,7 @@
 }
 
 .statementFrame {
-  width: min(100%, 1512px);
+  width: min(calc(100% - 57px), 1455px);
   display: grid;
   aspect-ratio: 2048 / 690;
   place-items: center;
@@ -158,6 +158,7 @@
   }
 
   .statementFrame {
+    width: 100%;
     min-height: 250px;
     aspect-ratio: auto;
     padding: 32px 20px;

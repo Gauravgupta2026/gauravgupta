@@ -5,6 +5,10 @@
 }
 
 .contactStage {
+  --cta-canvas: #ffffff;
+  --cta-field: #fafafa;
+  --cta-field-emphasis: #f7f7f8;
+
   position: relative;
   z-index: 2;
   min-height: 100svh;
@@ -12,7 +16,7 @@
   padding: clamp(96px, 11vw, 168px) 24px clamp(112px, 13vw, 190px);
   place-items: center;
   border-radius: 0 0 clamp(28px, 3vw, 48px) clamp(28px, 3vw, 48px);
-  background: var(--color-bg);
+  background: var(--cta-canvas);
   color: var(--color-ink);
 }
 
@@ -21,14 +25,14 @@
 }
 
 .contactCopy h2 {
-  max-width: 760px;
+  max-width: 720px;
   margin: 0 auto;
   font-family: var(--font-display);
-  font-size: clamp(46px, 6vw, 82px);
+  font-size: clamp(44px, 5.6vw, 76px);
   font-variation-settings: "opsz" 64;
-  font-weight: 380;
-  line-height: .96;
-  letter-spacing: -.045em;
+  font-weight: 340;
+  line-height: 1;
+  letter-spacing: -.04em;
   text-align: center;
   text-wrap: balance;
 }
@@ -38,10 +42,13 @@
 }
 
 .invitation {
-  margin: 24px auto 0;
+  max-width: 420px;
+  margin: 22px auto 0;
   color: var(--color-mute-2);
-  font-size: 15px;
-  line-height: 1.55;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
   text-align: center;
 }
 
@@ -55,9 +62,9 @@
 
 .mailboxField {
   display: flex;
-  border: 1px solid var(--color-border);
+  border: 0;
   border-radius: 10px;
-  background: var(--color-surface);
+  background: var(--cta-field);
 }
 
 .mailTo span,
@@ -75,8 +82,7 @@
   padding: 0 18px;
   align-items: center;
   gap: 14px;
-  border-color: var(--color-divider);
-  background: var(--color-border-2);
+  background: var(--cta-field-emphasis);
 }
 
 .mailTo span { color: var(--color-ink); font-weight: 500; }
@@ -109,9 +115,10 @@
   resize: vertical;
   background: transparent;
   color: var(--color-ink);
-  font-family: var(--font-display);
-  font-size: 18px;
-  line-height: 1.45;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
 }
 
 .field input { min-width: 0; flex: 1; }
@@ -132,9 +139,9 @@
   margin: 0;
   padding: 0;
   place-items: center;
-  border: 1px solid var(--color-divider);
+  border: 0;
   border-radius: 50%;
-  background: var(--color-surface);
+  background: var(--cta-field);
   color: var(--color-faint);
   cursor: pointer;
   transition: background-color 240ms ease, color 240ms ease;
@@ -186,6 +193,12 @@
   margin-top: 28px;
   justify-content: flex-start;
   color: #f4f4f5;
+}
+
+:global(:root[data-theme="dark"]) .contactStage {
+  --cta-canvas: var(--color-bg);
+  --cta-field: #141416;
+  --cta-field-emphasis: #19191c;
 }
 
 :global(:root[data-theme="dark"]) .reveal,
