@@ -81,7 +81,6 @@ export function Nav() {
       </div>
 
       <div className="site-nav-controls">
-        <ThemeToggle className="site-nav-theme-toggle" />
         <button
           ref={menuButtonRef}
           type="button"
@@ -134,6 +133,8 @@ export function Nav() {
           <span>Let&rsquo;s build something thoughtful.</span>
           <a href="mailto:hey@gauravguptas.com">hey@gauravguptas.com</a>
         </div>
+
+        <ThemeToggle className="site-nav-menu-theme-toggle" iconOnly />
       </div>
     </nav>
   );

@@ -184,9 +184,27 @@
 
 .footerThemeToggle {
   margin-top: 28px;
+  justify-content: flex-start;
   color: #f4f4f5;
-  font-family: var(--font-body);
-  font-size: 14px;
+}
+
+:global(:root[data-theme="dark"]) .reveal,
+:global(:root[data-theme="dark"]) .footerSheet {
+  background: #f5f5f5;
+}
+
+:global(:root[data-theme="dark"]) .footerSheet {
+  color: #111113;
+}
+
+:global(:root[data-theme="dark"]) .footerNav a,
+:global(:root[data-theme="dark"]) .footerNav span,
+:global(:root[data-theme="dark"]) .footerThemeToggle {
+  color: #111113;
+}
+
+:global(:root[data-theme="dark"]) .footerNav a:hover {
+  color: #315fbe;
 }
 
 .footerSheet p {

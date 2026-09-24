@@ -88,7 +88,7 @@ export function AboutFooter() {
           <div className={styles.footerLocation}>
             <span>Based in Bengaluru</span>
             <a href="mailto:hey@gauravguptas.com">hey@gauravguptas.com</a>
-            <ThemeToggle className={styles.footerThemeToggle} showLabel />
+            <ThemeToggle className={styles.footerThemeToggle} iconOnly />
           </div>
           <div className={styles.footerMenu}>
             <a href="/work">Work</a>
