@@ -1,0 +1,125 @@
+.section {
+  overflow: hidden;
+  padding: clamp(104px, 11vw, 168px) 0;
+  background: #fff;
+  color: #080808;
+}
+
+.rail {
+  display: flex;
+  min-height: clamp(300px, 35vw, 500px);
+  align-items: center;
+  gap: clamp(22px, 2.4vw, 36px);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  padding: 0 max(24px, calc((100vw - 1280px) / 2)) 20px;
+  scroll-padding-inline: max(24px, calc((100vw - 1280px) / 2));
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail:focus-visible {
+  outline: 1px solid rgba(8, 8, 8, 0.48);
+  outline-offset: -1px;
+}
+
+.card {
+  flex: 0 0 auto;
+  margin: 0;
+  scroll-snap-align: start;
+}
+
+.small {
+  width: clamp(170px, 16vw, 242px);
+}
+
+.medium {
+  width: clamp(220px, 23vw, 348px);
+}
+
+.large {
+  width: clamp(280px, 29vw, 438px);
+}
+
+.imageFrame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #ecebe7;
+}
+
+.small .imageFrame {
+  aspect-ratio: 4 / 5;
+}
+
+.large .imageFrame {
+  aspect-ratio: 1 / 1;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.progressWrap {
+  display: flex;
+  width: 6cm;
+  max-width: calc(100vw - 44px);
+  height: 2cm;
+  margin: clamp(40px, 5vw, 72px) auto 0;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progressBar {
+  width: 1px;
+  background: rgba(8, 8, 8, 0.48);
+  transition: background-color 140ms ease, transform 140ms ease;
+}
+
+.activeBar {
+  background: #080808;
+  transform: scaleX(2);
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 96px 0;
+  }
+
+  .rail {
+    min-height: 330px;
+    align-items: center;
+    gap: 16px;
+    padding-inline: 22px;
+    scroll-padding-inline: 22px;
+  }
+
+  .small {
+    width: 48vw;
+  }
+
+  .medium {
+    width: 62vw;
+  }
+
+  .large {
+    width: 72vw;
+  }
+
+  .progressWrap {
+    margin-top: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressBar {
+    transition: none;
+  }
+}

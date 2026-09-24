@@ -1,90 +1,155 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { Shell } from "@/components/Shell";
+import { Reveal } from "@/components/Reveal";
+import { SectionDivider } from "@/components/ui/SectionDivider";
+import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { selectedWork } from "@/content/selectedWork";
 
+const AUTOPLAY_MS = 1700;
+
 export function Projects() {
+  const [active, setActive] = useState(0);
+  const [card, setCard] = useState(0);
+  const [holding, setHolding] = useState(false);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const cards = selectedWork[active].cards;
+
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced || holding) return;
+
+    timer.current = setInterval(() => {
+      setCard((current) => (current + 1) % cards.length);
+    }, AUTOPLAY_MS);
+
+    return () => {
+      if (timer.current) clearInterval(timer.current);
+    };
+  }, [holding, cards.length, active]);
+
+  const selectProject = (index: number) => {
+    if (index === active) return;
+    setActive(index);
+    setCard(0);
+  };
+
   return (
-    <section id="work" className="projects-chapter" aria-labelledby="projects-title">
-      <div className="projects-shell">
-        <header className="projects-heading">
-          <h2 id="projects-title">Every project<br />starts somewhere.</h2>
-          <p className="projects-deck">
-            Scroll through the work at your own pace. Each project gets room to
-            breathe, with its first evidence visible before you open it.
-          </p>
-        </header>
+    <Shell
+      as="section"
+      id="work"
+      wide
+      className="bg-white pb-[120px] pt-[180px] text-ink md:pb-[180px] md:pt-[260px]"
+      data-browser-theme-color="#ffffff"
+    >
+      <Reveal
+        as="h2"
+        className="m-0 text-center font-display text-[46px] font-medium leading-[.95] tracking-[-0.04em] text-ink md:text-[72px]"
+      >
+        Every Project Starts Somewhere
+      </Reveal>
+      <SectionDivider className="mt-[64px] md:mt-[100px]" />
 
-        <div className="projects-list">
-          {selectedWork.map((project) => (
-            <article className="project-record" key={project.slug}>
-              <Link
-                href={`/projects/${project.slug}`}
-                className="project-record-link"
-                aria-label={`Read the ${project.title} case study`}
+      <div className="mt-[40px] grid grid-cols-1 gap-[32px] md:mt-[70px] md:grid-cols-[1fr_1fr] md:gap-[42px]">
+        <div className="flex flex-col">
+          {selectedWork.map((project, index) => (
+            <Link
+              key={project.slug}
+              href={`/projects/${project.slug}`}
+              onMouseEnter={() => selectProject(index)}
+              onFocus={() => selectProject(index)}
+              className="flex items-baseline gap-0 border-b border-black/15 py-[20px] text-left no-underline md:h-[147px] md:border-0 md:py-0"
+            >
+              <span
+                className={`w-[52px] font-mono text-[15px] leading-[37px] transition-colors duration-[450ms] md:w-[90px] md:text-[19px] ${
+                  index === active ? "text-zinc-700" : "text-zinc-400"
+                }`}
               >
-                <span className="project-record-number">{project.num}</span>
-
-                <span className="project-record-identity">
-                  <span className="project-record-name">{project.title}</span>
-                  <span className="project-record-gallery" aria-hidden="true">
-                    {project.visuals.map((visual) => (
-                      <span className="project-record-visual" key={visual}>
-                        <span>{visual}</span>
-                      </span>
-                    ))}
-                  </span>
-                </span>
-
-                <span className="project-record-summary">
-                  <span className="project-record-premise">{project.premise}</span>
-                  <span className="project-record-list project-record-facts">
-                    {project.facts.map((fact) => (
-                      <span key={fact}>{fact}</span>
-                    ))}
-                  </span>
-                </span>
-
-                <span className="project-record-list project-record-role">
-                  {project.disciplines.map((discipline) => (
-                    <span key={discipline}>{discipline}</span>
-                  ))}
-                </span>
-
-                <span className="project-record-action" aria-hidden="true">↗</span>
-              </Link>
-
-              <Link
-                href={`/projects/${project.slug}`}
-                className="project-mobile-link"
-                aria-label={`Read the ${project.title} case study`}
+                {project.num}
+              </span>
+              <span
+                className={`font-display font-medium leading-[37px] tracking-[-0.02em] transition-[color,font-size] duration-[450ms] ${
+                  index === active
+                    ? "text-[27px] text-ink md:text-[38px]"
+                    : "text-[23px] text-zinc-400 md:text-[32px]"
+                }`}
               >
-                <span className="project-mobile-number">{project.num}</span>
-                <span
-                  className="project-mobile-image"
-                  role="img"
-                  aria-label={`${project.title} project preview`}
-                >
-                  <span>{project.visuals[0]}</span>
-                </span>
-                <span className="project-mobile-name">{project.title}</span>
-                <span className="project-mobile-description">{project.premise}</span>
-                <span className="project-mobile-subtext">
-                  {project.facts.join(" · ")}
-                </span>
-                <span className="project-tablet-role">
-                  {project.disciplines.join(" · ")}
-                </span>
-              </Link>
-            </article>
+                {project.title}
+              </span>
+            </Link>
           ))}
         </div>
 
-        <div className="projects-footer">
-          <span>Three selected projects · 2026</span>
-          <Link href="/work">
-            View the full work index <span aria-hidden="true">→</span>
-          </Link>
+        <div
+          onMouseEnter={() => setHolding(true)}
+          onMouseLeave={() => setHolding(false)}
+          onFocusCapture={() => setHolding(true)}
+          onBlurCapture={() => setHolding(false)}
+        >
+          <div className="relative h-[420px] overflow-hidden md:h-[482px]">
+            <div
+              className="flex h-full transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)]"
+              style={{ transform: `translate3d(-${card * 100}%,0,0)` }}
+            >
+              {cards.map((preview, index) => (
+                <div
+                  key={preview.label}
+                  className="box-border flex h-full w-full min-w-0 flex-shrink-0 flex-col overflow-hidden bg-[#f1f0ec] p-[24px] md:p-[32px]"
+                >
+                  <div className="font-mono text-[9px] font-medium leading-[9px] tracking-[0.14em] text-zinc-500">
+                    {preview.label}
+                  </div>
+
+                  {preview.placeholder && (
+                    <MediaPlaceholder
+                      label={preview.label}
+                      seed={`${selectedWork[active].slug}-${index}`}
+                      align="bottom-left"
+                      className="mt-[20px] flex-1 md:mt-[24px]"
+                    />
+                  )}
+
+                  {preview.title && (
+                    <div className="mt-[20px] text-pretty font-display text-[24px] font-medium leading-[1.08] tracking-[-0.02em] text-ink md:mt-[24px] md:text-[30px]">
+                      {preview.title}
+                    </div>
+                  )}
+                  {preview.body && (
+                    <div className="mt-[14px] max-w-[44ch] text-pretty text-[13px] leading-[20px] text-zinc-600">
+                      {preview.body}
+                    </div>
+                  )}
+                  {preview.metric && (
+                    <div className="mt-auto pt-[16px] font-mono text-[11px] uppercase tracking-[.08em] text-zinc-600 md:pt-[20px]">
+                      {preview.metric}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-[16px] flex gap-[8px]">
+            {cards.map((preview, index) => (
+              <button
+                key={preview.label}
+                type="button"
+                aria-label={`Show ${preview.label.toLowerCase()}`}
+                onClick={() => setCard(index)}
+                className="-my-[16px] flex h-[48px] flex-1 items-center py-[16px]"
+              >
+                <span
+                  className={`h-[2px] w-full transition-colors duration-300 ${
+                    index === card ? "bg-zinc-900" : "bg-zinc-300"
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-    </section>
+    </Shell>
   );
 }

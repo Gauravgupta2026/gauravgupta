@@ -6,6 +6,72 @@
   font-family: var(--font-inter), Arial, sans-serif;
 }
 
+.landingProjects {
+  --font-work-newsreader: var(--font-newsreader);
+  padding-bottom: clamp(180px, 18vw, 280px);
+}
+
+.landingProjects .paper {
+  padding-top: 0;
+}
+
+.landingHeading {
+  text-align: center;
+}
+
+.kickerScreen {
+  min-height: 100svh;
+  display: grid;
+  padding: 80px 24px;
+  place-items: center;
+}
+
+.landingKicker {
+  margin: 0;
+  font-family: var(--font-work-newsreader), Georgia, serif;
+  font-size: clamp(22px, 2.4vw, 34px);
+  font-variation-settings: "opsz" 32;
+  font-weight: 520;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.landingTitle {
+  display: flex;
+  margin: 0 auto;
+  padding-inline: 20px;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-work-newsreader), Georgia, serif;
+  font-size: clamp(64px, 7.15vw, 108px);
+  font-variation-settings: "opsz" 72;
+  font-weight: 520;
+  line-height: 0.82;
+  letter-spacing: -0.045em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.titleReveal {
+  padding-block: clamp(150px, 17vw, 250px) clamp(105px, 12vw, 180px);
+}
+
+.landingProjects .projects {
+  margin-top: 0;
+}
+
+.landingProjects .project {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transform-origin: 50% 45%;
+}
+
+.landingProjects .project + .project {
+  margin-top: 0;
+}
+
 .paper {
   max-width: 1512px;
   margin: 0 auto;
@@ -88,7 +154,9 @@
 
 .projectCopy {
   width: 58.333%;
-  margin-top: 34px;
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(8, 8, 8, 0.2);
 }
 
 .copyLeft {
@@ -102,7 +170,7 @@
 .projectCopy h2 {
   margin: 0;
   font-family: var(--font-work-newsreader), Georgia, serif;
-  font-size: clamp(30px, 2.3vw, 36px);
+  font-size: clamp(32px, 2.45vw, 38px);
   font-variation-settings: "opsz" 50;
   font-weight: 520;
   line-height: 1;
@@ -110,25 +178,26 @@
 }
 
 .projectCopy > p:not(.meta) {
-  max-width: 520px;
-  margin: 11px 0 0;
+  max-width: 540px;
+  margin: 14px 0 0;
   font-family: var(--font-work-newsreader), Georgia, serif;
-  font-size: clamp(20px, 1.85vw, 28px);
+  font-size: clamp(21px, 1.9vw, 29px);
   font-variation-settings: "opsz" 32;
   font-weight: 360;
-  line-height: 1.14;
+  line-height: 1.18;
   letter-spacing: -0.02em;
 }
 
 .meta {
   display: flex;
   flex-direction: column;
-  margin: 22px 0 0;
-  font-size: 13px;
-  font-weight: 450;
-  line-height: 1.45;
-  letter-spacing: -0.01em;
-  text-transform: lowercase;
+  margin: 24px 0 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
 }
 
 .thesis {
@@ -186,6 +255,27 @@
     padding-top: 96px;
   }
 
+  .landingProjects .paper {
+    padding-top: 0;
+  }
+
+  .landingKicker {
+    font-size: clamp(21px, 6.5vw, 28px);
+  }
+
+  .landingTitle {
+    font-size: clamp(48px, 14vw, 66px);
+    line-height: 0.9;
+  }
+
+  .titleReveal {
+    padding-block: 112px 96px;
+  }
+
+  .landingProjects .projects {
+    margin-top: 0;
+  }
+
   .title {
     padding-inline: 20px;
     font-size: clamp(52px, 16vw, 72px);
@@ -221,6 +311,7 @@
   .copyRight {
     width: 100%;
     margin: 25px 0 0;
+    padding-top: 18px;
   }
 
   .projectCopy h2 {

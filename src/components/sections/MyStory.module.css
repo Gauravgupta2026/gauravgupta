@@ -1,37 +1,40 @@
+.statementScreen {
+  min-height: 100svh;
+  display: grid;
+  padding: clamp(48px, 6vw, 88px) 20px;
+  place-items: center;
+  background: var(--editorial-paper);
+  color: var(--editorial-ink);
+}
+
 .section {
-  padding: 80px 0 128px;
+  padding: clamp(120px, 11vw, 168px) 0 128px;
   background: var(--editorial-paper);
   color: var(--editorial-ink);
 }
 
 .shell {
-  width: min(100%, 1440px);
+  width: min(100%, 1512px);
   margin: 0 auto;
-  padding: 0 64px;
-}
-
-.part {
-  margin: 0 0 96px;
-  font-family: var(--font-editorial);
-  font-size: 19px;
-  font-style: italic;
-  line-height: 1;
-  text-align: center;
+  padding: 0 20px;
 }
 
 .statementFrame {
+  width: min(100%, 1512px);
   display: grid;
-  min-height: 380px;
+  aspect-ratio: 2048 / 690;
   place-items: center;
-  border: 1px solid var(--editorial-hairline);
   padding: 64px;
+  background-image: url("/assets/story/nostalgia-halftone.jpg");
+  background-position: center;
+  background-size: 100% 100%;
 }
 
 .statement {
   max-width: 1120px;
   margin: 0;
   font-family: var(--font-editorial);
-  font-size: clamp(64px, 7.2vw, 104px);
+  font-size: clamp(52px, 5vw, 76px);
   font-weight: 400;
   line-height: 0.98;
   letter-spacing: -0.035em;
@@ -40,10 +43,10 @@
 }
 
 .reflection {
-  width: min(100%, 620px);
-  margin: 96px auto 128px;
+  width: min(100%, 540px);
+  margin: clamp(108px, 10vw, 152px) auto clamp(128px, 12vw, 180px);
   font-family: var(--font-editorial);
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.5;
   text-wrap: pretty;
 }
@@ -52,12 +55,8 @@
   margin: 0;
 }
 
-.reflection p + p {
-  margin-top: 24px;
-}
-
 .figure {
-  margin: 0;
+  margin: 0 44px;
 }
 
 .image {
@@ -67,24 +66,15 @@
   filter: saturate(0.82) contrast(0.98);
 }
 
-.figure figcaption {
-  margin-top: 16px;
-  color: var(--editorial-muted);
-  font-family: var(--font-editorial);
-  font-size: 14px;
-  font-style: italic;
-  line-height: 1;
-  text-align: right;
-}
-
 .biography {
-  padding-top: 128px;
+  margin: 0 20px;
+  padding-top: 112px;
 }
 
 .biographyTitle {
   margin: 0;
   font-family: var(--font-editorial);
-  font-size: clamp(52px, 5vw, 72px);
+  font-size: clamp(48px, 4.4vw, 66px);
   font-style: italic;
   font-weight: 400;
   line-height: 1;
@@ -104,8 +94,8 @@
   max-width: 390px;
   margin: 0;
   font-family: var(--font-editorial);
-  font-size: 20px;
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 1.55;
   text-wrap: pretty;
 }
 
@@ -115,12 +105,10 @@
 
 .storyParagraph:nth-child(2) {
   grid-column: 5 / span 4;
-  margin-top: 80px;
 }
 
 .storyParagraph:nth-child(3) {
   grid-column: 9 / span 4;
-  margin-top: 160px;
 }
 
 @media (max-width: 1199px) {
@@ -129,15 +117,10 @@
   }
 
   .shell {
-    padding: 0 48px;
-  }
-
-  .part {
-    margin-bottom: 64px;
+    padding: 0 20px;
   }
 
   .statementFrame {
-    min-height: 320px;
     padding: 48px;
   }
 
@@ -150,7 +133,12 @@
   }
 
   .biography {
+    margin: 0 12px;
     padding-top: 96px;
+  }
+
+  .figure {
+    margin: 0 28px;
   }
 
   .storyGrid {
@@ -172,22 +160,24 @@
 }
 
 @media (max-width: 768px) {
+  .statementScreen {
+    min-height: 100svh;
+    padding: 28px 22px;
+  }
+
   .section {
-    padding: 48px 0 96px;
+    padding: 0 0 96px;
   }
 
   .shell {
     padding: 0 22px;
   }
 
-  .part {
-    margin-bottom: 48px;
-    font-size: 17px;
-  }
-
   .statementFrame {
     min-height: 250px;
+    aspect-ratio: auto;
     padding: 32px 20px;
+    background-size: auto 100%;
   }
 
   .statement {
@@ -196,17 +186,17 @@
   }
 
   .reflection {
-    margin: 64px auto 80px;
+    margin: 28px auto 80px;
     font-size: 18px;
     line-height: 1.55;
   }
 
-  .figure figcaption {
-    margin-top: 12px;
-    font-size: 12px;
+  .figure {
+    margin: 0;
   }
 
   .biography {
+    margin: 0;
     padding-top: 80px;
   }
 

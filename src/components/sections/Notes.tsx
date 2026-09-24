@@ -5,12 +5,19 @@ import styles from "./Notes.module.css";
 
 export function Notes() {
   return (
-    <section id="notes" className={styles.section} aria-labelledby="notes-title">
+    <section
+      id="notes"
+      className={styles.section}
+      aria-labelledby="notes-title"
+      data-browser-theme-color="#ffffff"
+    >
       <div className={styles.shell}>
         <header className={styles.heading}>
-          <p className={styles.part}>part three</p>
-          <Reveal as="h2" id="notes-title" className={styles.title}>
-            <span>Writing is where I slow down</span>
+          <Reveal as="p" className={styles.kicker} variant="chapter">
+            This is where i slow down
+          </Reveal>
+          <Reveal as="h2" id="notes-title" className={styles.title} variant="chapter" delay={100}>
+            Notes
           </Reveal>
         </header>
 
@@ -24,9 +31,7 @@ export function Notes() {
               >
                 <time className={styles.date}>{note.date}</time>
                 <h3 className={styles.cardTitle}>{note.title}</h3>
-                <span className={styles.action}>
-                  Read note <span aria-hidden="true">↗</span>
-                </span>
+                <span className={styles.action} aria-hidden="true" />
               </Link>
             </Reveal>
           ))}

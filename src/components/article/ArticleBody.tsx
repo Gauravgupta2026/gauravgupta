@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import type { Block } from "@/content/articles";
+import styles from "./ArticleBody.module.css";
 
 /**
  * Long-form reader. Prose is set in Newsreader (serif) at a comfortable
@@ -9,14 +10,14 @@ import type { Block } from "@/content/articles";
  */
 export function ArticleBody({ body }: { body: Block[] }) {
   return (
-    <div className="flex flex-col gap-[26px]">
+    <div className={styles.body}>
       {body.map((block, i) => {
         switch (block.type) {
           case "p":
             return (
               <p
                 key={i}
-                className="m-0 font-display text-[20px] leading-[1.75] text-ink/90 md:text-[19px]"
+                className={styles.paragraph}
               >
                 {block.text}
               </p>
@@ -26,7 +27,7 @@ export function ArticleBody({ body }: { body: Block[] }) {
             return (
               <h2
                 key={i}
-                className="m-0 mt-[22px] font-display text-[26px] font-medium leading-[1.2] text-ink md:text-[27px]"
+                className={styles.heading}
               >
                 {block.text}
               </h2>
@@ -36,13 +37,13 @@ export function ArticleBody({ body }: { body: Block[] }) {
             return (
               <figure
                 key={i}
-                className="my-[14px] border-l-2 border-blue pl-[24px]"
+                className={styles.quote}
               >
-                <blockquote className="m-0 font-display text-[23px] italic leading-[1.5] text-ink md:text-[23px]">
+                <blockquote>
                   {block.text}
                 </blockquote>
                 {block.cite ? (
-                  <figcaption className="mt-[12px] font-mono text-[13px] uppercase tracking-[0.14em] text-mute">
+                  <figcaption>
                     {block.cite}
                   </figcaption>
                 ) : null}
@@ -51,11 +52,11 @@ export function ArticleBody({ body }: { body: Block[] }) {
 
           case "ul":
             return (
-              <ul key={i} className="m-0 flex flex-col gap-[12px] pl-[20px]">
+              <ul key={i} className={styles.list}>
                 {block.items.map((item, j) => (
                   <li
                     key={j}
-                    className="font-display text-[21px] leading-[1.65] text-ink/90 marker:text-blue"
+                    className={styles.listItem}
                   >
                     {item}
                   </li>
@@ -67,9 +68,9 @@ export function ArticleBody({ body }: { body: Block[] }) {
             return (
               <figure
                 key={i}
-                className={`my-[14px] ${
+                className={`${styles.figure} ${
                   block.width === "wide"
-                    ? "md:-mx-[80px]"
+                    ? styles.wide
                     : ""
                 }`}
               >
@@ -77,7 +78,7 @@ export function ArticleBody({ body }: { body: Block[] }) {
                   <img
                     src={block.src}
                     alt={block.alt}
-                    className="w-full"
+                    className={styles.image}
                     loading="lazy"
                   />
                 ) : (
@@ -87,7 +88,7 @@ export function ArticleBody({ body }: { body: Block[] }) {
                   />
                 )}
                 {block.caption ? (
-                  <figcaption className="mt-[12px] text-center font-mono text-[13px] leading-[1.6] text-soft-ink">
+                  <figcaption className={styles.caption}>
                     {block.caption}
                   </figcaption>
                 ) : null}

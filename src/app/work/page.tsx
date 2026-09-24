@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { AboutFooter } from "@/components/sections/AboutFooter";
+import { Nav } from "@/components/sections/Nav";
 import { WorkEditorial } from "@/components/sections/WorkEditorial";
 
 const workNewsreader = localFont({
@@ -29,6 +30,7 @@ export const metadata: Metadata = {
 export default function WorkPage() {
   return (
     <main className={workNewsreader.variable} id="top">
+      <Nav />
       <WorkEditorial />
       <AboutFooter />
     </main>

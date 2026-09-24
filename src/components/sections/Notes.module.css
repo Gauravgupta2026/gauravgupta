@@ -1,60 +1,54 @@
 .section {
-  padding: 128px 0 clamp(190px, 26svh, 300px);
-  background: var(--editorial-paper);
-  color: var(--editorial-ink);
+  padding: clamp(160px, 16vw, 240px) 0;
+  background: #ffffff;
+  color: #18181b;
 }
 
 .shell {
-  width: min(100%, 1440px);
+  width: min(100%, 1512px);
   margin: 0 auto;
-  padding: 0 64px;
+  padding: 0 clamp(24px, 5.42vw, 82px);
 }
 
 .heading {
-  display: grid;
-  grid-template-columns: 1fr 4fr 1fr;
-  align-items: end;
-  margin-bottom: 64px;
+  text-align: center;
 }
 
-.part {
-  margin: 0 0 10px;
-  font-family: var(--font-editorial);
-  font-size: 19px;
-  font-style: italic;
+.kicker {
+  margin: 0;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  letter-spacing: .08em;
   line-height: 1;
+  text-transform: uppercase;
 }
 
 .title {
-  grid-column: 2;
-  margin: 0;
-  font-family: var(--font-editorial);
-  font-size: clamp(48px, 5vw, 64px);
-  font-style: italic;
+  margin: 42px 0 clamp(90px, 10vw, 140px);
+  font-family: var(--font-display);
+  font-size: clamp(52px, 6vw, 82px);
   font-weight: 400;
-  line-height: 0.98;
+  line-height: 1;
   letter-spacing: -0.04em;
-  text-align: center;
-  text-wrap: balance;
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(100%, 980px);
+  margin: 0 auto;
+  border-top: 1px solid #18181b;
 }
 
 .grid > article {
   min-width: 0;
 }
 
-.grid > article + article {
-  border-left: 1px solid var(--editorial-hairline);
-}
-
 .card {
-  display: flex;
-  min-height: 300px;
-  padding: 16px 48px 24px;
+  display: grid;
+  min-height: 132px;
+  padding: 28px 0;
+  grid-template-columns: 120px 1fr 48px;
+  align-items: center;
+  border-bottom: 1px solid #d4d4d8;
   color: inherit;
   flex-direction: column;
   text-decoration: none;
@@ -64,155 +58,94 @@
   position: relative;
   z-index: 1;
   outline: 2px solid var(--editorial-focus);
-  outline-offset: -2px;
+  outline-offset: 6px;
 }
 
 .date {
   color: var(--editorial-muted);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  line-height: 1.5;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  line-height: 1.4;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .cardTitle {
-  max-width: 10ch;
-  margin: 48px 0 0;
-  font-family: var(--font-editorial);
-  font-size: clamp(28px, 2.6vw, 36px);
-  font-weight: 700;
-  line-height: 1.04;
+  max-width: 22ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(27px, 2.6vw, 38px);
+  font-weight: 400;
+  line-height: 1.08;
   letter-spacing: -0.025em;
   text-wrap: balance;
 }
 
 .action {
-  display: inline-flex;
-  min-height: 44px;
-  margin-top: auto;
-  padding-top: 32px;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid transparent;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 1.5;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  justify-self: end;
+  place-items: center;
+  border: 1px solid #d4d4d8;
+  border-radius: 50%;
+  transition: background-color 240ms ease, color 240ms ease, transform 240ms ease;
 }
 
-.action span {
-  font-size: 22px;
-  transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
-}
+.action::after { content: "↗"; font-family: var(--font-geist-mono), monospace; font-size: 14px; }
 
-.card:hover .action,
-.card:focus-visible .action {
-  border-bottom-color: var(--editorial-ink);
-}
+.card:hover .action, .card:focus-visible .action { background: #18181b; color: #ffffff; transform: translate(2px, -2px); }
 
-.card:hover .action span,
-.card:focus-visible .action span {
-  transform: translate(4px, -4px);
-}
-
-@media (max-width: 1199px) {
+@media (max-width: 900px) {
   .section {
-    padding: 96px 0;
+    padding: 140px 0 180px;
   }
 
   .shell {
-    padding: 0 48px;
-  }
-
-  .heading {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    margin-bottom: 64px;
-  }
-
-  .part,
-  .title {
-    grid-column: 1;
-    text-align: center;
+    padding: 0 40px;
   }
 
   .title {
-    font-size: clamp(44px, 6vw, 56px);
+    margin: 36px 0 96px;
   }
 
   .card {
-    min-height: 288px;
-    padding: 16px 32px 24px;
+    min-height: 120px;
   }
-
-  .cardTitle {
-    margin-top: 40px;
-    font-size: clamp(27px, 3.2vw, 34px);
-  }
-
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .section {
-    padding: 96px 0 clamp(150px, 22svh, 220px);
+    padding: 120px 0 140px;
   }
 
   .shell {
     padding: 0 22px;
   }
 
-  .heading {
-    align-items: start;
-    margin-bottom: 48px;
-  }
-
-  .part {
-    margin: 0;
-    font-size: 17px;
-    text-align: left;
+  .kicker {
+    font-size: 10px;
   }
 
   .title {
-    font-size: clamp(38px, 10.5vw, 46px);
-    line-height: 1.03;
-    text-align: left;
-  }
-
-  .grid {
-    display: block;
-  }
-
-  .grid > article + article {
-    border-left: 0;
-    border-top: 1px solid var(--editorial-hairline);
+    margin: 32px 0 64px;
+    font-size: 54px;
   }
 
   .card {
-    min-height: 0;
-    padding: 32px 0 40px;
-  }
-
-  .date {
-    font-size: 12px;
+    min-height: 118px;
+    padding: 24px 0;
+    grid-template-columns: 72px 1fr 42px;
+    gap: 12px;
   }
 
   .cardTitle {
-    max-width: 13ch;
-    margin-top: 24px;
-    font-size: 30px;
-  }
-
-  .action {
-    margin-top: 56px;
-    padding-top: 0;
-    font-size: 12px;
+    font-size: 27px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .action span {
+  .action {
     transition: none;
   }
 }
