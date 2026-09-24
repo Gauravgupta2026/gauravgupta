@@ -41,8 +41,8 @@
 }
 
 .grid {
-  width: min(100%, 820px);
-  margin: 0 auto;
+  width: auto;
+  margin: 0 44px;
   border-top: 1px solid var(--editorial-ink);
   text-align: left;
 }
@@ -107,6 +107,10 @@
   .card {
     min-height: 92px;
   }
+
+  .grid {
+    margin: 0 28px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -136,6 +140,10 @@
     padding: 18px 0;
     grid-template-columns: 64px 1fr;
     gap: 12px;
+  }
+
+  .grid {
+    margin: 0;
   }
 
   .cardTitle {
