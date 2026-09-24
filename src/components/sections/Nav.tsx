@@ -134,7 +134,9 @@ export function Nav() {
           <a href="mailto:hey@gauravguptas.com">hey@gauravguptas.com</a>
         </div>
 
-        <ThemeToggle className="site-nav-menu-theme-toggle" iconOnly />
+        <div className="site-nav-menu-theme-control">
+          <ThemeToggle className="site-nav-menu-theme-toggle" iconOnly />
+        </div>
       </div>
     </nav>
   );

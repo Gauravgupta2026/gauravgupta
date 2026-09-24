@@ -641,10 +641,13 @@ html {
   justify-content: space-between;
 }
 
-.site-nav-menu-theme-toggle {
+.site-nav-menu-theme-control {
   position: absolute;
   right: 28px;
   bottom: 22px;
+}
+
+.site-nav-menu-theme-toggle {
   min-width: 38px;
   min-height: 38px;
   justify-content: center;
@@ -692,7 +695,12 @@ html {
   transform: rotate(-45deg);
 }
 
-.site-nav-menu-close:focus-visible,
+.site-nav-menu-close:focus-visible {
+  outline: 0;
+  border-color: var(--editorial-focus);
+  background: rgb(255 255 255 / 8%);
+}
+
 .site-nav-mobile-menu a:focus-visible {
   outline: 1px solid #ffffff;
   outline-offset: 6px;
@@ -776,6 +784,12 @@ html {
   letter-spacing: -0.035em;
   text-align: center;
   color: var(--editorial-signature);
+}
+
+@media (min-width: 1024px) {
+  .hero-statement-desktop-line {
+    white-space: nowrap;
+  }
 }
 
 .hero-portal {
@@ -1648,9 +1662,12 @@ html {
     border-radius: 20px;
   }
 
-  .site-nav-menu-theme-toggle {
+  .site-nav-menu-theme-control {
     right: 17px;
     bottom: 15px;
+  }
+
+  .site-nav-menu-theme-toggle {
     min-width: 34px;
     min-height: 34px;
   }
