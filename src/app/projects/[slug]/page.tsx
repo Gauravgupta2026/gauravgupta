@@ -7,7 +7,6 @@ import { DecisionLog } from "@/components/sections/DecisionLog";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { Nav } from "@/components/sections/Nav";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
-import { WipMark } from "@/components/ui/WipMark";
 import { getProjectDetail, projectDetails, type ProjectDetail, type Section } from "@/content/projectDetails";
 import { projects } from "@/content/projects";
 import styles from "./ProjectCaseStudy.module.css";
@@ -63,7 +62,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             <span>Case study / 2026</span>
           </div>
           <h1>{project.title}</h1>
-          <WipMark className={styles.caseStudyWip} />
           <p className={styles.standfirst}>{project.tagline}</p>
           {project.meta && (
             <dl className={styles.meta}>

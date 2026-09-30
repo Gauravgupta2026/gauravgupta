@@ -174,11 +174,6 @@
   letter-spacing: -0.035em;
 }
 
-.projectWip {
-  margin-bottom: 12px;
-  font-size: clamp(48px, 5.5vw, 72px);
-}
-
 .projectCopy > p:not(.meta) {
   max-width: 540px;
   margin: 14px 0 0;
