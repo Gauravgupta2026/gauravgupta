@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
+import { WipMark } from "@/components/ui/WipMark";
 import { WORK_EDITORIAL } from "@/content/workEditorial";
 import styles from "./WorkEditorial.module.css";
 
@@ -65,6 +66,7 @@ function ProjectRow({
       <div
         className={`${styles.projectCopy} ${reverse ? styles.copyRight : styles.copyLeft}`}
       >
+        <WipMark className={styles.projectWip} />
         <h2>{title}</h2>
         <p>{description}</p>
         <ProjectMeta role={role} detail={detail} />
