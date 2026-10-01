@@ -12,12 +12,6 @@ export function Notes() {
       data-browser-theme-color="#ffffff"
     >
       <div className={styles.shell}>
-        <header className={styles.introScreen}>
-          <Reveal as="p" className={styles.kicker} variant="chapter">
-            This is where i slow down
-          </Reveal>
-        </header>
-
         <div className={styles.notesContent}>
           <Reveal as="h2" id="notes-title" className={styles.title} variant="chapter">
             Notes

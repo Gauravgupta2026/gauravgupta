@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { m, useReducedMotion } from "framer-motion";
+import Link from "next/link";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import styles from "./AboutFooter.module.css";
 
@@ -83,7 +84,7 @@ export function AboutFooter() {
         </m.div>
       </section>
 
-      <footer className={styles.footerSheet} id="contact" data-browser-theme-color="#080808">
+      <footer className={styles.footerSheet} id="contact" data-browser-theme-color="#1235f5">
         <nav className={styles.footerNav} aria-label="Footer navigation">
           <div className={styles.footerLocation}>
             <span>Based in Bengaluru</span>
@@ -91,10 +92,10 @@ export function AboutFooter() {
             <ThemeToggle className={styles.footerThemeToggle} iconOnly />
           </div>
           <div className={styles.footerMenu}>
-            <a href="/work">Work</a>
-            <a href="/about">About</a>
-            <a href="/work">Projects</a>
-            <a href="/about#experience">Resume</a>
+            <Link href="/work">Work</Link>
+            <Link href="/about">About</Link>
+            <Link href="/work">Projects</Link>
+            <Link href="/about#experience">Resume</Link>
           </div>
           <div className={styles.footerSocials}>
             <a href="https://github.com/Gauravgupta2026" target="_blank" rel="noreferrer">GitHub</a>
