@@ -108,38 +108,20 @@ export function WorkEditorial() {
 type ProjectCollectionProps = {
   headingLevel: "h1" | "h2";
   titleId: string;
-  landing?: boolean;
 };
 
 function ProjectCollection({
   headingLevel,
   titleId,
-  landing = false,
 }: ProjectCollectionProps) {
   const { luckyDay, internship, wylde, sachetana } = WORK_EDITORIAL;
   const Heading = headingLevel;
 
   return (
     <div className={styles.paper}>
-      {landing ? (
-        <header className={styles.landingHeading}>
-          <div className={styles.kickerScreen}>
-            <Reveal as="p" className={styles.landingKicker} variant="chapter">
-              Work is the story
-            </Reveal>
-          </div>
-          <Reveal as="div" className={styles.titleReveal} variant="chapter">
-            <Heading className={styles.landingTitle} id={titleId}>
-              <span>Every project starts</span>
-              <span>somewhere</span>
-            </Heading>
-          </Reveal>
-        </header>
-      ) : (
-        <Heading className={styles.title} id={titleId}>
-          Work is the story
-        </Heading>
-      )}
+      <Heading className={styles.title} id={titleId}>
+        Work is the story
+      </Heading>
 
       <div className={styles.projects}>
         <ProjectRow
@@ -193,18 +175,5 @@ function ProjectCollection({
         />
       </div>
     </div>
-  );
-}
-
-export function LandingWorkProjects() {
-  return (
-    <section
-      className={`${styles.page} ${styles.landingProjects}`}
-      id="work"
-      aria-labelledby="landing-work-title"
-      data-browser-theme-color="#ffffff"
-    >
-      <ProjectCollection headingLevel="h2" titleId="landing-work-title" landing />
-    </section>
   );
 }

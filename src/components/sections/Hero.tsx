@@ -1,24 +1,23 @@
 import Link from "next/link";
+import styles from "./LandingOpening.module.css";
 
 export function Hero() {
   return (
     <header
       id="top"
-      className="hero-stage"
+      className={styles.hero}
       aria-labelledby="hero-title"
-      data-browser-theme-color="#080808"
+      data-browser-theme-color="#ffffff"
     >
-      <h1 id="hero-title" className="hero-statement">
-        <span className="hero-statement-desktop-line">I believe good work is</span>
-        <span>making them feel good</span>
+      <h1 id="hero-title">
+        <span>I design &amp; build digital products,</span>{" "}
+        <span>with care for how they <em>work and feel.</em></span>
       </h1>
 
-      <div className="hero-intro">
-        <p>
-          Currently building <Link href="/projects/wylde">Wylde</Link>
-        </p>
-        <p>3 projects and more experiments</p>
-        <p className="hero-intro-location">Building in Bengaluru, India</p>
+      <div className={styles.metadata}>
+        <p>Bengaluru, India</p>
+        <p>Currently building <Link href="/projects/wylde">Wylde</Link></p>
+        <p className={styles.availability}>Open to design engineering roles</p>
       </div>
     </header>
   );

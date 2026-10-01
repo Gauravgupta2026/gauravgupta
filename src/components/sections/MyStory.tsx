@@ -10,49 +10,26 @@ const STORY_PARAGRAPHS = [
 
 export function MyStory() {
   return (
-    <>
-      <section
-        id="story"
-        className={styles.statementScreen}
-        aria-labelledby="story-title"
-        data-browser-theme-color="#ffffff"
-      >
-        <Reveal as="div" className={styles.statementFrame} variant="chapter">
-            <h2 id="story-title" className={styles.statement}>
-              you are not immune to nostalgia
-            </h2>
-        </Reveal>
-      </section>
+    <section
+      id="story"
+      className={styles.section}
+      aria-labelledby="story-title"
+      data-browser-theme-color="#ffffff"
+    >
+      <Reveal as="figure" className={styles.figure} variant="chapter">
+        <Image
+          src="/photos/beach-manipal.png"
+          alt="Friends resting on the beach at night in Manipal"
+          width={1512}
+          height={843}
+          sizes="100vw"
+          className={styles.image}
+        />
+      </Reveal>
 
-      <section className={styles.section} aria-label="Gaurav's story">
-        <div className={styles.shell}>
-
-        <Reveal as="div" delay={80} className={styles.reflection}>
-          <p>
-            To be very clear: I&rsquo;m not trying to Good Old Days the internet.
-            None of this is meant to make you feel nostalgic &mdash; the Internet
-            used to be slow and less populated and less diverse, and its access
-            was limited to those of a certain class. The Web For All is a marked
-            improvement, widespread global internet access is a marked
-            improvement, and what I&rsquo;m asking you to consider is what it used to
-            feel like to use these tools, and what we&rsquo;ve lost in the Big Tech,
-            Web 2.0 and web3 devouring of the &rsquo;Net.
-          </p>
-        </Reveal>
-
-        <Reveal as="figure" delay={120} className={styles.figure}>
-          <Image
-            src="/photos/beach-manipal.png"
-            alt="Friends resting on the beach at night in Manipal"
-            width={1512}
-            height={843}
-            sizes="(max-width: 768px) calc(100vw - 44px), calc(100vw - 128px)"
-            className={styles.image}
-          />
-        </Reveal>
-
+      <div className={styles.shell}>
         <div className={styles.biography}>
-          <Reveal as="h3" className={styles.biographyTitle}>
+          <Reveal as="h2" id="story-title" className={styles.biographyTitle}>
             what i&rsquo;ve been
           </Reveal>
 
@@ -69,8 +46,7 @@ export function MyStory() {
             ))}
           </div>
         </div>
-        </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

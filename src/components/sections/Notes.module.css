@@ -10,27 +10,11 @@
   padding: 0 clamp(24px, 5.42vw, 82px);
 }
 
-.introScreen {
-  min-height: 100svh;
-  display: grid;
-  place-items: center;
-  text-align: center;
-}
-
-.kicker {
-  margin: 0;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 11px;
-  letter-spacing: .08em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
 .title {
   margin: 0 0 clamp(64px, 7vw, 96px);
-  font-family: var(--font-display);
+  font-family: var(--font-editorial);
   font-size: clamp(42px, 4.7vw, 64px);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1;
   letter-spacing: -0.04em;
 }
@@ -82,9 +66,9 @@
 .cardTitle {
   max-width: 22ch;
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-editorial);
   font-size: clamp(23px, 2.1vw, 31px);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.08;
   letter-spacing: -0.025em;
   text-wrap: balance;
@@ -120,10 +104,6 @@
 
   .shell {
     padding: 0 22px;
-  }
-
-  .kicker {
-    font-size: 10px;
   }
 
   .title {

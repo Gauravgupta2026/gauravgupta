@@ -24,7 +24,6 @@ const newsreader = localFont({
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
   display: "swap",
 });
 
@@ -85,9 +84,9 @@ const projectWordmark = localFont({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-const TITLE = "Gaurav Gupta";
+const TITLE = "Gaurav Gupta — Design Engineer";
 const DESCRIPTION =
-  "I build AI systems and user-facing tools, moving from idea to interface to shipped product. Interested in long-horizon agents.";
+  "I design and build thoughtful digital products, moving from idea and interface to shipped software.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

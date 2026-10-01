@@ -79,11 +79,6 @@
   --side-pad: 160px;
   --device-top: max(env(safe-area-inset-top), clamp(10px, 1.6vw, 24px));
   --hero-edge: clamp(22px, 3vw, 52px);
-  --hero-nav-top: clamp(24px, 3.2vh, 40px);
-  --hero-title-top: 31%;
-  --hero-seam-top: 50%;
-  --hero-portal-open-height: min(86svh, calc(100vw * 0.4642857));
-  --hero-copy-top: 72%;
 }
 
 @media (max-width: 768px) {
@@ -92,11 +87,6 @@
     --side-pad: 50px;
     --device-top: max(env(safe-area-inset-top), 10px);
     --hero-edge: clamp(16px, 4.8vw, 26px);
-    --hero-nav-top: clamp(18px, 3vh, 26px);
-    --hero-title-top: 28%;
-    --hero-seam-top: 50%;
-    --hero-portal-open-height: min(86svh, calc(100vw * 0.4642857));
-    --hero-copy-top: 68%;
   }
 }
 
@@ -752,202 +742,6 @@ html {
   min-height: auto;
   color: #ffffff;
   text-transform: none;
-}
-
-/* Landing hero canvas ---------------------------------------------------- */
-.hero-stage {
-  position: relative;
-  width: 100%;
-  height: calc(100svh - var(--device-top));
-  min-height: 480px;
-  overflow: clip;
-  background: var(--editorial-paper);
-  color: var(--editorial-ink);
-}
-
-.hero-statement {
-  position: absolute;
-  z-index: 4;
-  top: 12%;
-  left: 50%;
-  display: flex;
-  width: 100%;
-  min-height: 48svh;
-  margin: 0;
-  padding-inline: clamp(32px, 7vw, 112px);
-  transform: translateX(-50%);
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-seratonin);
-  font-size: clamp(58px, min(8vw, 13.5vh), 122px);
-  font-weight: 400;
-  line-height: 0.88;
-  letter-spacing: -0.035em;
-  text-align: center;
-  color: var(--editorial-signature);
-}
-
-@media (min-width: 1024px) {
-  .hero-statement-desktop-line {
-    white-space: nowrap;
-  }
-}
-
-.hero-portal {
-  position: absolute;
-  z-index: 80;
-  top: var(--hero-seam-top);
-  right: 0;
-  left: 0;
-  width: 100%;
-  height: 22px;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  border: 0;
-  border-block: 1px solid var(--editorial-hairline);
-  background: var(--editorial-charcoal);
-  color: var(--editorial-reverse);
-  cursor: ns-resize;
-  transform: translateY(-50%);
-  will-change: height;
-  transition:
-    height 320ms cubic-bezier(0.4, 0, 1, 1),
-    border-color 260ms ease;
-}
-
-.hero-portal:focus-visible,
-.hero-portal.is-open {
-  height: var(--hero-portal-open-height);
-  border-color: var(--editorial-focus);
-  outline: 1px solid var(--editorial-focus);
-  outline-offset: -4px;
-  transition-duration: 440ms, 300ms;
-  transition-timing-function:
-    cubic-bezier(0.16, 1, 0.3, 1),
-    ease;
-}
-
-.hero-portal-image {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  left: 0;
-  width: 100%;
-  height: var(--hero-portal-open-height);
-  object-fit: contain;
-  object-position: 50% 50%;
-  transform: translateY(-50%);
-  backface-visibility: hidden;
-}
-
-@media (hover: hover) {
-  .hero-portal:hover {
-    height: var(--hero-portal-open-height);
-    border-color: var(--editorial-focus);
-    transition-duration: 440ms, 300ms;
-    transition-timing-function:
-      cubic-bezier(0.16, 1, 0.3, 1),
-      ease;
-  }
-}
-
-.hero-intro {
-  position: absolute;
-  z-index: 1;
-  top: var(--hero-copy-top);
-  right: var(--hero-edge);
-  left: var(--hero-edge);
-  max-width: 680px;
-  margin: 0 auto;
-  font-family: var(--font-mono);
-  font-size: clamp(14px, min(1.28vw, 2.05vh), 19px);
-  font-weight: 500;
-  line-height: 1.55;
-  letter-spacing: 0.025em;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.hero-intro p {
-  margin: 0;
-}
-
-.hero-intro .hero-intro-location {
-  color: var(--editorial-muted);
-  font-weight: 400;
-}
-
-.hero-intro a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 250ms ease, text-decoration-color 250ms ease;
-}
-
-.hero-intro a:hover {
-  color: var(--editorial-focus);
-}
-
-.hero-intro a:focus-visible {
-  outline: 1px solid var(--editorial-focus);
-  outline-offset: 4px;
-}
-
-/* Note from the desk ----------------------------------------------------- */
-.desk-note {
-  padding: clamp(18px, 2.1vw, 32px);
-  background: #080808;
-  color: #d4d4d4;
-}
-
-.desk-note-frame {
-  display: grid;
-  min-height: min(560px, 62svh);
-  place-items: center;
-  border: 1px solid rgb(255 255 255 / 34%);
-  padding: clamp(40px, 4vw, 56px) clamp(20px, 3vw, 44px);
-}
-
-.desk-note-copy {
-  width: min(100%, 1000px);
-  font-family: var(--font-display);
-  font-size: clamp(18px, 1.55vw, 24px);
-  font-weight: 400;
-  line-height: 1.5;
-  text-align: center;
-  text-wrap: pretty;
-}
-
-.desk-note-copy p {
-  margin: 0;
-}
-
-.desk-note-salutation {
-  margin: 0 0 clamp(36px, 4.25vw, 64px);
-  font-size: inherit;
-  font-weight: 400;
-}
-
-.desk-note-salutation span {
-  white-space: nowrap;
-}
-
-.desk-note-signoff {
-  display: flex;
-  max-width: 350px;
-  margin: clamp(36px, 4.25vw, 64px) auto 0 !important;
-  flex-direction: column;
-  align-items: center;
-}
-
-.desk-note-signoff span {
-  margin-top: clamp(20px, 2vw, 30px);
-}
-
-.desk-note-signoff em {
-  font-weight: 400;
-  font-style: normal;
 }
 
 /* The work method -------------------------------------------------------- */
@@ -1706,37 +1500,6 @@ html {
     font-size: 11px;
   }
 
-  .hero-statement {
-    width: 100%;
-    min-height: 48svh;
-    padding-inline: clamp(28px, 8vw, 48px);
-    font-size: clamp(46px, min(15.5vw, 11.5vh), 76px);
-    line-height: 0.84;
-  }
-
-  .hero-portal {
-    height: 16px;
-  }
-
-  .hero-intro {
-    right: calc(var(--hero-edge) * 1.2);
-    left: calc(var(--hero-edge) * 1.2);
-    max-width: 34rem;
-    font-size: clamp(10px, min(3.2vw, 1.95vh), 14px);
-    line-height: 1.5;
-  }
-
-  .desk-note { padding: 18px; }
-
-  .desk-note-frame {
-    min-height: auto;
-    padding: 40px 20px;
-  }
-
-  .desk-note-salutation span {
-    white-space: normal;
-  }
-
   .work-method { padding: 80px 22px; }
   .work-method-heading h2 { font-size: clamp(34px, 9vw, 46px); }
   .work-method-circles { grid-template-columns: 1fr; gap: 12px; margin-top: 42px; }
@@ -1750,23 +1513,6 @@ html {
 }
 
 @media (max-height: 560px) {
-  :root {
-    --hero-nav-top: 14px;
-    --hero-title-top: 21vh;
-    --hero-seam-top: 50%;
-    --hero-portal-open-height: min(86svh, calc(100vw * 0.4642857));
-    --hero-copy-top: 64%;
-  }
-
-  .hero-statement {
-    font-size: clamp(34px, 10vh, 56px);
-  }
-
-  .hero-intro {
-    font-size: clamp(9px, 2vh, 12px);
-    line-height: 1.4;
-  }
-
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1775,9 +1521,7 @@ html {
   }
 
   .site-nav a,
-  .site-nav-mobile-menu,
-  .hero-portal,
-  .hero-portal-image {
+  .site-nav-mobile-menu {
     transition: none;
   }
 }

@@ -6,70 +6,6 @@
   font-family: var(--font-inter), Arial, sans-serif;
 }
 
-.landingProjects {
-  --font-work-newsreader: var(--font-newsreader);
-  padding-bottom: clamp(180px, 18vw, 280px);
-}
-
-.landingProjects .paper {
-  padding-top: 0;
-}
-
-.landingHeading {
-  text-align: center;
-}
-
-.kickerScreen {
-  min-height: 100svh;
-  display: grid;
-  padding: 80px 24px;
-  place-items: center;
-}
-
-.landingKicker {
-  margin: 0;
-  font-family: var(--font-editorial);
-  font-size: clamp(22px, 2.4vw, 34px);
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.025em;
-}
-
-.landingTitle {
-  display: flex;
-  margin: 0 auto;
-  padding-inline: 20px;
-  flex-direction: column;
-  align-items: center;
-  font-family: var(--font-editorial);
-  font-size: clamp(60px, 6.6vw, 100px);
-  font-weight: 300;
-  line-height: 0.92;
-  letter-spacing: -0.02em;
-  text-align: center;
-  text-wrap: balance;
-}
-
-.titleReveal {
-  padding-block: clamp(150px, 17vw, 250px) clamp(105px, 12vw, 180px);
-}
-
-.landingProjects .projects {
-  margin-top: 0;
-}
-
-.landingProjects .project {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  transform-origin: 50% 45%;
-}
-
-.landingProjects .project + .project {
-  margin-top: 0;
-}
-
 .paper {
   max-width: 1512px;
   margin: 0 auto;
@@ -223,7 +159,7 @@
   margin: 0;
   text-align: center;
   font-size: clamp(18px, 1.52vw, 23px);
-  font-weight: 450;
+  font-weight: 400;
   line-height: 1.35;
   letter-spacing: -0.026em;
 }
@@ -247,48 +183,9 @@
   }
 }
 
-@media (min-width: 721px) and (max-width: 1100px) {
-  .landingProjects .project {
-    min-height: auto;
-  }
-
-  .landingProjects .project + .project {
-    margin-top: 180px;
-  }
-}
-
 @media (max-width: 720px) {
   .paper {
     padding-top: 96px;
-  }
-
-  .landingProjects .paper {
-    padding-top: 0;
-  }
-
-  .landingKicker {
-    font-size: clamp(21px, 6.5vw, 28px);
-  }
-
-  .landingTitle {
-    font-size: clamp(48px, 14vw, 66px);
-    line-height: 0.9;
-  }
-
-  .titleReveal {
-    padding-block: 112px 96px;
-  }
-
-  .landingProjects .projects {
-    margin-top: 0;
-  }
-
-  .landingProjects .project {
-    min-height: auto;
-  }
-
-  .landingProjects .project + .project {
-    margin-top: 132px;
   }
 
   .title {
