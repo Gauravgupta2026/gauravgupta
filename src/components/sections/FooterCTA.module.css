@@ -44,8 +44,8 @@
   gap: 6px;
   color: #ffffff;
   font-family: var(--font-editorial);
-  font-size: 20px;
-  line-height: 26px;
+  font-size: calc((20px) * var(--mobile-type-scale, 1));
+  line-height: calc((26px) * var(--mobile-type-scale, 1));
   font-weight: 300;
   text-align: left;
 }
@@ -55,7 +55,7 @@
 .statement {
   margin: 0;
   font-family: var(--font-editorial);
-  font-size: clamp(32px, 2.8vw, 40px);
+  font-size: calc((clamp(32px, 2.8vw, 40px)) * var(--mobile-type-scale, 1));
   font-weight: 300;
   line-height: 1.1;
   letter-spacing: -0.025em;
@@ -66,7 +66,7 @@
   max-width: 420px;
   margin: 0;
   font-family: var(--font-editorial);
-  font-size: 21px;
+  font-size: calc((21px) * var(--mobile-type-scale, 1));
   font-weight: 400;
   line-height: 1.5;
 }
@@ -118,7 +118,7 @@
   background: #1235f5;
   color: #ffffff;
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: calc((16px) * var(--mobile-type-scale, 1));
   font-weight: 400;
   line-height: 1.2;
   text-decoration: none;
@@ -140,9 +140,9 @@
   align-items: center;
   color: inherit;
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: calc((14px) * var(--mobile-type-scale, 1));
   font-weight: 400;
-  line-height: 20px;
+  line-height: calc((20px) * var(--mobile-type-scale, 1));
   text-decoration: none;
 }
 
@@ -150,9 +150,9 @@
 
 @media (max-width: 768px) {
   .shell { padding-top: 72px; }
-  .links a { font-size: 13px; }
-  .beachCaption { font-size: 18px; line-height: 24px; }
-  .copy { font-size: 19px; line-height: 1.4; }
+  .links a { font-size: calc((13px) * var(--mobile-type-scale, 1)); }
+  .beachCaption { font-size: calc((18px) * var(--mobile-type-scale, 1)); line-height: calc((24px) * var(--mobile-type-scale, 1)); }
+  .copy { font-size: calc((19px) * var(--mobile-type-scale, 1)); line-height: 1.4; }
   .contactCard { grid-template-columns: 1fr; min-height: 300px; gap: 36px; padding: 48px 20px; }
 }
 
@@ -169,7 +169,7 @@
 
 @media (max-height: 600px) {
   .footerShell { padding-top: 24px; }
-  .links a { font-size: 13px; }
-  .beachCaption { font-size: 16px; line-height: 22px; }
+  .links a { font-size: calc((13px) * var(--mobile-type-scale, 1)); }
+  .beachCaption { font-size: calc((16px) * var(--mobile-type-scale, 1)); line-height: calc((22px) * var(--mobile-type-scale, 1)); }
   .links { flex-direction: row; flex-wrap: wrap; gap: 0 20px; }
 }

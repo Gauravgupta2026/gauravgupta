@@ -19,14 +19,14 @@
   align-items: baseline;
   gap: 20px;
   font-family: var(--font-editorial);
-  font-size: 32px;
+  font-size: calc((32px) * var(--mobile-type-scale, 1));
   font-weight: 300;
-  line-height: 40px;
+  line-height: calc((40px) * var(--mobile-type-scale, 1));
   letter-spacing: -0.04em;
 }
 
 .subtitle {
-  font-size: clamp(22px, 1.8vw, 29px);
+  font-size: calc((clamp(22px, 1.8vw, 29px)) * var(--mobile-type-scale, 1));
   letter-spacing: -0.025em;
 }
 
@@ -64,7 +64,7 @@
 .date {
   color: var(--editorial-muted);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: calc((13px) * var(--mobile-type-scale, 1));
   line-height: 1.4;
   text-transform: uppercase;
 }
@@ -73,7 +73,7 @@
   max-width: 16ch;
   margin: 76px 0 40px;
   font-family: var(--font-editorial);
-  font-size: clamp(28px, 2.35vw, 38px);
+  font-size: calc((clamp(28px, 2.35vw, 38px)) * var(--mobile-type-scale, 1));
   font-weight: 300;
   line-height: 1.05;
   letter-spacing: -0.025em;
@@ -83,22 +83,22 @@
 @media (max-width: 900px) {
   .grid > article:not(:first-child) { padding-left: 28px; }
   .grid > article:not(:last-child) { padding-right: 24px; }
-  .date { font-size: 14px; }
-  .cardTitle { font-size: 28px; }
+  .date { font-size: calc((14px) * var(--mobile-type-scale, 1)); }
+  .cardTitle { font-size: calc((28px) * var(--mobile-type-scale, 1)); }
 }
 
 @media (max-width: 768px) {
   .section { padding-top: 240px; }
   .notesContent { padding-top: 0; }
-  .title { font-size: 28px; line-height: 34px; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 32px; letter-spacing: -.025em; }
-  .subtitle { font-family: var(--font-body); font-size: 14px; font-weight: 400; line-height: 22px; letter-spacing: 0; color: var(--editorial-muted); }
+  .title { font-size: calc((28px) * var(--mobile-type-scale, 1)); line-height: calc((34px) * var(--mobile-type-scale, 1)); flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 32px; letter-spacing: -.025em; }
+  .subtitle { font-family: var(--font-body); font-size: calc((14px) * var(--mobile-type-scale, 1)); font-weight: 400; line-height: calc((22px) * var(--mobile-type-scale, 1)); letter-spacing: 0; color: var(--editorial-muted); }
   .grid { grid-template-columns: 1fr; }
   .grid > article + article { border-left: 0; border-top: 1px solid var(--editorial-hairline); }
   .grid > article:not(:first-child),
   .grid > article:not(:last-child) { padding: 0; }
   .card { display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: baseline; gap: 16px; min-height: 0; padding: 24px 0; }
-  .date { font-size: 12px; }
-  .cardTitle { max-width: none; margin: 0; font-family: var(--font-body); font-size: 18px; font-weight: 400; line-height: 26px; letter-spacing: -.015em; }
+  .date { font-size: calc((12px) * var(--mobile-type-scale, 1)); }
+  .cardTitle { max-width: none; margin: 0; font-family: var(--font-body); font-size: calc((18px) * var(--mobile-type-scale, 1)); font-weight: 400; line-height: calc((26px) * var(--mobile-type-scale, 1)); letter-spacing: -.015em; }
   .card::after { display: none; }
 }
 

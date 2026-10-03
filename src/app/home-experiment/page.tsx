@@ -81,10 +81,9 @@ export default function HomeExperiment() {
               <figcaption>Manipal. A place to build, with people to build with.</figcaption>
             </figure>
             <div className={styles.reading}>
-              <p>Manipal gave me a place to make things with other people. In our go-kart team, fifteen of us had a car to build and a competition date to meet. My part crossed design, marketing, budgets, and sponsors. Eight months later, we raced at Buddh International Circuit and finished fourth overall.</p>
-              <p>Sachetana began with a problem KMC brought to MIT. Our team took it up, made the decisions, and built the solution. We overbuilt it. Then we kept taking it to research competitions, giving the work a life beyond its first presentation.</p>
-              <p>Those projects asked different things of me. One meant keeping people, money, and a deadline moving together. The other meant working across disciplines to turn an open problem into a product. Both made the work bigger than the screen in front of me.</p>
-              <p>That’s the kind of work I want more of: a team with a question worth pursuing, and room to make something together. Longer term, I dream of a design-led firm that builds products and backs other builders. For now, I want to get good at the work that makes that possible.</p>
+              <p>At Manipal, fifteen of us built a go-kart in eight months. I worked on design, marketing, budgets, and sponsors. We raced at Buddh International Circuit and finished fourth overall.</p>
+              <p>Sachetana began with a problem KMC brought to MIT. Our team built the solution, then took it to research competitions. We built more than we needed, but the work continued beyond its first presentation.</p>
+              <p>These projects taught me to work with people, manage money, and meet a deadline. I want more work with a team that has a problem to solve. Longer term, I want to build a design firm that makes products and supports other builders. For now, I want to develop the skills that make this possible.</p>
             </div>
           </section>
           <section id="notes" className={styles.chapter} aria-labelledby="notes-title">
@@ -95,7 +94,7 @@ export default function HomeExperiment() {
               ))}
             </ul>
           </section>
-          <section id="contact" className={`${styles.chapter} ${styles.contact}`} aria-labelledby="contact-title" data-browser-theme-color="#000000">
+          <section id="contact" className={`${styles.chapter} ${styles.contact}`} aria-labelledby="contact-title" data-browser-theme-color="#ffffff">
             <h2 id="contact-title">Let’s make something<br /> worth using.</h2>
             <p className={styles.contactCopy}>I’m looking for a design engineering role. I want to help a team develop a product and build it. Tell me about your project.</p>
             <a className={styles.button} href="mailto:hey@gauravguptas.com">Get in touch</a>

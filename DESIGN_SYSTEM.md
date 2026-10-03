@@ -204,11 +204,11 @@ rules on this branch. Other branches keep their existing design.
 - The name links to `/`. Give the link the accessible name “Gaurav Gupta — Home”.
 - On phones, replace the visible name with “Home”. Keep all five links in one row. Use 20px outer gutters, 11px navigation text, and a 12px contact label.
 - Keep a 44px minimum control height, active-page state, blue focus outlines, and the existing scroll and reduced-motion rules.
-- Use `#000000` for the full-width contact panel. Keep the introduction white. Use white main text and `#C2C2C2` supporting text.
+- Use white for the full-width contact panel and introduction. Use ink for main text and `#505050` for supporting text.
 - The introduction follows the photograph without a white gap. Its reading column stays at 648px. Its first paragraph is 32px/38.4px on desktop and 28px/33.6px on phones.
 - The introduction has a 580px minimum desktop height and 128px vertical padding. Phones use natural height and 88px vertical padding.
 - The contact panel has a 680px minimum desktop height and a 480px minimum phone height. Use 128px and 88px vertical padding.
-- The contact action has a white outline. Hover fills it white with dark text. Keyboard focus has a white outline.
+- The contact action has an ink outline. Hover fills it ink with white text. Keyboard focus has a blue outline.
 - Keep the project, story, and notes surfaces white. Keep the bright blue Kapu footer.
 
 The hero has no name or role line. The navigation supplies the name on desktop.
@@ -235,3 +235,33 @@ Keep the story heading and paragraphs in the 648px reading column.
 The hero has a minimum height of 80svh, below the navigation. Center its content
 vertically. Place the mountain photograph directly below it. Let the hero grow
 when the text needs more space on a short screen.
+
+
+## Compact case study pages — October 3
+
+Project titles use Inter 500: 36–48px on desktop and 32px on phones.
+Summaries use Inter 400: 18px/27px and 16px/24px.
+Section headings use Garamond Book 400: 30–36px and 28px.
+Main text uses Garamond Book 400: 20px/30px and 18px/27px.
+Indices and metadata labels use DM Mono. Metadata values use Inter.
+
+On phones, use 32px opening padding, 24px before the title and metadata,
+and 32px before the image. Use 40px section gaps. Keep the project image
+at 1.62:1 and detail image at 16:9. Keep all case study text available.
+Expanded questions and decisions use ink text. Do not clip long answers.
+
+The landing story has 118 words, reduced from 185. The contact section is
+white and leads into the blue footer.
+
+
+## Mobile font reduction — October 3
+
+At widths of 809px or less, use `--mobile-type-scale: .75`.
+Multiply each explicit font size by this factor once. Scale fixed line heights
+by the same factor. Keep unitless line heights at their current ratios.
+The landing hero sets the factor to 1 for its heading and action.
+Keep navigation tap areas at 44×44px or larger. Desktop uses a factor of 1.
+
+These rules apply to all routes, including case studies and notes. They override
+the mobile font sizes in earlier tables. For example, the case study phone title
+is now 24px and its main text is 13.5px.

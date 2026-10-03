@@ -8,7 +8,7 @@
 .thumbnail img { object-fit: cover; }
 .thumbnail:focus-visible { outline: 2px solid var(--editorial-focus); outline-offset: 3px; }
 .rail:focus-visible { outline: 2px solid var(--editorial-focus); outline-offset: 5px; }
-.viewer button { min-width: 44px; min-height: 44px; border: 1px solid var(--editorial-hairline); background: transparent; color: inherit; cursor: pointer; font-size: 22px; }
+.viewer button { min-width: 44px; min-height: 44px; border: 1px solid var(--editorial-hairline); background: transparent; color: inherit; cursor: pointer; font-size: calc((22px) * var(--mobile-type-scale, 1)); }
 .viewer button:focus-visible { outline: 2px solid var(--editorial-focus); outline-offset: 3px; }
 .preview { position: fixed; z-index: 100; border: 0; background: transparent; box-shadow: 0 24px 56px rgb(0 0 0 / 20%); pointer-events: none; }
 .preview img { object-fit: contain; padding: 0; }
@@ -16,13 +16,13 @@
 .dialog::backdrop { background: rgb(0 0 0 / 65%); }
 .viewer { padding: 16px; }
 .viewer header { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-.viewer h2 { margin: 0; font-family: var(--font-body); font-size: 16px; font-weight: 500; line-height: 1.5; }
+.viewer h2 { margin: 0; font-family: var(--font-body); font-size: calc((16px) * var(--mobile-type-scale, 1)); font-weight: 500; line-height: 1.5; }
 .viewer h2 span { color: var(--editorial-muted); font-weight: 400; }
 .viewerImage { position: relative; height: min(65svh, 640px); margin-block: 16px; }
 .viewerImage img { object-fit: contain; }
 .viewer footer { display: flex; justify-content: center; align-items: center; gap: 24px; }
-.viewer footer button { padding-inline: 16px; font-family: var(--font-body); font-size: 14px; }
-.viewer footer p { margin: 0; font-family: var(--font-body); font-size: 13px; }
+.viewer footer button { padding-inline: 16px; font-family: var(--font-body); font-size: calc((14px) * var(--mobile-type-scale, 1)); }
+.viewer footer p { margin: 0; font-family: var(--font-body); font-size: calc((13px) * var(--mobile-type-scale, 1)); }
 
 @media (prefers-reduced-motion: reduce) { .track { animation: none; } .sequence[data-copy="1"] { display: none; } }
 

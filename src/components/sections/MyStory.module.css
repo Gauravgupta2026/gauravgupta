@@ -10,12 +10,12 @@
 .figure { width: 100%; margin: 0; overflow: hidden; }
 .image { display: block; width: 100%; height: auto; aspect-ratio: 15 / 8; object-fit: cover; filter: grayscale(1); }
 .memoryImage { display: block; width: 100%; height: auto; filter: saturate(.82) contrast(.98); }
-.caption { margin: 24px 0 0; color: var(--editorial-muted); font-family: var(--font-body); font-size: 13px; line-height: 1.5; text-align: right; }
+.caption { margin: 24px 0 0; color: var(--editorial-muted); font-family: var(--font-body); font-size: calc((13px) * var(--mobile-type-scale, 1)); line-height: 1.5; text-align: right; }
 .introduction,
 .biography { display: grid; grid-template-columns: minmax(0, 1fr) 480px; gap: 80px; align-items: start; padding-top: 80px; }
-.title { margin: 0; font-family: var(--font-editorial); font-size: 32px; font-weight: 300; line-height: 40px; letter-spacing: -.025em; }
+.title { margin: 0; font-family: var(--font-editorial); font-size: calc((32px) * var(--mobile-type-scale, 1)); font-weight: 300; line-height: calc((40px) * var(--mobile-type-scale, 1)); letter-spacing: -.025em; }
 .reading { display: grid; width: min(100%, 480px); gap: 20px; }
-.reading p { margin: 0; font-family: var(--font-editorial); font-size: 19px; font-weight: 400; line-height: 30px; text-wrap: pretty; }
+.reading p { margin: 0; font-family: var(--font-editorial); font-size: calc((19px) * var(--mobile-type-scale, 1)); font-weight: 400; line-height: calc((30px) * var(--mobile-type-scale, 1)); text-wrap: pretty; }
 
 @media (max-width: 768px) {
   .openingStory { padding-top: 120px; }
@@ -23,13 +23,13 @@
   .image { aspect-ratio: auto; height: 400px; object-fit: cover; object-position: 32% center; }
   .introduction,
   .biography { grid-template-columns: 1fr; gap: 24px; padding-top: 144px; }
-  .title { font-size: 28px; line-height: 34px; }
+  .title { font-size: calc((28px) * var(--mobile-type-scale, 1)); line-height: calc((34px) * var(--mobile-type-scale, 1)); }
   .reading { gap: 20px; }
-  .reading p { font-size: 19px; line-height: 30px; }
+  .reading p { font-size: calc((19px) * var(--mobile-type-scale, 1)); line-height: calc((30px) * var(--mobile-type-scale, 1)); }
 }
 
-.introduction .title { font-family: var(--font-body); font-size: 15px; font-weight: 400; line-height: 24px; letter-spacing: 0; }
-.introduction .reading p { font-family: var(--font-body); font-size: 15px; line-height: 24px; }
+.introduction .title { font-family: var(--font-body); font-size: calc((15px) * var(--mobile-type-scale, 1)); font-weight: 400; line-height: calc((24px) * var(--mobile-type-scale, 1)); letter-spacing: 0; }
+.introduction .reading p { font-family: var(--font-body); font-size: calc((15px) * var(--mobile-type-scale, 1)); line-height: calc((24px) * var(--mobile-type-scale, 1)); }
 @media (max-width: 768px) {
   .introduction { gap: 0; }
   .introduction .title { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

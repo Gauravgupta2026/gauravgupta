@@ -8,6 +8,7 @@
     background: var(--color-bg);
     color: var(--color-ink);
     font-family: var(--font-body);
+    font-size: calc(16px * var(--mobile-type-scale, 1));
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
@@ -26,4 +27,8 @@
 }
 @media (max-width: 768px) {
   :root { --page-gutter: 32px; }
+}
+
+@media (max-width: 809px) {
+  :root { --mobile-type-scale: .75; }
 }

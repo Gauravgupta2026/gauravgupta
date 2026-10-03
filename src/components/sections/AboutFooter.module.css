@@ -28,7 +28,7 @@
   max-width: 720px;
   margin: 0 auto;
   font-family: var(--font-editorial);
-  font-size: clamp(44px, 5.6vw, 76px);
+  font-size: calc((clamp(44px, 5.6vw, 76px)) * var(--mobile-type-scale, 1));
   font-weight: 300;
   line-height: 1;
   letter-spacing: -.04em;
@@ -45,7 +45,7 @@
   margin: 22px auto 0;
   color: var(--color-mute-2);
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: calc((16px) * var(--mobile-type-scale, 1));
   font-weight: 400;
   line-height: 1.6;
   text-align: center;
@@ -71,7 +71,7 @@
 .messageField > label {
   color: var(--color-mute);
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: calc((12px) * var(--mobile-type-scale, 1));
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -85,7 +85,7 @@
 }
 
 .mailTo span { color: var(--color-ink); font-weight: 500; }
-.mailTo strong { font-family: var(--font-body); font-size: 12px; font-weight: 400; }
+.mailTo strong { font-family: var(--font-body); font-size: calc((12px) * var(--mobile-type-scale, 1)); font-weight: 400; }
 
 .field {
   display: flex;
@@ -115,7 +115,7 @@
   background: transparent;
   color: var(--color-ink);
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: calc((16px) * var(--mobile-type-scale, 1));
   font-weight: 400;
   line-height: 1.55;
 }
@@ -159,7 +159,7 @@
 
 @media (max-width: 680px) {
   .contactStage { padding: 88px 20px 108px; border-radius: 0; }
-  .contactCopy h2 { font-size: clamp(43px, 13vw, 60px); }
+  .contactCopy h2 { font-size: calc((clamp(43px, 13vw, 60px)) * var(--mobile-type-scale, 1)); }
   .invitation { max-width: 300px; }
   .contactForm { margin-top: 56px; }
   .field { padding: 16px; }

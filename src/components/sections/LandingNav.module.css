@@ -13,8 +13,8 @@
   transition: transform 240ms ease, opacity 240ms ease;
   color: #111;
   font-family: var(--font-mono);
-  font-size: 13px;
-  line-height: 20px;
+  font-size: calc((13px) * var(--mobile-type-scale, 1));
+  line-height: calc((20px) * var(--mobile-type-scale, 1));
   text-transform: uppercase;
 }
 .nav a { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; color: inherit; text-decoration: none; }
@@ -22,10 +22,10 @@
 .nav a:hover, .destinations a[aria-current="page"] { text-decoration: underline; }
 .nav a:focus-visible { outline: 2px solid #1235f5; outline-offset: 5px; }
 .nav .home { justify-self: start; justify-content: flex-start; }
-.desktopName { font-family: var(--font-editorial); font-size: 28px; font-weight: 400; line-height: 1; letter-spacing: -.025em; text-transform: none; }
+.desktopName { font-family: var(--font-editorial); font-size: calc((28px) * var(--mobile-type-scale, 1)); font-weight: 400; line-height: 1; letter-spacing: -.025em; text-transform: none; }
 .mobileHome { display: none; }
 .destinations { display: flex; align-items: center; gap: 36px; }
-.nav .contact { justify-self: end; padding: 8px 22px; border: 1px solid #222; border-radius: 999px; font-family: var(--font-body); font-size: 13px; text-transform: none; }
+.nav .contact { justify-self: end; padding: 8px 22px; border: 1px solid #222; border-radius: 999px; font-family: var(--font-body); font-size: calc((13px) * var(--mobile-type-scale, 1)); text-transform: none; }
 .nav .contact:hover { background: #111; color: #fff; text-decoration: none; }
 .spacer { height: var(--navigation-height, 80px); flex-shrink: 0; }
 .nav::before {
@@ -41,13 +41,13 @@
 .nav[data-scrolling="true"] { transform: translateY(-110%); opacity: 0; }
 .nav:focus-within { transform: none; opacity: 1; }
 @media (max-width: 809px) {
-  .nav { display: flex; justify-content: space-between; gap: 8px; padding-inline: 20px; font-size: 11px; }
+  .nav { display: flex; justify-content: space-between; gap: 8px; padding-inline: 20px; font-size: calc((11px) * var(--mobile-type-scale, 1)); }
   .desktopName { display: none; }
   .mobileHome { display: inline; }
   .home { min-width: 44px; }
   .home[aria-current="page"] .mobileHome { text-decoration: underline; }
   .destinations { gap: 4px; }
   .destinations a { min-width: 44px; }
-  .nav .contact { padding-inline: 12px; font-size: 12px; white-space: nowrap; }
+  .nav .contact { padding-inline: 12px; font-size: calc((12px) * var(--mobile-type-scale, 1)); white-space: nowrap; }
 }
 @media (prefers-reduced-motion: reduce) { .nav { transition: none; } }

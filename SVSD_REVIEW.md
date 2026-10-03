@@ -103,3 +103,20 @@ check on physical devices.
 - Work, Labs, About, and Wylde also fit at 320px width. Their navigation links stayed inside the screen.
 - Examined the phone opening, work, and contact sections in browser images.
 - Build, lint, TypeScript, and diff checks passed. No dependencies or tests were added.
+
+
+## Story, contact, and mobile type changes
+
+- Shortened the landing story from 185 to 118 words, a reduction of 67 words.
+- Changed the contact section to white, with ink text and an ink outline action.
+- Case study titles use Inter. Section headings and main text use Garamond Book.
+- Reduced case study opening gaps, section gaps, and image heights on phones.
+- Reduced mobile font sizes by 25% across the site. The landing hero is excluded.
+- At 390px width, the landing hero stays at 44px. Landing project titles are 16.5px. Case study titles are 24px.
+- Checked Home, Work, Labs, About, three case studies, and one note at 320, 390, and 1440px. No horizontal overflow was found. Navigation tap areas stayed at least 44px high.
+- Checked an expanded case study question. Removed fixed height limits that could clip long answers.
+- Fixed article layers on case study and note pages. Their content stays above the blue footer. The three project titles and one note title were checked with the browser hit test and remained visible.
+- Build, lint, TypeScript, and diff checks passed. No dependencies or tests were added.
+
+The shared browser disconnected during the final route checks. Those checks
+used a local Chromium browser. Physical devices were not checked.
