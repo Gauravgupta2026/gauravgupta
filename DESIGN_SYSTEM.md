@@ -219,7 +219,8 @@ The introduction supplies the name and role on phones.
 Keep the introduction white with ink text. Keep its current type and spacing.
 
 Keep the featured project text above its image. Use this text width:
-`min(648px, (100svh - 420px) * 1.25)`. Make the image 2.25 times wider than the
+`clamp(280px, (100svh - 420px) * 1.25, 648px)`. The lower limit keeps the
+image visible on short landscape screens. Make the image 2.25 times wider than the
 text. Limit its width to the content column. Show the title, short description, and
 contribution above the image. Keep the detailed explanation in the case study.
 Reduce the previous image height by 2.5 CSS cm, approximately 94.5px. Keep a

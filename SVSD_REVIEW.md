@@ -89,3 +89,17 @@ checks passed after these changes. No dependencies, secrets, or tests were added
 - Next-project links come from the Work records. The generic New Project entry is not promoted from these links. Its existing direct route stays available.
 - File rows without a file URL are not shown as actions. No replacement URLs were invented.
 - Work and Labs are now included in the sitemap.
+
+## Phone and tablet check
+
+The browser check used 320×568, 390×844, 768×1024, 844×390, 810×1080,
+1024×768, and 1440×900 CSS pixels. This was a browser size check, not a
+check on physical devices.
+
+- Fixed a zero-width featured image on short landscape screens. Its text width now has a 280px lower limit.
+- Phone navigation links now have 44×44px minimum tap areas.
+- Updated the featured image size hint to match its larger frame.
+- No horizontal overflow remained at the examined sizes.
+- Work, Labs, About, and Wylde also fit at 320px width. Their navigation links stayed inside the screen.
+- Examined the phone opening, work, and contact sections in browser images.
+- Build, lint, TypeScript, and diff checks passed. No dependencies or tests were added.

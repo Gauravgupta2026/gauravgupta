@@ -66,7 +66,7 @@ export default function HomeExperiment() {
                       <p className={styles.projectFact}>{copy.fact}</p>
                     </div>
                     <Link className={styles.projectImage} href={project.href} aria-label={`Explore ${project.title}`}>
-                      <Image src={image.src} alt={image.alt} width={image.width} height={image.height} sizes={index === 0 ? "(max-width: 809px) calc(100vw - 40px), 648px" : "(max-width: 809px) calc(100vw - 40px), (max-width: 1199px) 46vw, 532px"} />
+                      <Image src={image.src} alt={image.alt} width={image.width} height={image.height} sizes={index === 0 ? "(max-width: 809px) calc(100vw - 40px), (max-width: 1199px) calc(100vw - 64px), 1120px" : "(max-width: 809px) calc(100vw - 40px), (max-width: 1199px) 46vw, 532px"} />
                     </Link>
                     <Link className={styles.projectAction} href={project.href}>Explore {project.title}</Link>
                   </article>

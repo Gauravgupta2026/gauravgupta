@@ -46,7 +46,8 @@
   .mobileHome { display: inline; }
   .home { min-width: 44px; }
   .home[aria-current="page"] .mobileHome { text-decoration: underline; }
-  .destinations { gap: 12px; }
+  .destinations { gap: 4px; }
+  .destinations a { min-width: 44px; }
   .nav .contact { padding-inline: 12px; font-size: 12px; white-space: nowrap; }
 }
 @media (prefers-reduced-motion: reduce) { .nav { transition: none; } }
