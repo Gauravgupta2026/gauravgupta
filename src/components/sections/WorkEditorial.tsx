@@ -24,14 +24,12 @@ export function WorkEditorial() {
                   {project.href ? <Link href={project.href}>{project.title}</Link> : project.title}
                 </h2>
                 <p className={styles.premise}>{project.premise}</p>
-                <p className={styles.meta}><span>Contribution</span>{project.contribution}</p>
-                <p className={styles.meta}><span>{project.factLabel}</span>{project.fact}</p>
               </header>
               <WorkProjectGallery project={project} priority={index === 0} />
               <div className={styles.projectDetails}>
-                <div>
-                  <p className={styles.decision}><span>Design choice</span>{project.decision}</p>
-                  {project.evidence && <p className={styles.evidence}>{project.evidence}</p>}
+                <div className={styles.detailsMeta}>
+                  <p className={styles.meta}><span>Contribution</span>{project.contribution}</p>
+                  <p className={styles.meta}><span>{project.factLabel}</span>{project.fact}</p>
                 </div>
                 {project.href && (
                   <Link className={styles.projectLink} href={project.href}>Explore {project.title}</Link>
@@ -53,12 +51,6 @@ export function WorkEditorial() {
           </div>
         </section>
 
-        <section id="work-contact" className={styles.contactCard} aria-labelledby="work-contact-title">
-          <h2 id="work-contact-title">Have something in mind?</h2>
-          <p>Tell me what you’re trying to make, and where you need someone who can design and build.</p>
-          <a className={styles.contactButton} href="mailto:hey@gauravguptas.com">Get in touch.</a>
-          <a className={styles.email} href="mailto:hey@gauravguptas.com">hey@gauravguptas.com</a>
-        </section>
       </div>
     </div>
   );

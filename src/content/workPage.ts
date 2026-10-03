@@ -12,8 +12,6 @@ export type WorkProject = {
   contribution: string;
   factLabel: string;
   fact: string;
-  decision: string;
-  evidence?: string;
   href?: string;
   images: readonly WorkImage[];
 };
@@ -33,7 +31,6 @@ export const WORK_PROJECTS: readonly WorkProject[] = [
     slug: 'wylde', title: 'Wylde',
     premise: 'A party card game that gets a room playing without a rulebook.',
     contribution: 'Design + build · Solo project', factLabel: 'Interaction', fact: 'The first round teaches the game',
-    decision: 'The first round teaches the game. Scoring stays out so the room remains the focus.',
     href: '/projects/wylde',
     images: [galleryImages.dots,galleryImages.nk,galleryImages.tap,galleryImages.fluzz,galleryImages.g],
   },
@@ -41,8 +38,6 @@ export const WORK_PROJECTS: readonly WorkProject[] = [
     slug: 'sachetana', title: 'Sachetana',
     premise: 'A reflection app for students, with control over what they share.',
     contribution: 'Design + build · Team project', factLabel: 'Recognition', fact: 'MAHE Research Day · Team winner',
-    decision: 'The AI drafts a reflection. The student reviews it before saving or sharing.',
-    evidence: 'Built at MIT for a problem brought by KMC. Our team later won at MAHE Research Day.',
     href: '/projects/sachetana',
     images: [galleryImages.fgh,galleryImages.ss,galleryImages.g,galleryImages.nk],
   },
@@ -50,7 +45,6 @@ export const WORK_PROJECTS: readonly WorkProject[] = [
     slug: 'lucky-day', title: 'Lucky Day',
     premise: 'A slot-machine game exploring motion, timing, and tactile feedback.',
     contribution: 'Design + build · Personal project', factLabel: 'Craft', fact: 'Spring motion + tactile feedback',
-    decision: 'Springy reels and a vibration on near-misses make the result felt as well as seen.',
     href: '/projects/lucky-day',
     images: [galleryImages.fluzz,galleryImages.tap,galleryImages.dots,galleryImages.nk],
   },
@@ -58,7 +52,6 @@ export const WORK_PROJECTS: readonly WorkProject[] = [
     slug: 'research-internship', title: 'Research internship',
     premise: 'A research workspace that keeps source context close to the results.',
     contribution: 'Product design · Research + prototyping', factLabel: 'Scope', fact: 'Search, filters + source context',
-    decision: 'Search, filters, and source details sit together so the results can be read in context.',
     images: [galleryImages.ss,galleryImages.nk,galleryImages.fgh],
   },
 ];

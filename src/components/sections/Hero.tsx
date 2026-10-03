@@ -10,8 +10,7 @@ export function Hero() {
       data-browser-theme-color="#ffffff"
     >
       <h1 id="hero-title">
-        <span>I believe good products</span>{" "}
-        <span><em>work well and feel right.</em></span>
+        I believe good products<br className={styles.desktopBreak} /> work well and feel right.
       </h1>
 
       <Link className={styles.heroAction} href="#work">

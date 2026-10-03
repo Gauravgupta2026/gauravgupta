@@ -170,7 +170,7 @@
   content: "";
 }
 
-.featuredMedia figure {
+.featuredMedia .featuredHero {
   position: absolute;
   margin: 0;
   overflow: hidden;
@@ -530,3 +530,13 @@
     scroll-behavior: auto;
   }
 }
+
+/* The accepted experiment heading and compact project descriptions. */
+.sectionTitle { font-family: var(--font-editorial); font-size: 64px; font-weight: 400; line-height: 1.05; text-align: center; }
+.featuredDescription, .galleryHeader > p { font-size: 12.8px; line-height: 19.2px; }
+@media (max-width: 809px) { .sectionTitle { font-size: 27px; line-height: 1.1; } }
+
+.featuredHero { display: block; height: 100%; }
+.imageLink { position: absolute; inset: 0; display: block; }
+.featuredHero:focus-visible, .imageLink:focus-visible { outline: 3px solid #1235f5; outline-offset: -3px; }
+@media (min-width: 810px) and (max-width: 1199px) { .sectionTitle { font-size: 52px; } }

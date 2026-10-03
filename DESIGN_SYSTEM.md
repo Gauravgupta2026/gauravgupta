@@ -166,3 +166,23 @@ Work image strips measure their rendered sequence width to maintain 32px/second 
 ## Release cleanup
 
 The production release excludes the alternate landing route and its fonts/photos. Obsolete navigation, theme toggles, unreferenced legacy sections, and unused component styles are removed. Image viewer focus restoration uses preventScroll; stable scrollbar gutters prevent page-width shifts during dialog scroll locking.
+
+
+## Main branch design port — October 4
+
+These rules replace conflicting earlier rules for this release.
+
+- Keep the named experiment navigation visible during scroll. Use an 80px desktop row and 64px phone row. Do not add scroll listeners or hide states.
+- Use the experiment hero in Garamond Book 400. Desktop is 79.2px, tablet is 61.2px, and phone is 28px. The phone main branch hero was 24px.
+- Fit the nav, hero, and 10% of the mountain image height within the first desktop screen. On phones, show 25% of the image and reduce the action gap to 24px. Use the existing 15:8 desktop mountain frame and 400px phone frame. Let short screens grow if the content needs space.
+- Keep `/photos/mountains.png`, `/photos/beach-manipal.png`, the opening paragraphs, biography, note titles, and contact text from main.
+- Story main text is 20px/30px desktop and 13.5px/21px phone. Biography and Selected Works headings use Garamond Book 64px desktop and 27px phone.
+- Notes use full content width with one row per article. Titles use Inter 20px/28px desktop and 13.5px/19.5px phone. Dates use DM Mono 12px/20px and 9px/15px.
+- Contact uses a white centered section with the main heading and role invitation. Use Garamond Book 64px and 27px for the heading. Copy uses Inter 18px/28px and 12px/18.75px. Use a quiet outlined capsule action. Keep the blue footer.
+- Reduce landing project descriptions from 16px to 12.8px. Keep project assets, facts, routes, and gallery behavior from main.
+- Work projects use title and premise above the gallery, then contribution, the existing fact or interaction, and the Explore action below it. Remove design choices from this view. Remove the unused design choice fields after checking their consumers.
+- Work uses the same contact section and content as Home.
+
+- Align the navigation name and contact action with the mountain photo edges. Use the same 1280px shell and page gutters. Keep 44px navigation targets on phones.
+- Use 52px chapter headings from 810px to 1199px. Stack story columns at 1024px and below. Keep all text and actions within the device width.
+- Project image links must open valid case studies. Research images open Work. Do not render document actions without a destination. Keep gallery drag separate from link clicks.

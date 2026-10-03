@@ -4,10 +4,10 @@ import type { FileArtifact } from "@/content/projectDetails";
 export function ArtifactFiles({ files }: { files: FileArtifact[] }) {
   return (
     <div className="mt-[28px] flex flex-col md:mt-[44px]">
-      {files.map((f) => (
+      {files.filter((file) => file.href).map((f) => (
         <a
           key={f.name}
-          href={f.href ?? "#"}
+          href={f.href}
           className="grid grid-cols-1 gap-[4px] border-t border-border-2 py-[12px] text-inherit no-underline transition-opacity duration-300 hover:opacity-70 sm:grid-cols-[minmax(160px,240px)_1fr_100px_80px] sm:items-baseline sm:gap-[24px] md:py-[18px]"
         >
           <span className="text-[13px] leading-[17px] text-ink md:text-[14px] md:leading-[19px]">

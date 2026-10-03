@@ -34,14 +34,14 @@ export function FeaturedProject() {
       </div>
 
       <div className={styles.featuredMedia} aria-label={`${project.title} project imagery`}>
-        <figure className={styles.featuredHero}>
+        <Link className={styles.featuredHero} href={project.href} aria-label={`Read ${project.title} case study`}>
           <Image
             alt={project.media.heroAlt}
             fill
             sizes="(max-width: 760px) calc(100vw - 64px), 45vw"
             src={project.media.hero}
           />
-        </figure>
+        </Link>
       </div>
     </article>
   );
