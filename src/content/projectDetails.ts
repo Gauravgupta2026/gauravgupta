@@ -401,5 +401,5 @@ export const projectDetails: Record<string, ProjectDetail> = {
 };
 
 export function getProjectDetail(slug: string): ProjectDetail | undefined {
-  return projectDetails[slug];
+  return Object.hasOwn(projectDetails, slug) ? projectDetails[slug] : undefined;
 }

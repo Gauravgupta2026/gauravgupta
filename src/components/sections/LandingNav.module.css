@@ -7,7 +7,9 @@
   align-items: center;
   gap: 32px;
   height: var(--navigation-height, 80px);
-  padding-inline: 40px;
+  width: min(100%, 1280px);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
   background: transparent;
   isolation: isolate;
   color: #111;
@@ -39,7 +41,7 @@
 }
 .nav:focus-within { transform: none; opacity: 1; }
 @media (max-width: 809px) {
-  .nav { display: flex; justify-content: space-between; gap: 8px; padding-inline: 20px; font-size: calc((11px) * var(--mobile-type-scale, 1)); }
+  .nav { display: flex; justify-content: space-between; gap: 8px; padding-inline: var(--page-gutter); font-size: calc((11px) * var(--mobile-type-scale, 1)); }
   .desktopName { display: none; }
   .mobileHome { display: inline; }
   .home { min-width: 44px; }
@@ -51,3 +53,5 @@
 
 
 @media (max-width: 809px) { .nav { height: 64px; } .spacer { height: 64px; } }
+
+@media (max-width: 360px) { .nav { gap: 4px; } .destinations { gap: 2px; } .nav .contact { padding-inline: 6px; font-size: 9px; } }

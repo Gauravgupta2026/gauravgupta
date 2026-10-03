@@ -11,3 +11,5 @@
 .card:hover .cardTitle { text-decoration: underline; text-underline-offset: 5px; }
 .card:focus-visible { outline: 2px solid #1235f5; outline-offset: 5px; }
 @media (max-width: 809px) { .section { padding-top: 88px; } .title { font-size: 27px; line-height: 1.1; margin-bottom: 24px; } .card { grid-template-columns: 70px minmax(0, 1fr); gap: 16px; padding-block: 24px; } .date { font-size: 9px; line-height: 15px; } .cardTitle { font-size: 13.5px; line-height: 19.5px; } }
+
+@media (min-width: 810px) and (max-width: 1199px) { .title { font-size: 52px; } }

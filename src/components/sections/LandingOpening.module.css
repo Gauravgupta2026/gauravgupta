@@ -12,10 +12,10 @@
 .heroAction:focus-visible { outline: 2px solid #1235f5; outline-offset: 5px; }
 @media (min-width: 810px) and (max-width: 1199px) { .hero h1 { font-size: 61.2px; } }
 @media (max-width: 809px) {
-  .hero { --image-peek: 40px; min-height: calc(100svh - 64px - var(--image-peek)); padding-block: 32px; }
+  .hero { --image-peek: 100px; min-height: calc(100svh - 64px - var(--image-peek)); padding-block: 32px; }
   .hero h1 { font-size: 28px; }
   .desktopBreak { display: none; }
-  .heroAction { min-height: 52px; font-size: 14px; margin-top: 32px; padding-inline: 32px; }
+  .heroAction { min-height: 52px; font-size: 14px; margin-top: 24px; padding-inline: 32px; }
 }
 
 @media (max-height: 500px) and (min-width: 810px) {

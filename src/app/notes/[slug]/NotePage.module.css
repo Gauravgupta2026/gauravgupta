@@ -13,3 +13,5 @@
   .header { padding-top: 130px; } .header h1 { margin-top: 42px; font-size: 44px; } .dek { font-size: 20px; }
   .meta { margin-top: 64px; } .body { margin-top: 88px; } .footer { flex-direction: column; }
 }
+
+.page > article { position: relative; z-index: 2; display: flow-root; background: var(--color-bg); }

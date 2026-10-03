@@ -20,6 +20,7 @@ export function MyStory() {
         <OpeningReveal as="figure" className={styles.figure}>
           <Image
             src="/photos/mountains.png"
+            loading="eager"
             alt="Looking out across a snow-covered mountain valley"
             width={1512}
             height={702}

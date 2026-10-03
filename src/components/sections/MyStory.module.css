@@ -39,3 +39,6 @@
 @media (min-width: 769px) and (max-width: 809px) { .image { height: 400px; aspect-ratio: auto; object-fit: cover; } }
 
 @media (max-width: 809px) { .introduction .reading p { font-size: 13.5px; line-height: 21px; } }
+
+@media (min-width: 810px) and (max-width: 1199px) { .title { font-size: 52px; } .reading p, .introduction .reading p { font-size: 19px; line-height: 28.5px; } }
+@media (min-width: 769px) and (max-width: 1024px) { .introduction, .biography { grid-template-columns: 1fr; gap: 24px; } }

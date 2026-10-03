@@ -15,6 +15,7 @@ export function FaqAccordion({ faqs }: { faqs: Faq[] }) {
           <div key={f.q} className="border-t border-border-2">
             <button
               type="button"
+              aria-expanded={isOpen}
               onClick={() => setOpen(isOpen ? -1 : i)}
               className="grid w-full cursor-pointer grid-cols-[1fr_28px] items-baseline gap-[16px] py-[16px] text-left md:grid-cols-[1fr_32px] md:gap-[24px] md:py-[30px]"
             >

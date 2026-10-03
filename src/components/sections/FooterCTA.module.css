@@ -1,7 +1,4 @@
 .reveal {
-  --cta-highlight: #f3f3f3;
-  --cta-border: #e6e6e6;
-  --cta-white-shadow: 0 12px 40px rgb(255 255 255 / 85%);
   position: relative;
   isolation: isolate;
   background: #0b2cff;
@@ -106,3 +103,5 @@
   .beachCaption { font-size: 16px; line-height: 22px; }
   .links { flex-direction: row; flex-wrap: wrap; gap: 0 20px; }
 }
+
+@media (min-width: 810px) and (max-width: 1199px) { .statement { font-size: 52px; } }
