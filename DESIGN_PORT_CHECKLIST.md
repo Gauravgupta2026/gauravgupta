@@ -14,7 +14,7 @@ Branch: `port-experiment-design`. Base: `origin/main` at `1c298a1`.
 10. [x] Check layouts and code.
 11. [x] Align navigation edges with the mountain photo.
 12. [x] Check project links, case study routes, and image viewers.
-13. [ ] Open a PR to main.
+13. [x] Open PR #25 to main.
 
 This PR ports selected changes. It does not merge the experiments branch or add
 its alternate route, photos, or metadata. Case study changes fix routes and keep the page above the footer.
@@ -40,3 +40,5 @@ its alternate route, photos, or metadata. Case study changes fix routes and keep
 - Navigation outer edges match the mountain frame at all three widths.
 - Featured and gallery image clicks opened Wylde and Sachetana. Case study decision and FAQ buttons changed their open state.
 - Unknown project addresses show a 404 page with Home and Work links.
+
+PR: https://github.com/Gauravgupta2026/gauravgupta/pull/25
