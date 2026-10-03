@@ -1,178 +1,64 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Reveal } from "@/components/Reveal";
-import { WORK_EDITORIAL } from "@/content/workEditorial";
+import { WORK_PROJECTS, WORK_QUESTIONS } from "@/content/workPage";
+import { WorkProjectGallery } from "./WorkProjectGallery";
 import styles from "./WorkEditorial.module.css";
 
-type ProjectRowProps = {
-  title: string;
-  description: string;
-  role: string;
-  detail: string;
-  image: string;
-  detailImage: string;
-  primaryAlt: string;
-  secondaryAlt: string;
-  href?: string;
-  reverse?: boolean;
-  priority?: boolean;
-};
-
-function ProjectMeta({ role, detail }: { role: string; detail: string }) {
-  return (
-    <p className={styles.meta}>
-      <span>{role}</span>
-      <span>{detail}</span>
-    </p>
-  );
-}
-
-function ProjectRow({
-  title,
-  description,
-  role,
-  detail,
-  image,
-  detailImage,
-  primaryAlt,
-  secondaryAlt,
-  href,
-  reverse = false,
-  priority = false,
-}: ProjectRowProps) {
-  const content = (
-    <>
-      <div className={`${styles.mediaGrid} ${reverse ? styles.reverse : ""}`}>
-        <figure className={`${styles.media} ${styles.primaryMedia}`}>
-          <Image
-            alt={primaryAlt}
-            fill
-            priority={priority}
-            sizes="(max-width: 720px) calc(100vw - 40px), (max-width: 1100px) 58vw, 770px"
-            src={image}
-          />
-        </figure>
-        <figure className={`${styles.media} ${styles.secondaryMedia}`}>
-          <Image
-            alt={secondaryAlt}
-            fill
-            sizes="(max-width: 720px) calc(100vw - 40px), (max-width: 1100px) 34vw, 500px"
-            src={detailImage}
-          />
-        </figure>
-      </div>
-
-      <div
-        className={`${styles.projectCopy} ${reverse ? styles.copyRight : styles.copyLeft}`}
-      >
-        <h2>{title}</h2>
-        <p>{description}</p>
-        <ProjectMeta role={role} detail={detail} />
-      </div>
-    </>
-  );
-
-  return (
-    <Reveal as="article" className={styles.project} variant="project">
-      {href ? (
-        <Link className={styles.projectLink} href={href}>
-          {content}
-        </Link>
-      ) : (
-        content
-      )}
-    </Reveal>
-  );
-}
-
 export function WorkEditorial() {
-  const { reflection } = WORK_EDITORIAL;
-
   return (
     <div className={styles.page}>
-      <ProjectCollection headingLevel="h1" titleId="work-title" />
+      <div className={styles.shell}>
+        <header className={styles.opening}>
+          <h1>Ideas, worked through.</h1>
+          <p className={styles.introduction}>
+            I design and build digital products, from the first question to the
+            details of the interaction. These projects span student wellbeing,
+            social play, and research tools.
+          </p>
+        </header>
 
-      <p className={styles.thesis} aria-label="Interactions drive feelings">
-          <span>Interactions</span>
-          <span>drive</span>
-          <span>feelings</span>
-      </p>
+        <section className={styles.projects} aria-label="Selected projects">
+          {WORK_PROJECTS.map((project, index) => (
+            <article key={project.slug} aria-labelledby={`${project.slug}-heading`}>
+              <header className={styles.projectHeader}>
+                <h2 id={`${project.slug}-heading`}>
+                  {project.href ? <Link href={project.href}>{project.title}</Link> : project.title}
+                </h2>
+                <p className={styles.premise}>{project.premise}</p>
+                <p className={styles.meta}><span>Contribution</span>{project.contribution}</p>
+                <p className={styles.meta}><span>{project.factLabel}</span>{project.fact}</p>
+              </header>
+              <WorkProjectGallery project={project} priority={index === 0} />
+              <div className={styles.projectDetails}>
+                <div>
+                  <p className={styles.decision}><span>Design choice</span>{project.decision}</p>
+                  {project.evidence && <p className={styles.evidence}>{project.evidence}</p>}
+                </div>
+                {project.href && (
+                  <Link className={styles.projectLink} href={project.href}>Explore {project.title}</Link>
+                )}
+              </div>
+            </article>
+          ))}
+        </section>
 
-      <section className={styles.reflection} aria-label="Design reflection">
-        <p>{reflection}</p>
-      </section>
-    </div>
-  );
-}
+        <section className={styles.questions} aria-labelledby="work-questions-title">
+          <h2 id="work-questions-title">A few questions</h2>
+          <div>
+            {WORK_QUESTIONS.map((item) => (
+              <details key={item.id} className={styles.question}>
+                <summary>{item.question}<span aria-hidden="true">+</span></summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
 
-type ProjectCollectionProps = {
-  headingLevel: "h1" | "h2";
-  titleId: string;
-};
-
-function ProjectCollection({
-  headingLevel,
-  titleId,
-}: ProjectCollectionProps) {
-  const { luckyDay, internship, wylde, sachetana } = WORK_EDITORIAL;
-  const Heading = headingLevel;
-
-  return (
-    <div className={styles.paper}>
-      <Heading className={styles.title} id={titleId}>
-        Work is the story
-      </Heading>
-
-      <div className={styles.projects}>
-        <ProjectRow
-          description={sachetana.description}
-          detail={sachetana.detail}
-          detailImage={sachetana.detailImage}
-          href={sachetana.href}
-          image={sachetana.image}
-          primaryAlt="Two phones displaying a calm, privacy-focused reflection interface"
-          priority
-          role={sachetana.role}
-          secondaryAlt="A close-up phone showing a private mood check-in"
-          title={sachetana.title}
-        />
-
-        <ProjectRow
-          description={wylde.description}
-          detail={wylde.detail}
-          detailImage={wylde.detailImage}
-          href={wylde.href}
-          image={wylde.image}
-          primaryAlt="Two people crossing a quiet brutalist interior"
-          reverse
-          role={wylde.role}
-          secondaryAlt="Friends gathering inside a softly lit brutalist social space"
-          title={wylde.title}
-        />
-
-        <ProjectRow
-          description={luckyDay.description}
-          detail={luckyDay.detail}
-          detailImage={luckyDay.detailImage}
-          href={luckyDay.href}
-          image={luckyDay.primaryImage}
-          primaryAlt="Two phones displaying a dark, celestial card game"
-          role={luckyDay.role}
-          secondaryAlt="Overlapping phones with a card-game screen and a light control interface"
-          title={luckyDay.title}
-        />
-
-        <ProjectRow
-          description={internship.description}
-          detail={internship.detail}
-          detailImage={internship.detailImage}
-          image={internship.image}
-          primaryAlt="A pale research and search interface displayed on a laptop"
-          reverse
-          role={internship.role}
-          secondaryAlt="A detailed research workspace with filters, sources and a selected result"
-          title={internship.title}
-        />
+        <section id="work-contact" className={styles.contactCard} aria-labelledby="work-contact-title">
+          <h2 id="work-contact-title">Have something in mind?</h2>
+          <p>Tell me what you’re trying to make, and where you need someone who can design and build.</p>
+          <a className={styles.contactButton} href="mailto:hey@gauravguptas.com">Get in touch.</a>
+          <a className={styles.email} href="mailto:hey@gauravguptas.com">hey@gauravguptas.com</a>
+        </section>
       </div>
     </div>
   );

@@ -88,7 +88,7 @@ export function ProjectGallery({ project }: ProjectGalleryProps) {
           ))}
         </div>
         <p className={styles.scrollHint} aria-hidden="true">
-          Drag or scroll <span>→</span>
+          Drag or scroll
         </p>
       </div>
     </article>

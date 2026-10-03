@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { PortfolioFooter } from "@/components/sections/PortfolioFooter";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArtifactFiles } from "@/components/sections/ArtifactFiles";
 import { DecisionLog } from "@/components/sections/DecisionLog";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
-import { Nav } from "@/components/sections/Nav";
+import { LandingNav } from "@/components/sections/LandingNav";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { getProjectDetail, projectDetails, type ProjectDetail, type Section } from "@/content/projectDetails";
 import { projects } from "@/content/projects";
@@ -54,7 +55,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   return (
     <main className={styles.page}>
-      <Nav />
+      <LandingNav />
       <article>
         <header className={styles.header}>
           <div className={styles.kicker}>
@@ -94,7 +95,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               <div className={styles.proofLinks}>
                 {(Object.keys(PROOF_LABELS) as Array<keyof typeof PROOF_LABELS>).map((key) => {
                   const href = project.proof?.[key];
-                  return href ? <a key={key} href={href} target="_blank" rel="noopener noreferrer">{PROOF_LABELS[key]} ↗</a> : null;
+                  return href ? <a key={key} href={href} target="_blank" rel="noopener noreferrer">{PROOF_LABELS[key]}</a> : null;
                 })}
               </div>
               {project.proof.feedback && <p>{project.proof.feedback}</p>}
@@ -125,9 +126,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <footer className={styles.nextProjects}>
           <span>Continue exploring</span>
           <h2>Next project</h2>
-          <div>{others.map((item) => <Link href={`/projects/${item.slug}`} key={item.slug}><span>{item.title}</span><i aria-hidden="true">↗</i></Link>)}</div>
+          <div>{others.map((item) => <Link href={`/projects/${item.slug}`} key={item.slug}><span>{item.title}</span></Link>)}</div>
         </footer>
       </article>
+      <PortfolioFooter />
     </main>
   );
 }

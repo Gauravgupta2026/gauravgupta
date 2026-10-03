@@ -9,7 +9,6 @@ export function FeaturedProject() {
   return (
     <article className={styles.featured} aria-labelledby="featured-project-title">
       <div className={styles.featuredCopy}>
-        <p className={styles.eyebrow}>{project.eyebrow}</p>
         <h3 id="featured-project-title" className={styles.featuredTitle}>
           <span>{project.headline.before}</span>{" "}
           <em>{project.headline.emphasis}</em>{" "}
@@ -18,7 +17,7 @@ export function FeaturedProject() {
         <p className={styles.featuredDescription}>{project.description}</p>
         <Link className={styles.featuredAction} href={project.href}>
           Read the case study
-          <span aria-hidden="true">↗</span>
+
         </Link>
 
         <div className={styles.proof}>
@@ -26,7 +25,7 @@ export function FeaturedProject() {
           <ul>
             {project.proof.map((item) => (
               <li key={item.title}>
-                <span aria-hidden="true">→</span>
+
                 <p><strong>{item.title}</strong> {item.body}</p>
               </li>
             ))}
@@ -39,7 +38,7 @@ export function FeaturedProject() {
           <Image
             alt={project.media.heroAlt}
             fill
-            sizes="(max-width: 760px) 84vw, 58vw"
+            sizes="(max-width: 760px) calc(100vw - 64px), 45vw"
             src={project.media.hero}
           />
         </figure>

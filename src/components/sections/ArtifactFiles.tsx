@@ -16,10 +16,10 @@ export function ArtifactFiles({ files }: { files: FileArtifact[] }) {
           <span className="text-pretty text-[12px] leading-[16px] text-mute-2 md:text-[11px] md:leading-[18px]">
             {f.d}
           </span>
-          <span className="font-mono text-[8px] tracking-[0.2em] text-faint md:text-[8px]">
+          <span className="font-body text-[8px] tracking-[0.2em] text-faint md:text-[8px]">
             {f.kind}
           </span>
-          <span className="font-mono text-[8px] tracking-[0.2em] text-lilac sm:justify-self-end md:text-[8px]">
+          <span className="font-body text-[8px] tracking-[0.2em] text-lilac sm:justify-self-end md:text-[8px]">
             {f.action}
           </span>
         </a>

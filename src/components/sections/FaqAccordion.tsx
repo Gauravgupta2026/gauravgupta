@@ -26,7 +26,7 @@ export function FaqAccordion({ faqs }: { faqs: Faq[] }) {
                 {f.q}
               </span>
               <span
-                className={`justify-self-end font-mono text-[13px] transition-[transform,color] duration-300 md:text-[14px] ${
+                className={`justify-self-end font-body text-[13px] transition-[transform,color] duration-300 md:text-[14px] ${
                   isOpen ? "rotate-45 text-lilac" : "rotate-0 text-faint"
                 }`}
               >

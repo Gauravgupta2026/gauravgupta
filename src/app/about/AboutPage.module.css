@@ -7,11 +7,14 @@
 
 .canvas {
   min-height: 100svh;
+  width: min(100%, 1280px);
+  margin-inline: auto;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   grid-template-rows: minmax(230px, 1fr) minmax(350px, 46svh);
   column-gap: clamp(18px, 2vw, 32px);
-  padding: var(--nav-height) clamp(24px, 2.5vw, 38px) 0;
+  row-gap: 48px;
+  padding: 0 var(--page-gutter);
 }
 
 .title {
@@ -21,8 +24,7 @@
   margin: clamp(28px, 4vh, 48px) 0 0;
   font-family: var(--font-display);
   font-size: clamp(30px, 2.4vw, 42px);
-  font-variation-settings: "opsz" 48;
-  font-weight: 430;
+  font-weight: 300;
   line-height: 1;
   letter-spacing: -0.045em;
 }
@@ -34,11 +36,10 @@
   max-width: 720px;
   margin-top: clamp(36px, 5vh, 64px);
   font-family: var(--font-display);
-  font-size: clamp(25px, 2.35vw, 38px);
-  font-variation-settings: "opsz" 48;
-  font-weight: 390;
-  line-height: 1.08;
-  letter-spacing: -0.045em;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
   text-wrap: pretty;
 }
 
@@ -119,7 +120,7 @@
 
   .statement {
     grid-column: 6 / -1;
-    font-size: clamp(23px, 3.3vw, 32px);
+    font-size: 21px;
   }
 
   .portrait {
@@ -135,7 +136,8 @@
   .canvas {
     min-height: 100svh;
     display: flex;
-    padding: calc(var(--nav-height) + 28px) 20px 0;
+    row-gap: 0;
+    padding: 28px var(--page-gutter) 0;
     flex-direction: column;
   }
 
@@ -147,7 +149,7 @@
   .statement {
     max-width: none;
     margin-top: 64px;
-    font-size: clamp(24px, 7.2vw, 32px);
+    font-size: 20px;
   }
 
   .portrait {

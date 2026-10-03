@@ -1,54 +1,49 @@
 import type { Metadata } from "next";
-import { Nav } from "@/components/sections/Nav";
+import { PortfolioFooter } from "@/components/sections/PortfolioFooter";
+import { LandingNav } from "@/components/sections/LandingNav";
 import { LabsGrid } from "@/components/sections/LabsGrid";
-import { Shell } from "@/components/Shell";
-import { Reveal } from "@/components/Reveal";
-import { SectionDivider } from "@/components/ui/SectionDivider";
+import { labsQuestions } from "@/content/labsItems";
+import styles from "@/components/sections/WorkEditorial.module.css";
 
 export const metadata: Metadata = {
   title: "Labs — Gaurav Gupta",
-  description:
-    "Half-finished things kept in public. Nothing here is a product yet, and some of it never will be.",
+  description: "Experiments, sketches, and things still taking shape. Interfaces, motion, and questions worth trying.",
 };
 
 export default function LabsPage() {
   return (
-    <main>
-      <Nav />
-      <Shell
-        as="header"
-        wide
-        className="relative pb-[28px] pt-[80px] md:pb-[56px] md:pt-[145px]"
-      >
-        <Reveal
-          as="h1"
-          className="m-0 font-display text-[30px] font-light leading-[1.05] tracking-[-0.008em] text-white md:text-[40px]"
-        >
-          Labs
-        </Reveal>
-        <Reveal
-          as="p"
-          delay={80}
-          className="m-0 mt-[14px] max-w-[677px] text-pretty font-body text-[13px] leading-[21px] text-mute-2 md:mt-[28px] md:text-[14px] md:leading-[23px]"
-        >
-          Half-finished things kept in public. Nothing here is a product yet,
-          and some of it never will be.
-        </Reveal>
-        <div className="mt-[12px] font-mono text-[8px] tracking-[0.2em] text-faint md:absolute md:right-[var(--side-pad)] md:top-[97px] md:mt-0 md:text-[9px]">
-          WORK IN PROGRESS
+    <main id="top" style={{ position: "relative", isolation: "isolate" }}>
+      <LandingNav />
+      <div className={styles.page}>
+        <div className={styles.shell}>
+          <header className={styles.opening}>
+            <h1>Things worth trying.</h1>
+            <p className={styles.introduction}>
+              Experiments, sketches, and things still taking shape. This is where
+              I try an interaction, test a direction, or keep a useful question open.
+            </p>
+          </header>
+          <LabsGrid />
+          <section className={styles.questions} aria-labelledby="labs-questions-title">
+            <h2 id="labs-questions-title">A few questions</h2>
+            <div>
+              {labsQuestions.map(item => (
+                <details key={item.question} className={styles.question}>
+                  <summary>{item.question}<span aria-hidden="true">+</span></summary>
+                  <p>{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+          <section className={styles.contactCard} aria-labelledby="labs-contact-title">
+            <h2 id="labs-contact-title">Have a question worth trying?</h2>
+            <p>Tell me what you’re curious about, or what you’d like to explore together.</p>
+            <a className={styles.contactButton} href="mailto:hey@gauravguptas.com">Get in touch.</a>
+            <a className={styles.email} href="mailto:hey@gauravguptas.com">hey@gauravguptas.com</a>
+          </section>
         </div>
-      </Shell>
-
-      <SectionDivider />
-
-      <Shell
-        wide
-        className="py-[32px] md:py-[80px]"
-        style={{ paddingRight: "calc(var(--side-pad) * 0.7)" }}
-      >
-        <LabsGrid />
-      </Shell>
-
+      </div>
+      <PortfolioFooter />
     </main>
   );
 }

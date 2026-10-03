@@ -1,24 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Inter,
-  Allison,
-  Benne,
-  Geist_Mono,
-} from "next/font/google";
+import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { LazyMotion, domAnimation } from "framer-motion";
 import "./globals.css";
 import { PostHogProvider } from "@/components/PostHogProvider";
-
-/** Display serif, weight 300 roman — headings only. */
-const newsreader = localFont({
-  src: [
-    { path: "./fonts/Newsreader-Variable.ttf", style: "normal" },
-    { path: "./fonts/Newsreader-Italic-Variable.ttf", style: "italic" },
-  ],
-  variable: "--font-newsreader",
-  display: "swap",
-});
 
 /** Body copy. */
 const inter = Inter({
@@ -27,43 +12,14 @@ const inter = Inter({
   display: "swap",
 });
 
-/** UI / labels / nav / meta. */
+/** Code and technical annotations only. */
 const dmMono = localFont({
   src: [
     { path: "./fonts/DMMono-Light.ttf", weight: "300", style: "normal" },
     { path: "./fonts/DMMono-Regular.ttf", weight: "400", style: "normal" },
     { path: "./fonts/DMMono-Medium.ttf", weight: "500", style: "normal" },
   ],
-  variable: "--font-jetbrains",
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-/** Logo mark — "GG" wordmark. */
-const allison = Allison({
-  variable: "--font-allison",
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-});
-
-/** Editorial nameplate used in the landing hero. */
-const benne = Benne({
-  variable: "--font-benne",
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-});
-
-/** Local Seratonin display face used in the landing hero. */
-const seratonin = localFont({
-  src: "./fonts/Seratonin-Regular.otf",
-  variable: "--font-seratonin-local",
+  variable: "--font-dm-mono",
   display: "swap",
 });
 
@@ -71,15 +27,9 @@ const editorial = localFont({
   src: [
     { path: "../../public/fonts/itc-garamond/ITCGaramondStd-Lt.ttf", weight: "300", style: "normal" },
     { path: "../../public/fonts/itc-garamond/ITCGaramondStd-LtIta.ttf", weight: "300", style: "italic" },
-    { path: "../../public/fonts/itc-garamond/ITCGaramondStd-Bk.ttf", weight: "700", style: "normal" },
+    { path: "../../public/fonts/itc-garamond/ITCGaramondStd-Bk.ttf", weight: "400", style: "normal" },
   ],
   variable: "--font-editorial-local",
-  display: "swap",
-});
-
-const projectWordmark = localFont({
-  src: "../../public/fonts/Pixelta.ttf",
-  variable: "--font-project-local",
   display: "swap",
 });
 
@@ -107,7 +57,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#080808",
+  themeColor: "#ffffff",
   viewportFit: "cover",
 };
 
@@ -119,17 +69,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      suppressHydrationWarning
-      className={`${newsreader.variable} ${inter.variable} ${dmMono.variable} ${geistMono.variable} ${allison.variable} ${benne.variable} ${seratonin.variable} ${editorial.variable} ${projectWordmark.variable}`}
+      className={`${inter.variable} ${dmMono.variable} ${editorial.variable}`}
     >
       <body>
-        <script
-          // Runs before paint so a stored "dark" choice never flashes light first.
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}",
-          }}
-        />
         <PostHogProvider>
           {/* strict: throws if any component reaches for `motion` (full
               bundle) instead of `m` — keeps the site on the small
