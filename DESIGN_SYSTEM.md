@@ -167,12 +167,70 @@ Work image strips measure their rendered sequence width to maintain 32px/second 
 
 The production release excludes the alternate landing route and its fonts/photos. Obsolete navigation, theme toggles, unreferenced legacy sections, and unused component styles are removed. Image viewer focus restoration uses preventScroll; stable scrollbar gutters prevent page-width shifts during dialog scroll locking.
 
-## Experiments branch landing
+## Experiments branch landing — SVSD reference
 
-This branch serves the alternate landing at `/`, with `/home-experiment` retained as an alias. It is separate from the main-site release. Use locally registered Fraunces 900 for the expressive hero, ITC Garamond for editorial headings and identity descriptions, Inter for narrative, and the root DM Mono registration for black uppercase utility labels. Omit stars and emoji.
+This branch serves the new landing page at `/`. `/home-experiment` is an alias.
+The user requested replacement of the earlier experiment on October 3, 2026.
 
-The desktop hero has a minimum height of 68svh, followed by the full-bleed photo carousel; the opening can flow beyond one screen. Identity fields use a compact centered 560px grid with 20px gaps. On mobile, preserve the four-line headline, increase the headline-to-identity gap by 3cm (113.4 CSS pixels), and put the identity fields near the photographs. The hero has a 68svh minimum rather than forcing the whole opening into one screen. Navigation is 72px desktop / 64px mobile and shares the hide-while-scrolling behavior.
+Use the SVSD research in `design-reports/svsd-design-system.md` and
+`design-reports/svsd-implementation-plan.md`. The files are local research records.
+The following rules replace the earlier experiment rules and apply only to this landing page.
 
-Project text and 3:2 images share a centered 648px column, with 12px image corners. Chapters use 136px desktop / 96px mobile gaps; projects use 112px / 80px. Titles are 21.12px desktop / 19.2px mobile, narrative 16px / 14.4px, and supporting project copy has a 12px minimum. Published writing stays in dated single-column rows. The personal photo carousel pauses on hover and keyboard focus, suspends offscreen or when hidden, offers a compact pause control, and becomes manually scrollable for reduced motion. Keep factual project contributions and the team Research Day award; do not invent impact numbers.
+- Use ITC Garamond Book 400 for the hero, section headings, and personal story.
+- Use Inter for project information and actions. Use DM Mono for navigation and dates.
+- Hero type is 88px/92.4px on desktop, 68px/71.4px on tablets, and 44px/46.2px on phones. Use 38px below 360px.
+- Section headings are 64px/67.2px, 52px/54.6px, and 36px/39.6px.
+- Personal text is 20px/30px, 19px/28.5px, and 18px/28px.
+- Use a 648px reading width and a 1120px work width. Gutters are 40px, 32px, and 20px.
+- Section gaps are 180px, 128px, and 88px. Project gaps are 112px, 96px, and 80px.
+- Use white surfaces, ink text, one-pixel outlined capsules, and blue focus outlines.
+- Use the shared Home link, Work, Labs, About, and Say hello navigation. The row is 80px on desktop and 64px on phones.
+- Follow the hero with a still mountain photograph. Keep its full aspect ratio. Limit its width to 1200px and keep the page gutters.
+- Show one featured project, then two projects side by side. Stack the projects on phones.
+- Keep the full project images at their source aspect ratios. Keep real case-study links and project facts.
+- Follow work with the Manipal photograph and story, dated notes, one contact section, and the Kapu footer.
+- Main actions have minimum heights of 64px, 56px, and 52px. Other controls have a 44px minimum height.
+- Show all text at first paint. The opening has no automatic image movement.
+- Keep the footer pause control, reduced-motion rules, and offscreen suspension.
 
-The new introduction connects care in interaction to building usable software. The origin story follows the projects, then published notes and contact. Keep the shared Kapu footer. See DEPLOYMENT.md for the separate Vercel project and domain setup.
+See `DEPLOYMENT.md` for the separate experiment domain setup.
+
+## Experiment navigation and dark sections — October 3
+
+These rules apply to the `experiments` branch. They replace the earlier navigation
+rules on this branch. Other branches keep their existing design.
+
+- On desktop, put the Garamond Book name at the left, three plain DM Mono links at the center, and an outlined Say hello action at the right.
+- The name links to `/`. Give the link the accessible name “Gaurav Gupta — Home”.
+- On phones, replace the visible name with “Home”. Keep all five links in one row. Use 20px outer gutters, 11px navigation text, and a 12px contact label.
+- Keep a 44px minimum control height, active-page state, blue focus outlines, and the existing scroll and reduced-motion rules.
+- Use `#000000` for the full-width contact panel. Keep the introduction white. Use white main text and `#C2C2C2` supporting text.
+- The introduction follows the photograph without a white gap. Its reading column stays at 648px. Its first paragraph is 32px/38.4px on desktop and 28px/33.6px on phones.
+- The introduction has a 580px minimum desktop height and 128px vertical padding. Phones use natural height and 88px vertical padding.
+- The contact panel has a 680px minimum desktop height and a 480px minimum phone height. Use 128px and 88px vertical padding.
+- The contact action has a white outline. Hover fills it white with dark text. Keyboard focus has a white outline.
+- Keep the project, story, and notes surfaces white. Keep the bright blue Kapu footer.
+
+The hero has no name or role line. The navigation supplies the name on desktop.
+The introduction supplies the name and role on phones.
+
+## Featured project screen size — October 3
+
+Keep the introduction white with ink text. Keep its current type and spacing.
+
+Keep the featured project text above its image. Use this text width:
+`min(648px, (100svh - 420px) * 1.25)`. Make the image 2.25 times wider than the
+text. Limit its width to the content column. Show the title, short description, and
+contribution above the image. Keep the detailed explanation in the case study.
+Reduce the previous image height by 2.5 CSS cm, approximately 94.5px. Keep a
+minimum height of 160px on short screens. Crop from the center to fill the frame.
+Use 40px below the work heading, 16px before the
+image, and 16px before its action. Phones use the full content column and natural
+flow. Let short screens scroll.
+
+The Manipal beach photograph spans the full page width at its source aspect ratio.
+Keep the story heading and paragraphs in the 648px reading column.
+
+The hero has a minimum height of 80svh, below the navigation. Center its content
+vertically. Place the mountain photograph directly below it. Let the hero grow
+when the text needs more space on a short screen.

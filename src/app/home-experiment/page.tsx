@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import Image from "next/image";
 import Link from "next/link";
 import { LandingNav } from "@/components/sections/LandingNav";
@@ -7,15 +6,7 @@ import { LandingFrame } from "@/components/sections/LandingFrame";
 import { PortfolioFooter } from "@/components/sections/PortfolioFooter";
 import { notes } from "@/content/notes";
 import { WORK_PROJECTS } from "@/content/workPage";
-import { PersonalPhotoStrip } from "./PersonalPhotoStrip";
 import styles from "./page.module.css";
-
-const display = localFont({
-  src: "../../../public/fonts/fraunces/Fraunces-variable.ttf",
-  weight: "100 900",
-  variable: "--font-experiment-display",
-  display: "swap",
-});
 
 const projectCopy = {
   wylde: { description: "A party game made for the people in the room.", detail: "A party game has to earn its place in the room. In Wylde, the first round teaches the rules through play. Scoring stays out, leaving people free to pass the phone and enjoy each other’s company.", fact: "Design & build · Solo project" },
@@ -33,70 +24,62 @@ const projects = WORK_PROJECTS.filter((project) => project.slug in projectCopy);
 
 export const metadata: Metadata = {
   title: "Gaurav Gupta — Design & code",
-  description: "I design and code. I care how it feels and I care that it works. Selected work and notes by Gaurav Gupta.",
+  description: "I design and build software. Work, personal stories, and notes by Gaurav Gupta, a design engineer in Bengaluru.",
   robots: { index: false, follow: false },
 };
 
 export default function HomeExperiment() {
   return (
-    <main className={`landing-page ${display.variable} ${styles.page}`}>
+    <main className={`landing-page ${styles.page}`}>
       <div className={styles.surface}>
         <LandingFrame>
-          <div className={styles.opening}>
-            <LandingNav className={styles.navigation} />
+          <div>
+            <LandingNav />
             <header className={styles.hero}>
-              <div className={styles.headline}>
-                <h1><span>I care how<br className={styles.mobileBreak} /> it feels</span>{" "}<span>&amp; I care that<br className={styles.mobileBreak} /> it works.</span></h1>
-              </div>
-              <dl className={styles.identity}>
-                <div>
-                  <dt>Based in</dt>
-                  <dd>Bengaluru</dd>
-                </div>
-                <div>
-                  <dt>Trade</dt>
-                  <dd>Design &amp; code</dd>
-                </div>
-                <div>
-                  <dt>Dreams of</dt>
-                  <dd>A design VC</dd>
-                </div>
-              </dl>
+              <h1>I believe good products<br className={styles.desktopBreak} /> work well and feel right.</h1>
+              <a className={styles.button} href="#work">See my work</a>
             </header>
-            <PersonalPhotoStrip />
+            <figure className={styles.openingPhoto}>
+              <Image src="/photos/alternate/mountain-portrait.webp" alt="Gaurav resting on a rock in a snowy mountain landscape" width={1600} height={900} sizes="(max-width: 809px) calc(100vw - 40px), (max-width: 1199px) calc(100vw - 64px), 1200px" preload />
+            </figure>
           </div>
-          <section className={`${styles.chapter} ${styles.introduction}`} aria-label="Introduction">
+          <section className={`${styles.chapter} ${styles.introduction}`} aria-label="Introduction" data-browser-theme-color="#ffffff">
             <div className={styles.reading}>
-              <p>I’m Gaurav, a design engineer. I work across the sketch and the browser, turning an idea into something people can try.</p>
-              <p>I’m interested in the moments that decide how a product feels: the first round of a game, the pause before sharing something personal, the response to a tap. They can look small on a screen. They matter to the person on the other side.</p>
-              <p>If your idea is still taking shape, I can help you work out the interaction, build a prototype, and carry the design into code. Making it usable is part of making it.</p>
+              <p>I’m Gaurav, a design engineer in Bengaluru. I design and build software, from the first sketch to a product that people can use.</p>
+              <p>I study the small parts of an interaction: the first round of a game, a pause before sharing, or the response to a tap. These parts change how a product feels.</p>
+              <p>I can help you develop an idea, build a prototype, and turn the design into code.</p>
             </div>
           </section>
           <section id="work" className={styles.work} aria-labelledby="work-title">
-            <header className={styles.chapterHeading}><h2 id="work-title">Things I’ve made.</h2></header>
+            <header className={styles.chapterHeading}><h2 id="work-title">Ideas, made real.</h2></header>
             <div className={styles.projectList}>
-              {projects.map((project) => {
+              {projects.map((project, index) => {
+                if (!project.href) return null;
                 const copy = projectCopy[project.slug as keyof typeof projectCopy];
                 const image = projectImages[project.slug as keyof typeof projectImages];
                 return (
-                  <article key={project.slug} className={styles.project}>
+                  <article key={project.slug} className={`${styles.project} ${index === 0 ? styles.featured : ""}`}>
                     <div className={styles.projectBrief}>
-                      <h3><Link href={project.href!}>{project.title}</Link></h3>
+                      <h3><Link href={project.href}>{project.title}</Link></h3>
                       <p className={styles.premise}>{copy.description}</p>
-                      <p className={styles.projectDetail}>{copy.detail}</p>
+                      {index !== 0 && <p className={styles.projectDetail}>{copy.detail}</p>}
                       <p className={styles.projectFact}>{copy.fact}</p>
                     </div>
-                    <Link className={styles.projectImage} href={project.href!} aria-label={`Explore ${project.title}`}>
-                      <Image src={image.src} alt={image.alt} width={image.width} height={image.height} sizes="(max-width: 680px) calc(100vw - 32px), 648px" />
+                    <Link className={styles.projectImage} href={project.href} aria-label={`Explore ${project.title}`}>
+                      <Image src={image.src} alt={image.alt} width={image.width} height={image.height} sizes={index === 0 ? "(max-width: 809px) calc(100vw - 40px), 648px" : "(max-width: 809px) calc(100vw - 40px), (max-width: 1199px) 46vw, 532px"} />
                     </Link>
+                    <Link className={styles.projectAction} href={project.href}>Explore {project.title}</Link>
                   </article>
                 );
               })}
             </div>
           </section>
-          <section id="story" className={styles.chapter} aria-labelledby="origin-title">
+          <section id="story" className={`${styles.chapter} ${styles.story}`} aria-labelledby="origin-title">
             <h2 id="origin-title">Where this started.</h2>
-            <p className={styles.sectionLabel}>Manipal</p>
+            <figure className={styles.storyPhoto}>
+              <Image src="/photos/beach-manipal.png" alt="Friends resting on the beach at night in Manipal" width={1512} height={843} sizes="100vw" />
+              <figcaption>Manipal. A place to build, with people to build with.</figcaption>
+            </figure>
             <div className={styles.reading}>
               <p>Manipal gave me a place to make things with other people. In our go-kart team, fifteen of us had a car to build and a competition date to meet. My part crossed design, marketing, budgets, and sponsors. Eight months later, we raced at Buddh International Circuit and finished fourth overall.</p>
               <p>Sachetana began with a problem KMC brought to MIT. Our team took it up, made the decisions, and built the solution. We overbuilt it. Then we kept taking it to research competitions, giving the work a life beyond its first presentation.</p>
@@ -105,17 +88,17 @@ export default function HomeExperiment() {
             </div>
           </section>
           <section id="notes" className={styles.chapter} aria-labelledby="notes-title">
-            <h2 id="notes-title">Things I’m thinking about.</h2>
+            <h2 id="notes-title">Notes from the work.</h2>
             <ul className={styles.notes}>
               {notes.map((note) => (
                 <li key={note.slug}><Link href={`/notes/${note.slug}`}><span className={styles.noteDate}>{note.date}</span><span className={styles.noteTitle}>{note.title}</span></Link></li>
               ))}
             </ul>
           </section>
-          <section id="contact" className={`${styles.chapter} ${styles.contact}`} aria-labelledby="contact-title">
-            <h2 id="contact-title">Have something in mind?</h2>
-            <p className={styles.contactCopy}>I’m looking for a design engineering role where I can help shape a product and build it with the team. Tell me about the problem you’re working on, what you’ve tried, and where you need a hand.</p>
-            <a className={styles.contactButton} href="mailto:hey@gauravguptas.com">Get in touch</a>
+          <section id="contact" className={`${styles.chapter} ${styles.contact}`} aria-labelledby="contact-title" data-browser-theme-color="#000000">
+            <h2 id="contact-title">Let’s make something<br /> worth using.</h2>
+            <p className={styles.contactCopy}>I’m looking for a design engineering role. I want to help a team develop a product and build it. Tell me about your project.</p>
+            <a className={styles.button} href="mailto:hey@gauravguptas.com">Get in touch</a>
           </section>
         </LandingFrame>
       </div>
