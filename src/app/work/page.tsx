@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PortfolioFooter } from "@/components/sections/PortfolioFooter";
+import { FooterCTA } from "@/components/sections/FooterCTA";
 import { LandingNav } from "@/components/sections/LandingNav";
 import { WorkEditorial } from "@/components/sections/WorkEditorial";
 
@@ -13,7 +13,7 @@ export default function WorkPage() {
     <main id="top" style={{ position: "relative", isolation: "isolate" }}>
       <LandingNav />
       <WorkEditorial />
-      <PortfolioFooter />
+      <FooterCTA />
     </main>
   );
 }

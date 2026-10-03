@@ -180,5 +180,5 @@ These rules replace conflicting earlier rules for this release.
 - Notes use full content width with one row per article. Titles use Inter 20px/28px desktop and 13.5px/19.5px phone. Dates use DM Mono 12px/20px and 9px/15px.
 - Contact uses a white centered section with the main heading and role invitation. Use Garamond Book 64px and 27px for the heading. Copy uses Inter 18px/28px and 12px/18.75px. Use a quiet outlined capsule action. Keep the blue footer.
 - Reduce landing project descriptions from 16px to 12.8px. Keep project assets, facts, routes, and gallery behavior from main.
-- Work projects use title and premise above the gallery, then contribution, the existing fact or interaction, and the Explore action below it. Remove design choices from this view. Keep the data available until all consumers are checked.
+- Work projects use title and premise above the gallery, then contribution, the existing fact or interaction, and the Explore action below it. Remove design choices from this view. Remove the unused design choice fields after checking their consumers.
 - Work uses the same contact section and content as Home.

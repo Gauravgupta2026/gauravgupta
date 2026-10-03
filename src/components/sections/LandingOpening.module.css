@@ -17,3 +17,9 @@
   .desktopBreak { display: none; }
   .heroAction { min-height: 52px; font-size: 14px; margin-top: 32px; padding-inline: 32px; }
 }
+
+@media (max-height: 500px) and (min-width: 810px) {
+  .hero { padding-block: 16px; }
+  .hero h1 { font-size: 28px; }
+  .heroAction { min-height: 44px; margin-top: 16px; font-size: 14px; }
+}
