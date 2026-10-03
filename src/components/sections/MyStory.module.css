@@ -4,7 +4,7 @@
   color: var(--editorial-ink);
 }
 
-.openingStory { padding-top: 120px; }
+.openingStory { padding-top: 0; }
 .memory { padding-top: 240px; }
 .shell { width: min(100%, 1280px); margin: 0 auto; padding-inline: var(--page-gutter); }
 .figure { width: 100%; margin: 0; overflow: hidden; }
@@ -13,25 +13,29 @@
 .caption { margin: 24px 0 0; color: var(--editorial-muted); font-family: var(--font-body); font-size: 13px; line-height: 1.5; text-align: right; }
 .introduction,
 .biography { display: grid; grid-template-columns: minmax(0, 1fr) 480px; gap: 80px; align-items: start; padding-top: 80px; }
-.title { margin: 0; font-family: var(--font-editorial); font-size: 32px; font-weight: 300; line-height: 40px; letter-spacing: -.025em; }
+.title { margin: 0; font-family: var(--font-editorial); font-size: 64px; font-weight: 400; line-height: 1.05; letter-spacing: -.025em; }
 .reading { display: grid; width: min(100%, 480px); gap: 20px; }
-.reading p { margin: 0; font-family: var(--font-editorial); font-size: 19px; font-weight: 400; line-height: 30px; text-wrap: pretty; }
+.reading p { margin: 0; font-family: var(--font-editorial); font-size: 20px; font-weight: 400; line-height: 30px; text-wrap: pretty; }
 
 @media (max-width: 768px) {
-  .openingStory { padding-top: 120px; }
+  .openingStory { padding-top: 0; }
   .memory { padding-top: 240px; }
   .image { aspect-ratio: auto; height: 400px; object-fit: cover; object-position: 32% center; }
   .introduction,
   .biography { grid-template-columns: 1fr; gap: 24px; padding-top: 144px; }
-  .title { font-size: 28px; line-height: 34px; }
+  .title { font-size: 27px; line-height: 1.1; }
   .reading { gap: 20px; }
-  .reading p { font-size: 19px; line-height: 30px; }
+  .reading p { font-size: 13.5px; line-height: 21px; }
 }
 
 .introduction .title { font-family: var(--font-body); font-size: 15px; font-weight: 400; line-height: 24px; letter-spacing: 0; }
-.introduction .reading p { font-family: var(--font-body); font-size: 15px; line-height: 24px; }
+.introduction .reading p { font-family: var(--font-editorial); font-size: 20px; line-height: 30px; }
 @media (max-width: 768px) {
   .introduction { gap: 0; }
   .introduction .title { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .biography { padding-top: 80px; }
 }
+
+@media (min-width: 769px) and (max-width: 809px) { .image { height: 400px; aspect-ratio: auto; object-fit: cover; } }
+
+@media (max-width: 809px) { .introduction .reading p { font-size: 13.5px; line-height: 21px; } }
