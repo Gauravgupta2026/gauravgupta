@@ -10,21 +10,21 @@ The site should feel precise, calm, human, and technically capable. Editorial ty
 
 - Electric blue: `#1235F5` for identity, primary actions, focus, links, and interactive emphasis.
 - Ink: `#111111` for primary text.
-- Navigation ink: `#505050` for quiet utility text.
+- Navigation ink: `#000000`; quiet supporting copy uses `#505050`.
 - Quiet surface: `#F3F3F3` for secondary controls and metadata.
 - White: `#FFFFFF` for the page and text on electric blue.
 - Purple is not part of the site-wide palette.
 
 ## Shape language
 
-- **Square:** identity. The blue square belongs beside the name.
+- **Square:** identity. The blue square may be used as an identity detail; the shared navigation has no name mark.
 - **Capsule:** compact interface. Use for navigation controls, actions, filters, categories, tags, and small status labels.
 - **Rectangle:** content. Use for imagery, galleries, project compositions, the ASCII sea, and page sections.
 - Do not round content merely to repeat the capsule shape.
 
 Capsules share a full radius but express hierarchy through fill:
 
-- Navigation links: plain Inter text without capsules or borders. The shared primary navigation action uses an ink capsule with a white label.
+- Navigation links: plain black uppercase DM Mono text without capsules or borders, including Say hello.
 - Primary site action: electric blue with white text. Editorial project actions may use ink when the surrounding case-study composition requires it.
 - Secondary action: quiet gray with dark text.
 - Category or tag: quiet gray, regular-weight text, and an optional meaningful color dot.
@@ -32,9 +32,9 @@ Capsules share a full radius but express hierarchy through fill:
 
 ## Typography
 
-- Inter is the structural voice for navigation, functional body copy, metadata, and the name. Personal and long-form narrative use ITC Garamond Book 400.
+- Inter is the structural voice for functional body copy, metadata, and project titles. Navigation uses DM Mono. Personal and long-form narrative use ITC Garamond Book 400.
 - ITC Garamond is the editorial voice for section headings and one restrained emotional phrase in the hero. Individual project titles use Inter so featured and standard projects share one hierarchy.
-- Monospace belongs to ASCII art, technical annotations, and indices; it is not the identity font.
+- DM Mono belongs to navigation, technical annotations, and indices; the ASCII canvas uses its own monospace rendering.
 - Hover states do not change font weight because changing metrics can cause layout movement.
 
 ### Responsive type scale
@@ -42,7 +42,7 @@ Capsules share a full radius but express hierarchy through fill:
 | Role | Desktop | Tablet | Mobile | Weight |
 | --- | --- | --- | --- | --- |
 | Name | 12–16px | 13px | 13px | Inter 700 |
-| Navigation | 15px | 15px | 13px | Inter 400 |
+| Navigation | 13px / 20px | 13px / 20px | 12px / 20px | DM Mono 400 |
 | Hero | 40px / 56px | 40px / 56px | 24px / 32px | Inter 400 |
 | Hero emphasis | follows hero | follows hero | follows hero | ITC Garamond italic 300 |
 | Hero metadata | 10–15px | 11px | 10px | Inter 400–500 |
@@ -58,7 +58,7 @@ Capsules share a full radius but express hierarchy through fill:
 - Shared navigation contains centered Work, Labs, About, and Say hello links in black uppercase DM Mono, with no name, resume, capsule, or mobile menu. Use a fixed 80px row with a matching flow spacer. Hide it during scrolling and reveal it 180ms after scrolling stops, with a translucent white gradient and soft backdrop blur. Keyboard focus always reveals it; reduced motion disables the transition.
 - The hero blends Natural’s centered, spacious composition with the existing Inter headline and ITC Garamond italic emphasis. A blue capsule links to selected work; the capsule is the sole hero action, with no supporting line below it.
 - The opening contains navigation and centered hero copy, using a 668px opening including the 80px navigation at desktop and 500px on mobile. It leads into the existing mountain photograph inside the shared page gutters, with 120px before it on both desktop and mobile. Follow the photo with a new Bengaluru introduction about care in design and code, using a quiet 15px/24px left label and a 480px right reading column in Inter 15px/24px; hide the redundant left label visually on mobile. The image is 1200×640px at a 1440px viewport and 326×400px at 390px. Photo-to-copy spacing is 80px desktop and 144px mobile. Put the Manipal beach photograph and factual biography after projects. There is no sun section.
-- The supplied Kapu beach ASCII scene, with its island, lighthouse, and dolphins, closes the landing footer. The complete footer, including its navigation and sea, is solid electric blue (`#0B2CFF`, matching the existing scene); use no background gradient or grain. The shared footer fits one viewport below the 80px sticky navigation. Use a two-row grid: naturally sized links/caption, then artwork filling the remaining height. Place “Kapu beach, near Manipal.” and “Best years!” below the navigation in Garamond Light, with a 24px gap and no translated offset. Use 32–56px top spacing; short viewports wrap the links horizontally. This replaces the earlier centimetre-based footer gaps. Keep the enlarged lighthouse anchored at the island surface and grow it upward. Fit its height to the available sky without moving the base. The island occludes tower pixels below the surface. The art resizes to the available footer space without changing the lighthouse’s anchoring. Gradually thin out the ASCII marks over the bottom 30% of the scene. Lazy-load the scene and retain pause/replay, offscreen suspension, and reduced-motion handling.
+- The supplied Kapu beach ASCII scene, with its island, lighthouse, and dolphins, closes the landing footer. The complete footer, including its navigation and sea, is solid electric blue (`#0B2CFF`, matching the existing scene); use no background gradient or grain. The shared footer fits one viewport below the 80px fixed navigation. Use a two-row grid: naturally sized links/caption, then artwork filling the remaining height. Place “Kapu beach, near Manipal.” and “Best years!” below the navigation in Garamond Light, with a 24px gap and no translated offset. Use 32–56px top spacing; short viewports wrap the links horizontally. This replaces the earlier centimetre-based footer gaps. Keep the enlarged lighthouse anchored at the island surface and grow it upward. Fit its height to the available sky without moving the base. The island occludes tower pixels below the surface. The art resizes to the available footer space without changing the lighthouse’s anchoring. Gradually thin out the ASCII marks over the bottom 30% of the scene. Lazy-load the scene and retain pause/replay, offscreen suspension, and reduced-motion handling.
 
 ## Motion and interaction
 
@@ -114,13 +114,13 @@ The next consolidation uses Inter for identity/interface/project information, IT
 - Hero: “I believe good products work well and feel right.” No identity subline or metadata block; Bengaluru belongs in the introduction below the mountain.
 - The opening image and intro use a local once-only 12px / 500ms rise without scale. Text is readable at first paint; reduced motion uses the settled position. Shared Reveal behavior remains unchanged.
 - The intro ends without bottom padding. Selected Works owns the next boundary: 240px desktop / mobile. Biography → Writing uses the same chapter gap. Preserve the explicitly requested contact and footer spacing.
-- Shared main-route navigation uses black uppercase DM Mono, an 80px sticky row, four plain text links, and active-page state; omit the identity, action capsules, and mobile menu. Footer links use Inter; the Kapu caption retains Garamond Light.
+- Shared main-route navigation uses black uppercase DM Mono, an 80px fixed row, four plain text links, and active-page state; omit the identity, action capsules, and mobile menu. Footer links use Inter; the Kapu caption retains Garamond Light.
 - Work project gaps are 240–320px desktop and 160px mobile. Keep temporary image paths and descriptive alt text, but remove placeholder badges, gallery labels, and FAQ mentions.
 - Font registration is Inter, ITC Garamond (300 roman/italic and 400 roman), and DM Mono. Article narrative is 22px desktop / 20px mobile in Garamond Book. Technical indices retain DM Mono; interface labels and fields use Inter.
 
 ## Rendered verification — October 3
 
-The measured Home opening matches Natural at 1440×900 and 390×844 for headline size, line height, position, image dimensions, image gap, and first story paragraph position. Retain the portfolio's own fonts and wording. Actions stay at least 44px high; Natural's sampled hero action is 36px. Story length changes later absolute positions, so compare chapter gaps rather than total page height. See `design-reports/natural-rendered-verification.md`.
+The measured Home opening matches Natural at 1440×900 and 390×844 for headline size, line height, position, image dimensions, image gap, and first story paragraph position. Retain the portfolio's own fonts and wording. Actions stay at least 44px high; Natural's sampled hero action is 36px. Story length changes later absolute positions, so compare chapter gaps rather than total page height.
 
 Landing project media dimensions are reduced 20% from their previous dimensions, including the featured frame and mobile strips. Text and chapter spacing are retained. The footer has no theme switch; stored dark-mode initialization is removed so visitors return to the visible light design.
 
@@ -134,7 +134,7 @@ Hover image previews use the asset’s original aspect ratio within a 560×320px
 
 Work case-study actions retain the explicit “Explore [project]” label in a quiet outlined capsule: Inter 13px, a neutral one-pixel border, at least 44px high, grey hover, and blue focus outline. Omit arrows. Keep project title links as an additional entry point.
 
-Work FAQs occupy a full screen beneath the 80px sticky navigation, with vertically centered content and generous internal spacing. Use a minimum height rather than a fixed height so expanded answers grow naturally. The contact CTA follows below this section in normal flow.
+Work FAQs occupy a full screen beneath the 80px fixed navigation, with vertically centered content and generous internal spacing. Use a minimum height rather than a fixed height so expanded answers grow naturally. The contact CTA follows below this section in normal flow.
 
 Mobile Home chapter headings use Garamond Light 28px/34px consistently for Selected Works, biography, and Writing. Notes row titles use Inter 18px/26px, dates 12px, and the Writing subtitle uses quiet Inter 14px/22px on its own line. Keep compact single-column Notes rows; desktop typography remains unchanged. This deliberately refines the earlier exact Natural heading-size match to improve the portfolio’s own hierarchy.
 
@@ -162,3 +162,7 @@ The mobile island’s right-side spread is 0.38 of scene width, broadened from 0
 ## Release stability
 
 Work image strips measure their rendered sequence width to maintain 32px/second on desktop and mobile. Use compositor transforms and remove obsolete edge-filter layers. Reserve scrollbar space and restore image-trigger focus without scrolling when viewers close. Remove unreferenced legacy components, CSS, theme overrides, and duplicate footer caption IDs. The experiment ships only on its own branch.
+
+## Release cleanup
+
+The production release excludes the alternate landing route and its fonts/photos. Obsolete navigation, theme toggles, unreferenced legacy sections, and unused component styles are removed. Image viewer focus restoration uses preventScroll; stable scrollbar gutters prevent page-width shifts during dialog scroll locking.
