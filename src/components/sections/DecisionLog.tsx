@@ -41,7 +41,7 @@ export function DecisionLog({ forks }: { forks: DecisionFork[] }) {
                 </span>
               </span>
               <span
-                className={`justify-self-end font-mono text-[16px] leading-[23px] transition-[transform,color] duration-300 md:text-[18px] md:leading-[28px] ${
+                className={`justify-self-end font-body text-[16px] leading-[23px] transition-[transform,color] duration-300 md:text-[18px] md:leading-[28px] ${
                   isOpen ? "rotate-45 text-lilac" : "rotate-0 text-faint"
                 }`}
               >

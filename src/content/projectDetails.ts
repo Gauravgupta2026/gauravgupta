@@ -115,7 +115,7 @@ export const projectDetails: Record<string, ProjectDetail> = {
     statement:
       "The constraint was trust: nothing leaves the device unless the student chooses it.",
     meta: [
-      { k: "ROLE", v: "Design + build, solo" },
+      { k: "ROLE", v: "Design + build, team project" },
       { k: "PERIOD", v: "6 months" },
       { k: "PLATFORM", v: "iOS · Web" },
       { k: "STATUS", v: "Write-up in progress" },

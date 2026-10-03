@@ -1,49 +1,55 @@
 import Image from "next/image";
-import { Reveal } from "@/components/Reveal";
+import { OpeningReveal } from "./OpeningReveal";
 import styles from "./MyStory.module.css";
 
-const STORY_PARAGRAPHS = [
-  "I grew up in Manipal taking things apart. By my second year, I had joined a go-kart team with a car, fifteen people, and a competition date. They put me on design, marketing and budgets.",
-  "I managed sponsors, the calendar, and a workshop of engineers who each knew their subsystem deserved another week. Eight months later, the kart ran at Buddh International Circuit and finished fourth overall.",
-  "Design and development at MIT x KMC later taught me to move between disciplines without treating the handoff as someone else’s problem. A sketch had to survive the browser; a feature had to make sense to the person using it.",
+const OPENING_PARAGRAPHS = [
+  "I’m based in Bengaluru, where I design and build digital products. I like products that make the next moment easier. A card can get a quiet room playing. A check-in can give a student space to find the words.",
+  "Those experiences depend on small decisions: what appears first, what needs explaining, and what stays out. That is why I work across design and code. I want to follow an idea far enough to see whether the interaction carries the intention.",
+  "The work below is where I explore that connection.",
+] as const;
+
+const BIOGRAPHY_PARAGRAPHS = [
+  "I grew up in Manipal, taking things apart. By my second year, I was on a fifteen-person go-kart team, handling design, marketing, budgets and sponsors. Eight months later, we raced at Buddh International Circuit and finished fourth overall.",
+  "At MIT, I worked on Sachetana. KMC brought us a problem, and our team took it on, making decisions together and building the product. We went on to present it at research competitions and won at MAHE Research Day.",
 ] as const;
 
 export function MyStory() {
   return (
-    <section
-      id="story"
-      className={styles.section}
-      aria-labelledby="story-title"
-      data-browser-theme-color="#ffffff"
-    >
-      <Reveal as="figure" className={styles.figure} variant="chapter">
-        <Image
-          src="/photos/beach-manipal.png"
-          alt="Friends resting on the beach at night in Manipal"
-          width={1512}
-          height={843}
-          sizes="100vw"
-          className={styles.image}
-        />
-      </Reveal>
-
+    <section id="story" className={styles.openingStory} aria-labelledby="story-title" data-browser-theme-color="#ffffff">
       <div className={styles.shell}>
-        <div className={styles.biography}>
-          <Reveal as="h2" id="story-title" className={styles.biographyTitle}>
-            what i&rsquo;ve been
-          </Reveal>
+        <OpeningReveal as="figure" className={styles.figure}>
+          <Image
+            src="/photos/mountains.png"
+            alt="Looking out across a snow-covered mountain valley"
+            width={1512}
+            height={702}
+            sizes="(max-width: 768px) calc(100vw - 56px), (max-width: 1600px) 89vw, 1424px"
+            className={styles.image}
+          />
+        </OpeningReveal>
+        <OpeningReveal className={styles.introduction}>
+          <h2 id="story-title" className={styles.title}>The part I care about.</h2>
+          <div className={styles.reading}>
+            {OPENING_PARAGRAPHS.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </div>
+        </OpeningReveal>
+      </div>
+    </section>
+  );
+}
 
-          <div className={styles.storyGrid}>
-            {STORY_PARAGRAPHS.map((paragraph, index) => (
-              <Reveal
-                as="p"
-                delay={index * 80}
-                className={styles.storyParagraph}
-                key={paragraph}
-              >
-                {paragraph}
-              </Reveal>
-            ))}
+export function Biography() {
+  return (
+    <section className={styles.memory} aria-labelledby="biography-title" data-browser-theme-color="#ffffff">
+      <div className={styles.shell}>
+        <figure className={styles.figure}>
+          <Image src="/photos/beach-manipal.png" alt="Friends resting on the beach at night in Manipal" width={1512} height={843} sizes="(max-width: 768px) calc(100vw - 56px), 89vw" className={styles.memoryImage} />
+          <figcaption className={styles.caption}>Manipal&rsquo;24</figcaption>
+        </figure>
+        <div className={styles.biography}>
+          <h2 id="biography-title" className={styles.title}>How I got here.</h2>
+          <div className={styles.reading}>
+            {BIOGRAPHY_PARAGRAPHS.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           </div>
         </div>
       </div>

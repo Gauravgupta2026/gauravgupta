@@ -14,7 +14,8 @@ export function Notes() {
       <div className={styles.shell}>
         <div className={styles.notesContent}>
           <Reveal as="h2" id="notes-title" className={styles.title} variant="chapter">
-            Notes
+            <span>Writing</span>{" "}
+            <span className={styles.subtitle}>is where I slow down</span>
           </Reveal>
 
           <div className={styles.grid}>

@@ -8,7 +8,7 @@
 | Area | Choice |
 | --- | --- |
 | Runtime | Node.js with TypeScript 5 in strict mode |
-| Framework | Next.js 16.2.9 App Router with React 19.2.4 |
+| Framework | Next.js 16.3.8 App Router with React 19.2.4 |
 | Styling | Tailwind CSS v4 through `@tailwindcss/postcss` |
 | Motion | Framer Motion 13 with `LazyMotion` and `domAnimation` |
 | Analytics | PostHog browser analytics and error tracking |

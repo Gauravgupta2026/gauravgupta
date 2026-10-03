@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { AboutFooter } from "@/components/sections/AboutFooter";
 import { AboutGallery } from "@/components/sections/AboutGallery";
-import { Nav } from "@/components/sections/Nav";
+import { LandingNav } from "@/components/sections/LandingNav";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import styles from "./AboutPage.module.css";
 
 export const metadata: Metadata = {
   title: "About — Gaurav Gupta",
   description:
-    "A future-oriented thinker and fast mover building products and user-facing tools.",
+    "Gaurav Gupta, a design engineer in Bengaluru. Design, code, teamwork in Manipal, and the ambition to build and back useful products.",
 };
 
 const DETAILS = [
@@ -20,7 +20,7 @@ const DETAILS = [
     period: "2023 — 2025",
   },
   {
-    primary: "Product & design",
+    primary: "Design engineering",
     secondary: "Focus",
     period: "Current",
   },
@@ -34,27 +34,22 @@ const DETAILS = [
 export default function AboutPage() {
   return (
     <main id="top" className={`about-page ${styles.page}`}>
-      <Nav />
+      <LandingNav />
       <section className={styles.canvas} aria-labelledby="about-title">
         <h1 id="about-title" className={styles.title}>About me</h1>
 
         <div className={styles.statement}>
-          <p>
-            I&rsquo;m a husband, dad to three pets, and a designer who&rsquo;s trying
-            not to take himself too seriously.
-          </p>
-          <p>
-            I am a future-oriented thinker and a fast mover. I like music,
-            reading, the outdoors, poetry, sketching, pen and ink, and making
-            useful tools. I want the work to stay ambitious without losing the
-            vibrant side of me.
-          </p>
+          <p>I’m Gaurav, a design engineer based in Bengaluru. I like being close to both the idea and the thing people eventually use: working out an interaction, building it, and seeing where it needs more care.</p>
+          <p>My projects give that care different forms. Wylde keeps a party focused on the people in the room. Sachetana lets students decide what to share. Lucky Day gives me room to explore how timing and motion change a simple interaction.</p>
+          <p>In Manipal, I learned to make things with a team. Our go-kart project took fifteen people from a car in the workshop to fourth place at Buddh International Circuit. I worked across design, marketing, budgets, and sponsors.</p>
+          <p>Then KMC brought a problem to MIT, and our team built Sachetana. We overbuilt, kept presenting the work at research competitions, and won at MAHE Research Day. It’s part of why I’m drawn to problems that need people from different disciplines to work together.</p>
+          <p>For now, I’m looking for a team where I can help shape a product and build it. Longer term, I want to create a design-led firm that makes products and backs other builders. There’s a lot to learn between here and there. I want to learn it by making things.</p>
         </div>
 
         <figure className={styles.portrait}>
           <figcaption>
             <span>(Gaurav Gupta)</span>
-            <span>(Product designer + builder)</span>
+            <span>(Design engineer)</span>
           </figcaption>
           <div className={styles.imageFrame}>
             <Image
