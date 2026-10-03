@@ -1,0 +1,104 @@
+.page { --navigation-height: 72px; --reading-width: 648px; --chapter-gap: 136px; --project-gap: 112px; background: #0b2cff; color: #111; isolation: isolate; }
+.opening { display: block; --navigation-height: 72px; }
+.surface { position: relative; z-index: 2; background: #fff; }
+.page .footer { height: calc(100svh - var(--navigation-height)); top: var(--navigation-height); }
+.page .navigation { gap: 36px; font-size: 13px; }
+.navigation a { display: inline-flex; min-height: 44px; align-items: center; color: #000; text-decoration: none; }
+.navigation a:hover { text-decoration: underline; text-underline-offset: 5px; }
+.page a:focus-visible, .page button:focus-visible, .photoViewport:focus-visible { outline: 2px solid #1235f5; outline-offset: 5px; }
+.page footer a:focus-visible, .page footer button:focus-visible { outline-color: #fff; }
+.hero { min-height: 68svh; display: flex; flex-direction: column; justify-content: center; padding: 54px 32px 32px; text-align: center; }
+.headline { width: min(100%, 1280px); margin: 0 auto; }
+.headline h1 { margin: 0; font-family: var(--font-experiment-display), var(--font-editorial); font-size: calc(clamp(72px, 10vw, 144px) - 2pt); font-weight: 900; font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; line-height: .94; letter-spacing: -.055em; }
+.headline h1 > span { display: block; }
+.mobileBreak { display: none; }
+.identity { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; width: min(100%, 560px); margin: 48px auto 0; }
+.identity dt { font-family: var(--font-mono), monospace; font-size: 11px; line-height: 18px; color: #000; text-transform: uppercase; }
+.identity dd { margin: 14px 0 0; font-family: var(--font-editorial); font-size: 14.4px; line-height: 19.2px; font-weight: 400; }
+.photoSection { --photo-height: clamp(230.4px, 22.08vw, 326.4px); position: relative; padding-top: 12px; }
+.photoViewport { width: 100%; overflow: hidden; }
+.photoTrack { display: flex; width: max-content; animation: photoDrift 96s linear infinite; }
+.photoGroup { display: flex; align-items: stretch; gap: 6px; padding-right: 6px; }
+.photoGroup figure { flex-shrink: 0; height: var(--photo-height); margin: 0; overflow: hidden; }
+.widePhoto { width: calc(var(--photo-height) * 1.77); }
+.landscapePhoto { width: calc(var(--photo-height) * 1.33); }
+.photoGroup img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.photoTrack[data-paused="true"], .photoViewport:hover .photoTrack, .photoViewport:focus-within .photoTrack { animation-play-state: paused; }
+.photoControl { position: absolute; right: 16px; bottom: 12px; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #1112; border-radius: 50%; color: #111; background: #fffe; cursor: pointer; }
+.photoControl:hover { background: #fff; }
+@keyframes photoDrift { to { transform: translateX(-50%); } }
+.chapter { width: min(var(--reading-width), calc(100% - 32px)); margin: var(--chapter-gap) auto 0; }
+.introduction { margin-top: 132px; }
+.introduction .reading { margin-top: 0; }
+.chapter h2, .chapterHeading h2 { margin: 0; text-align: center; font-family: var(--font-editorial); font-size: 36.8px; font-weight: 300; line-height: 1; letter-spacing: -.025em; }
+.sectionLabel { margin: 8px 0 0; text-align: center; font-family: var(--font-mono), monospace; font-size: 12px; font-weight: 400; line-height: 20px; text-transform: uppercase; }
+.reading { margin-top: 24px; font-family: var(--font-body); font-size: 16px; line-height: 25.6px; letter-spacing: -.025em; }
+.reading p { margin: 0 0 28px; }
+.reading p:last-child { margin-bottom: 0; }
+.work { margin-top: var(--chapter-gap); }
+.chapterHeading { width: min(var(--reading-width), calc(100% - 32px)); margin: 0 auto; }
+.projectList { margin-top: 56px; }
+.project + .project { margin-top: var(--project-gap); }
+.projectBrief { width: min(var(--reading-width), calc(100% - 32px)); margin: 0 auto; font-family: var(--font-body); }
+.projectBrief h3 { margin: 0; font-size: 21.12px; font-weight: 500; line-height: 25.92px; letter-spacing: -.025em; }
+.projectBrief h3 a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; text-decoration: none; }
+.projectBrief h3 a:hover { text-decoration: underline; text-underline-offset: 5px; }
+.premise { margin: 4px 0 0; font-size: 14.4px; line-height: 21.6px; letter-spacing: -.025em; }
+.projectDetail { margin: 20px 0 0; font-size: 12px; line-height: 19.2px; color: #505050; }
+.projectFact { margin: 20px 0 0; font-family: var(--font-mono), monospace; font-size: 11px; line-height: 18px; text-transform: uppercase; }
+.projectImage { display: block; width: min(var(--reading-width), calc(100% - 32px)); aspect-ratio: 3 / 2; margin: 32px auto 0; border-radius: 12px; overflow: hidden; }
+.projectImage img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.notes { margin: 30px 0 0; padding: 0; list-style: none; }
+.notes li { border-bottom: 1px solid #dedede; }
+.notes li:first-child { border-top: 1px solid #dedede; }
+.notes a { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 20px; align-items: baseline; padding: 24px 0; color: inherit; text-decoration: none; }
+.noteDate { font-family: var(--font-mono), monospace; font-size: 12px; line-height: 20px; text-transform: uppercase; }
+.noteTitle { font-family: var(--font-body); font-size: 14.4px; line-height: 20.8px; letter-spacing: -.025em; }
+.notes a:hover .noteTitle { text-decoration: underline; text-underline-offset: 5px; }
+.contact { text-align: center; padding-bottom: calc(var(--chapter-gap) + 6.5cm); }
+.contactCopy { margin: 24px 0 0; font-family: var(--font-body); font-size: 16px; line-height: 25.6px; letter-spacing: -.025em; }
+.contactButton { display: inline-flex; align-items: center; justify-content: center; min-height: 64px; margin-top: 40px; padding: 12px 36px; border: 1px solid #111; border-radius: 999px; font-family: var(--font-mono), monospace; font-size: 13px; text-transform: uppercase; color: #111; background: #fff; text-decoration: none; transition: background 180ms ease, color 180ms ease; }
+.contactButton:hover { background: #111; color: #fff; }
+@media (max-width: 900px) {
+  .headline h1 { font-size: calc(clamp(64px, 10.5vw, 100px) - 2pt); }
+}
+@media (max-width: 768px) {
+  .page { --navigation-height: 64px; --chapter-gap: 96px; --project-gap: 80px; }
+  .page .navigation { gap: 32px; font-size: 12px; }
+  .opening { --navigation-height: 64px; display: flex; flex-direction: column; }
+  .opening > .navigation, .opening > .photoSection { flex-shrink: 0; }
+  .hero { min-height: 68svh; padding: 36px 8px 16px; }
+  .headline h1 { font-size: clamp(54px, 18vw, 120px); line-height: .9; }
+  .mobileBreak { display: block; }
+  .identity { margin-top: calc(36px + 3cm); gap: 12px; }
+  .identity dt { font-size: 10px; }
+  .identity dd { margin-top: 12px; font-size: 12px; line-height: 16px; }
+  .photoSection { --photo-height: 211.2px; }
+  .photoViewport { overflow-x: auto; scrollbar-width: none; }
+  .introduction { margin-top: 56px; }
+  .chapter h2, .chapterHeading h2 { font-size: 30.4px; line-height: 32px; }
+  .sectionLabel { font-size: 11px; }
+  .reading { font-size: 14.4px; line-height: 23.2px; }
+  .reading p { margin-bottom: 24px; }
+  .projectList { margin-top: 40px; }
+  .projectBrief h3 { font-size: 19.2px; line-height: 24.96px; }
+  .premise { font-size: 12.8px; line-height: 19.2px; }
+  .projectDetail { font-size: 12px; line-height: 19.2px; }
+  .projectImage { margin-top: 24px; }
+  .notes a { grid-template-columns: 70px minmax(0, 1fr); gap: 16px; padding: 22px 0; }
+  .noteDate { font-size: 11px; }
+  .noteTitle { font-size: 13.6px; line-height: 20px; }
+  .contactCopy { font-size: 14.4px; line-height: 23.2px; }
+  .contactButton { min-height: 56px; margin-top: 32px; }
+}
+@media (max-width: 768px) and (max-height: 700px) {
+  .hero { padding-block: 24px; }
+  .identity { margin-top: calc(24px + 3cm); }
+  .photoSection { --photo-height: min(211.2px, 27svh); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .photoViewport { overflow-x: auto; }
+  .photoTrack { animation: none; }
+  .photoGroup + .photoGroup, .photoControl { display: none; }
+  .contactButton { transition: none; }
+}
