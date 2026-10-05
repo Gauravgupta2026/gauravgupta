@@ -3,7 +3,11 @@ import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import type { Block } from "@/content/articles";
 import styles from "./ArticleBody.module.css";
 
-/** Garamond narrative, Inter captions, and a bounded reading column. */
+/**
+ * Long-form reader. Prose is set in Newsreader (serif) at a comfortable
+ * measure for sustained reading — the mono UI voice is kept for labels and
+ * captions only. Images can sit inside the column or break out slightly wide.
+ */
 export function ArticleBody({ body }: { body: Block[] }) {
   return (
     <div className={styles.body}>

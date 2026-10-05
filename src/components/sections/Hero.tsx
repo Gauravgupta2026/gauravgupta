@@ -10,13 +10,15 @@ export function Hero() {
       data-browser-theme-color="#ffffff"
     >
       <h1 id="hero-title">
-        I believe good products<br className={styles.desktopBreak} /> work well and feel right.
+        <span>I design &amp; build digital products,</span>{" "}
+        <span>with care for how they <em>work and feel.</em></span>
       </h1>
 
-      <Link className={styles.heroAction} href="#work">
-        View selected work
-      </Link>
-
+      <div className={styles.metadata}>
+        <p>Bengaluru, India</p>
+        <p>Currently building <Link href="/projects/wylde">Wylde</Link></p>
+        <p className={styles.availability}>Open to design engineering roles</p>
+      </div>
     </header>
   );
 }

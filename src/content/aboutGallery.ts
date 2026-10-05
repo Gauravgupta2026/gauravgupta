@@ -11,7 +11,7 @@ export type AboutGalleryScreen = {
 export const aboutGalleryScreens: AboutGalleryScreen[] = [
   {
     story:
-      "The moments I care about in a product often happen between the obvious ones. How someone learns what to do next. Whether a response arrives when they expect it. Whether they feel in control. These are the details I want to notice, and make room for in the work.",
+      "The parts of life I want to remember are rarely the loud ones. They are the pets finding the softest seat, a song worked out slowly at the piano, ink settling into paper, a trail with nowhere urgent to be, and a book held open long after the tea has gone cold.",
     photos: [
     { src: "/photos/about/01-pets-home.jpg", alt: "A dog resting at home beside its person" },
     { src: "/photos/about/02-piano.jpg", alt: "Hands playing piano in a quiet room" },
@@ -23,7 +23,7 @@ export const aboutGalleryScreens: AboutGalleryScreen[] = [
   },
   {
     story:
-      "The person using the product gives the work its direction. In a party game, that means keeping the room playing. In a reflection app, it means leaving the decision to share with the student. The same attention can lead to very different designs.",
+      "I keep returning to small rituals. Putting a record on. Taking a notebook outside. Walking until the noise settles. Reading beneath a warm lamp. Making space for play. None of it is especially grand, but together these moments keep the vibrant side of me close.",
     photos: [
     { src: "/photos/about/07-cat-window.jpg", alt: "A cat watching the street from a windowsill" },
     { src: "/photos/about/08-vinyl.jpg", alt: "A record turning on a well-used record player" },
@@ -35,7 +35,7 @@ export const aboutGalleryScreens: AboutGalleryScreen[] = [
   },
   {
     story:
-      "I want to build a design-led firm one day, and help other builders get their ideas into people’s hands. That starts with the work in front of me: asking better questions, making decisions with a team, and carrying a design far enough to find out whether it works.",
+      "I am trying to leave room for the person I am becoming. Someone who sketches more, works with his hands, stays curious, reads widely, and keeps going outdoors. The plan is unfinished by design. There are tools I still want to make, things I want to learn, and more pages to fill.",
     photos: [
     { src: "/photos/about/13-ink-study.jpg", alt: "Ink tests and loose lines in a sketchbook" },
     { src: "/photos/about/14-trees.jpg", alt: "A quiet path beneath tall trees" },

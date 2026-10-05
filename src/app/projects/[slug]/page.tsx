@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { PortfolioFooter } from "@/components/sections/PortfolioFooter";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArtifactFiles } from "@/components/sections/ArtifactFiles";
 import { DecisionLog } from "@/components/sections/DecisionLog";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
-import { LandingNav } from "@/components/sections/LandingNav";
+import { Nav } from "@/components/sections/Nav";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { getProjectDetail, projectDetails, type ProjectDetail, type Section } from "@/content/projectDetails";
-import { WORK_PROJECTS } from "@/content/workPage";
+import { projects } from "@/content/projects";
 import styles from "./ProjectCaseStudy.module.css";
 
 const PROJECT_MEDIA: Record<string, { hero: string; detail: string }> = {
@@ -47,16 +46,15 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   const sections = narrativeSections(project);
   const media = PROJECT_MEDIA[slug];
-  const others = WORK_PROJECTS.filter((item) => item.slug !== slug && item.href && getProjectDetail(item.slug));
-  const linkedFiles = project.files?.filter((file) => file.href);
+  const others = projects.filter((item) => item.slug !== slug).slice(0, 3);
   let nextSectionNumber = sections.length;
   const forksNumber = project.forks ? ++nextSectionNumber : 0;
-  const filesNumber = linkedFiles?.length ? ++nextSectionNumber : 0;
+  const filesNumber = project.files ? ++nextSectionNumber : 0;
   const faqsNumber = project.faqs ? ++nextSectionNumber : 0;
 
   return (
     <main className={styles.page}>
-      <LandingNav />
+      <Nav />
       <article>
         <header className={styles.header}>
           <div className={styles.kicker}>
@@ -96,7 +94,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               <div className={styles.proofLinks}>
                 {(Object.keys(PROOF_LABELS) as Array<keyof typeof PROOF_LABELS>).map((key) => {
                   const href = project.proof?.[key];
-                  return href ? <a key={key} href={href} target="_blank" rel="noopener noreferrer">{PROOF_LABELS[key]}</a> : null;
+                  return href ? <a key={key} href={href} target="_blank" rel="noopener noreferrer">{PROOF_LABELS[key]} ↗</a> : null;
                 })}
               </div>
               {project.proof.feedback && <p>{project.proof.feedback}</p>}
@@ -120,17 +118,16 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
         <div className={styles.supportingSections}>
           {project.forks && <section><span>{pad(forksNumber)} / Decisions</span><h2>Decision log</h2><DecisionLog forks={project.forks} /></section>}
-          {Boolean(linkedFiles?.length) && <section><span>{pad(filesNumber)} / Process</span><h2>Artefacts &amp; trigger files</h2><ArtifactFiles files={linkedFiles ?? []} /></section>}
+          {project.files && <section><span>{pad(filesNumber)} / Process</span><h2>Artefacts &amp; trigger files</h2><ArtifactFiles files={project.files} /></section>}
           {project.faqs && <section><span>{pad(faqsNumber)} / Questions</span><h2>Questions I get asked</h2><FaqAccordion faqs={project.faqs} /></section>}
         </div>
 
         <footer className={styles.nextProjects}>
           <span>Continue exploring</span>
           <h2>Next project</h2>
-          <div>{others.map((item) => item.href && <Link href={item.href} key={item.slug}><span>{item.title}</span></Link>)}</div>
+          <div>{others.map((item) => <Link href={`/projects/${item.slug}`} key={item.slug}><span>{item.title}</span><i aria-hidden="true">↗</i></Link>)}</div>
         </footer>
       </article>
-      <PortfolioFooter />
     </main>
   );
 }
