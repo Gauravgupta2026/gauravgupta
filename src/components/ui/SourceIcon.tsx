@@ -1,7 +1,7 @@
 /**
  * Source glyphs for Notes rows — recreated from the reference's inline SVGs.
  * substack: stacked bars + downward chevron · medium: three ellipses ·
- * site: rounded square with a central circle. All draw in electric blue.
+ * site: rounded square with an outbound arrow. All draw in electric blue.
  */
 export type NoteSource = "substack" | "medium" | "site";
 
@@ -46,7 +46,7 @@ export function SourceIcon({ source }: { source: NoteSource }) {
       aria-hidden
     >
       <rect x="3" y="3" width="18" height="18" rx="3" />
-      <circle cx="12" cy="12" r="4" />
+      <path d="M9 15 L15 9 M10 9 H15 V14" />
     </svg>
   );
 }

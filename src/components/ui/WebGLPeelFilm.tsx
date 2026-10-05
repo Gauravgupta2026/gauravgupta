@@ -141,7 +141,7 @@ function updateStoryTexture(
   const lineHeight = fontSize * 1.48;
   const maxWidth = Math.min(cssWidth * 0.58, 620);
   const fontFamily = getComputedStyle(document.documentElement)
-    .getPropertyValue("--font-editorial-local")
+    .getPropertyValue("--font-newsreader")
     .trim();
   context.font = `400 ${fontSize}px ${fontFamily || "Georgia"}, Georgia, serif`;
   context.fillStyle = "rgba(39, 39, 42, 0.82)";

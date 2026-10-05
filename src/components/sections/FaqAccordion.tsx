@@ -15,7 +15,6 @@ export function FaqAccordion({ faqs }: { faqs: Faq[] }) {
           <div key={f.q} className="border-t border-border-2">
             <button
               type="button"
-              aria-expanded={isOpen}
               onClick={() => setOpen(isOpen ? -1 : i)}
               className="grid w-full cursor-pointer grid-cols-[1fr_28px] items-baseline gap-[16px] py-[16px] text-left md:grid-cols-[1fr_32px] md:gap-[24px] md:py-[30px]"
             >
@@ -27,7 +26,7 @@ export function FaqAccordion({ faqs }: { faqs: Faq[] }) {
                 {f.q}
               </span>
               <span
-                className={`justify-self-end font-body text-[13px] transition-[transform,color] duration-300 md:text-[14px] ${
+                className={`justify-self-end font-mono text-[13px] transition-[transform,color] duration-300 md:text-[14px] ${
                   isOpen ? "rotate-45 text-lilac" : "rotate-0 text-faint"
                 }`}
               >

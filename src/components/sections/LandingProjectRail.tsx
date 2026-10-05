@@ -8,7 +8,7 @@ export function LandingProjectRail() {
     <section className={styles.section} id="work" aria-labelledby="selected-work-title">
       <h2 className={styles.sectionTitle} id="selected-work-title">Selected Works</h2>
       <FeaturedProject />
-      <div>
+      <div className={styles.galleryProjects}>
         {LANDING_GALLERY_PROJECTS.map((project) => (
           <ProjectGallery key={project.title} project={project} />
         ))}

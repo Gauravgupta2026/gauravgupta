@@ -6,26 +6,23 @@ import { useRef, useState, type PointerEvent } from "react";
 import type { LandingGalleryProject } from "@/content/landingProjects";
 import styles from "./LandingProjectRail.module.css";
 
-const DRAG_THRESHOLD_PX = 6;
-
 type ProjectGalleryProps = {
   project: LandingGalleryProject;
 };
 
 export function ProjectGallery({ project }: ProjectGalleryProps) {
   const railRef = useRef<HTMLDivElement>(null);
-  const didDrag = useRef(false);
   const dragStart = useRef({ pointerX: 0, scrollLeft: 0 });
   const [hasInteracted, setHasInteracted] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const titleId = `${project.title.toLowerCase().replaceAll(" ", "-")}-title`;
 
   function startDrag(event: PointerEvent<HTMLDivElement>) {
-    didDrag.current = false;
-    if (event.pointerType === "touch" || event.button !== 0) return;
+    if (event.pointerType === "touch") return;
     const rail = railRef.current;
     if (!rail) return;
     dragStart.current = { pointerX: event.clientX, scrollLeft: rail.scrollLeft };
+    rail.setPointerCapture(event.pointerId);
     setIsDragging(true);
   }
 
@@ -33,10 +30,6 @@ export function ProjectGallery({ project }: ProjectGalleryProps) {
     if (!isDragging) return;
     const rail = railRef.current;
     if (!rail) return;
-    if (Math.abs(event.clientX - dragStart.current.pointerX) > DRAG_THRESHOLD_PX) {
-      didDrag.current = true;
-      rail.setPointerCapture(event.pointerId);
-    }
     rail.scrollLeft = dragStart.current.scrollLeft - (event.clientX - dragStart.current.pointerX);
     setHasInteracted(true);
   }
@@ -74,7 +67,6 @@ export function ProjectGallery({ project }: ProjectGalleryProps) {
           onPointerMove={moveDrag}
           onPointerUp={endDrag}
           onPointerCancel={endDrag}
-          onPointerLeave={(event) => { if (!event.currentTarget.hasPointerCapture(event.pointerId)) endDrag(event); }}
           onScroll={() => setHasInteracted(true)}
           role="region"
           aria-label={`${project.title} image gallery. Scroll horizontally to explore.`}
@@ -85,26 +77,18 @@ export function ProjectGallery({ project }: ProjectGalleryProps) {
               className={`${styles.galleryImage} ${styles[image.shape]} ${image.fit === "contain" ? styles.contain : ""}`}
               key={`${image.src}-${index}`}
             >
-              <Link
-                className={styles.imageLink}
-                href={project.href}
-                aria-label={`Explore ${project.title}`}
+              <Image
+                alt={image.alt}
                 draggable={false}
-                onClick={(event) => { if (didDrag.current) event.preventDefault(); }}
-              >
-                <Image
-                  alt={image.alt}
-                  draggable={false}
-                  fill
-                  sizes="(max-width: 720px) 76vw, 46vw"
-                  src={image.src}
-                />
-              </Link>
+                fill
+                sizes="(max-width: 720px) 76vw, 46vw"
+                src={image.src}
+              />
             </figure>
           ))}
         </div>
         <p className={styles.scrollHint} aria-hidden="true">
-          Drag or scroll
+          Drag or scroll <span>→</span>
         </p>
       </div>
     </article>

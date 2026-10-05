@@ -27,7 +27,7 @@ export const FEATURED_PROJECT = {
   proof: [
     {
       title: "Designed and built end to end.",
-      body: "I designed the interactions and built the game, including the card flow and shuffle logic.",
+      body: "Product thinking, interface and implementation shaped as one system.",
     },
     {
       title: "The first round teaches the game.",
@@ -50,7 +50,7 @@ export const LANDING_GALLERY_PROJECTS: readonly LandingGalleryProject[] = [
     href: "/projects/sachetana",
     tags: ["Wellbeing", "iOS"],
     description:
-      "A reflection app for students, built around control over sharing. AI drafts a reflection; the student reviews it before saving or sharing.",
+      "A private reflection space for students, bringing mood check-ins, journaling and careful AI boundaries into one calm experience.",
     images: [
       {
         src: "/assets/projects/sachetana.jpg",
@@ -84,7 +84,7 @@ export const LANDING_GALLERY_PROJECTS: readonly LandingGalleryProject[] = [
     href: "/projects/lucky-day",
     tags: ["Interaction", "iOS"],
     description:
-      "A slot-machine study in motion and feedback. Springy reels and a vibration on near-misses make the result felt as well as seen.",
+      "A tactile experiment in chance, timing and feedback, where every pull had to register through motion before it registered as a result.",
     images: [
       {
         src: "/assets/work/lucky-day-hero.jpg",
@@ -113,7 +113,7 @@ export const LANDING_GALLERY_PROJECTS: readonly LandingGalleryProject[] = [
     href: "/work",
     tags: ["Product design", "Research"],
     description:
-      "A research workspace with search, filters and source details together, keeping the context alongside the results.",
+      "A research workspace that brought search, filtering and source context together so dense information became easier to scan and understand.",
     images: [
       {
         src: "/assets/work/internship-research.jpg",

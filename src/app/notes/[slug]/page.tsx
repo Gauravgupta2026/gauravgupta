@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { PortfolioFooter } from "@/components/sections/PortfolioFooter";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleBody } from "@/components/article/ArticleBody";
-import { LandingNav } from "@/components/sections/LandingNav";
+import { Nav } from "@/components/sections/Nav";
 import { articles, getArticle } from "@/content/articles";
 import styles from "./NotePage.module.css";
 
@@ -31,11 +30,11 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
 
   return (
     <main className={styles.page}>
-      <LandingNav />
+      <Nav />
       <article>
         <header className={styles.header}>
           <div className={styles.kicker}>
-            <Link href="/#notes">Notes</Link>
+            <Link href="/notes">Notes</Link>
             <span>{article.readingTime}</span>
           </div>
           <h1>{article.title}</h1>
@@ -51,11 +50,10 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
         </div>
 
         <footer className={styles.footer}>
-          <Link href="/#notes">All notes</Link>
-          <a href="mailto:hey@gauravguptas.com">Continue the conversation</a>
+          <Link href="/notes">← All notes</Link>
+          <a href="mailto:hey@gauravguptas.com">Continue the conversation ↗</a>
         </footer>
       </article>
-      <PortfolioFooter />
     </main>
   );
 }
