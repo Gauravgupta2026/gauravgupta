@@ -1,8 +1,5 @@
 import localFont from "next/font/local";
-import Link from "next/link";
-import { GiantsOpening } from "@/components/giants/GiantsOpening";
-import { SelectedWork } from "@/components/giants/SelectedWork";
-import styles from "@/components/giants/GiantsOpening.module.css";
+import { LandingExperience } from "@/components/giants/LandingExperience";
 
 const switzer = localFont({
   src: [
@@ -12,48 +9,24 @@ const switzer = localFont({
   variable: "--font-giants-body",
   display: "swap",
 });
-
-const cormorant = localFont({
-  src: "../../public/fonts/frosted/cormorant.ttf",
-  variable: "--font-signature-editorial",
+const albert = localFont({
+  src: "../../public/fonts/frosted/albert.ttf",
+  variable: "--font-edna-ui",
   weight: "400",
   display: "swap",
-  preload: false,
 });
-
-const instrument = localFont({
-  src: [
-    { path: "../../public/fonts/frosted/instrument.ttf", weight: "400", style: "normal" },
-    { path: "../../public/fonts/frosted/instrument-italic.ttf", weight: "400", style: "italic" },
-  ],
-  variable: "--font-signature-instrument",
+const name = localFont({
+  src: "../../public/fonts/frosted/cormorant-italic.ttf",
+  variable: "--font-edna-name",
+  weight: "600",
+  style: "italic",
   display: "swap",
-  preload: false,
 });
 
-const bodoni = localFont({
-  src: "../../public/fonts/frosted/bodoni.ttf",
-  variable: "--font-signature-bodoni",
-  weight: "400",
-  display: "swap",
-  preload: false,
-});
-
-export default async function Home({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
-  const requested = (await searchParams).type;
-  const nameStyle = requested === "editorial" || requested === "bodoni" || requested === "italic" ? requested : "instrument";
+export default function Home() {
   return (
-    <main className={`${styles.page} ${switzer.variable} ${cormorant.variable} ${instrument.variable} ${bodoni.variable}`} data-browser-theme-color="#fffef7">
-      <GiantsOpening nameStyle={nameStyle} />
-      <section id="introduction" className={styles.introduction} aria-labelledby="intro-title">
-        <p className={styles.eyebrow}>A way of seeing</p>
-        <h2 id="intro-title">I design and build digital products, with care for how they work and feel.</h2>
-        <div className={styles.introCopy}>
-          <p>I’m drawn to good writing, thoughtful interfaces, and the small details that make an experience worth remembering.</p>
-          <Link href="/about">More about me ↗</Link>
-        </div>
-      </section>
-      <SelectedWork />
+    <main className={`${switzer.variable} ${albert.variable} ${name.variable}`} style={{ background: "#0a0a0a", fontFamily: "var(--font-giants-body), sans-serif" }} data-browser-theme-color="#0a0a0a">
+      <LandingExperience />
     </main>
   );
 }

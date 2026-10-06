@@ -34,6 +34,7 @@ export function SelectedWork() {
       const progress = pinned ? Math.min(1, Math.max(0, -root.getBoundingClientRect().top / Math.max(1, travel))) : 0;
       rail.style.transform = pinned ? `translate3d(${-progress * travel}px,0,0)` : "none";
       const shift = pinned ? progress * travel : windowElement.scrollLeft;
+      root.style.setProperty("--work-progress", String(travel > 0 ? Math.min(1, Math.max(0, shift / travel)) : 0));
       const cards = Array.from(rail.querySelectorAll<HTMLElement>("[data-project]"));
       const closest = cards.reduce((best, card, index) => Math.abs(card.offsetLeft - shift - 64) < Math.abs(cards[best].offsetLeft - shift - 64) ? index : best, 0);
       setActive(closest);
@@ -71,15 +72,18 @@ export function SelectedWork() {
       <div className={styles.sticky}>
         <div className={styles.toolbar}>
           <h2 id="work-title">Selected work</h2>
-          <div className={styles.controls}>
-            <span>{String(active + 1).padStart(2, "0")} / 03</span>
-            <button onClick={() => moveTo(Math.max(0, active - 1))} disabled={active === 0} aria-label="Previous project">←</button>
-            <button onClick={() => moveTo(Math.min(2, active + 1))} disabled={active === 2} aria-label="Next project">→</button>
-          </div>
+          <nav className={styles.controls} aria-label="Choose a project">
+            <Link className={styles.viewMore} href={`/projects/${selected[active].slug}`}>View More</Link>
+            <button onClick={() => moveTo(active - 1)} disabled={active === 0} aria-label="Previous project">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6" /></svg>
+            </button>
+            <button onClick={() => moveTo(active + 1)} disabled={active === selected.length - 1} aria-label="Next project">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" /></svg>
+            </button>
+          </nav>
         </div>
         <div ref={viewport} className={styles.viewport}>
           <div ref={track} className={styles.track}>
-            <div className={styles.lead}><p>From the first<br />question to the<br /><em>smallest detail.</em></p><span>Design &amp; engineering<br />Three selected projects</span></div>
             {selected.map((project, index) => {
               const detail = projectDetails[project.slug];
               const role = detail.meta?.find(field => field.k === "ROLE")?.v;
@@ -105,7 +109,7 @@ export function SelectedWork() {
                     )}
                   </Link>
                   <div className={styles.caption}>
-                    <div><h3><Link href={`/projects/${project.slug}`}>{project.title} <span aria-hidden="true">↗</span></Link></h3><p className={styles.purpose}>{project.purpose}</p></div>
+                    <div><h3><Link href={`/projects/${project.slug}`}>{project.title}</Link></h3><p className={styles.purpose}>{project.purpose}</p></div>
                     <div className={styles.facts}><p>{project.context}</p><p>{role}</p><p>{status}</p></div>
                   </div>
                   <p className={styles.context}>{project.focus}</p>
@@ -114,6 +118,7 @@ export function SelectedWork() {
             })}
           </div>
         </div>
+        <div className={styles.progress} role="progressbar" aria-label="Selected project" aria-valuemin={1} aria-valuemax={selected.length} aria-valuenow={active + 1} aria-valuetext={`${active + 1} of ${selected.length}: ${selected[active].title}`}><span /></div>
       </div>
     </section>
   );
