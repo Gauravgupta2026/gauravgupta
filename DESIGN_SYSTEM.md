@@ -20,11 +20,11 @@ Dark, quiet, human. Give the work room to breathe. Use size and dimming for hier
 
 ## Typography
 
-ITC Garamond Light, weight 300, **upright**, is the human voice: page introductions and CTA; the experimental hero also uses it. Main retains its existing Cormorant italic hero name. About follows the supplied reference with plain Switzer throughout its biography. Albert Sans 400 is interface chrome: navigation, controls, hero description. Switzer 400 is content: project titles, purposes, facts, biography, and index rows. Fraunces is deferred and is not loaded. Existing substantive articles retain their own article typography.
+ITC Garamond Light, weight 300, **upright**, is the human voice: page introductions and CTA; the experimental hero also uses it. Main hero name uses the same upright ITC voice. About follows the supplied reference with plain Switzer throughout its biography. Albert Sans 400 is interface chrome: navigation, controls, hero description. Switzer 400 is content: project titles, purposes, facts, biography, and index rows. Fraunces is deferred and is not loaded. Existing substantive articles retain their own article typography.
 
 | Element | Size and line-height |
 | --- | --- |
-| Main hero name | Cormorant italic 600, `clamp(16px,3.571vw,24px)` / 1.5 |
+| Main hero name | ITC Garamond Light upright 300, `clamp(16px,3.571vw,24px)` / 1.5 |
 | Main hero description | Albert Sans `clamp(13px,1.905vw,16px)` / 1.45 |
 | Experimental hero name | `clamp(36px,4.5vw,64px)` / 1.05; below 440px `clamp(32px,9vw,40px)` |
 | Experimental hero description | `clamp(14px,1.3vw,18px)` / 1.45, balanced and centered |
@@ -66,7 +66,7 @@ Work, Labs, and Notes use PageIntro: “Ideas, made real.”, “Experiments”,
 
 On experiments only, the flower bed replaces the central pink flower intro, retaining centered name and description. The supplied flower configuration stays unchanged: breeze .60; gust interval 8 seconds; trail decay .90; blur .25; glow .36; pitch 7px; side mask .52/.78; bottom mask .72; beam dimming .20; grain .005; FPS 30; pixel ratio 1.25; strip 36vh.
 
-Experiments starts at the hero unless an explicit anchor is present, without an opening scroll lock. Main retains the orchid intro scroll lock and removes stale #selected-work fragments on reload. Before projects, show “Care in how it works. Care in how it feels.” at the left with a directional arrow. Desktop vertical scrolling drives the horizontal rail: panels are 75 percent of viewport width, initially 25 percent of the first panel is visible, and a 45 percent viewport-height reading hold precedes translation. Mobile/tablet use native horizontal scrolling, with panels sized to shared media width plus page gutters. Arrow and controls allow deliberate navigation. Case-study actions have no arrow; hover/focus uses a bright neutral fill. No continuous shimmer.
+Experiments starts at the hero unless an explicit anchor is present, without an opening scroll lock. Main plays the orchid/poem introduction on a fresh document loaded at Home, with a scroll lock only during that first intro. A persistent layout provider remembers its completion; internal returns to Home immediately show the finished hero. Loading another page first also bypasses the intro on subsequent Home navigation. Reloading creates a fresh document. Stale #selected-work fragments are removed on reload. No visible Skip introduction button; a faint 18px pause/play icon retains a labelled 44px target. Before projects, show “Care in how it works. Care in how it feels.” at the left with a directional arrow. Desktop vertical scrolling drives the horizontal rail: panels are 75 percent of viewport width, initially 25 percent of the first panel is visible, and a 45 percent viewport-height reading hold precedes translation. Mobile/tablet use native horizontal scrolling, with panels sized to shared media width plus page gutters. Arrow and controls allow deliberate navigation. Case-study actions have no arrow. The current project action has a white fill and dark text; the previous action returns to its quiet default when the next project becomes current. Hover/focus remain visible. A single custom progress indicator follows the rail; hide its native scrollbar without disabling native swipe. Fade the custom indicator after leaving the project section. No continuous shimmer.
 
 ### Work
 
@@ -74,7 +74,7 @@ Keep the original vertical alternating paired-image project layout and links. At
 
 Use CollectionFilter: four visible options on desktop/tablet, a labelled native dropdown with icon on phones, result count, and empty-state return to All work. Options: All work; Taking shape; In the making; Finished work. User-confirmed stages: Sachetana, Lucky Day, Research internship are finished; Wylde is in progress. No named project index or “Interactions drive feelings” statement.
 
-The active CTA is “Creativity and ideas” / “travel further together.” Invitation is 14px; headline has two explicit lines. Padding is 88px desktop / 64px mobile/tablet. The email action has a 44px minimum target. Every route shares one ContactEnding mounted after page content in the root layout; on every screen its CTA occupies at least 55svh with centered content.
+The active CTA is “Creativity and ideas” / “travel further together.” Invitation is 14px; headline has two explicit lines. The 55svh CTA groups its content toward the ending, with 64px top padding and `--contact-content-space` below its button. The email action has a 44px minimum target. Every route shares one ContactEnding mounted after page content in the root layout; on every screen its CTA occupies at least 55svh with its closing content grouped toward the footer.
 
 ### Labs
 
@@ -106,7 +106,7 @@ Mobile Landing omits the project focus (“The design problem…”); purpose an
 
 ## Botanical footer experiment
 
-ContactEnding is mounted once in the root layout across every page, including About, project case studies, and note articles. About’s former separate footer is removed. CTA minimum height is 55svh on every screen. The artwork plus footer occupy 40svh (minimum 240px to preserve links on short screens).
+ContactEnding is mounted once in the root layout across every page, including About, project case studies, and note articles. About’s former separate footer is removed. CTA minimum height is 55svh on every screen. Artwork before the footer uses `--contact-art-space: clamp(48px,8svh,80px)`. CTA closing padding uses `--contact-content-space: clamp(24px,4svh,40px)`. The space below the footer equals their sum, matching the visual gap from the CTA button to the footer. Footer height is content-driven; there is no fixed 40svh ending spacer.
 
 Original generated macro botanical artwork replaces the cartoon SVG shapes: translucent pink rose petals, sage/olive leaves, natural veins, irregular edges. One transparent WebP atlas is 168KB, at `public/media/botanical-atlas.webp`. The built-in image-generation prompt and provenance are recorded in `public/media/SOURCES.md`.
 
@@ -120,7 +120,7 @@ Labs toolbar styles target only its navigation arrow buttons; CollectionFilter o
 
 ## Branch ownership and scroll performance
 
-Shared navigation, project presentation, Work/Labs/Notes/About, filters, CTA and botanical footer belong to main and experiments. Main retains its orchid opening, palette, poem, name face and mobile handoff. Only experiments replaces that opening with the flower bed and enlarged upright hero copy. The root navigation is shared; main hides it during its opening handoff. Main browser theme colors continue to follow its light/dark hero, while experiments uses the dark ground.
+Shared navigation, project presentation, Work/Labs/Notes/About, filters, CTA and botanical footer belong to main and experiments. Main retains its orchid opening, palette, poem and mobile handoff; its name now uses upright ITC. Only experiments replaces that opening with the flower bed and enlarged upright hero copy. The root navigation is shared; main hides it during its opening handoff. Main browser theme colors continue to follow its light/dark hero, while experiments uses the dark ground.
 
 Native phone/tablet rails do not snap or translate in JavaScript. Gallery scroll listeners are passive, coalesce updates to one animation frame and change React state only at boundaries. Footer scroll handlers use cached document geometry; layout changes refresh it through ResizeObserver. Experimental hero and flower strip use stable svh units so browser toolbar expansion does not repeatedly resize canvases. Hero rendering must stop offscreen or while hidden/paused. Keep main's existing scroll-restoration fix.
 

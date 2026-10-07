@@ -24,6 +24,7 @@ export function useProjectRail(projectCount: number) {
       if (pinned && windowElement.scrollLeft !== 0) windowElement.scrollLeft = 0;
       const shift = Math.min(travel, Math.max(0, pinned ? window.scrollY - top - hold : windowElement.scrollLeft));
       if (pinned) rail.style.transform = `translate3d(${-shift}px,0,0)`;
+      root.dataset.active = String(visible && (!pinned || window.scrollY <= top + hold + travel));
       root.style.setProperty("--work-progress", String(travel ? shift / travel : 0));
       const nearest = stops.reduce((best, stop, index) => Math.abs(stop - shift) < Math.abs(stops[best] - shift) ? index : best, 0);
       if (nearest - 1 !== currentPanel) { currentPanel = nearest - 1; setActive(currentPanel); }
@@ -58,11 +59,11 @@ export function useProjectRail(projectCount: number) {
     const observer = new ResizeObserver(measure);
     observer.observe(windowElement);
     const visibility = new IntersectionObserver(entries => {
-      visible = entries[0].isIntersecting;
+      visible = entries[0].intersectionRatio >= .5;
       syncListener();
       schedule();
-    });
-    visibility.observe(root);
+    }, { threshold: [0, .5] });
+    visibility.observe(windowElement);
     windowElement.addEventListener("scroll", schedule, { passive: true });
     preference.addEventListener("change", measure);
     document.fonts.ready.then(measure);

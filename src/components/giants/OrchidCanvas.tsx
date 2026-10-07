@@ -5,6 +5,7 @@ import { OPENING, easeBetween } from "./openingTimeline";
 import { lightFlowerPalette, LIGHT_FLOWER_DEFAULTS } from "./lightFlowerSettings";
 
 const FRAME_INTERVAL = 1000 / 30;
+const MAX_FRAME_ELAPSED_MS = 1000;
 const MAX_PIXEL_RATIO = 1.6;
 const TAU = Math.PI * 2;
 const REFERENCE_BLOOM_SECONDS = 5;
@@ -161,7 +162,7 @@ export function OrchidCanvas({ paused, skipIntro, onTime, theme }: { paused: boo
     const animate = (timestamp: number) => {
       frame = 0;
       if (disposed || !visible || document.hidden || playback.current.paused || reduced.matches) return;
-      const delta = previousTime ? Math.min(timestamp - previousTime, 100) : 0; previousTime = timestamp;
+      const delta = previousTime ? Math.min(timestamp - previousTime, MAX_FRAME_ELAPSED_MS) : 0; previousTime = timestamp;
       if (playback.current.skipIntro && elapsed < OPENING.complete) { elapsed = OPENING.complete; draw(); }
       if (visible && !document.hidden && !playback.current.paused && !reduced.matches) {
         elapsed += delta / 1000;

@@ -11,7 +11,8 @@
 .controls button:disabled { opacity: .25; }
 .viewMore { color: var(--landing-ink); font-size: 12px; text-decoration: none; padding: 12px 0; margin-right: 8px; border-bottom: 1px solid var(--landing-border); }
 .viewMore:hover { border-color: var(--landing-ink); }
-.viewport { overflow-x: auto; scroll-snap-type: none; scrollbar-width: thin; scrollbar-color: var(--landing-muted) var(--landing-bg); }
+.viewport { overflow-x: auto; scroll-snap-type: none; scrollbar-width: none; }
+.viewport::-webkit-scrollbar { display: none; }
 .section[data-pinned="true"] .viewport { overflow: hidden; scroll-snap-type: none; }
 .track::after { content: ""; flex: 0 0 calc(var(--panel-width) - var(--card-width)); }
 .track { position: relative; display: flex; width: max-content; align-items: stretch; }
@@ -23,7 +24,7 @@
 .direction:hover { color: var(--landing-accent); }
 .direction:focus-visible, .controls button:focus-visible, .viewMore:focus-visible, .viewport:focus-visible, .caseStudy:focus-visible, .mediaLink:focus-visible, .caption a:focus-visible { outline: 2px solid var(--landing-accent); outline-offset: 4px; }
 .project { box-sizing: border-box; flex: 0 0 var(--card-width); width: var(--card-width); min-width: 0; min-height: 100svh; padding: 144px var(--page-gutter) 64px; display: flex; flex-direction: column; justify-content: center; scroll-snap-align: start; }
-.progress { position: absolute; left: var(--page-gutter); right: var(--page-gutter); bottom: 24px; height: 1px; background: var(--landing-progress-track); overflow: hidden; }
+.progress { opacity: 0; transition: opacity 250ms; position: absolute; left: var(--page-gutter); right: var(--page-gutter); bottom: 24px; height: 1px; background: var(--landing-progress-track); overflow: hidden; }
 .progress span { display: block; width: 25%; height: 100%; background: var(--landing-progress); transform: translateX(calc(var(--work-progress, 0) * 300%)); }
 .screenReader { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .caseStudy { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin: 16px 0 0; padding: 12px 16px; border-radius: 6px; transition: background-color 200ms, color 200ms; color: var(--landing-ink); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--landing-border); }
@@ -87,3 +88,7 @@
 @media (max-width: 600px) { .context { display: none; } }
 
 @media (max-width: 600px) { .transition { align-items: center; padding: 96px var(--page-gutter); } }
+
+.section[data-active="true"] .progress { opacity: 1; }
+.project[data-active="true"] .caseStudy { background: #fff; color: #0a0a0a; border-color: #fff; }
+@media (prefers-reduced-motion: reduce) { .progress { transition: none; } }

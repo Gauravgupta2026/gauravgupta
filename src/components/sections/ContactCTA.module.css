@@ -1,11 +1,8 @@
-.cta { min-height: 55svh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 64px var(--page-gutter); background: #0a0a0a; color: #f7f6f2; text-align: center; }
+.cta { min-height: 55svh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 64px var(--page-gutter) var(--contact-content-space); background: #0a0a0a; color: #f7f6f2; text-align: center; }
 .cta h2 { max-width: 600px; margin: 0 auto; font: 300 clamp(24px, 3.2vw, 40px)/1.15 var(--font-editorial-local), Georgia, serif; font-style: normal; letter-spacing: .005em; }
 .cta p { max-width: 42ch; margin: 20px auto 24px; font: 400 14px/1.5 var(--font-edna-ui), sans-serif; color: #a4a4a4; }
 .cta a { display: inline-flex; align-items: center; min-height: 44px; padding: 12px 24px; border: 1px solid #ffffff65; border-radius: 6px; color: #f7f6f2; font: 400 14px/1.5 var(--font-edna-ui), sans-serif; text-decoration: none; }
 .cta a:hover { background: #f7f6f2; color: #0a0a0a; }
 .cta a:focus-visible { outline: 2px solid #ffcae8; outline-offset: 4px; }
-@media (max-width: 1023px) { .cta { padding-block: 64px; } }
 
 .cta h2 span { display: block; }
-
-@media (max-width: 600px) { .cta { min-height: 55svh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; } }

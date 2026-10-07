@@ -12,6 +12,7 @@ import "./legacy-components.css";
 import "./layout-tokens.css";
 import { ContactEnding } from "@/components/sections/ContactEnding";
 import { Nav } from "@/components/sections/Nav";
+import { LandingIntroProvider } from "@/components/LandingIntroProvider";
 import { LayoutMetrics } from "@/components/LayoutMetrics";
 import { PostHogProvider } from "@/components/PostHogProvider";
 
@@ -155,10 +156,12 @@ export default function RootLayout({
               only, no gestures/layout/drag) instead of Framer Motion's
               full ~35kb bundle. */}
           <LazyMotion features={domAnimation} strict>
-            <LayoutMetrics />
-            <Nav />
-            {children}
-            <ContactEnding />
+            <LandingIntroProvider>
+              <LayoutMetrics />
+              <Nav />
+              {children}
+              <ContactEnding />
+            </LandingIntroProvider>
           </LazyMotion>
         </PostHogProvider>
       </body>

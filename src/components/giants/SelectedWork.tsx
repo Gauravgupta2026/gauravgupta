@@ -38,7 +38,7 @@ export function SelectedWork() {
           const role = detail.meta?.find(field => field.k === "ROLE")?.v;
           const status = detail.meta?.find(field => field.k === "STATUS")?.v ?? detail.meta?.find(field => field.k === "PERIOD")?.v;
           return (
-            <article key={project.slug} data-project className={styles.project} onFocusCapture={() => revealFocusedProject(index)}>
+            <article key={project.slug} data-project data-active={active === index} className={styles.project} onFocusCapture={() => revealFocusedProject(index)}>
               <Link className={`${styles.mediaLink} ${presentation.frame}`} href={`/projects/${project.slug}`} aria-label={`View ${project.title} case study`}>
                 <ProjectMedia project={project} sizes="(max-width: 1023px) 90vw, 75vw" />
               </Link>

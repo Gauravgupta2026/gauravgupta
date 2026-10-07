@@ -11,7 +11,6 @@ export const OPENING = {
   attributionIn: [QUOTE_START + 0.25, QUOTE_START + 0.85],
   quoteOut: [BLOOM_END, QUOTE_FADE_END],
   profileIn: [HERO_REVEAL_START, INTRO_COMPLETE],
-  navigationIn: [HERO_REVEAL_START, INTRO_COMPLETE],
   complete: INTRO_COMPLETE,
 } as const;
 

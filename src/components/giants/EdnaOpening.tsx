@@ -5,9 +5,8 @@ import { OrchidCanvas } from "./OrchidCanvas";
 import { OPENING, easeBetween } from "./openingTimeline";
 import styles from "./EdnaOpening.module.css";
 
-export function EdnaOpening({ onReveal, theme }: { onReveal: () => void; theme: "light" | "dark" }) {
+export function EdnaOpening({ onReveal, theme, skipIntro }: { onReveal: () => void; theme: "light" | "dark"; skipIntro: boolean }) {
   const [paused, setPaused] = useState(false);
-  const [skipIntro, setSkipIntro] = useState(false);
   const [ready, setReady] = useState(false);
   const hero = useRef<HTMLElement>(null);
   const revealed = useRef(false);
@@ -45,25 +44,26 @@ export function EdnaOpening({ onReveal, theme }: { onReveal: () => void; theme: 
   }, []);
   return (
     <>
-      {ready && <a className={styles.skip} href="#selected-work">Skip to selected work</a>}
+      {(ready || skipIntro) && <a className={styles.skip} href="#selected-work">Skip to selected work</a>}
       <div ref={cursor} className={styles.cursor} aria-hidden="true" />
-      <section ref={hero} data-edna-opening className={styles.hero} aria-labelledby="hero-name">
+      <section ref={hero} data-edna-opening data-intro={skipIntro ? "complete" : "playing"} className={styles.hero} aria-labelledby="hero-name">
         <OrchidCanvas theme={theme} paused={paused} skipIntro={skipIntro} onTime={updateScene} />
         <div className={styles.vignette} />
         <div className={styles.fade} />
-        <figure className={styles.poem} aria-hidden={ready}>
+        <figure className={styles.poem} aria-hidden={ready || skipIntro}>
           <blockquote>
             <span>The infant flower opens its bud and cries,</span>
             <span>“Dear World, please do not fade.”</span>
           </blockquote>
           <figcaption>Rabindranath Tagore · <cite>Stray Birds, 66</cite></figcaption>
         </figure>
-        <div className={styles.copy} aria-hidden={!ready}>
+        <div className={styles.copy} aria-hidden={!ready && !skipIntro}>
           <h1 id="hero-name">Gaurav Gupta</h1>
           <p>a designer and engineer who builds digital products with care for how they work and feel</p>
         </div>
-        {!ready && <button className={styles.skipIntro} onClick={() => setSkipIntro(true)}>Skip introduction</button>}
-        <button className={styles.pause} onClick={() => setPaused(!paused)} aria-label={paused ? "Play flower animation" : "Pause flower animation"}>{paused ? "Play motion" : "Pause motion"}</button>
+        <button className={styles.pause} onClick={() => setPaused(!paused)} aria-label={paused ? "Play flower animation" : "Pause flower animation"} aria-pressed={paused}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">{paused ? <path d="m9 5 10 7-10 7Z" /> : <path d="M8 5v14M16 5v14" />}</svg>
+        </button>
       </section>
     </>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { useLandingIntro } from "@/components/LandingIntroProvider";
 import { EdnaOpening } from "./EdnaOpening";
 import { SelectedWork } from "./SelectedWork";
 import styles from "./EdnaOpening.module.css";
@@ -15,6 +16,7 @@ const prefersLight = () => window.matchMedia(LIGHT_PREFERENCE).matches;
 const darkFallback = () => false;
 
 export function LandingExperience() {
+  const { playIntro, finishIntro } = useLandingIntro();
   const light = useSyncExternalStore(subscribeToColourPreference, prefersLight, darkFallback);
   const [ready, setReady] = useState(false);
   useEffect(() => {
@@ -27,10 +29,10 @@ export function LandingExperience() {
     window.scrollTo({ top: 0, behavior: "instant" });
     return () => { window.history.scrollRestoration = previousRestoration; };
   }, []);
-  const revealPage = useCallback(() => setReady(true), []);
+  const revealPage = useCallback(() => { setReady(true); finishIntro(); }, [finishIntro]);
   return (
-    <div className={styles.experience} data-loading={!ready} data-landing-theme={light ? "light" : "dark"}>
-      <EdnaOpening onReveal={revealPage} theme={light ? "light" : "dark"} />
+    <div className={styles.experience} data-loading={playIntro && !ready} data-landing-theme={light ? "light" : "dark"}>
+      <EdnaOpening skipIntro={!playIntro} onReveal={revealPage} theme={light ? "light" : "dark"} />
       <SelectedWork />
     </div>
   );
