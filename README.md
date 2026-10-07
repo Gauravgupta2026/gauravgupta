@@ -28,4 +28,4 @@ npm run build   # production build + typecheck
 - `src/components` — shared UI and page sections
 - `src/content` — copy and data for projects, notes, and articles
 
-See `CLAUDE.md` for the design system and project conventions.
+See `DESIGN_SYSTEM.md` for the design system and `AGENTS.md` for project conventions.

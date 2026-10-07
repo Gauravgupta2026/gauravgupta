@@ -54,7 +54,6 @@ for interactions, animation, browser state, or analytics.
 | `src/components/article/` | Rendering for typed article content blocks |
 | `src/content/` | Source-controlled portfolio copy and data; there is no CMS |
 | `public/` | Shipped photos, local fonts, icons, and static assets |
-| `design-reference/`, `inspo/` | Legacy visual assets; use only when explicitly referenced by `DESIGN_SYSTEM.md` |
 | `scripts/analytics-reviewer/` | PostHog signal collection and Linear issue automation using server-side secrets |
 
 ### Routes
