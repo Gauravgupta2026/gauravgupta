@@ -135,9 +135,11 @@ export function OrchidCanvas({ paused, skipIntro, onTime, theme }: { paused: boo
         path(silver); context.fillStyle = "#cfd4d9"; context.fill();
         path(bright); context.shadowColor = "rgba(255,255,255,.7)"; context.shadowBlur = pitch * 2;
         context.fillStyle = "#fff"; context.fill(); context.shadowBlur = 0;
-        const tint = easeBetween(4.15, 6.75, motionTime) * .22;
-        element.style.transition = "filter 1.5s ease";
-        element.style.filter = `drop-shadow(0 0 22px rgba(150,0,78,${motionTime >= 5.8 ? .9 : 0}))`;
+        const tintProgress = easeBetween(...OPENING.pinkIn, time);
+        const tint = tintProgress * .22;
+        element.dataset.tint = tintProgress.toFixed(3);
+        element.style.transition = "none";
+        element.style.filter = `drop-shadow(0 0 22px rgba(150,0,78,${tintProgress * .9}))`;
         context.globalCompositeOperation = "source-atop"; context.fillStyle = `rgba(211,0,120,${tint})`;
         context.fillRect(0, 0, width, height); context.globalCompositeOperation = "source-over";
       }

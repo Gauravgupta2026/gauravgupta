@@ -52,3 +52,19 @@ Validation: 20 detail-layout checks across 390×844, 820×1180, 1440×900 and 84
 Theme regression reproduced before the fix: emulated dark device + legacy `theme=light` resolved light. After the fix it resolves dark, then follows a live change to light. The footer icon switches to dark, stores `portfolio-theme=dark`, and retains it on navigation. Preview appearance and explicit test preference were reset to system/default afterward.
 
 Footer phase observations: smooth drift before impact; wilt reaches 1 and dot radius reaches 0 at dissolution; all three wave paths receive geometry; progress reaches 1, settled becomes true and every ripple opacity returns to 0. The scene has no continuous shimmer or scroll handler. Real-device frame rate and subjective timing remain visual-review items. Final lint, webpack production build, standalone typecheck and diff check pass.
+
+## Hero tint and directional footer hairline
+
+- [x] Trace original tint delay (4.48s) and glow delay (6.26s plus CSS fade).
+- [x] Start dark orchid tint/glow about 0.6s into bloom; finish at 3.51s without secondary filter lag. Preserve palette and opening handoff.
+- [x] Remove footer botanicals, dithering, atlas and unused motion code sitewide.
+- [x] Keep a static hairline; trigger only on a downward cursor crossing from above. Footer hover/upward entry/scroll/touch stay inert.
+- [x] Three subtle waves settle in 2.3s; no automatic animation or retrigger while active.
+- [x] Preserve theme tokens, spacing, reduced motion and hidden/offscreen cleanup.
+- [x] Add regression checks for direction and hero tint timing.
+- [x] Browser: dark hero tint observed at 0.827 during the opening, later 1.000; no secondary CSS fade. Light hero retains its original palette/filter.
+- [x] Browser: no automatic ripple; upward approach and footer hover stay inactive; downward crossing animates wave geometry, then all three paths return to opacity zero. No botanical elements remain; light hairline uses light theme tokens.
+- [x] Lint, regression script, production build, standalone typecheck and diff checks pass.
+- [ ] Physical-phone visual check: collaborative preview resizing timed out for both freeform and preset modes, remaining at 1169×731. No mobile-specific layout changes were made.
+
+Earlier botanical phase observations above describe the superseded implementation. The directional hairline is the current footer specification.

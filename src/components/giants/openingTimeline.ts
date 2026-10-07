@@ -7,6 +7,7 @@ const QUOTE_START = BLOOM_END * (1 - Math.cbrt(0.7));
 
 export const OPENING = {
   bloomEnd: BLOOM_END,
+  pinkIn: [QUOTE_START, BLOOM_END * .65],
   quoteLinesIn: [[QUOTE_START, QUOTE_START + 0.65], [QUOTE_START + 0.12, QUOTE_START + 0.77]],
   attributionIn: [QUOTE_START + 0.25, QUOTE_START + 0.85],
   quoteOut: [BLOOM_END, QUOTE_FADE_END],
