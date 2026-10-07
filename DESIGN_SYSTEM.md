@@ -139,3 +139,11 @@ Selected work retains only the fine custom progress line: hide native horizontal
 ## Automatic landing colour preference — current behavior
 
 Remove the tuning panel, its storage/export/inspection code and the navigation theme label. The supplied light-flower preset is fixed in source. The landing defaults to dark when no preference is available and follows `prefers-color-scheme: light` when the device requests light mode. CSS applies the light surface before hydration; the canvas subscribes to device-preference changes and redraws without restarting its clock. Other routes retain their existing theme behavior. The old `/light` study URL redirects to `/`. A manual footer toggle is planned for later and is not included now.
+
+## Mobile handoff and rendering stability
+
+Every landing load starts at the hero. Clear a stale `#selected-work` fragment before the deferred projects mount and disable browser scroll restoration for the landing's lifetime; deliberate Work links still scroll to the projects. Avoid scroll anchoring when the rail mounts. Use a stable 100svh hero so mobile browser-bar changes do not resize the artwork during a swipe. Centre both the flower and the profile veil/copy at 50% throughout the opening and hero.
+
+Keep the approved light preset and motion equations. Limit dot sampling to the flower bounds, omit disabled edge calculations, batch only the active colour bands, and render the diffuse light glow at half a CSS pixel per pixel in an offscreen canvas while keeping the crisp dots at full canvas resolution. Cache project layout on resize; mobile vertical scrolling must not remeasure or rewrite the horizontal rail on every frame.
+
+Browser chrome: landing viewport metadata supplies light/dark theme colours matching #fdfafb and #0a0a0a. Its html/body backgrounds and colour scheme follow the same device preference, including overscroll and safe-area surfaces. Scope these root styles to the landing; browser-controlled toolbar tinting remains dependent on the browser.

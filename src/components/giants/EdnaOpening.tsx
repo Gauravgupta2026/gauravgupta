@@ -52,7 +52,7 @@ export function EdnaOpening({ onReveal, theme }: { onReveal: () => void; theme: 
       <header ref={navigation} className={styles.nav} inert={!ready} hidden={!ready}>
         <Link className={styles.identity} href="/">Gaurav Gupta</Link>
         <nav aria-label="Main navigation">
-          <Link href="#selected-work">Work</Link>
+          <a href="#selected-work">Work</a>
           <Link href="/labs">Play</Link>
           <Link href="/about">About</Link>
         </nav>
