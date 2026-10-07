@@ -83,3 +83,10 @@ Earlier botanical phase observations above describe the superseded implementatio
 - [x] Increase secondary frame width/height by 10% from its current size, preserving aspect ratio; primary frame retains 90% scale.
 - [x] Update responsive source sizes and authoritative sizing rules.
 - [x] Computed styles verified at 390 / 820 / 1440px, with no horizontal overflow. Secondary mobile frame is 322×201px against primary 293×183px; tablet secondary is 475×297px against primary 432×270px. Gaps resolve to 12px stacked / 16px desktop. Lint, build, typecheck and existing regressions pass.
+
+## Softer light-mode accents
+
+- [x] Replace saturated cursor yellow with butter yellow #ffe58a; soften progress/ripples to champagne #d6b551 and hairline to #dfc36c80.
+- [x] Keep readable gold for text/focus and preserve the dark palette, hero artwork and all geometry.
+- [x] Reduce light cursor shadow to 0 1px 3px at about 8% opacity; dark shadow remains unchanged.
+- [x] Browser computed colors match: butter cursor RGB(255,229,138), champagne progress/ripples #d6b551, faint line #dfc36c80; light shadow resolves to 0 1px 3px at 0.078 alpha. Explicit dark mode retains original colors and shadow. Lint/build/typecheck/diff checks pass.
