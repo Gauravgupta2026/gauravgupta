@@ -129,3 +129,13 @@ This supersedes the rotating bud transformation and all earlier timing. Use the 
 Total active preload: 7.1 seconds. Bloom runs continuously from 0–5.4s, stretched from the reference's five-second motion clock. The quote starts when cubic-eased bloom reaches 30% (about 0.605s), reveals softly over 0.85s including attribution, and stays visible through the rest of the bloom. Quote fades at 5.4–6s. A flower-only pause lasts from 6–6.35s, followed by the hero reveal at 6.35–7.1s. Navigation and projects become available at 7.1s; scrolling unlocks then. Full-screen 100dvh, pause, skip, hidden-tab suspension, reduced-motion bypass and renderer-failure fallback remain. No secondary bloom occurs during the hero reveal.
 
 Handoff stability: reserve scrollbar space throughout the opening, size the canvas to its actual container, and retain display-rate animation frames through the complete opening and hero reveal. The quote threshold is 30% actual eased bloom, not 30% elapsed duration.
+
+## Light flower preset and project refinements
+
+Apply the exact exported settings supplied by Gaurav: background #fdfafb, shadows #ffece5, petal body #ffcf4d, highlights #ff7a7a, edges #ffffff; contrast 0.55, centre depth 0.6, edge definition 0, dot size 1.4, dot spacing 0.7, glow 1, text veil 1. Motion and dark-mode rendering remain unchanged.
+
+Selected work retains only the fine custom progress line: hide native horizontal scrollbars while keeping scrolling functional. Active marker uses the landing accent, track blends with its surface. Mobile heading and View More/arrow controls share one row. Project media borders are removed.
+
+## Automatic landing colour preference — current behavior
+
+Remove the tuning panel, its storage/export/inspection code and the navigation theme label. The supplied light-flower preset is fixed in source. The landing defaults to dark when no preference is available and follows `prefers-color-scheme: light` when the device requests light mode. CSS applies the light surface before hydration; the canvas subscribes to device-preference changes and redraws without restarting its clock. Other routes retain their existing theme behavior. The old `/light` study URL redirects to `/`. A manual footer toggle is planned for later and is not included now.
