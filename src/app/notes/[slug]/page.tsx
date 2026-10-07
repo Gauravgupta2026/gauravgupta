@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleBody } from "@/components/article/ArticleBody";
-import { Nav } from "@/components/sections/Nav";
 import { articles, getArticle } from "@/content/articles";
 import styles from "./NotePage.module.css";
 
@@ -30,7 +29,6 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
 
   return (
     <main className={styles.page}>
-      <Nav />
       <article>
         <header className={styles.header}>
           <div className={styles.kicker}>
@@ -51,7 +49,6 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
 
         <footer className={styles.footer}>
           <Link href="/notes">← All notes</Link>
-          <a href="mailto:hey@gauravguptas.com">Continue the conversation ↗</a>
         </footer>
       </article>
     </main>

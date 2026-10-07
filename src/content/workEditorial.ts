@@ -1,15 +1,17 @@
 export const WORK_EDITORIAL = {
   luckyDay: {
     title: "Lucky Day",
-    description: "A social card game designed to turn waiting into play.",
+    stage: "finished",
+    description: "An interaction you can feel.",
     role: "Design + build",
-    detail: "iOS · 500+ beta users",
+    detail: "iOS · Motion and haptics study",
     href: "/projects/lucky-day",
     primaryImage: "/assets/work/lucky-day-hero.jpg",
     detailImage: "/assets/work/lucky-day-detail.jpg",
   },
   internship: {
     title: "Research internship",
+    stage: "finished",
     description: "Making dense information easier to search and understand.",
     role: "Product design",
     detail: "Research + prototyping",
@@ -18,22 +20,22 @@ export const WORK_EDITORIAL = {
   },
   wylde: {
     title: "Wylde",
-    description: "A quieter way to find your people.",
+    stage: "making",
+    description: "Less explaining. More playing.",
     role: "Design + build",
-    detail: "iOS · TestFlight",
+    detail: "iOS · Party card game",
     href: "/projects/wylde",
     image: "/assets/work/wylde-space.jpg",
     detailImage: "/assets/work/wylde-detail.jpg",
   },
   sachetana: {
     title: "Sachetana",
+    stage: "finished",
     description: "A private space for students to check in with themselves.",
     role: "Design + build",
-    detail: "iOS · AI guardrails",
+    detail: "Student wellness · iOS & web",
     href: "/projects/sachetana",
     image: "/assets/work/sachetana-wellness.jpg",
     detailImage: "/assets/work/sachetana-detail.jpg",
   },
-  reflection:
-    "Logic deliberates. Emotion decides — who to choose, who to trust, who to ignore. So the question is simple: how do you want to make people feel?",
 } as const;

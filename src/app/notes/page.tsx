@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Nav } from "@/components/sections/Nav";
-import { AboutFooter } from "@/components/sections/AboutFooter";
 import { articles } from "@/content/articles";
+import { PageIntro } from "@/components/PageIntro";
 import styles from "./NotesIndex.module.css";
 
 export const metadata: Metadata = {
@@ -14,12 +13,11 @@ export default function NotesPage() {
   return (
     <main className={styles.page}>
       <div className={styles.surface}>
-        <Nav />
-        <section className={styles.index} aria-labelledby="notes-title">
-          <h1 id="notes-title">Notes</h1>
+          <PageIntro title="Writing" description="is where I slow down." />
+          <section className={styles.index} aria-label="Writing">
           <ul className={styles.list}>
             {articles.map(article => (
-              <li key={article.slug}>
+              <li key={article.slug} id={`note-${article.slug}`}>
                 <Link className={styles.row} href={`/notes/${article.slug}`}>
                   <span className={styles.title}>{article.title}</span>
                   <span className={styles.kind}>Article</span>
@@ -30,7 +28,6 @@ export default function NotesPage() {
           </ul>
         </section>
       </div>
-      <AboutFooter />
     </main>
   );
 }

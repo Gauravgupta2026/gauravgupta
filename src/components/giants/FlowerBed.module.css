@@ -1,0 +1,16 @@
+.strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  contain: strict;
+}
+.strip canvas, .fallback { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.poster { mix-blend-mode: screen; }
+.live { opacity: 0; transition: opacity 700ms ease; }
+.fallback { mask-image: linear-gradient(transparent, #000 45%), linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent); mask-composite: intersect; }
+.fallback img { width: 100%; height: 100%; object-fit: cover; object-position: center bottom; }
+.strip:has(canvas[data-ready="true"]) .fallback { visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .live { transition: none; } }
+@media (forced-colors: active) { .strip { display: none; } }

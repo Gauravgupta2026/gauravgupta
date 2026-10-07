@@ -1,0 +1,9 @@
+.buttons { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.buttons button { min-height: 44px; padding: 8px 0; border: 0; border-bottom: 1px solid transparent; background: transparent; color: #a4a4a4; font: 400 13px/1.5 var(--font-edna-ui), sans-serif; cursor: pointer; }
+.buttons button[aria-pressed="true"] { color: #f7f6f2; border-bottom-color: #ead8e2; }
+.buttons button:hover { color: #ffcae8; }
+.dropdown { display: none; align-items: center; gap: 8px; }
+.dropdown svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; }
+.dropdown select { min-height: 44px; max-width: 200px; border: 0; background: #0a0a0a; color: #f7f6f2; font: 400 13px/1.5 var(--font-edna-ui), sans-serif; cursor: pointer; }
+.filter button:focus-visible, .filter select:focus-visible { outline: 2px solid #ffcae8; outline-offset: 4px; }
+@media (max-width: 600px) { .buttons { display: none; } .dropdown { display: flex; } }

@@ -8,6 +8,11 @@ import {
 import localFont from "next/font/local";
 import { LazyMotion, domAnimation } from "framer-motion";
 import "./globals.css";
+import "./legacy-components.css";
+import "./layout-tokens.css";
+import { ContactEnding } from "@/components/sections/ContactEnding";
+import { Nav } from "@/components/sections/Nav";
+import { LayoutMetrics } from "@/components/LayoutMetrics";
 import { PostHogProvider } from "@/components/PostHogProvider";
 
 /** Display serif, weight 300 roman — headings only. */
@@ -83,6 +88,19 @@ const projectWordmark = localFont({
   display: "swap",
 });
 
+const albert = localFont({
+  src: "../../public/fonts/frosted/albert.ttf",
+  variable: "--font-edna-ui",
+  weight: "400",
+  display: "swap",
+});
+const switzer = localFont({
+  src: "../../public/fonts/frosted/switzer.woff2",
+  variable: "--font-giants-body",
+  weight: "400",
+  display: "swap",
+});
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const TITLE = "Gaurav Gupta — Design Engineer";
 const DESCRIPTION =
@@ -120,7 +138,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${newsreader.variable} ${inter.variable} ${dmMono.variable} ${geistMono.variable} ${allison.variable} ${benne.variable} ${seratonin.variable} ${editorial.variable} ${projectWordmark.variable}`}
+      className={`${newsreader.variable} ${inter.variable} ${dmMono.variable} ${geistMono.variable} ${allison.variable} ${benne.variable} ${seratonin.variable} ${editorial.variable} ${projectWordmark.variable} ${albert.variable} ${switzer.variable}`}
     >
       <body>
         <script
@@ -137,7 +155,10 @@ export default function RootLayout({
               only, no gestures/layout/drag) instead of Framer Motion's
               full ~35kb bundle. */}
           <LazyMotion features={domAnimation} strict>
+            <LayoutMetrics />
+            <Nav />
             {children}
+            <ContactEnding />
           </LazyMotion>
         </PostHogProvider>
       </body>
