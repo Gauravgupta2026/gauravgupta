@@ -11,7 +11,7 @@ Dark, quiet, human. Give the work room to breathe. Use size and dimming for hier
 | Ground | `#0a0a0a` |
 | Content | `#f7f6f2` |
 | Name / navigation | `#ffffff` |
-| Hero description | White at 85 percent |
+| Experimental hero description | White at 85 percent |
 | Supporting text | `#a4a4a4` |
 | Media surface / border | `#171717` / `#2e2e2e` |
 | Control border / hover | `#ffffff24` / `#ffffff65` |
@@ -24,8 +24,10 @@ ITC Garamond Light, weight 300, **upright**, is the human voice: hero name, page
 
 | Element | Size and line-height |
 | --- | --- |
-| Hero name | `clamp(36px,4.5vw,64px)` / 1.05; below 440px `clamp(32px,9vw,40px)` |
-| Hero description | `clamp(14px,1.3vw,18px)` / 1.45, balanced and centered |
+| Main hero name | Cormorant italic 600, `clamp(16px,3.571vw,24px)` / 1.5 |
+| Main hero description | Albert Sans `clamp(13px,1.905vw,16px)` / 1.45 |
+| Experimental hero name | `clamp(36px,4.5vw,64px)` / 1.05; below 440px `clamp(32px,9vw,40px)` |
+| Experimental hero description | `clamp(14px,1.3vw,18px)` / 1.45, balanced and centered |
 | Project title, all indexes | Switzer `clamp(18px,1.4vw,20px)` / 1.15; 18px below 601px |
 | Project purpose | Switzer 14px / 1.4 |
 | Project facts | Switzer 12px / 1.5, normal case |
@@ -100,7 +102,7 @@ Keep skip links, keyboard controls, labelled form fields, logical headings, moda
 
 Before sizing changes, inspect every caller of the shared presentation and the responsive rules that override it. Update this document and `docs/SIZING_AUDIT.md` together. Verify actual computed dimensions and typography across Landing, Work, and Labs at phone/tablet sizes; check desktop compositions separately. Run lint, build, typecheck after build, and diff checks. Passing checks verifies implementation, not aesthetic acceptance. Do not append conflicting historical values as new specifications.
 
-Mobile Landing omits the project focus (“The design problem…”); purpose and metadata remain. Hero description uses CSS `text-wrap: pretty` to avoid an isolated last word. Mobile navigation remains a single horizontal row, Albert Sans 12px (11px below 361px with no link gap to fit one row), with 44px targets.
+Mobile Landing omits the project focus (“The design problem…”); purpose and metadata remain. Experimental hero description uses CSS `text-wrap: pretty` to avoid an isolated last word. Mobile navigation remains a single horizontal row, Albert Sans 12px (11px below 361px with no link gap to fit one row), with 44px targets.
 
 ## Botanical footer experiment
 
@@ -121,3 +123,5 @@ Labs toolbar styles target only its navigation arrow buttons; CollectionFilter o
 Shared navigation, project presentation, Work/Labs/Notes/About, filters, CTA and botanical footer belong to main and experiments. Main retains its orchid opening, palette, poem, name face and mobile handoff. Only experiments replaces that opening with the flower bed and enlarged upright hero copy. The root navigation is shared; main hides it during its opening handoff. Main browser theme colors continue to follow its light/dark hero, while experiments uses the dark ground.
 
 Native phone/tablet rails do not snap or translate in JavaScript. Gallery scroll listeners are passive, coalesce updates to one animation frame and change React state only at boundaries. Footer scroll handlers use cached document geometry; layout changes refresh it through ResizeObserver. Experimental hero and flower strip use stable svh units so browser toolbar expansion does not repeatedly resize canvases. Hero rendering must stop offscreen or while hidden/paused. Keep main's existing scroll-restoration fix.
+
+Experiments is replaced wholesale by the latest site state, rather than retaining the older alternate layout. Its search-indexing exclusion is retained as an environment safeguard; main remains indexable.

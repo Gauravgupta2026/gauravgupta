@@ -18,4 +18,3 @@
 @media (forced-colors: active) { .header { background: Canvas; } .header a { color: LinkText; } }
 
 .name::after { content: ""; position: absolute; inset: -11px -6px; }
-

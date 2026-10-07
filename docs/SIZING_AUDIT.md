@@ -15,3 +15,5 @@
 - [x] Footer caches layout geometry; hero animation loops pause offscreen.
 
 Build, lint and TypeScript checks run separately on the main-compatible and full experimental versions. Browser checks cover layout, filters, overflow, opening handoff and scroll behavior; desktop phone emulation does not establish real-device frame rate. No dependencies or external contracts changed; no automated suite exists. Visual acceptance remains Gaurav's review.
+
+Mobile browser measurements at 390 × 844: Work/Labs intro 379.8px; CTA 464.2px; project previews 327 × 204.4px; one main navigation and footer; no document overflow. Labs Prototypes returns two cards and correctly disables Next at the end. Main skip-intro handoff completes at scrollY=0 with one navigation. Real phone scrolling still needs user review.
