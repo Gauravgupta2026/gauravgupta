@@ -18,8 +18,15 @@ export function LandingExperience() {
   const light = useSyncExternalStore(subscribeToColourPreference, prefersLight, darkFallback);
   const [ready, setReady] = useState(false);
   useEffect(() => {
-    if (ready && window.location.hash === "#selected-work") document.getElementById("selected-work")?.scrollIntoView();
-  }, [ready]);
+    const previousRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+    // Work links leave a fragment behind; reloading should replay the intro at the top.
+    if (window.location.hash === "#selected-work") {
+      window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search);
+    }
+    window.scrollTo({ top: 0, behavior: "instant" });
+    return () => { window.history.scrollRestoration = previousRestoration; };
+  }, []);
   const revealPage = useCallback(() => setReady(true), []);
   return (
     <div className={styles.experience} data-loading={!ready} data-landing-theme={light ? "light" : "dark"}>

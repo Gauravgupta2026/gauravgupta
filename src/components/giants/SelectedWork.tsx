@@ -23,35 +23,45 @@ export function SelectedWork() {
     const root = section.current, windowElement = viewport.current, rail = track.current;
     if (!root || !windowElement || !rail) return;
     const preference = window.matchMedia("(min-width: 1024px) and (prefers-reduced-motion: no-preference)");
-    let frame = 0;
+    const cards = Array.from(rail.querySelectorAll<HTMLElement>("[data-project]"));
+    let frame = 0, pinned = false, inset = 0;
+    let cardOffsets: number[] = [];
     const update = () => {
-      const pinned = preference.matches;
-      if (pinned && windowElement.scrollLeft !== 0) windowElement.scrollLeft = 0;
-      root.dataset.pinned = String(pinned);
-      const travel = Math.max(0, rail.scrollWidth - windowElement.clientWidth);
-      distance.current = travel;
-      root.style.setProperty("--travel", `${travel}px`);
+      frame = 0;
+      const travel = distance.current;
       const progress = pinned ? Math.min(1, Math.max(0, -root.getBoundingClientRect().top / Math.max(1, travel))) : 0;
-      rail.style.transform = pinned ? `translate3d(${-progress * travel}px,0,0)` : "none";
       const shift = pinned ? progress * travel : windowElement.scrollLeft;
+      if (pinned) rail.style.transform = `translate3d(${-shift}px,0,0)`;
       root.style.setProperty("--work-progress", String(travel > 0 ? Math.min(1, Math.max(0, shift / travel)) : 0));
-      const cards = Array.from(rail.querySelectorAll<HTMLElement>("[data-project]"));
-      const closest = cards.reduce((best, card, index) => Math.abs(card.offsetLeft - shift - 64) < Math.abs(cards[best].offsetLeft - shift - 64) ? index : best, 0);
-      setActive(closest);
+      const closest = cardOffsets.reduce((best, offset, index) => Math.abs(offset - shift - inset) < Math.abs(cardOffsets[best] - shift - inset) ? index : best, 0);
+      setActive(current => current === closest ? current : closest);
     };
-    const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); };
-    const observer = new ResizeObserver(schedule);
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const measure = () => {
+      pinned = preference.matches;
+      // Cache layout on resize, rather than remeasuring every mobile scroll event.
+      inset = parseFloat(getComputedStyle(rail).paddingLeft);
+      cardOffsets = cards.map(card => card.offsetLeft);
+      distance.current = Math.max(0, rail.scrollWidth - windowElement.clientWidth);
+      root.dataset.pinned = String(pinned);
+      root.style.setProperty("--travel", `${distance.current}px`);
+      if (pinned && windowElement.scrollLeft !== 0) windowElement.scrollLeft = 0;
+      if (!pinned) rail.style.transform = "none";
+      schedule();
+    };
+    const onPageScroll = () => { if (pinned) schedule(); };
+    const observer = new ResizeObserver(measure);
     observer.observe(windowElement);
     observer.observe(rail);
-    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("scroll", onPageScroll, { passive: true });
     windowElement.addEventListener("scroll", schedule, { passive: true });
-    preference.addEventListener("change", schedule);
-    update();
+    preference.addEventListener("change", measure);
+    measure();
     return () => {
       cancelAnimationFrame(frame); observer.disconnect();
-      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("scroll", onPageScroll);
       windowElement.removeEventListener("scroll", schedule);
-      preference.removeEventListener("change", schedule);
+      preference.removeEventListener("change", measure);
     };
   }, []);
 

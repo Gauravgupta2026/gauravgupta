@@ -8,6 +8,9 @@ const FRAME_INTERVAL = 1000 / 30;
 const MAX_PIXEL_RATIO = 1.6;
 const TAU = Math.PI * 2;
 const REFERENCE_BLOOM_SECONDS = 5;
+const SAMPLE_MARGIN = .04;
+// Diffuse glow needs fewer pixels than the crisp dot layer.
+const GLOW_PIXEL_RATIO = .5;
 const LIGHT_PALETTE = lightFlowerPalette(LIGHT_FLOWER_DEFAULTS);
 type Dot = { x: number; y: number; radius: number; light: number; edge: number; center: number };
 
@@ -23,6 +26,8 @@ export function OrchidCanvas({ paused, skipIntro, onTime, theme }: { paused: boo
     const element = canvas.current;
     const context = element?.getContext("2d");
     if (!element || !context) { playback.current.onTime(OPENING.complete); return; }
+    const glowCanvas = document.createElement("canvas");
+    const glowContext = glowCanvas.getContext("2d");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const source = new Image();
     let luminance: Uint8ClampedArray | undefined;
@@ -35,9 +40,10 @@ export function OrchidCanvas({ paused, skipIntro, onTime, theme }: { paused: boo
       const x = u * (sourceWidth - 1), y = v * (sourceHeight - 1);
       const left = Math.floor(x), top = Math.floor(y), fx = x - left, fy = y - top;
       const right = Math.min(left + 1, sourceWidth - 1), bottom = Math.min(top + 1, sourceHeight - 1);
-      const pixel = (column: number, row: number) => luminance![4 * (row * sourceWidth + column)] / 255;
-      return pixel(left, top) * (1 - fx) * (1 - fy) + pixel(right, top) * fx * (1 - fy)
-        + pixel(left, bottom) * (1 - fx) * fy + pixel(right, bottom) * fx * fy;
+      return (luminance[4 * (top * sourceWidth + left)] * (1 - fx) * (1 - fy)
+        + luminance[4 * (top * sourceWidth + right)] * fx * (1 - fy)
+        + luminance[4 * (bottom * sourceWidth + left)] * (1 - fx) * fy
+        + luminance[4 * (bottom * sourceWidth + right)] * fx * fy) / 255;
     };
     const draw = () => {
       if (!luminance || !width || !height) return;
@@ -57,25 +63,31 @@ export function OrchidCanvas({ paused, skipIntro, onTime, theme }: { paused: boo
       const flowerHeight = fullHeight * (.6 + .4 * bloom) * (1 + .018 * Math.sin(.5 * motionTime));
       const flowerWidth = flowerHeight * aspect;
       const centerX = width / 2 + Math.sin(motionTime * .22) * pitch * .6;
-      const centerY = height * (width <= 440 ? .588 : .5) + Math.cos(motionTime * .18) * pitch * .4;
+      const centerY = height * .5 + Math.cos(motionTime * .18) * pitch * .4;
       const silver: Dot[] = [], bright: Dot[] = [];
-      const columns = Math.ceil(width / pitch) + 1, rows = Math.ceil(height / pitch) + 1;
-      // Sample a fixed screen grid: radial reveal, breathing, ripples and luminance match Edna's renderer.
-      for (let row = 0; row < rows; row++) for (let column = 0; column < columns; column++) {
+      // Visit only the flower's bounds; the margin includes the sampling ripples and dot radius.
+      const halfWidth = flowerWidth * (.5 + SAMPLE_MARGIN) + pitch;
+      const halfHeight = flowerHeight * (.5 + SAMPLE_MARGIN) + pitch;
+      const firstColumn = Math.max(0, Math.floor((centerX - halfWidth) / pitch));
+      const lastColumn = Math.min(Math.ceil(width / pitch), Math.ceil((centerX + halfWidth) / pitch));
+      const firstRow = Math.max(0, Math.floor((centerY - halfHeight) / pitch));
+      const lastRow = Math.min(Math.ceil(height / pitch), Math.ceil((centerY + halfHeight) / pitch));
+      // Keep the same screen-aligned dot grid and motion equations.
+      for (let row = firstRow; row <= lastRow; row++) for (let column = firstColumn; column <= lastColumn; column++) {
         const px = column * pitch + pitch / 2, py = row * pitch + pitch / 2;
         let u = (px - centerX) / flowerWidth + .5;
         let v = (py - centerY) / flowerHeight + .5;
         u += .013 * Math.sin(9 * v + .7 * motionTime);
         v += .013 * Math.sin(9 * u - .6 * motionTime + 1.3);
         let light = sample(u, v);
+        if (light <= .02) continue;
         let edgeStrength = 0;
-        if (playback.current.theme === "light" && light > .02) {
+        if (playback.current.theme === "light" && settings.edgeDefinition > 0) {
           const du = pitch / flowerWidth, dv = pitch / flowerHeight;
           const neighbour = Math.min(sample(u - du, v), sample(u + du, v), sample(u, v - dv), sample(u, v + dv));
           edgeStrength = Math.min(1, Math.max(0, light - neighbour) * 3);
         }
         const centreStrength = playback.current.theme === "light" ? Math.exp(-((u - .5) ** 2 + (v - .56) ** 2) / .022) : 0;
-        if (light <= .02) continue;
         light *= .9 + .1 * Math.sin((px + py) * .05 + motionTime * 1.3);
         const nx = (px - centerX) / (.6 * flowerWidth);
         const ny = (py - centerY) / (.6 * flowerHeight);
@@ -87,30 +99,34 @@ export function OrchidCanvas({ paused, skipIntro, onTime, theme }: { paused: boo
         if (radius < .35) continue;
         (light > .6 ? bright : silver).push({ x: px, y: py, radius, light, edge: edgeStrength, center: centreStrength });
       }
-      const path = (dots: Iterable<Dot>) => {
-        context.beginPath();
-        for (const dot of dots) { context.moveTo(dot.x + dot.radius, dot.y); context.arc(dot.x, dot.y, dot.radius, 0, TAU); }
+      const path = (dots: Iterable<Dot>, target = context) => {
+        target.beginPath();
+        for (const dot of dots) { target.moveTo(dot.x + dot.radius, dot.y); target.arc(dot.x, dot.y, dot.radius, 0, TAU); }
       };
       context.clearRect(0, 0, width, height);
       if (playback.current.theme === "light") {
         const palette = LIGHT_PALETTE;
-        const groups: Dot[][] = Array.from({ length: palette.length * 4 }, () => []);
+        const edgeBands = settings.edgeDefinition > 0 ? 4 : 1;
+        const groups: Dot[][] = Array.from({ length: palette.length * edgeBands }, () => []);
         for (const dot of [...silver, ...bright]) {
           const tone = Math.max(0, Math.min(1, .5 + (dot.light - .5) * settings.contrast - dot.center * settings.centerDepth));
           const band = Math.round(tone * (palette.length - 1));
-          const edgeBand = Math.round(dot.edge * 3);
-          groups[band * 4 + edgeBand].push(dot);
+          const edgeBand = Math.round(dot.edge * (edgeBands - 1));
+          groups[band * edgeBands + edgeBand].push(dot);
         }
         element.style.filter = "none";
-        path([...silver, ...bright]);
-        context.shadowColor = settings.shadow;
-        context.shadowBlur = pitch * settings.glow;
-        context.globalAlpha = settings.glow * .25;
-        context.fillStyle = settings.petal; context.fill();
-        context.globalAlpha = 1; context.shadowBlur = 0;
+        if (glowContext && settings.glow > 0) {
+          glowContext.clearRect(0, 0, width, height);
+          path([...silver, ...bright], glowContext);
+          glowContext.shadowColor = settings.shadow;
+          glowContext.shadowBlur = pitch * settings.glow * GLOW_PIXEL_RATIO;
+          glowContext.globalAlpha = settings.glow * .25;
+          glowContext.fillStyle = settings.petal; glowContext.fill();
+          context.drawImage(glowCanvas, 0, 0, width, height);
+        }
         groups.forEach((dots, index) => {
           if (!dots.length) return;
-          path(dots); context.fillStyle = palette[Math.floor(index / 4)][index % 4]; context.fill();
+          path(dots); context.fillStyle = palette[Math.floor(index / edgeBands)][index % edgeBands]; context.fill();
         });
       } else {
         path([...silver, ...bright]); context.shadowColor = "rgba(211,0,120,.55)"; context.shadowBlur = pitch * 1.1;
@@ -129,8 +145,16 @@ export function OrchidCanvas({ paused, skipIntro, onTime, theme }: { paused: boo
     const resize = () => {
       const bounds = element.getBoundingClientRect(); width = bounds.width; height = bounds.height;
       const ratio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
-      element.width = Math.round(width * ratio); element.height = Math.round(height * ratio);
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      const pixelWidth = Math.round(width * ratio), pixelHeight = Math.round(height * ratio);
+      if (element.width !== pixelWidth || element.height !== pixelHeight) {
+        element.width = pixelWidth; element.height = pixelHeight;
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      }
+      const glowWidth = Math.ceil(width * GLOW_PIXEL_RATIO), glowHeight = Math.ceil(height * GLOW_PIXEL_RATIO);
+      if (glowCanvas.width !== glowWidth || glowCanvas.height !== glowHeight) {
+        glowCanvas.width = glowWidth; glowCanvas.height = glowHeight;
+        glowContext?.setTransform(GLOW_PIXEL_RATIO, 0, 0, GLOW_PIXEL_RATIO, 0, 0);
+      }
       const referenceHeight = 812 + width * .105;
       spacing = width < 840 ? Math.max(3, Math.round(referenceHeight / 96 * Math.min(1, width / 840))) : Math.max(5, Math.round(Math.min(width, referenceHeight) / 96));
       draw();
