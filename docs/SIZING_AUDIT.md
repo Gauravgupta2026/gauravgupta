@@ -29,3 +29,6 @@ Mobile browser measurements at 390 × 844: Work/Labs intro 379.8px; CTA 464.2px;
 - [x] Verify fresh load, internal return, project activation and balanced footer in mobile/desktop preview.
 
 Final checks: fresh Home load enters playing then complete at scrollY=0; no Skip introduction control; ITC normal weight 300; native gallery scrollbar hidden. Mobile swiping and desktop scroll advance the single white read action. Leaving the section sets progress inactive/opacity zero. Leaving during the intro and returning Home, or starting at About then navigating Home, immediately shows complete/opacity one without replay. At 390 × 844, CTA action-to-footer and trailing footer gap are both 101.27px; CTA remains 464.2px (55svh). Build, lint, TypeScript and whitespace checks pass.
+
+Shared inner-page canvas fix: html and body use #0a0a0a with dark color-scheme; root theme-color matches. This removes the legacy white backdrop below Work, Play, Notes and About footers. Home retains its route-specific palette override.
+Verified at 390px on /work, /labs, /notes and /about: html/body computed rgb(10,10,10), root color-scheme dark, theme-color #0a0a0a. Build, lint, TypeScript and diff checks pass.

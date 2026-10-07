@@ -1,3 +1,6 @@
+/* Match the shared footer behind safe areas, gutters and overscroll. */
+html, body { background: #0a0a0a; color-scheme: dark; }
+
 :root {
   scrollbar-gutter: stable;
   --page-gutter: 64px;

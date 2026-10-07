@@ -4,7 +4,7 @@ Shared implementation: `main`; flower-bed hero: `experiments`, 7 October 2026. T
 
 ## Character and color
 
-Dark, quiet, human. Give the work room to breathe. Use size and dimming for hierarchy, not bold sans text. Pink marks hover, focus, progress, and the landing cursor rather than filling page surfaces. Project art owns its palette inside the frame.
+Dark, quiet, human. Give the work room to breathe. The shared html/body canvas and default browser color scheme are dark `#0a0a0a`, matching the footer in safe areas, overscroll and scrollbar gutters. Home keeps its explicit light/dark orchid palette override. Use size and dimming for hierarchy, not bold sans text. Pink marks hover, focus, progress, and the landing cursor rather than filling page surfaces. Project art owns its palette inside the frame.
 
 | Role | Value |
 | --- | --- |
