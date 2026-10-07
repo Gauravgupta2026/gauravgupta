@@ -1,0 +1,41 @@
+/* One palette for the document, shared sections and reader pages. */
+:root {
+  --site-bg: #fdfafb; --site-ink: #342a2e; --site-muted: #72646b;
+  --site-surface: #f3edef; --site-border: #d9ccd2;
+  --site-control: #a0808f55; --site-control-hover: #a0808faa;
+  --site-hover-bg: #a04f7210; --site-focus: #9e365f;
+  --site-progress: #a65178; --site-track: #b28d9c40;
+  --site-scroll: #a0808f; --site-line: #a6517870; --site-shimmer: #9e365f;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --site-bg: #0a0a0a; --site-ink: #f7f6f2; --site-muted: #a4a4a4;
+  --site-surface: #171717; --site-border: #2e2e2e;
+  --site-control: #ffffff24; --site-control-hover: #ffffff65;
+  --site-hover-bg: #ffffff08; --site-focus: #ffcae8;
+  --site-progress: #ead8e2; --site-track: #ffffff20;
+  --site-scroll: #646464; --site-line: #f7dfe7b0; --site-shimmer: #fff1e9;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --site-bg: #0a0a0a; --site-ink: #f7f6f2; --site-muted: #a4a4a4;
+    --site-surface: #171717; --site-border: #2e2e2e;
+    --site-control: #ffffff24; --site-control-hover: #ffffff65;
+    --site-hover-bg: #ffffff08; --site-focus: #ffcae8;
+    --site-progress: #ead8e2; --site-track: #ffffff20;
+    --site-scroll: #646464; --site-line: #f7dfe7b0; --site-shimmer: #fff1e9;
+    color-scheme: dark;
+  }
+}
+:root, :root[data-theme="dark"] {
+  --color-bg: var(--site-bg); --color-ink: var(--site-ink); --color-white: var(--site-ink);
+  --color-soft-ink: var(--site-ink); --color-mute: var(--site-muted);
+  --color-mute-2: var(--site-muted); --color-mute-3: var(--site-muted); --color-faint: var(--site-muted);
+  --color-border: var(--site-border); --color-border-2: var(--site-border); --color-divider: var(--site-border);
+  --color-surface: var(--site-surface); --color-lilac: var(--site-focus); --color-lilac-soft: var(--site-focus);
+  --font-display: var(--font-editorial-local), Georgia, serif;
+  --font-body: var(--font-giants-body), system-ui, sans-serif;
+}
+html, body { background: var(--site-bg); color: var(--site-ink); }
+html { scrollbar-color: var(--site-scroll) var(--site-bg); }

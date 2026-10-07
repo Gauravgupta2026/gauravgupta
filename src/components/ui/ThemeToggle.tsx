@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { setSiteTheme, useSiteTheme } from "@/components/SiteTheme";
 
 type ThemeToggleProps = {
   className?: string;
@@ -10,36 +10,8 @@ type ThemeToggleProps = {
 
 /** A persistent light/dark control shared by the nav and footer. */
 export function ThemeToggle({ className = "", iconOnly = false, showLabel = false }: ThemeToggleProps) {
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
-    const syncTheme = () => {
-      setDark(document.documentElement.getAttribute("data-theme") === "dark");
-    };
-
-    queueMicrotask(syncTheme);
-    window.addEventListener("themechange", syncTheme);
-    window.addEventListener("storage", syncTheme);
-    return () => {
-      window.removeEventListener("themechange", syncTheme);
-      window.removeEventListener("storage", syncTheme);
-    };
-  }, []);
-
-  const toggle = () => {
-    const next = !dark;
-    setDark(next);
-    if (next) {
-      document.documentElement.setAttribute("data-theme", "dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.removeAttribute("data-theme");
-      localStorage.setItem("theme", "light");
-    }
-    // Canvas-drawn graphics (e.g. HalftoneField) can't react to the
-    // [data-theme] attribute via CSS — they redraw on this event instead.
-    window.dispatchEvent(new Event("themechange"));
-  };
+  const dark = useSiteTheme() === "dark";
+  const toggle = () => setSiteTheme(dark ? "light" : "dark");
 
   return (
     <button

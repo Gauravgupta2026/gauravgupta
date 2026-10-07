@@ -1,23 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useSiteTheme } from "@/components/SiteTheme";
 import { useLandingIntro } from "@/components/LandingIntroProvider";
 import { EdnaOpening } from "./EdnaOpening";
 import { SelectedWork } from "./SelectedWork";
 import styles from "./EdnaOpening.module.css";
 
-const LIGHT_PREFERENCE = "(prefers-color-scheme: light)";
-function subscribeToColourPreference(onChange: () => void) {
-  const preference = window.matchMedia(LIGHT_PREFERENCE);
-  preference.addEventListener("change", onChange);
-  return () => preference.removeEventListener("change", onChange);
-}
-const prefersLight = () => window.matchMedia(LIGHT_PREFERENCE).matches;
-const darkFallback = () => false;
-
 export function LandingExperience() {
   const { playIntro, finishIntro } = useLandingIntro();
-  const light = useSyncExternalStore(subscribeToColourPreference, prefersLight, darkFallback);
+  const light = useSiteTheme() === "light";
   const [ready, setReady] = useState(false);
   useEffect(() => {
     const previousRestoration = window.history.scrollRestoration;

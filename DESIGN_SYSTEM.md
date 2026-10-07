@@ -4,7 +4,7 @@ Shared implementation: `main`; flower-bed hero: `experiments`, 7 October 2026. T
 
 ## Character and color
 
-Dark, quiet, human. Give the work room to breathe. The shared html/body canvas and default browser color scheme are dark `#0a0a0a`, matching the footer in safe areas, overscroll and scrollbar gutters. Home keeps its explicit light/dark orchid palette override. Use size and dimming for hierarchy, not bold sans text. Pink marks hover, focus, progress, and the landing cursor rather than filling page surfaces. Project art owns its palette inside the frame.
+Quiet, human, in both themes. Give the work room to breathe. `theme.css` owns semantic colors sitewide: dark ground `#0a0a0a`, light ground `#fdfafb`, including safe areas, browser bars and scrollbar gutters. Saved light/dark preferences override the device setting; otherwise follow the device. Hero canvas, navigation, reading pages, CTA and footer use the same resolved theme. Use size and dimming for hierarchy, not bold sans text. Pink marks hover, focus, progress, and the landing cursor rather than filling page surfaces. Project art owns its palette inside the frame.
 
 | Role | Value |
 | --- | --- |
@@ -20,7 +20,7 @@ Dark, quiet, human. Give the work room to breathe. The shared html/body canvas a
 
 ## Typography
 
-ITC Garamond Light, weight 300, **upright**, is the human voice: page introductions and CTA; the experimental hero also uses it. Main hero name uses the same upright ITC voice. About follows the supplied reference with plain Switzer throughout its biography. Albert Sans 400 is interface chrome: navigation, controls, hero description. Switzer 400 is content: project titles, purposes, facts, biography, and index rows. Fraunces is deferred and is not loaded. Existing substantive articles retain their own article typography.
+ITC Garamond Light, weight 300, **upright**, is the human voice: page introductions and CTA; the experimental hero also uses it. Main hero name uses the same upright ITC voice. About follows the supplied reference with plain Switzer throughout its biography. Albert Sans 400 is interface chrome: navigation, controls, hero description. Switzer 400 is content: project titles, purposes, facts, biography, and index rows. Fraunces is deferred and is not loaded. Case studies use upright ITC headings, Switzer prose and Albert labels. Notes retain Geist Mono prose and their existing composition, with upright ITC headings.
 
 | Element | Size and line-height |
 | --- | --- |
@@ -125,3 +125,11 @@ Shared navigation, project presentation, Work/Labs/Notes/About, filters, CTA and
 Native phone/tablet rails do not snap or translate in JavaScript. Gallery scroll listeners are passive, coalesce updates to one animation frame and change React state only at boundaries. Footer scroll handlers use cached document geometry; layout changes refresh it through ResizeObserver. Experimental hero and flower strip use stable svh units so browser toolbar expansion does not repeatedly resize canvases. Hero rendering must stop offscreen or while hidden/paused. Keep main's existing scroll-restoration fix.
 
 Experiments is replaced wholesale by the latest site state, rather than retaining the older alternate layout. Its search-indexing exclusion is retained as an environment safeguard; main remains indexable.
+
+## Theme and reading-page contract
+
+Light: content #342a2e, supporting #72646b, surface #f3edef, border #d9ccd2, focus #9e365f, progress #a65178. Dark retains the table above. Use `--site-*` tokens for UI; preserve intrinsic artwork colors. Root bootstrap resolves theme before paint; SiteTheme follows device changes and saved preferences on route navigation. No scroll listener is needed for browser color.
+
+Case-study and note article titles: upright ITC 300, 32–52px / 1.1. Case prose: Switzer 16px / 1.65; note prose: Geist Mono 14px / 1.75. Reading measure capped at 680px. Section headings: ITC 26–36px for cases, 24–32px for notes. Labels stay readable at 12px; avoid tiny uppercase metadata. Note date appears above the title; one full-width rule follows the introduction, without repeated source/date metadata. Quotes and principles use theme-aware surfaces, upright serif text, and restrained spacing. Expanded case-study answers use intrinsic height so text cannot be clipped.
+
+Landing “View More” always links to `/work`; individual “Read case study” links retain the project route.

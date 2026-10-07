@@ -16,7 +16,7 @@ export function SelectedWork() {
         <div className={styles.toolbar}>
           <h2 id="work-title">Selected work</h2>
           <nav className={styles.controls} aria-label="Project navigation">
-            {active >= 0 && <Link className={styles.viewMore} href={`/projects/${selected[active].slug}`}>View More</Link>}
+            {active >= 0 && <Link className={styles.viewMore} href="/work">View More</Link>}
             <button onClick={() => moveTo(active - 1)} disabled={active === -1} aria-label="Previous panel">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6" /></svg>
             </button>

@@ -5,12 +5,6 @@ import { ArticleBody } from "@/components/article/ArticleBody";
 import { articles, getArticle } from "@/content/articles";
 import styles from "./NotePage.module.css";
 
-const SOURCE_NAME: Record<string, string> = {
-  substack: "Substack",
-  medium: "Medium",
-  site: "On-site",
-};
-
 export function generateStaticParams() {
   return articles.map((article) => ({ slug: article.slug }));
 }
@@ -32,15 +26,12 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
       <article>
         <header className={styles.header}>
           <div className={styles.kicker}>
-            <Link href="/notes">Notes</Link>
+            <time>{article.date}</time>
             <span>{article.readingTime}</span>
           </div>
           <h1>{article.title}</h1>
           <p className={styles.dek}>{article.dek}</p>
-          <div className={styles.meta}>
-            <span>{SOURCE_NAME[article.source]}</span>
-            <time>{article.date}</time>
-          </div>
+          <div className={styles.rule} aria-hidden="true" />
         </header>
 
         <div className={styles.body}>

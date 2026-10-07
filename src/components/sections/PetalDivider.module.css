@@ -1,7 +1,7 @@
 .scene { position: relative; height: var(--ending-space); flex: none; margin-inline: var(--page-gutter); overflow: hidden; pointer-events: none; isolation: isolate; }
 .piece { position: absolute; bottom: 10px; background-image: url('/media/botanical-atlas.webp'); background-size: 200% 200%; background-repeat: no-repeat; transform-origin: center bottom; opacity: 0; }
-.line { position: absolute; inset: auto 0 8px; height: 1px; background: linear-gradient(90deg,#ead8e220,#f7dfe7b0 50%,#ead8e220); opacity: var(--line-opacity, 1); transform: scaleX(var(--line-spread, 1)); transform-origin: center; overflow: hidden; }
-.line span { position: absolute; top: 0; left: 50%; width: 20%; height: 1px; background: linear-gradient(90deg,transparent,#fff1e9,transparent); animation: radiate-right 5s ease-out infinite; animation-play-state: paused; }
+.line { position: absolute; inset: auto 0 8px; height: 1px; background: linear-gradient(90deg,transparent,var(--site-line) 50%,transparent); opacity: var(--line-opacity, 1); transform: scaleX(var(--line-spread, 1)); transform-origin: center; overflow: hidden; }
+.line span { position: absolute; top: 0; left: 50%; width: 20%; height: 1px; background: linear-gradient(90deg,transparent,var(--site-shimmer),transparent); animation: radiate-right 5s ease-out infinite; animation-play-state: paused; }
 .line span:last-child { left: auto; right: 50%; animation-name: radiate-left; }
 .scene[data-active="true"][data-settled="true"] .line span { animation-play-state: running; }
 @keyframes radiate-right { from { opacity: 0; transform: translateX(-50%); } 20% { opacity: 1; } to { opacity: 0; transform: translateX(250%); } }

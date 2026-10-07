@@ -1,10 +1,10 @@
-.header { position: fixed; inset: 0 0 auto; width: var(--viewport-width, 100%); height: 72px; z-index: 100; background: #0a0a0a; color: #fff; font: 400 14px/1.5 var(--font-edna-ui), system-ui, sans-serif; }
-.name { position: absolute; left: var(--page-gutter); top: 14px; min-height: 44px; display: flex; align-items: center; color: #fff; text-decoration: none; transition: opacity 250ms; }
+.header { position: fixed; inset: 0 0 auto; width: var(--viewport-width, 100%); height: 72px; z-index: 100; background: var(--site-bg); color: var(--site-ink); font: 400 14px/1.5 var(--font-edna-ui), system-ui, sans-serif; }
+.name { position: absolute; left: var(--page-gutter); top: 14px; min-height: 44px; display: flex; align-items: center; color: var(--site-ink); text-decoration: none; transition: opacity 250ms; }
 .links { position: absolute; right: var(--page-gutter); top: 14px; display: flex; gap: 32px; transition: top 350ms ease, transform 350ms ease; }
-.links a { display: flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: flex-end; color: #fff; text-decoration: none; }
-.links a[aria-current="page"] { color: #a4a4a4; }
-.header a:hover { color: #ffcae8; }
-.header a:focus-visible { outline: 2px solid #ffcae8; outline-offset: 4px; }
+.links a { display: flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: flex-end; color: var(--site-ink); text-decoration: none; }
+.links a[aria-current="page"] { color: var(--site-muted); }
+.header a:hover { color: var(--site-focus); }
+.header a:focus-visible { outline: 2px solid var(--site-focus); outline-offset: 4px; }
 .header[data-hero="true"] { background: transparent; }
 .header[data-hero="true"] .name { opacity: 0; visibility: hidden; }
 @media (max-width: 1023px) {
@@ -22,6 +22,3 @@
 
 /* Keep main's orchid handoff while sharing one navigation across routes. */
 :global(body):has([data-loading="true"]) .header { visibility: hidden; }
-@media (prefers-color-scheme: light) {
-  :global(body):has([data-landing-theme="light"]) .header[data-hero="true"] .links a { color: #342a2e; }
-}

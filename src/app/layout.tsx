@@ -10,6 +10,8 @@ import { LazyMotion, domAnimation } from "framer-motion";
 import "./globals.css";
 import "./legacy-components.css";
 import "./layout-tokens.css";
+import "./theme.css";
+import { SiteTheme } from "@/components/SiteTheme";
 import { ContactEnding } from "@/components/sections/ContactEnding";
 import { Nav } from "@/components/sections/Nav";
 import { LandingIntroProvider } from "@/components/LandingIntroProvider";
@@ -126,8 +128,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
-  colorScheme: "dark",
+  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#fdfafb" }, { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" }],
+  colorScheme: "dark light",
   viewportFit: "cover",
 };
 
@@ -144,10 +146,10 @@ export default function RootLayout({
     >
       <body>
         <script
-          // Runs before paint so a stored "dark" choice never flashes light first.
+          // Resolve the saved choice or device preference before the first paint.
           dangerouslySetInnerHTML={{
             __html:
-              "try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}",
+              "(()=>{let t;try{t=localStorage.getItem('theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t;document.querySelectorAll('meta[name=theme-color]').forEach(m=>m.content=t==='dark'?'#0a0a0a':'#fdfafb')})()",
           }}
         />
         <PostHogProvider>
@@ -158,6 +160,7 @@ export default function RootLayout({
               full ~35kb bundle. */}
           <LazyMotion features={domAnimation} strict>
             <LandingIntroProvider>
+              <SiteTheme />
               <LayoutMetrics />
               <Nav />
               {children}

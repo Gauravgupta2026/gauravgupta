@@ -1,12 +1,12 @@
 .section { padding-bottom: 64px; scroll-margin-top: 96px; }
 .toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 0 var(--page-gutter) 24px; }
-.toolbar p { margin: 0; font-size: 13px; line-height: 1.5; color: #9d9299; }
+.toolbar p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--site-muted); }
 .toolbar nav { display: flex; gap: 8px; }
-.toolbar nav button { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #ffffff24; border-radius: 50%; background: transparent; color: #f7f6f2; cursor: pointer; }
+.toolbar nav button { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--site-control); border-radius: 50%; background: transparent; color: var(--site-ink); cursor: pointer; }
 .toolbar nav button:disabled { opacity: .25; cursor: default; }
-.toolbar nav button:hover:not(:disabled) { border-color: #ffffff65; background: #ffffff08; }
+.toolbar nav button:hover:not(:disabled) { border-color: var(--site-control-hover); background: var(--site-hover-bg); }
 .toolbar nav svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.15; stroke-linecap: round; stroke-linejoin: round; }
-.gallery { margin-inline: var(--page-gutter); padding: 8px 0 32px; overflow-x: auto; scrollbar-width: thin; scrollbar-color: #323232 #0a0a0a; scroll-padding-inline: 0; }
+.gallery { margin-inline: var(--page-gutter); padding: 8px 0 32px; overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--site-scroll) var(--site-bg); scroll-padding-inline: 0; }
 .track { position: relative; display: flex; align-items: flex-end; width: max-content; gap: 32px; margin: 0; padding: 0; list-style: none; }
  .tile { width: calc((var(--viewport-width, 100vw) - var(--page-gutter) * 2 - 64px) / 3); flex-shrink: 0; }
 .preview { display: block; width: 100%; height: clamp(320px, 48svh, 560px); padding: 0; cursor: zoom-in; }
@@ -16,15 +16,15 @@
 .preview:hover svg { transform: scale(1.025); }
 .caption { margin: 18px 0 0; }
 
-.caption p { margin: 5px 0 0; font-size: 12px; line-height: 1.5; color: #a4a4a4; }
-.toolbar nav button:focus-visible, .preview:focus-visible, .gallery:focus-visible, .close:focus-visible { outline: 2px solid #ffcae8; outline-offset: 4px; }
-.dialog { width: min(88vw, 1088px); max-height: 90svh; padding: 0; border: 1px solid #2e2e2e; border-radius: 8px; background: #0a0a0a; color: #f7f6f2; font-family: var(--font-giants-body), sans-serif; }
+.caption p { margin: 5px 0 0; font-size: 12px; line-height: 1.5; color: var(--site-muted); }
+.toolbar nav button:focus-visible, .preview:focus-visible, .gallery:focus-visible, .close:focus-visible { outline: 2px solid var(--site-focus); outline-offset: 4px; }
+.dialog { width: min(88vw, 1088px); max-height: 90svh; padding: 0; border: 1px solid var(--site-border); border-radius: 8px; background: var(--site-bg); color: var(--site-ink); font-family: var(--font-giants-body), sans-serif; }
 .dialog::backdrop { background: #000d; }
 .dialogBody { position: relative; padding: 64px 32px 32px; }
-.close { position: absolute; top: 8px; right: 16px; min-height: 44px; padding: 8px 12px; border: 1px solid #ffffff65; border-radius: 6px; color: #f7f6f2; background: #0a0a0a; font: 13px var(--font-edna-ui), sans-serif; cursor: pointer; }
-.dialogArt { height: min(60svh, 560px); background: #171717; border-radius: 8px; }
+.close { position: absolute; top: 8px; right: 16px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--site-control-hover); border-radius: 6px; color: var(--site-ink); background: var(--site-bg); font: 13px var(--font-edna-ui), sans-serif; cursor: pointer; }
+.dialogArt { height: min(60svh, 560px); background: var(--site-surface); border-radius: 8px; }
 .dialog h2 { margin: 24px 0 0; font: 300 clamp(28px, 3vw, 40px)/1.1 var(--font-editorial-local), Georgia, serif; font-style: normal; }
-.dialog p { margin: 12px 0 0; font-size: 13px; color: #a4a4a4; line-height: 1.5; }
+.dialog p { margin: 12px 0 0; font-size: 13px; color: var(--site-muted); line-height: 1.5; }
 
 @media (min-width: 601px) and (max-width: 1023px) {
  .tile { width: calc((var(--viewport-width, 100vw) - var(--page-gutter) * 2 - 32px) / 2); }

@@ -1,6 +1,6 @@
-.page { padding: 0 var(--page-gutter); background: #0a0a0a; color: #f7f6f2; font-family: var(--font-giants-body), sans-serif; }
+.page { padding: 0 var(--page-gutter); background: var(--site-bg); color: var(--site-ink); font-family: var(--font-giants-body), sans-serif; }
 .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
-.resultCount { margin: 0; font-size: 13px; color: #a4a4a4; }
+.resultCount { margin: 0; font-size: 13px; color: var(--site-muted); }
 .paper, .collection { min-width: 0; }
 .project { scroll-margin-top: 112px; }
 .project + .project { margin-top: 128px; }
@@ -17,9 +17,9 @@
 .copyLeft { margin-right: auto; }
 .copyRight { margin-left: 41.667%; }
 .meta { display: flex; flex-direction: column; margin: 16px 0 0; }
-.empty { min-height: 200px; color: #a4a4a4; font-size: 15px; }
-.empty button { display: inline-flex; min-height: 44px; align-items: center; margin-left: 12px; padding: 8px 12px; border: 1px solid #ffffff65; border-radius: 6px; background: transparent; color: #f7f6f2; cursor: pointer; font: inherit; }
-.projectLink:focus-visible, .empty button:focus-visible { outline: 2px solid #ffcae8; outline-offset: 4px; }
+.empty { min-height: 200px; color: var(--site-muted); font-size: 15px; }
+.empty button { display: inline-flex; min-height: 44px; align-items: center; margin-left: 12px; padding: 8px 12px; border: 1px solid var(--site-control-hover); border-radius: 6px; background: transparent; color: var(--site-ink); cursor: pointer; font: inherit; }
+.projectLink:focus-visible, .empty button:focus-visible { outline: 2px solid var(--site-focus); outline-offset: 4px; }
 @media (max-width: 1023px) {
  .mediaGrid { display: flex; flex-direction: column; gap: 16px; }
  .projectCopy, .copyLeft, .copyRight { width: var(--project-media-width); margin: 20px 0 0; }

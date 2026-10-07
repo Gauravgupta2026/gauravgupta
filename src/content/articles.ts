@@ -37,7 +37,7 @@ export const articles: Article[] = [
     title: "Notes on Long-Horizon Agents",
     dek: "What actually breaks when an agent has to remember, plan, and recover across hundreds of steps — and the small architectural bets that keep it coherent.",
     source: "site",
-    date: "Jun 2026",
+    date: "June 2026",
     readingTime: "7 min read",
     body: [
       {
