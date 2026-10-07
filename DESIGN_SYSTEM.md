@@ -42,7 +42,7 @@ Use `ProjectPresentation.module.css` for project titles, purposes, facts, and fr
 
 `src/app/layout-tokens.css` owns gutters and project size tokens. Reserve a stable scrollbar gutter sitewide so short and long pages share usable width; the fixed nav uses that same width. Desktop gutters are 64px; at 1023px and below they are 24px. Align the shared nav, section labels, project media/captions, and biography to these columns. Breakpoints: 1023px, 600px, 440px.
 
-At **600px and below**, Landing, Work, and Labs project media start from the same base dimensions, with explicit page adjustments: Work scales both dimensions to 90%; Landing scales height to 110%; Labs keeps the base. Landing and Work retain these dimensions through 1023px; Labs uses two larger gallery columns on tablet:
+At **600px and below**, Landing, Work, and Labs project media start from the same base dimensions, with explicit page adjustments: Work primary frames scale both dimensions to 90%; secondary frames are 10% larger than that (99% of the base); Landing scales height to 110%; Labs keeps the base. Landing and Work retain these dimensions through 1023px; Labs uses two larger gallery columns on tablet:
 
 - Width: usable viewport width less two page gutters, capped at 480px.
 - Height: width multiplied by 0.625 (16:10).
@@ -50,7 +50,7 @@ At **600px and below**, Landing, Work, and Labs project media start from the sam
 - `LayoutMetrics` publishes usable viewport width through a ResizeObserver. It does no per-scroll measurement. The CSS fallback remains usable before hydration.
 - Complete project containers may differ: Landing keeps its reading section, Work stacks two media frames, Labs keeps captions below a horizontal gallery. Consistency refers to preview dimensions and typography, not identical page composition.
 
-Desktop Landing media height: `clamp(198px,(100svh - 400px) * .715,396px)`. Work retains alternating 7/5-column paired images and 24px gaps; each image is 90% of its former width and height, preserving aspect ratios and its column alignment. Labs uses three equal-width cards on desktop with 32px gaps inside page gutters; tablet uses two columns. Bottom-aligned desktop preview heights vary between 43svh and 53svh within their 300–600px limits. These desktop compositions intentionally differ.
+Desktop Landing media height: `clamp(198px,(100svh - 400px) * .715,396px)`. Work retains alternating 7/5-column paired images with 16px gaps (12px when stacked). Primary frames remain at 90% scale; secondary frames increase 10% from their reduced size, to 99% of their original scale. Preserve aspect ratios and column alignment. Labs uses three equal-width cards on desktop with 32px gaps inside page gutters; tablet uses two columns. Bottom-aligned desktop preview heights vary between 43svh and 53svh within their 300–600px limits. These desktop compositions intentionally differ.
 
 Controls keep 44px minimum targets even when their text becomes smaller. Media zoom stays clipped inside the frame. Utility buttons have 6px radii; gallery controls are circles with 20px icons. Focus rings are 2px pink, offset 4px.
 

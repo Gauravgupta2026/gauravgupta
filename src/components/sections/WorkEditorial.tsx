@@ -71,7 +71,7 @@ function ProjectRow({
           <Image
             alt={secondaryAlt}
             fill
-            sizes="(max-width: 527px) calc((100vw - 48px) * .9), (max-width: 1023px) 432px, 38vw"
+            sizes="(max-width: 527px) calc((100vw - 48px) * .99), (max-width: 1023px) 476px, 42vw"
             src={detailImage}
           />
         </figure>

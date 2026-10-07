@@ -1,14 +1,14 @@
-.page { --work-media-scale: .9; --project-media-width: calc(var(--project-media-base-width) * var(--work-media-scale)); --project-media-height: calc(var(--project-media-width) * .625); padding: 0 var(--page-gutter); background: var(--site-bg); color: var(--site-ink); font-family: var(--font-giants-body), sans-serif; }
+.page { --work-media-scale: .9; --work-detail-scale: 1.1; --project-media-width: calc(var(--project-media-base-width) * var(--work-media-scale)); --project-media-height: calc(var(--project-media-width) * .625); padding: 0 var(--page-gutter); background: var(--site-bg); color: var(--site-ink); font-family: var(--font-giants-body), sans-serif; }
 .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
 .resultCount { margin: 0; font-size: 13px; color: var(--site-muted); }
 .paper, .collection { min-width: 0; }
 .project { scroll-margin-top: 112px; }
 .project + .project { margin-top: 128px; }
 .projectLink { display: block; color: inherit; text-decoration: none; }
-.mediaGrid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: start; }
+.mediaGrid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; align-items: start; }
 .primaryMedia, .secondaryMedia { grid-row: 1; margin: 0; width: calc(100% * var(--work-media-scale)); }
 .primaryMedia { grid-column: 1 / span 7; aspect-ratio: 770 / 438; }
-.secondaryMedia { grid-column: 8 / -1; aspect-ratio: 504 / 255; }
+.secondaryMedia { width: calc(100% * var(--work-media-scale) * var(--work-detail-scale)); grid-column: 8 / -1; aspect-ratio: 504 / 255; }
 .reverse .primaryMedia { grid-column: 6 / -1; }
 .reverse .secondaryMedia { grid-column: 1 / span 5; }
 .mediaGrid img { object-fit: cover; transition: transform 700ms cubic-bezier(.2,.7,0,1); }
@@ -22,7 +22,8 @@
 .projectLink:focus-visible, .empty button:focus-visible { outline: 2px solid var(--site-focus); outline-offset: 4px; }
 @media (max-width: 1023px) {
  .primaryMedia, .secondaryMedia { width: var(--project-media-width); }
- .mediaGrid { display: flex; flex-direction: column; gap: 16px; }
+ .mediaGrid { display: flex; flex-direction: column; gap: 12px; }
+ .mediaGrid .secondaryMedia { width: calc(var(--project-media-width) * var(--work-detail-scale)); height: calc(var(--project-media-height) * var(--work-detail-scale)); }
  .projectCopy, .copyLeft, .copyRight { width: var(--project-media-width); margin: 20px 0 0; }
  .project + .project { margin-top: 96px; }
 }

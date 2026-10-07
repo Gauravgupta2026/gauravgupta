@@ -76,3 +76,10 @@ Earlier botanical phase observations above describe the superseded implementatio
 - [x] Responsive image `sizes` matches reduced Work frames. Labs geometry and shared typography remain unchanged.
 - [x] Light accent/cursor follows yellow hero; readable gold tokens cover focus, progress and hairline ripples. Dark accents remain pink.
 - [x] Final computed styles checked in same-origin responsive frames at 390, 820 and 1440px: Work widths/heights scale to 90%; Landing heights scale to 110%. At 390px, Work is 293×183px and Landing is 326×224px (fractional scrollbar gutter included). At tablet width, Work is 432×270px and Landing is 480×330px. Light cursor resolves to RGB(255,207,77); dark remains pink. Build/lint/typecheck and direction/timing regressions pass.
+
+## Work image-pair refinement
+
+- [x] Reduce paired-image gap to 16px desktop / 12px stacked.
+- [x] Increase secondary frame width/height by 10% from its current size, preserving aspect ratio; primary frame retains 90% scale.
+- [x] Update responsive source sizes and authoritative sizing rules.
+- [x] Computed styles verified at 390 / 820 / 1440px, with no horizontal overflow. Secondary mobile frame is 322×201px against primary 293×183px; tablet secondary is 475×297px against primary 432×270px. Gaps resolve to 12px stacked / 16px desktop. Lint, build, typecheck and existing regressions pass.
