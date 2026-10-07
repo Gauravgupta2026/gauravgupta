@@ -31,7 +31,7 @@ export function LandingExperience() {
   return (
     <div className={styles.experience} data-loading={!ready} data-landing-theme={light ? "light" : "dark"}>
       <EdnaOpening onReveal={revealPage} theme={light ? "light" : "dark"} />
-      {ready && <SelectedWork />}
+      <SelectedWork />
     </div>
   );
 }

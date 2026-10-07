@@ -141,7 +141,6 @@ export function OrchidCanvas({ paused, skipIntro, onTime, theme }: { paused: boo
         context.fillRect(0, 0, width, height); context.globalCompositeOperation = "source-over";
       }
     };
-    repaint.current = draw;
     const resize = () => {
       const bounds = element.getBoundingClientRect(); width = bounds.width; height = bounds.height;
       const ratio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
@@ -160,14 +159,23 @@ export function OrchidCanvas({ paused, skipIntro, onTime, theme }: { paused: boo
       draw();
     };
     const animate = (timestamp: number) => {
+      frame = 0;
+      if (disposed || !visible || document.hidden || playback.current.paused || reduced.matches) return;
       const delta = previousTime ? Math.min(timestamp - previousTime, 100) : 0; previousTime = timestamp;
       if (playback.current.skipIntro && elapsed < OPENING.complete) { elapsed = OPENING.complete; draw(); }
       if (visible && !document.hidden && !playback.current.paused && !reduced.matches) {
         elapsed += delta / 1000;
-        if (elapsed < OPENING.complete || timestamp - previousFrame >= FRAME_INTERVAL) { draw(); previousFrame = timestamp; }
+        if (timestamp - previousFrame >= FRAME_INTERVAL) { draw(); previousFrame = timestamp; }
       }
       frame = requestAnimationFrame(animate);
     };
+    const syncPlayback = () => {
+      cancelAnimationFrame(frame); frame = 0; previousTime = 0;
+      if (playback.current.skipIntro) elapsed = Math.max(elapsed, OPENING.complete);
+      if (visible && !document.hidden) draw();
+      if (luminance && visible && !document.hidden && !playback.current.paused && !reduced.matches) frame = requestAnimationFrame(animate);
+    };
+    repaint.current = syncPlayback;
     source.onload = () => {
       if (disposed) return;
       const buffer = document.createElement("canvas"); buffer.width = source.width; buffer.height = source.height;
@@ -175,13 +183,14 @@ export function OrchidCanvas({ paused, skipIntro, onTime, theme }: { paused: boo
       if (!bufferContext) { playback.current.onTime(OPENING.complete); return; }
       bufferContext.drawImage(source, 0, 0);
       luminance = bufferContext.getImageData(0, 0, source.width, source.height).data;
-      sourceWidth = source.width; sourceHeight = source.height; resize(); frame = requestAnimationFrame(animate);
+      sourceWidth = source.width; sourceHeight = source.height; resize(); syncPlayback();
     };
     source.onerror = () => { if (!disposed) playback.current.onTime(OPENING.complete); };
     const observer = new ResizeObserver(resize); observer.observe(element);
-    const intersection = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }); intersection.observe(element);
-    reduced.addEventListener("change", draw); source.src = "/media/orchid-luminance.png";
-    return () => { repaint.current = null; disposed = true; cancelAnimationFrame(frame); observer.disconnect(); intersection.disconnect(); reduced.removeEventListener("change", draw); source.onload = null; source.onerror = null; };
+    const intersection = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; syncPlayback(); }); intersection.observe(element);
+    document.addEventListener("visibilitychange", syncPlayback);
+    reduced.addEventListener("change", syncPlayback); source.src = "/media/orchid-luminance.png";
+    return () => { repaint.current = null; disposed = true; cancelAnimationFrame(frame); observer.disconnect(); intersection.disconnect(); reduced.removeEventListener("change", syncPlayback); document.removeEventListener("visibilitychange", syncPlayback); source.onload = null; source.onerror = null; };
   }, []);
   return <canvas ref={canvas} aria-hidden="true" />;
 }

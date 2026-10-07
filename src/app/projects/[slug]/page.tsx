@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { ArtifactFiles } from "@/components/sections/ArtifactFiles";
 import { DecisionLog } from "@/components/sections/DecisionLog";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
-import { Nav } from "@/components/sections/Nav";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { getProjectDetail, projectDetails, type ProjectDetail, type Section } from "@/content/projectDetails";
 import { projects } from "@/content/projects";
@@ -54,7 +53,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   return (
     <main className={styles.page}>
-      <Nav />
       <article>
         <header className={styles.header}>
           <div className={styles.kicker}>

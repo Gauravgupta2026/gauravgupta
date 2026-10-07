@@ -1,149 +1,127 @@
 # Portfolio design system
 
-This document records the approved visual rules for the current portfolio redesign.
+Shared implementation: `main`; flower-bed hero: `experiments`, 7 October 2026. This document records the current rules; superseded experiments are not specifications. Visual acceptance remains Gaurav's review.
 
-## Character
+## Character and color
 
-The site should feel precise, calm, human, and technically capable. Editorial typography and generous whitespace carry the story. Electric-blue ASCII motion supplies the primary expressive moment.
+Dark, quiet, human. Give the work room to breathe. Use size and dimming for hierarchy, not bold sans text. Pink marks hover, focus, progress, and the landing cursor rather than filling page surfaces. Project art owns its palette inside the frame.
 
-## Color
-
-- Electric blue: `#1235F5` for identity, primary actions, focus, links, and interactive emphasis.
-- Ink: `#111111` for primary text.
-- Navigation ink: `#505050` for quiet utility text.
-- Quiet surface: `#F3F3F3` for secondary controls and metadata.
-- White: `#FFFFFF` for the page and text on electric blue.
-- Purple is not part of the site-wide palette.
-
-## Shape language
-
-- **Square:** identity. The blue square belongs beside the name.
-- **Capsule:** compact interface. Use for navigation controls, actions, filters, categories, tags, and small status labels.
-- **Rectangle:** content. Use for imagery, galleries, project compositions, the ASCII sea, and page sections.
-- Do not round content merely to repeat the capsule shape.
-
-Capsules share a full radius but express hierarchy through fill:
-
-- Navigation: white with a one-pixel neutral border.
-- Primary site action: electric blue with white text. Editorial project actions may use ink when the surrounding case-study composition requires it.
-- Secondary action: quiet gray with dark text.
-- Category or tag: quiet gray, regular-weight text, and an optional meaningful color dot.
-- Featured label: pale blue capsule with electric-blue text; it identifies hierarchy without competing with the project title.
+| Role | Value |
+| --- | --- |
+| Ground | `#0a0a0a` |
+| Content | `#f7f6f2` |
+| Name / navigation | `#ffffff` |
+| Experimental hero description | White at 85 percent |
+| Supporting text | `#a4a4a4` |
+| Media surface / border | `#171717` / `#2e2e2e` |
+| Control border / hover | `#ffffff24` / `#ffffff65` |
+| Focus and hover accent | `#ffcae8` |
+| Progress / cursor | `#ead8e2` / `#da027d` |
 
 ## Typography
 
-- Inter is the structural voice for navigation, body copy, metadata, and the name.
-- ITC Garamond is the editorial voice for section headings and one restrained emotional phrase in the hero. Individual project titles use Inter so featured and standard projects share one hierarchy.
-- Monospace belongs to ASCII art, technical annotations, and indices; it is not the identity font.
-- Hover states do not change font weight because changing metrics can cause layout movement.
+ITC Garamond Light, weight 300, **upright**, is the human voice: page introductions and CTA; the experimental hero also uses it. Main retains its existing Cormorant italic hero name. About follows the supplied reference with plain Switzer throughout its biography. Albert Sans 400 is interface chrome: navigation, controls, hero description. Switzer 400 is content: project titles, purposes, facts, biography, and index rows. Fraunces is deferred and is not loaded. Existing substantive articles retain their own article typography.
 
-### Responsive type scale
+| Element | Size and line-height |
+| --- | --- |
+| Main hero name | Cormorant italic 600, `clamp(16px,3.571vw,24px)` / 1.5 |
+| Main hero description | Albert Sans `clamp(13px,1.905vw,16px)` / 1.45 |
+| Experimental hero name | `clamp(36px,4.5vw,64px)` / 1.05; below 440px `clamp(32px,9vw,40px)` |
+| Experimental hero description | `clamp(14px,1.3vw,18px)` / 1.45, balanced and centered |
+| Project title, all indexes | Switzer `clamp(18px,1.4vw,20px)` / 1.15; 18px below 601px |
+| Project purpose | Switzer 14px / 1.4 |
+| Project facts | Switzer 12px / 1.5, normal case |
+| Context / inner-page introduction | 14–15px / 1.45–1.55 |
+| About biography, including lead | Switzer 400, 16px / 1.35 |
+| Notes rows | 15px / 1.5; 13px below 601px; metadata 13px / 11px |
+| CTA headline | ITC `clamp(24px,3.2vw,40px)` / 1.15, two explicit lines |
 
-| Role | Desktop | Tablet | Mobile | Weight |
-| --- | --- | --- | --- | --- |
-| Name | 12–16px | 13px | 13px | Inter 700 |
-| Navigation | 11–14px | 13px | 13px | Inter 400 |
-| Hero | 25–50px | 25–38px | 22–28px | Inter 400 |
-| Hero emphasis | follows hero | follows hero | follows hero | ITC Garamond italic 300 |
-| Hero metadata | 10–15px | 11px | 10px | Inter 400–500 |
-| Section heading | 30–40px | 30px | 30px | ITC Garamond 300 |
-| Featured title | 28–34px | 24–29px | 22–23px | Inter 500 |
-| Featured body | 14–15px | 14px | 14px | Inter 400 |
-| Project title | 21–26px | 21–26px | 23px | Inter 500 |
-| Project description | 13–16px | 14px | 14px | Inter 400 |
-| Tag | 12px | 12px | 10px | Inter 400 |
+Use `ProjectPresentation.module.css` for project titles, purposes, facts, and frame shape. Do not duplicate these properties in page selectors. A project title is content, not the ITC voice. Keep prose under 75ch. No synthetic italic or bold in the voice role.
 
-## Opening composition
+## Shared layout and sizing
 
-- Desktop navigation retains the original three-part arrangement: identity, section links, and actions.
-- The hero remains an offset two-line statement with generous breathing room.
-- The ASCII sea occupies half of the initial viewport and is the opening's signature motion.
-- Decorative sky detail remains quiet so the dolphin is the focal point.
+`src/app/layout-tokens.css` owns gutters and project size tokens. Reserve a stable scrollbar gutter sitewide so short and long pages share usable width; the fixed nav uses that same width. Desktop gutters are 64px; at 1023px and below they are 24px. Align the shared nav, section labels, project media/captions, and biography to these columns. Breakpoints: 1023px, 600px, 440px.
 
-## Motion and interaction
+At **600px and below**, Landing, Work, and Labs project media have identical dimensions. Landing and Work retain these dimensions through 1023px; Labs uses two larger gallery columns on tablet:
 
-- Motion begins through intentional engagement: pointer entry on hover-capable devices and viewport entry on touch devices.
-- Pause animation when it is offscreen, the document is hidden, or reduced motion is requested.
-- Keyboard focus and touch targets remain visible and at least 44 pixels high.
-- Opening the mobile menu blurs and dims the page beneath it and locks page scrolling.
+- Width: usable viewport width less two page gutters, capped at 480px.
+- Height: width multiplied by 0.625 (16:10).
+- Border: 1px `#2e2e2e`; radius 8px; surface `#171717`.
+- `LayoutMetrics` publishes usable viewport width through a ResizeObserver. It does no per-scroll measurement. The CSS fallback remains usable before hydration.
+- Complete project containers may differ: Landing keeps its reading section, Work stacks two media frames, Labs keeps captions below a horizontal gallery. Consistency refers to preview dimensions and typography, not identical page composition.
 
-## Responsive behavior
+Desktop Landing media height: `clamp(180px,(100svh - 400px) * .65,360px)`. Work retains alternating 7/5-column paired images, 24px gap, with existing aspect ratios. Labs uses three equal-width cards on desktop with 32px gaps inside page gutters; tablet uses two columns. Bottom-aligned desktop preview heights vary between 43svh and 53svh within their 300–600px limits. These desktop compositions intentionally differ.
 
-- Desktop capsules stay compact and secondary to the hero.
-- Mobile navigation uses spacious rows inside one menu panel rather than a cloud of individual chips.
-- Project media may scroll horizontally on mobile, with sufficient exterior whitespace and native touch behavior.
-- On mobile, the featured project keeps its label, title, short description, action, and one image. Supporting proof moves into the case study rather than crowding the landing page.
-- Project galleries use a shared image height with varied portrait, square, landscape, and wide widths. This creates rhythm while keeping each project row visually coherent.
+Controls keep 44px minimum targets even when their text becomes smaller. Media zoom stays clipped inside the frame. Utility buttons have 6px radii; gallery controls are circles with 20px icons. Focus rings are 2px pink, offset 4px.
 
+## Navigation and headings
 
-## October 6 restoration
+One `Nav` in the root layout covers all routes. Horizontal links stay at the top right: Work (`/work`), Play (`/labs`), Notes (`/notes`), About (`/about`). Name appears at the top left on inner pages and after the landing hero name leaves view. There is no vertical navigation or separate stale page navigation.
 
-Restore the October 2 main snapshot (`b1617a2`) for the site, including its original navigation, offset hero with metadata, electric-blue ASCII dolphin sea, project galleries, personal story, and contact footer. Preserve the newer standalone Notes index as the only later design addition: white theme, centered 960px column, regular Inter Notes heading at 64px desktop / 32px mobile, minimal title/type/date rows at 14px/22px desktop and 13px/18px mobile, quiet metadata, no cards or dividers. Keep a Notes navigation item, link rows to existing articles, route article back-links to `/notes`, and omit the landing Notes teaser. Notes CSS stays scoped to its route so its typography does not change the restored site.
+Work, Labs, and Notes use PageIntro: “Ideas, made real.”, “Experiments”, and “Writing”. Notes description: “is where I slow down.” These three introductions occupy at least 45svh at every breakpoint, then filtering or the Notes list begins. Phones use 28px upright ITC headings and 14px Switzer description. About has a visually hidden semantic h1, with no visible route heading. Project case-study and note article titles remain visible because they identify substantive content.
 
-Retain the current main dependency manifest and lockfile, including its Next.js security updates; the restoration targets site design and content, not dependency downgrades.
+## Page behavior
 
-## Creative Giants reference study — October 6
+### Landing
 
-The latest user correction supersedes the frosted-name opening. On branch design/frosted-name, reproduce the Creative Giants opening geometry and motion: edge-to-edge screen-blended white surface, custom condensed name wordmark revealing blurred background video, circular identity and black Menu capsule, white supporting copy over fixed video, downward clipped reveal followed by wordmark and copy fades. Switzer regular/light supplies UI and copy. Checklist: design/frosted-name/CHECKLIST.md. The later selected-work study below replaces reference footage with licensed local nature clips and the condensed wordmark with Instrument Serif.
+On experiments only, the flower bed replaces the central pink flower intro, retaining centered name and description. The supplied flower configuration stays unchanged: breeze .60; gust interval 8 seconds; trail decay .90; blur .25; glow .36; pitch 7px; side mask .52/.78; bottom mask .72; beam dimming .20; grain .005; FPS 30; pixel ratio 1.25; strip 36vh.
 
-## Selected work and signature study — October 6
+Experiments starts at the hero unless an explicit anchor is present, without an opening scroll lock. Main retains the orchid intro scroll lock and removes stale #selected-work fragments on reload. Before projects, show “Care in how it works. Care in how it feels.” at the left with a directional arrow. Desktop vertical scrolling drives the horizontal rail: panels are 75 percent of viewport width, initially 25 percent of the first panel is visible, and a 45 percent viewport-height reading hold precedes translation. Mobile/tablet use native horizontal scrolling, with panels sized to shared media width plus page gutters. Arrow and controls allow deliberate navigation. Case-study actions have no arrow; hover/focus uses a bright neutral fill. No continuous shimmer.
 
-Edna-inspired selected work uses a dark horizontal sequence, large 8px-radius media surfaces, title and one-line purpose below, and quiet role/platform/status metadata plus one concise design problem. Desktop scroll advances the horizontal rail inside a sticky viewport; previous/next controls and focus keep projects reachable. Mobile and reduced motion use native horizontal scrolling and scroll snap. No user metrics are added. Content meanings are confirmed by Gaurav: Wylde is the party card game, Lucky Day is the slot-machine study, Sachetana is student wellness. Sachetana reuses its actual interface image; other covers are clearly labelled original art direction, not app screenshots.
+### Work
 
-The name study now uses Instrument Serif regular by default, with smooth outlines and a 13vw desktop size (250px cap), 17vw on mobile; enlarged after Gaurav found the smaller setting too slight within the panel. Seratonin is rejected for this opening. Compare `?type=italic` (Instrument Serif italic), `?type=editorial` (Cormorant Garamond), and `?type=bodoni` (Bodoni Moda). Each has optical sizing and letter spacing adjusted individually rather than being stretched to fill the panel. The original full-width reveal panel and its proportions remain. These are review options, not approved final identity fonts. Background footage now uses locally compressed Pexels clips: desktop lakeside wildflowers with restrained warm grading; mobile dandelions beside water at sunset. Both use forward/reverse loops, are muted, and respect pause/reduced motion. Asset sources and licence link are in public/media/SOURCES.md. The Creative Giants showreel is no longer loaded.
+Keep the original vertical alternating paired-image project layout and links. At 1023px and below, image pairs stack using the shared 16:10 frames; copy aligns with them. Project gaps are 128px desktop / 96px mobile/tablet.
 
-## Edna Ho hero replacement — October 7
+Use CollectionFilter: four visible options on desktop/tablet, a labelled native dropdown with icon on phones, result count, and empty-state return to All work. Options: All work; Taking shape; In the making; Finished work. User-confirmed stages: Sachetana, Lucky Day, Research internship are finished; Wylde is in progress. No named project index or “Interactions drive feelings” statement.
 
-The current user instruction supersedes the white reveal panel, large name, and nature-video direction. Match https://ednaho.com/: #0A0A0A full-screen canvas, pink-white halftone orchid, radial five-second bloom, subtle breathing and ripple, central dark elliptical fade, centred small italic name and two-line introduction, and white corner navigation at 24px with 32px link gaps. Text fades from 3.8 seconds and navigation reveals from 4.25 seconds. Mobile uses 85dvh, text at 61% rather than 53%, and navigation with 8px side insets. Hero leads directly into the existing selected-work rail. Albert Sans matches reference UI; locally licensed Cormorant Garamond italic is the name substitute for reference Minister Book Italic. The orchid luminance mask is sourced from the reference site for this exact reproduction study, with attribution in public/media/SOURCES.md. Native focus and reduced-motion equivalents are retained.
+The active CTA is “Creativity and ideas” / “travel further together.” Invitation is 14px; headline has two explicit lines. Padding is 88px desktop / 64px mobile/tablet. The email action has a 44px minimum target. Every route shares one ContactEnding mounted after page content in the root layout; on every screen its CTA occupies at least 55svh with centered content.
 
-## Tagore opening story and project index — October 7
+### Labs
 
-This modification supersedes the simultaneous orchid/profile reveal. A shared canvas clock controls the complete sequence: bud-to-open bloom over 3.6 seconds. The flower reaches its final size and position in one continuous bloom; there is no later expansion during the profile reveal. The first poem line begins at 2.04 seconds, approximately 60% of the eased bloom. Lines reveal at 2.04–2.54 and 2.17–2.67 seconds with a 6px rise and 2px-to-zero blur; attribution follows at 2.3–2.75 seconds. All quote content then holds fully visible for 0.4 seconds before fading out at 3.15–3.6 seconds. Name/profile reveal follows at 3.6–4.4 seconds; navigation and the rest of the page become available at 4.4 seconds. Eased lateral opening, restrained glow and slow expansion carry the emotion; no typewriter effect or word-by-word animation. Pause freezes the full scene. Skip introduction and reduced motion reveal the final hero directly. Scrolling is locked during the single-screen preload.
+Reference: supplied Schiller composition, adapted to the dark system. Shared introduction occupies 45svh. Experiments is the introduction title. No bracketed status labels appear on any page. Description is 14px mobile / 15px desktop. Remove the visible “Illustrative…” notices; previews remain illustrative artworks internally, not evidence of deployment.
 
-Poem: “The infant flower opens its bud and cries, ‘Dear World, please do not fade.’” — Rabindranath Tagore, Stray Birds, no. 66. Verified against Tagore Web and the Jadavpur University Bichitra manuscript archive. Italic poem typography at 19px desktop / 17px mobile, quiet attribution; no invented connective copy.
+Native horizontal gallery, captions always visible, previous/next controls. Vertical wheel over the gallery moves horizontally and returns page scrolling at its ends; native sideways input and touch remain native. No snap that blocks movement and no automatic advance. A tile opens a native modal dialog: Escape closes it and focus returns to its trigger.
 
-Project navigation uses three numbered name buttons with a fine active underline. Remove both circular previous/next arrows and diagonal title arrows. Preserve native scrolling, keyboard focus and direct case-study links.
+### Notes
 
-## Lily scene and project controls — October 7
+No local index, email block, cards, or list dividers. The Writing introduction precedes the list, and the shared contact ending follows it. Keep existing title/type/date rows, destinations, and article content. Rows have 64px minimum height, 20px vertical padding; text wraps inside the title column rather than pushing metadata offscreen.
 
-The lily supersedes the orchid mask. Render original six-petal geometry using native WebGL: a closed silver bud rises and completes one 360-degree turn while unfolding continuously over 3.6 seconds. Retain the original Edna-inspired screen-aligned silver/white dots, stronger pink tint and pink halo. The later correction rejects champagne pink, silk fibres and chrome surface texture. Preserve the shared quote/profile timeline, pause, skip, hidden/offscreen pause, and reduced-motion still state. User lily images are material and form references only; no supplied photograph is shipped in the hero. Pink lily references remain reserved for a later light-mode study (see design/frosted-name/LILY-DIRECTION.md).
+### About
 
-Selected work starts with the full first project, with no leading text column. Exactly three controls: View More links to the active case study; fine-stroke left/right arrows in quiet 44px circular touch targets move between projects and disable at the ends. Group all three tightly on the right. A 1px progress line below the rail carries a one-third-length marker, moving with the continuous scroll position; expose the active project through accessible progress values. Preserve hiring context and native mobile scrolling.
+Reference: supplied black, text-first About screenshot. Start the biography at `clamp(176px,24svh,240px)` with no visible About heading. Plain sans-serif lead and body, equal size, following the supplied screenshot; 24px paragraph gaps; 64px before the existing mountain photograph. Biography width is at most 720px. Keep existing facts and social destinations; do not import the reference person's history.
 
-Lily refinement: rechecked the live Edna Ho source on October 7. Match its responsive cell pitch (`812 + 0.105 × viewport width`, scaled below 840px, divided by 96 and rounded; minimum 3px mobile / 5px desktop), dot radius (`0.62 × pitch × brightness^0.72`) and original pink tint. Native WebGL reproduces that screen-aligned dot field over the rotating lily geometry. Add only sparse tiny centre glints; no floating glitter cloud. The turn/unfolding takes 3.6 seconds with soft acceleration and deceleration, ending in a slow breathing tilt rather than another expansion.
+Photo aligns to gutters on desktop/tablet; full bleed below 601px, 52svh tall. Follow with aligned context rows and a simple footer. The shared root CTA follows the page content. The older stamp/gallery reference does not override this text-first composition.
 
-## Single-screen lily preload — current direction
+## Motion and accessibility
 
-This supersedes all earlier opening durations and scroll-through behavior. The full active sequence is 4.4 seconds: continuous 360-degree lily unfolding from 0–3.6s, quote starting at approximately 60% bloom, quote fully visible by 2.75s and held for 0.4s, quote fade at 3.15–3.6s, hero reveal at 3.6–4.4s. During the preload the opening is 100dvh, scrolling is locked, the nav is hidden/inert, and projects are not mounted. The hero retains the same full viewport height through the reveal so the lily does not jump or rescale. At completion page scrolling returns and navigation/projects become available. Skip, reduced motion and renderer failure bypass the preload. Manual pause and hidden-tab pause remain available.
+Scroll pinning is desktop-only. Mobile/tablet and reduced-motion use native scrolling. Experimental content remains available immediately, including without WebGL. Main retains its timed opening handoff. Flower animation pauses offscreen, when the tab is hidden, on the pause control, and for reduced motion. Media hover uses 600–700ms clipped scale; reduced motion removes transitions. The landing cursor is only for fine pointers; inner pages use native cursors.
 
-Reference breakdown and implementation checklist: `design/frosted-name/EDNA-FLOWER-CHECKLIST.md`. Use native Canvas 2D for Edna's exact radius, silver/white threshold, pink halo, white glow and continuous brightness modulation over a small GPU-generated lily luminance buffer. No petal surface texture experiments.
+Keep skip links, keyboard controls, labelled form fields, logical headings, modal focus return, and 44px targets. Visually hidden headings remain available to screen readers. Forced colors uses system text/background colors and suppresses decorative artwork. Never hide real copy inside canvas.
 
-## Restored Edna orchid — latest correction
+## Maintenance and verification
 
-Restore the original reference orchid luminance artwork (`public/media/orchid-luminance.png`) and native silver/white halftone rendering. The lily experiment is rejected and its renderers are removed. Preserve the 4.4s full-screen preload, 0.4s full quote hold, hidden/inert navigation, deferred project mounting, and single 360-degree rise/unfolding from compressed bud to the reference's open silhouette. The rising turn is a stylized dot-field transformation of the original mask, not a botanical 3D model. Fit the flower against viewport width and height on laptop, tablet and mobile, leaving room for the quote. Preserve source attribution, round brightness-scaled dots, pink/white glow, continuous shimmer, subtle sample ripples and sparse centre glints.
+Before sizing changes, inspect every caller of the shared presentation and the responsive rules that override it. Update this document and `docs/SIZING_AUDIT.md` together. Verify actual computed dimensions and typography across Landing, Work, and Labs at phone/tablet sizes; check desktop compositions separately. Run lint, build, typecheck after build, and diff checks. Passing checks verifies implementation, not aesthetic acceptance. Do not append conflicting historical values as new specifications.
 
-## Exact Edna motion and paced preload — current direction
+Mobile Landing omits the project focus (“The design problem…”); purpose and metadata remain. Experimental hero description uses CSS `text-wrap: pretty` to avoid an isolated last word. Mobile navigation remains a single horizontal row, Albert Sans 12px (11px below 361px with no link gap to fit one row), with 44px targets.
 
-This supersedes the rotating bud transformation and all earlier timing. Use the original orchid mask with Edna's cubic ease-out radial reveal (`1 - (1 - progress)^3`), uniform 60–100% scale opening, 1.8% breathing, subtle centre drift, coupled sampling ripples and continuous brightness modulation. Remove rotation, rising movement, perspective projection and added glitter. Retain the reference dot pitch, radius, silver/white threshold, native pink/white glow, pink tint and delayed pink outer halo. Responsive framing fits short screens without changing these motion equations.
+## Botanical footer experiment
 
-Total active preload: 7.1 seconds. Bloom runs continuously from 0–5.4s, stretched from the reference's five-second motion clock. The quote starts when cubic-eased bloom reaches 30% (about 0.605s), reveals softly over 0.85s including attribution, and stays visible through the rest of the bloom. Quote fades at 5.4–6s. A flower-only pause lasts from 6–6.35s, followed by the hero reveal at 6.35–7.1s. Navigation and projects become available at 7.1s; scrolling unlocks then. Full-screen 100dvh, pause, skip, hidden-tab suspension, reduced-motion bypass and renderer-failure fallback remain. No secondary bloom occurs during the hero reveal.
+ContactEnding is mounted once in the root layout across every page, including About, project case studies, and note articles. About’s former separate footer is removed. CTA minimum height is 55svh on every screen. The artwork plus footer occupy 40svh (minimum 240px to preserve links on short screens).
 
-Handoff stability: reserve scrollbar space throughout the opening, size the canvas to its actual container, and retain display-rate animation frames through the complete opening and hero reveal. The quote threshold is 30% actual eased bloom, not 30% elapsed duration.
+Original generated macro botanical artwork replaces the cartoon SVG shapes: translucent pink rose petals, sage/olive leaves, natural veins, irregular edges. One transparent WebP atlas is 168KB, at `public/media/botanical-atlas.webp`. The built-in image-generation prompt and provenance are recorded in `public/media/SOURCES.md`.
 
-## Light flower preset and project refinements
+Scroll sets the target of a 4.2-second eased sequence. Drift takes its first half, followed by a settling pause. During the last third the pieces converge toward the center and flatten into the hairline; the line grows from the center toward both edges. A pair of restrained shimmer rays radiate outward once settled. There are 14 sprites on desktop / 10 on phones, no scroll interception or pinning. Rendering stops when progress catches its target, offscreen, or when the tab is hidden. The motion resets on route changes so a persistent layout cannot skip the sequence on a new page. Reduced motion and forced colors show a static hairline.
 
-Apply the exact exported settings supplied by Gaurav: background #fdfafb, shadows #ffece5, petal body #ffcf4d, highlights #ff7a7a, edges #ffffff; contrast 0.55, centre depth 0.6, edge definition 0, dot size 1.4, dot spacing 0.7, glow 1, text veil 1. Motion and dark-mode rendering remain unchanged.
+Labs uses four factual collection filters: All experiments; Prototypes (Prototype); In progress (Testing, Ongoing, In use); On the shelf (Archive, Shelved). They do not assign completion claims to unfinished experiments. Filtering resets the gallery to its start and recomputes navigation boundaries.
 
-Selected work retains only the fine custom progress line: hide native horizontal scrollbars while keeping scrolling functional. Active marker uses the landing accent, track blends with its surface. Mobile heading and View More/arrow controls share one row. Project media borders are removed.
+Mobile Landing project introduction: vertically center the thought and arrow; keep the thought at the left shared gutter and arrow beside it. Desktop preserves its existing lower-left composition.
 
-## Automatic landing colour preference — current behavior
+Labs toolbar styles target only its navigation arrow buttons; CollectionFilter owns its text buttons and dropdown. Never style every button beneath a shared toolbar as a circle.
 
-Remove the tuning panel, its storage/export/inspection code and the navigation theme label. The supplied light-flower preset is fixed in source. The landing defaults to dark when no preference is available and follows `prefers-color-scheme: light` when the device requests light mode. CSS applies the light surface before hydration; the canvas subscribes to device-preference changes and redraws without restarting its clock. Other routes retain their existing theme behavior. The old `/light` study URL redirects to `/`. A manual footer toggle is planned for later and is not included now.
+## Branch ownership and scroll performance
 
-## Mobile handoff and rendering stability
+Shared navigation, project presentation, Work/Labs/Notes/About, filters, CTA and botanical footer belong to main and experiments. Main retains its orchid opening, palette, poem, name face and mobile handoff. Only experiments replaces that opening with the flower bed and enlarged upright hero copy. The root navigation is shared; main hides it during its opening handoff. Main browser theme colors continue to follow its light/dark hero, while experiments uses the dark ground.
 
-Every landing load starts at the hero. Clear a stale `#selected-work` fragment before the deferred projects mount and disable browser scroll restoration for the landing's lifetime; deliberate Work links still scroll to the projects. Avoid scroll anchoring when the rail mounts. Use a stable 100svh hero so mobile browser-bar changes do not resize the artwork during a swipe. Centre both the flower and the profile veil/copy at 50% throughout the opening and hero.
+Native phone/tablet rails do not snap or translate in JavaScript. Gallery scroll listeners are passive, coalesce updates to one animation frame and change React state only at boundaries. Footer scroll handlers use cached document geometry; layout changes refresh it through ResizeObserver. Experimental hero and flower strip use stable svh units so browser toolbar expansion does not repeatedly resize canvases. Hero rendering must stop offscreen or while hidden/paused. Keep main's existing scroll-restoration fix.
 
-Keep the approved light preset and motion equations. Limit dot sampling to the flower bounds, omit disabled edge calculations, batch only the active colour bands, and render the diffuse light glow at half a CSS pixel per pixel in an offscreen canvas while keeping the crisp dots at full canvas resolution. Cache project layout on resize; mobile vertical scrolling must not remeasure or rewrite the horizontal rail on every frame.
-
-Browser chrome: landing viewport metadata supplies light/dark theme colours matching #fdfafb and #0a0a0a. Its html/body backgrounds and colour scheme follow the same device preference, including overscroll and safe-area surfaces. Scope these root styles to the landing; browser-controlled toolbar tinting remains dependent on the browser.
+Experiments is replaced wholesale by the latest site state, rather than retaining the older alternate layout. Its search-indexing exclusion is retained as an environment safeguard; main remains indexable.

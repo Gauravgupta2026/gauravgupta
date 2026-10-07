@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { OrchidCanvas } from "./OrchidCanvas";
 import { OPENING, easeBetween } from "./openingTimeline";
 import styles from "./EdnaOpening.module.css";
@@ -11,9 +10,9 @@ export function EdnaOpening({ onReveal, theme }: { onReveal: () => void; theme: 
   const [skipIntro, setSkipIntro] = useState(false);
   const [ready, setReady] = useState(false);
   const hero = useRef<HTMLElement>(null);
-  const navigation = useRef<HTMLElement>(null);
   const revealed = useRef(false);
   const updateScene = useCallback((time: number) => {
+    if (revealed.current) return;
     const quote = 1 - easeBetween(...OPENING.quoteOut, time);
     const profile = easeBetween(...OPENING.profileIn, time);
     hero.current?.style.setProperty("--quote-opacity", String(quote));
@@ -26,7 +25,6 @@ export function EdnaOpening({ onReveal, theme }: { onReveal: () => void; theme: 
     hero.current?.style.setProperty("--attribution-opacity", String(easeBetween(...OPENING.attributionIn, time)));
     hero.current?.style.setProperty("--profile-opacity", String(profile));
     hero.current?.style.setProperty("--profile-rise", `${(1 - profile) * 8}px`);
-    navigation.current?.style.setProperty("--nav-opacity", String(easeBetween(...OPENING.navigationIn, time)));
     if (time >= OPENING.complete && !revealed.current) { revealed.current = true; setReady(true); onReveal(); }
   }, [onReveal]);
   const cursor = useRef<HTMLDivElement>(null);
@@ -49,14 +47,6 @@ export function EdnaOpening({ onReveal, theme }: { onReveal: () => void; theme: 
     <>
       {ready && <a className={styles.skip} href="#selected-work">Skip to selected work</a>}
       <div ref={cursor} className={styles.cursor} aria-hidden="true" />
-      <header ref={navigation} className={styles.nav} inert={!ready} hidden={!ready}>
-        <Link className={styles.identity} href="/">Gaurav Gupta</Link>
-        <nav aria-label="Main navigation">
-          <a href="#selected-work">Work</a>
-          <Link href="/labs">Play</Link>
-          <Link href="/about">About</Link>
-        </nav>
-      </header>
       <section ref={hero} data-edna-opening className={styles.hero} aria-labelledby="hero-name">
         <OrchidCanvas theme={theme} paused={paused} skipIntro={skipIntro} onTime={updateScene} />
         <div className={styles.vignette} />
