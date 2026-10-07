@@ -18,13 +18,13 @@
 
 .caption p { margin: 5px 0 0; font-size: 12px; line-height: 1.5; color: var(--site-muted); }
 .toolbar nav button:focus-visible, .preview:focus-visible, .gallery:focus-visible, .close:focus-visible { outline: 2px solid var(--site-focus); outline-offset: 4px; }
-.dialog { width: min(88vw, 1088px); max-height: 90svh; padding: 0; border: 1px solid var(--site-border); border-radius: 8px; background: var(--site-bg); color: var(--site-ink); font-family: var(--font-giants-body), sans-serif; }
+.dialog { width: min(calc(100vw - 48px), 960px); max-height: calc(100svh - 48px); margin: auto; overflow-y: auto; overscroll-behavior: contain; padding: 0; border: 1px solid var(--site-border); border-radius: 8px; background: var(--site-bg); color: var(--site-ink); font-family: var(--font-giants-body), sans-serif; }
 .dialog::backdrop { background: #000d; }
-.dialogBody { position: relative; padding: 64px 32px 32px; }
-.close { position: absolute; top: 8px; right: 16px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--site-control-hover); border-radius: 6px; color: var(--site-ink); background: var(--site-bg); font: 13px var(--font-edna-ui), sans-serif; cursor: pointer; }
-.dialogArt { height: min(60svh, 560px); background: var(--site-surface); border-radius: 8px; }
-.dialog h2 { margin: 24px 0 0; font: 300 clamp(28px, 3vw, 40px)/1.1 var(--font-editorial-local), Georgia, serif; font-style: normal; }
-.dialog p { margin: 12px 0 0; font-size: 13px; color: var(--site-muted); line-height: 1.5; }
+.dialogBody { display: grid; gap: 20px; min-width: 0; padding: 24px; }
+.close { justify-self: end; min-height: 44px; padding: 8px 12px; border: 1px solid var(--site-control-hover); border-radius: 6px; color: var(--site-ink); background: var(--site-bg); font: 13px var(--font-edna-ui), sans-serif; cursor: pointer; }
+.dialogArt { height: min(48svh, 480px); min-height: 180px; overflow: hidden; background: var(--site-surface); border-radius: 8px; }
+.dialog h2 { margin: 0; font: 400 var(--project-title-size)/1.2 var(--font-giants-body), sans-serif; overflow-wrap: anywhere; }
+.dialog p { margin: 0; font-size: 13px; color: var(--site-muted); line-height: 1.5; }
 
 @media (min-width: 601px) and (max-width: 1023px) {
  .tile { width: calc((var(--viewport-width, 100vw) - var(--page-gutter) * 2 - 32px) / 2); }
@@ -34,7 +34,10 @@
  .track { gap: 24px; }
  .tile { width: var(--project-media-width); }
  .preview, .tile:nth-child(3n + 2) .preview, .tile:nth-child(3n + 3) .preview { width: var(--project-media-width); height: var(--project-media-height); }
- .dialogBody { padding: 64px 16px 24px; }
+ .dialogBody { padding: 16px; gap: 16px; }
+ .dialogArt { height: min(40svh, 320px); }
 }
 @media (prefers-reduced-motion: reduce) { .preview svg { transition: none; } }
 @media (forced-colors: active) { .preview svg, .dialogArt { display: none; } .preview { min-height: 44px; height: 80px !important; } .caption p, .toolbar p, .dialog p { color: CanvasText; } }
+
+:global(html):has(.dialog:modal) { overflow: hidden; }

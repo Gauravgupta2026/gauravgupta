@@ -8,7 +8,7 @@ type ThemeToggleProps = {
   showLabel?: boolean;
 };
 
-/** A persistent light/dark control shared by the nav and footer. */
+/** Explicit theme choice; otherwise the site follows the device. */
 export function ThemeToggle({ className = "", iconOnly = false, showLabel = false }: ThemeToggleProps) {
   const dark = useSiteTheme() === "dark";
   const toggle = () => setSiteTheme(dark ? "light" : "dark");
@@ -18,6 +18,7 @@ export function ThemeToggle({ className = "", iconOnly = false, showLabel = fals
       type="button"
       onClick={toggle}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+      title={dark ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={dark}
       className={`theme-toggle ${className}`.trim()}
       data-dark={dark ? "true" : "false"}

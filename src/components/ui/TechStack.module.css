@@ -1,0 +1,5 @@
+.stack { display: flex; flex-wrap: wrap; gap: 16px; margin: 14px 0 0; padding: 0; list-style: none; }
+.stack li { display: grid; place-items: center; width: 32px; height: 32px; }
+.mark { display: block; width: 28px; height: 28px; background: var(--site-ink); mask-size: contain; mask-position: center; mask-repeat: no-repeat; }
+.stack img { object-fit: contain; }
+@media (forced-colors: active) { .mark { background: CanvasText; } }

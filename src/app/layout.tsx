@@ -11,6 +11,7 @@ import "./globals.css";
 import "./legacy-components.css";
 import "./layout-tokens.css";
 import "./theme.css";
+import { THEME_BOOTSTRAP, THEME_BACKGROUND } from "@/lib/siteTheme";
 import { SiteTheme } from "@/components/SiteTheme";
 import { ContactEnding } from "@/components/sections/ContactEnding";
 import { Nav } from "@/components/sections/Nav";
@@ -128,7 +129,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#fdfafb" }, { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" }],
+  themeColor: [{ media: "(prefers-color-scheme: light)", color: THEME_BACKGROUND.light }, { media: "(prefers-color-scheme: dark)", color: THEME_BACKGROUND.dark }],
   colorScheme: "dark light",
   viewportFit: "cover",
 };
@@ -148,8 +149,7 @@ export default function RootLayout({
         <script
           // Resolve the saved choice or device preference before the first paint.
           dangerouslySetInnerHTML={{
-            __html:
-              "(()=>{let t;try{t=localStorage.getItem('theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t;document.querySelectorAll('meta[name=theme-color]').forEach(m=>m.content=t==='dark'?'#0a0a0a':'#fdfafb')})()",
+            __html: THEME_BOOTSTRAP,
           }}
         />
         <PostHogProvider>

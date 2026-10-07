@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ArtifactFiles } from "@/components/sections/ArtifactFiles";
 import { DecisionLog } from "@/components/sections/DecisionLog";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
+import { TechStack } from "@/components/ui/TechStack";
 import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
 import { getProjectDetail, projectDetails, type ProjectDetail, type Section } from "@/content/projectDetails";
 import { projects } from "@/content/projects";
@@ -45,7 +46,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   const sections = narrativeSections(project);
   const media = PROJECT_MEDIA[slug];
-  const others = projects.filter((item) => item.slug !== slug).slice(0, 3);
+  const projectIndex = projects.findIndex(item => item.slug === slug);
+  const nextProject = projects[(projectIndex + 1) % projects.length];
   let nextSectionNumber = sections.length;
   const forksNumber = project.forks ? ++nextSectionNumber : 0;
   const filesNumber = project.files ? ++nextSectionNumber : 0;
@@ -55,10 +57,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     <main className={styles.page}>
       <article>
         <header className={styles.header}>
-          <div className={styles.kicker}>
-            <Link href="/work">Selected work</Link>
-            <span>Case study / 2026</span>
-          </div>
           <h1>{project.title}</h1>
           <p className={styles.standfirst}>{project.tagline}</p>
           {project.meta && (
@@ -70,7 +68,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
         <figure className={styles.leadVisual}>
           {media ? (
-            <Image src={media.hero} alt={`${project.title} project overview`} fill priority sizes="(max-width: 720px) calc(100vw - 40px), 760px" />
+            <Image src={media.hero} alt={`${project.title} project overview`} fill priority sizes="(max-width: 1023px) calc(100vw - 48px), min(960px, calc(100vw - 128px))" />
           ) : (
             <MediaPlaceholder label={project.showcaseLabel} seed={`${slug}-lead`} className={styles.placeholder} />
           )}
@@ -83,7 +81,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
         <div className={styles.readingColumn}>
           <section className={styles.contextGrid}>
-            <div><span>Tech stack</span><p>{project.techStack.join(" · ")}</p></div>
+            <div><span>Tech stack</span><TechStack technologies={project.techStack} /></div>
             <div><span>Built with</span><p>{project.stakeholders.join(" · ")}</p></div>
           </section>
 
@@ -110,7 +108,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
         {media && (
           <figure className={styles.detailVisual}>
-            <Image src={media.detail} alt={`${project.title} interface detail`} fill sizes="(max-width: 720px) calc(100vw - 40px), 900px" />
+            <Image src={media.detail} alt={`${project.title} interface detail`} fill sizes="(max-width: 1023px) calc(100vw - 48px), min(960px, calc(100vw - 128px))" />
           </figure>
         )}
 
@@ -121,9 +119,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </div>
 
         <footer className={styles.nextProjects}>
-          <span>Continue exploring</span>
-          <h2>Next project</h2>
-          <div>{others.map((item) => <Link href={`/projects/${item.slug}`} key={item.slug}><span>{item.title}</span><i aria-hidden="true">↗</i></Link>)}</div>
+          <Link href={`/projects/${nextProject.slug}`}><span>Next project</span><span>{nextProject.title}</span></Link>
         </footer>
       </article>
     </main>

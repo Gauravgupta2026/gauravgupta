@@ -3,13 +3,12 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 
-type Theme = "light" | "dark";
+import { THEME_STORAGE_KEY, THEME_BACKGROUND, type SiteThemeName as Theme } from "@/lib/siteTheme";
 const DARK_PREFERENCE = "(prefers-color-scheme: dark)";
-const BACKGROUND = { light: "#fdfafb", dark: "#0a0a0a" };
 
 function resolveTheme(): Theme {
   try {
-    const stored = localStorage.getItem("theme");
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
     if (stored === "light" || stored === "dark") return stored;
   } catch { /* Device preference still works when storage is unavailable. */ }
   return window.matchMedia(DARK_PREFERENCE).matches ? "dark" : "light";
@@ -18,7 +17,7 @@ function applyTheme() {
   const theme = resolveTheme();
   document.documentElement.dataset.theme = theme;
   document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach(meta => {
-    meta.content = BACKGROUND[theme];
+    meta.content = THEME_BACKGROUND[theme];
   });
   window.dispatchEvent(new Event("site-theme-applied"));
 }
@@ -30,9 +29,9 @@ export function useSiteTheme(): Theme {
   return useSyncExternalStore(subscribe, () => document.documentElement.dataset.theme === "dark" ? "dark" : "light", () => "dark");
 }
 export function setSiteTheme(theme: Theme) {
-  try { localStorage.setItem("theme", theme); } catch { /* Keep the current document usable without persistence. */ }
+  try { localStorage.setItem(THEME_STORAGE_KEY, theme); } catch { /* Keep the current document usable without persistence. */ }
   document.documentElement.dataset.theme = theme;
-  document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach(meta => { meta.content = BACKGROUND[theme]; });
+  document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach(meta => { meta.content = THEME_BACKGROUND[theme]; });
   window.dispatchEvent(new Event("site-theme-applied"));
 }
 export function SiteTheme() {

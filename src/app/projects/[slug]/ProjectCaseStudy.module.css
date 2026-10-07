@@ -1,11 +1,8 @@
 .page { --font-mono: var(--font-edna-ui), sans-serif; min-height: 100svh; overflow: clip; background: var(--site-bg); color: var(--site-ink); font-family: var(--font-giants-body), system-ui, sans-serif; }
 .header { width: min(1120px, calc(100% - var(--page-gutter) * 2)); margin-inline: auto; padding: clamp(128px, 16svh, 176px) 0 0; text-align: center; }
-.kicker { display: flex; justify-content: center; gap: 12px; }
-.kicker span::before { content: "•"; margin-right: 12px; }
-.kicker a { color: inherit; text-underline-offset: 4px; }
-.header h1 { max-width: 760px; margin: 32px auto 0; font: 300 clamp(32px, 4vw, 52px)/1.1 var(--font-editorial-local), Georgia, serif; letter-spacing: -.02em; text-wrap: balance; }
+.header h1 { max-width: 760px; margin: 0 auto; font: 300 clamp(28px, 3.2vw, 44px)/1.15 var(--font-editorial-local), Georgia, serif; letter-spacing: -.02em; text-wrap: balance; }
 .standfirst { max-width: 620px; margin: 28px auto 0; font-size: 16px; line-height: 1.55; text-wrap: pretty; }
-.kicker, .meta dt, .readingColumn span, .supportingSections > section > span, .nextProjects > span, .proofLinks a, .principle span { font: 400 12px/1.5 var(--font-edna-ui), sans-serif; letter-spacing: .02em; }
+.meta dt, .readingColumn span, .supportingSections > section > span, .proofLinks a, .principle span { font: 400 12px/1.5 var(--font-edna-ui), sans-serif; letter-spacing: .02em; }
 .meta { width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 48px auto 0; border-block: 1px solid var(--site-border); text-align: left; }
 .meta div { min-height: 76px; padding: 16px; border-right: 1px solid var(--site-border); }
 .meta div:last-child { border-right: 0; }
@@ -26,14 +23,13 @@
 .proofLinks a { color: inherit; }
 .proof p { margin: 16px 0 0; font-size: 14px; line-height: 1.55; color: var(--site-muted); }
 .storySection, .supportingSections > section { padding-top: 72px; }
-.storySection h2, .supportingSections h2, .nextProjects h2 { margin: 16px 0 24px; font: 300 clamp(26px, 3vw, 36px)/1.15 var(--font-editorial-local), Georgia, serif; letter-spacing: -.025em; }
+.storySection h2, .supportingSections h2 { margin: 16px 0 24px; font: 300 clamp(26px, 3vw, 36px)/1.15 var(--font-editorial-local), Georgia, serif; letter-spacing: -.025em; }
 .storySection > p { margin: 0 0 24px; font-size: 16px; line-height: 1.65; text-wrap: pretty; }
-.nextProjects { width: min(1120px, calc(100% - var(--page-gutter) * 2)); margin: 80px auto 0; padding: 42px 0 48px; border-top: 1px solid var(--site-border); }
-.nextProjects > div { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--site-border); }
-.nextProjects a { display: flex; min-height: 110px; padding: 22px 16px 22px 0; justify-content: space-between; gap: 16px; color: inherit; text-decoration: none; border-bottom: 1px solid var(--site-border); }
-.nextProjects a + a { padding-left: 16px; border-left: 1px solid var(--site-border); }
-.nextProjects a span { font-size: var(--project-title-size); }
-.nextProjects i { font-style: normal; }
+.nextProjects { width: min(680px, calc(100% - var(--page-gutter) * 2)); margin: 72px auto 0; padding-bottom: 48px; }
+.nextProjects a { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; min-height: 44px; padding-block: 16px; border-top: 1px solid var(--site-border); color: var(--site-ink); text-decoration: none; font-size: 16px; }
+.nextProjects a span:first-child { flex-shrink: 0; font: 12px var(--font-edna-ui), sans-serif; color: var(--site-muted); }
+.nextProjects a span:last-child { text-align: right; }
+.nextProjects a:hover { color: var(--site-focus); }
 .page a:focus-visible, .page button:focus-visible { outline: 2px solid var(--site-focus); outline-offset: 4px; }
 @media (max-width: 720px) {
   .meta { grid-template-columns: 1fr 1fr; }
@@ -41,6 +37,4 @@
   .meta div:nth-child(-n + 2) { border-bottom: 1px solid var(--site-border); }
   .leadVisual, .detailVisual { aspect-ratio: 1.25; }
   .contextGrid { grid-template-columns: 1fr; gap: 22px; }
-  .nextProjects > div { grid-template-columns: 1fr; }
-  .nextProjects a + a { padding-left: 0; border-left: 0; }
 }

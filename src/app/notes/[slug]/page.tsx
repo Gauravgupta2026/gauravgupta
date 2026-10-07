@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleBody } from "@/components/article/ArticleBody";
 import { articles, getArticle } from "@/content/articles";
@@ -30,17 +29,13 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
             <span>{article.readingTime}</span>
           </div>
           <h1>{article.title}</h1>
-          <p className={styles.dek}>{article.dek}</p>
+          <aside className={styles.tldr}><h2>TL;DR</h2><p>{article.dek}</p></aside>
           <div className={styles.rule} aria-hidden="true" />
         </header>
 
         <div className={styles.body}>
           <ArticleBody body={article.body} />
         </div>
-
-        <footer className={styles.footer}>
-          <Link href="/notes">← All notes</Link>
-        </footer>
       </article>
     </main>
   );

@@ -1,11 +1,11 @@
 .scene { position: relative; height: var(--ending-space); flex: none; margin-inline: var(--page-gutter); overflow: hidden; pointer-events: none; isolation: isolate; }
-.piece { position: absolute; bottom: 10px; background-image: url('/media/botanical-atlas.webp'); background-size: 200% 200%; background-repeat: no-repeat; transform-origin: center bottom; opacity: 0; }
-.line { position: absolute; inset: auto 0 8px; height: 1px; background: linear-gradient(90deg,transparent,var(--site-line) 50%,transparent); opacity: var(--line-opacity, 1); transform: scaleX(var(--line-spread, 1)); transform-origin: center; overflow: hidden; }
-.line span { position: absolute; top: 0; left: 50%; width: 20%; height: 1px; background: linear-gradient(90deg,transparent,var(--site-shimmer),transparent); animation: radiate-right 5s ease-out infinite; animation-play-state: paused; }
-.line span:last-child { left: auto; right: 50%; animation-name: radiate-left; }
-.scene[data-active="true"][data-settled="true"] .line span { animation-play-state: running; }
-@keyframes radiate-right { from { opacity: 0; transform: translateX(-50%); } 20% { opacity: 1; } to { opacity: 0; transform: translateX(250%); } }
-@keyframes radiate-left { from { opacity: 0; transform: translateX(50%); } 20% { opacity: 1; } to { opacity: 0; transform: translateX(-250%); } }
+.piece { --wilt: 0; --dither-dot: 1.8px; position: absolute; bottom: 8px; transform-origin: center bottom; opacity: 0; }
+.solid, .dither { position: absolute; inset: 0; background-image: url('/media/botanical-atlas.webp'); background-size: 200% 200%; background-position: inherit; background-repeat: no-repeat; }
+.solid { opacity: calc(1 - var(--wilt)); }
+.dither { opacity: var(--wilt); mask-image: radial-gradient(circle, #000 var(--dither-dot), transparent calc(var(--dither-dot) + .2px)); mask-size: 4px 4px; }
+.line { position: absolute; inset: auto 0 8px; height: 1px; background: linear-gradient(90deg,transparent,var(--site-line) 50%,transparent); opacity: var(--line-opacity, 1); }
+.water { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.water path { fill: none; stroke: var(--site-shimmer); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: 0; }
 @media (max-width: 600px) { .piece:nth-child(n + 11) { display: none; } }
-@media (prefers-reduced-motion: reduce) { .piece { display: none; } .line { opacity: 1; transform: none; } .line span { display: none; animation: none; } }
-@media (forced-colors: active) { .piece, .line span { display: none; } .line { opacity: 1; transform: none; background: CanvasText; } }
+@media (prefers-reduced-motion: reduce), (forced-colors: active) { .piece, .water { display: none; } .line { opacity: 1; } }
+@media (forced-colors: active) { .line { background: CanvasText; } }
