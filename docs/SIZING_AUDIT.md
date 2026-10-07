@@ -68,3 +68,11 @@ Footer phase observations: smooth drift before impact; wilt reaches 1 and dot ra
 - [ ] Physical-phone visual check: collaborative preview resizing timed out for both freeform and preset modes, remaining at 1169×731. No mobile-specific layout changes were made.
 
 Earlier botanical phase observations above describe the superseded implementation. The directional hairline is the current footer specification.
+
+## Final image and light-accent refinement
+
+- [x] Work image frames use 90% width and height, preserving aspect ratios and alternating columns; mobile captions follow the reduced image width.
+- [x] Landing image heights use 110% of their previous height on desktop/tablet/mobile; image widths remain unchanged. Scoped selector wins over the shared frame sizing.
+- [x] Responsive image `sizes` matches reduced Work frames. Labs geometry and shared typography remain unchanged.
+- [x] Light accent/cursor follows yellow hero; readable gold tokens cover focus, progress and hairline ripples. Dark accents remain pink.
+- [x] Final computed styles checked in same-origin responsive frames at 390, 820 and 1440px: Work widths/heights scale to 90%; Landing heights scale to 110%. At 390px, Work is 293×183px and Landing is 326×224px (fractional scrollbar gutter included). At tablet width, Work is 432×270px and Landing is 480×330px. Light cursor resolves to RGB(255,207,77); dark remains pink. Build/lint/typecheck and direction/timing regressions pass.

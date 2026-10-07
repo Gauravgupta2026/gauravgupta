@@ -5,7 +5,8 @@
   --contact-art-space: clamp(48px, 8svh, 80px);
   --project-title-size: clamp(18px, 1.4vw, 20px);
   --project-purpose-size: 14px;
-  --project-media-width: min(480px, calc(var(--viewport-width, 100vw) - var(--page-gutter) * 2));
+  --project-media-base-width: min(480px, calc(var(--viewport-width, 100vw) - var(--page-gutter) * 2));
+  --project-media-width: var(--project-media-base-width);
   --project-media-height: calc(var(--project-media-width) * .625);
 }
 @media (max-width: 1023px) { :root { --page-gutter: 24px; } }

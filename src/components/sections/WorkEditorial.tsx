@@ -63,7 +63,7 @@ function ProjectRow({
             alt={primaryAlt}
             fill
             priority={priority}
-            sizes="(max-width: 527px) calc(100vw - 48px), (max-width: 1023px) 480px, 58vw"
+            sizes="(max-width: 527px) calc((100vw - 48px) * .9), (max-width: 1023px) 432px, 52vw"
             src={image}
           />
         </figure>
@@ -71,7 +71,7 @@ function ProjectRow({
           <Image
             alt={secondaryAlt}
             fill
-            sizes="(max-width: 527px) calc(100vw - 48px), (max-width: 1023px) 480px, 42vw"
+            sizes="(max-width: 527px) calc((100vw - 48px) * .9), (max-width: 1023px) 432px, 38vw"
             src={detailImage}
           />
         </figure>

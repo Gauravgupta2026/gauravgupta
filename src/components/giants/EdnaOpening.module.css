@@ -5,7 +5,7 @@
 .copy { position: absolute; top: 50%; left: 0; right: 0; transform: translateY(calc(-50% + var(--profile-rise))); display: flex; flex-direction: column; align-items: center; gap: clamp(8px,1.429vw,12px); pointer-events: none; opacity: var(--profile-opacity); }
 .copy h1 { margin: 0; font-family: var(--font-editorial-local), Georgia, serif; font-size: clamp(16px,3.571vw,24px); font-style: normal; font-weight: 300; line-height: 1.5; letter-spacing: .01em; color: var(--landing-ink); }
 .copy p { margin: 0; font-family: var(--font-edna-ui), sans-serif; font-size: clamp(13px,1.905vw,16px); font-weight: 400; color: var(--landing-copy); text-align: center; max-width: clamp(230px,47.619vw,400px); line-height: 1.45; }
-.cursor { position: fixed; left: -100px; top: -100px; width: 16px; height: 16px; transform: translate(-50%,-50%); border-radius: 50%; background: #da027d; box-shadow: 0 0 8px #0005; z-index: 9999; pointer-events: none; opacity: 0; transition: width 150ms, height 150ms; }
+.cursor { position: fixed; left: -100px; top: -100px; width: 16px; height: 16px; transform: translate(-50%,-50%); border-radius: 50%; background: var(--site-accent); box-shadow: 0 0 8px #0005; z-index: 9999; pointer-events: none; opacity: 0; transition: width 150ms, height 150ms; }
 .pause { position: absolute; right: var(--page-gutter); bottom: 24px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; background: transparent; border: 0; color: var(--landing-muted); opacity: .35; cursor: pointer; transition: opacity 200ms; }
 .pause svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
 .pause:hover, .pause:focus-visible { opacity: 1; }

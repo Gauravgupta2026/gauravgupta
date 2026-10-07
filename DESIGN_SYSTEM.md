@@ -4,7 +4,7 @@ Shared implementation: `main`; flower-bed hero: `experiments`, 7 October 2026. T
 
 ## Character and color
 
-Quiet, human, in both themes. Give the work room to breathe. `theme.css` owns semantic colors sitewide: dark ground `#0a0a0a`, light ground `#fdfafb`, including safe areas, browser bars and scrollbar gutters. Explicit choices from the footer icon (`portfolio-theme`) override the device setting; otherwise follow the device. Ignore the obsolete `theme` storage key so old layouts cannot lock the site in light mode. Hero canvas, navigation, reading pages, CTA and footer use the same resolved theme. Use size and dimming for hierarchy, not bold sans text. Pink marks hover, focus, progress, and the landing cursor rather than filling page surfaces. Project art owns its palette inside the frame.
+Quiet, human, in both themes. Give the work room to breathe. `theme.css` owns semantic colors sitewide: dark ground `#0a0a0a`, light ground `#fdfafb`, including safe areas, browser bars and scrollbar gutters. Explicit choices from the footer icon (`portfolio-theme`) override the device setting; otherwise follow the device. Ignore the obsolete `theme` storage key so old layouts cannot lock the site in light mode. Hero canvas, navigation, reading pages, CTA and footer use the same resolved theme. Use size and dimming for hierarchy, not bold sans text. Dark mode uses pink for accents and the landing cursor. Light mode follows the yellow flower: cursor `#ffcf4d`, readable gold hover/focus `#9b6900`, progress/ripples `#b17b00`. Accents do not fill page surfaces. Project art owns its palette inside the frame.
 
 | Role | Value |
 | --- | --- |
@@ -42,7 +42,7 @@ Use `ProjectPresentation.module.css` for project titles, purposes, facts, and fr
 
 `src/app/layout-tokens.css` owns gutters and project size tokens. Reserve a stable scrollbar gutter sitewide so short and long pages share usable width; the fixed nav uses that same width. Desktop gutters are 64px; at 1023px and below they are 24px. Align the shared nav, section labels, project media/captions, and biography to these columns. Breakpoints: 1023px, 600px, 440px.
 
-At **600px and below**, Landing, Work, and Labs project media have identical dimensions. Landing and Work retain these dimensions through 1023px; Labs uses two larger gallery columns on tablet:
+At **600px and below**, Landing, Work, and Labs project media start from the same base dimensions, with explicit page adjustments: Work scales both dimensions to 90%; Landing scales height to 110%; Labs keeps the base. Landing and Work retain these dimensions through 1023px; Labs uses two larger gallery columns on tablet:
 
 - Width: usable viewport width less two page gutters, capped at 480px.
 - Height: width multiplied by 0.625 (16:10).
@@ -50,7 +50,7 @@ At **600px and below**, Landing, Work, and Labs project media have identical dim
 - `LayoutMetrics` publishes usable viewport width through a ResizeObserver. It does no per-scroll measurement. The CSS fallback remains usable before hydration.
 - Complete project containers may differ: Landing keeps its reading section, Work stacks two media frames, Labs keeps captions below a horizontal gallery. Consistency refers to preview dimensions and typography, not identical page composition.
 
-Desktop Landing media height: `clamp(180px,(100svh - 400px) * .65,360px)`. Work retains alternating 7/5-column paired images, 24px gap, with existing aspect ratios. Labs uses three equal-width cards on desktop with 32px gaps inside page gutters; tablet uses two columns. Bottom-aligned desktop preview heights vary between 43svh and 53svh within their 300–600px limits. These desktop compositions intentionally differ.
+Desktop Landing media height: `clamp(198px,(100svh - 400px) * .715,396px)`. Work retains alternating 7/5-column paired images and 24px gaps; each image is 90% of its former width and height, preserving aspect ratios and its column alignment. Labs uses three equal-width cards on desktop with 32px gaps inside page gutters; tablet uses two columns. Bottom-aligned desktop preview heights vary between 43svh and 53svh within their 300–600px limits. These desktop compositions intentionally differ.
 
 Controls keep 44px minimum targets even when their text becomes smaller. Media zoom stays clipped inside the frame. Utility buttons have 6px radii; gallery controls are circles with 20px icons. Focus rings are 2px pink, offset 4px.
 
