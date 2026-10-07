@@ -139,3 +139,7 @@ Labs detail dialog: explicitly centered with `margin:auto`, bounded by 24px view
 Footer theme control: one faint 16px sun/moon icon inside a 44px target, beside footer links. Keep its label accessible without visible text. Bootstrap and mounted controller share the storage key and palette from `src/lib/siteTheme.ts`. Device appearance changes update all pages when no explicit footer choice is saved.
 
 Main dark orchid color: `OPENING.pinkIn` starts alongside the first quote (about 0.6 seconds) and ends at 65 percent of bloom duration (3.51 seconds). Tint and glow share this timeline directly; no secondary CSS filter transition or delayed glow threshold. Original pink hue, tint strength, bloom shape, poem/profile timing and light flower palette stay unchanged. Internal Home navigation / reduced motion begin in the completed color state.
+
+## Site icon
+
+Use the supplied aluminium-foil calligraphic G on black as the single site icon in both themes. Root App Router assets: `favicon.ico` contains 16/32/48/64px PNG frames, `icon.png` is 512px, and `apple-icon.png` is 180px. Preserve the supplied artwork and its composition; Next.js adds sitewide icon metadata automatically.
