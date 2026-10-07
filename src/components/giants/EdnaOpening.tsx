@@ -6,7 +6,7 @@ import { OrchidCanvas } from "./OrchidCanvas";
 import { OPENING, easeBetween } from "./openingTimeline";
 import styles from "./EdnaOpening.module.css";
 
-export function EdnaOpening({ onReveal }: { onReveal: () => void }) {
+export function EdnaOpening({ onReveal, theme }: { onReveal: () => void; theme: "light" | "dark" }) {
   const [paused, setPaused] = useState(false);
   const [skipIntro, setSkipIntro] = useState(false);
   const [ready, setReady] = useState(false);
@@ -58,7 +58,7 @@ export function EdnaOpening({ onReveal }: { onReveal: () => void }) {
         </nav>
       </header>
       <section ref={hero} data-edna-opening className={styles.hero} aria-labelledby="hero-name">
-        <OrchidCanvas paused={paused} skipIntro={skipIntro} onTime={updateScene} />
+        <OrchidCanvas theme={theme} paused={paused} skipIntro={skipIntro} onTime={updateScene} />
         <div className={styles.vignette} />
         <div className={styles.fade} />
         <figure className={styles.poem} aria-hidden={ready}>
