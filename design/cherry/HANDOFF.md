@@ -143,4 +143,8 @@ Also: Gaurav has an experiments branch with a white, hand-drawn ink style (house
 
 ## 11. Repo state
 
-Worktree: `.claude/worktrees/pearl-hero-underwater-969c51`, branch `claude/cherry-petal-breeze` (base `main`; the worktree folder keeps its old name). The `design/` folder is **untracked and uncommitted**. A new chat in another worktree will not see it unless it is committed or the new chat works in this worktree.
+- Branch: `claude/cherry-petal-breeze`, based on `main`, **pushed** to `origin` (GitHub: Gauravgupta2026/gauravgupta).
+- Commit `06f19b5` adds `design/cherry/` (prototypes, assets, review frames, this handoff) and `design/pearl-hero/` (earlier exploration, reference only).
+- No site code (`src/`) has changed yet. `main` is untouched.
+- To start the build in a fresh session: `git fetch origin && git checkout claude/cherry-petal-breeze` (or create a new worktree from it), then read this file.
+- The original worktree folder is still named `.claude/worktrees/pearl-hero-underwater-969c51`; the name is historical only.
