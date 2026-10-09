@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cherry wind prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #07060A; --ink: #EFE7EA; --muted: #A1949A; --gutter: clamp(16px, 3vw, 40px); }
+  :root[data-theme="light"] { --bg: #F6F1EE; --ink: #2A2226; --muted: #7D6F75; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; overflow: hidden; height: 100%; }
+  canvas#stage { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  .name, .caption { position: fixed; bottom: var(--gutter); opacity: 0; pointer-events: none; }
+  .name { left: var(--gutter); font-size: 15px; font-weight: 500; letter-spacing: .01em; }
+  .caption { right: var(--gutter); width: min(58vw, 330px); text-align: right; font-family: Newsreader, Georgia, serif; font-style: italic; font-size: 13px; line-height: 1.45; color: var(--muted); }
+  .caption small { display: block; font: 11px Inter, system-ui, sans-serif; font-style: normal; letter-spacing: .05em; margin-top: .4em; }
+  .panel-toggle[hidden] { display: none; }
+  .panel-toggle { position: fixed; left: 12px; top: 12px; z-index: 5; background: rgba(20, 16, 18, .55); color: #ddd; border: 1px solid rgba(255, 255, 255, .15); border-radius: 8px; font: 12px Inter, sans-serif; padding: 6px 10px; cursor: pointer; }
+  .panel { position: fixed; left: 12px; top: 48px; z-index: 5; width: 260px; max-height: calc(100vh - 60px); overflow: auto; background: rgba(14, 11, 13, .9); color: #eee; border: 1px solid rgba(255, 255, 255, .12); border-radius: 10px; padding: 12px; font: 12px Inter, sans-serif; }
+  .panel[hidden] { display: none; }
+  .panel label { display: grid; grid-template-columns: 1fr 40px; gap: 2px 8px; margin-bottom: 6px; }
+  .panel label span:last-child { text-align: right; color: #aaa; font-variant-numeric: tabular-nums; }
+  .panel input[type="range"] { grid-column: 1 / -1; accent-color: #F2B8C8; }
+  .panel .row { display: flex; gap: 6px; margin: 8px 0; flex-wrap: wrap; }
+  .panel button { flex: 1; background: #1E1A1C; color: #eee; border: 1px solid #333; border-radius: 6px; padding: 6px; font: inherit; cursor: pointer; }
+  .panel button[aria-pressed="true"] { border-color: #F2B8C8; color: #F2B8C8; }
+  .panel .stat { color: #aaa; margin-top: 6px; }
+</style>
+<script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }</script>
+</head>
+<body>
+<canvas id="stage" aria-hidden="true"></canvas>
+<button class="panel-toggle" id="panel-toggle" type="button" hidden>Tweak</button>
+<div class="panel" id="panel" hidden></div>
+
+<script type="module">
+import * as THREE from "three";
+
+// ---------- Helpers ----------
+const TAU = Math.PI * 2;
+const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
+const lerp = (a, b, t) => a + (b - a) * t;
+const smoothstep = (e0, e1, x) => { const t = clamp01((x - e0) / (e1 - e0)); return t * t * (3 - 2 * t); };
+const easeOutCubic = (t) => 1 - Math.pow(1 - clamp01(t), 3);
+const mulberry32 = (seed) => () => {
+  seed = (seed + 0x6D2B79F5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+
+// ---------- Tweakable ----------
+const P = {
+  petals: 140,       // storm size
+  breeze: 1,         // steady wind
+  gust: 1,           // strength of the gust and the rush to camera
+  blur: 1,           // depth-of-field strength
+  translucency: 1,   // light passing through petals
+  pitch: 7,          // halftone cell, css px
+  glimmer: .55,      // hybrid: sparkle on bright petal areas
+  mode: "real",      // real | halftone | hybrid
+};
+
+// ---------- Scene constants ----------
+const CAMERA_Z = 10, CAMERA_FOV = 40;
+const ATLAS_COLS = 4, ATLAS_ROWS = 6, ATLAS_CELLS = ATLAS_COLS * ATLAS_ROWS;
+const MAX_PETALS = 200;
+const PETAL_SIZE_MIN = .46, PETAL_SIZE_MAX = .74;
+const NEAR_SIZE_GAIN = 1.25;   // petals in the rush are drawn a little larger
+const PLANE_SEGMENTS = 10;
+const FIXED_DT = 1 / 60;
+const MAX_STEPS_PER_FRAME = 4;
+const MAX_DPR = 2;
+// Petal edges come from the texture alpha, so the offscreen target needs no multisampling
+// (a multisampled target also failed to draw in one tested browser).
+const MSAA_SAMPLES = 0;
+
+// Physics of a light, flat petal in moving air.
+const GRAVITY = .85;
+const DRAG_EDGE = .7, DRAG_FACE = 3.4;     // petals facing the wind are pushed harder
+const FLUTTER_LIFT = .55;                  // sideways slip from the wind across the petal
+const SPIN_BASE = .7, SPIN_PER_SPEED = .38, AXIS_WANDER = .9;
+const FLUTTER_SHAPE_PER_SPEED = .025, FLUTTER_SHAPE_MAX = .14;
+
+// Where petals live and leave.
+const FIELD_X = 11, FIELD_Y_TOP = 6.5, FIELD_Y_BOTTOM = -7;
+const PASSED_CAMERA_Z = CAMERA_Z - 1.3;   // leave before a petal fills the whole lens
+const BACK_Z_MIN = -32, BACK_Z_MAX = -14;
+
+// ---------- Timeline (seconds). One wind carries every beat. ----------
+const T = {
+  breathEnd: 1.6,            // petals breeze in from both sides
+  gust: [1.2, 3.1],          // gust fronts sweep in from both edges; the two streams meet in the middle
+  turn: [2.8, 3.6],          // the wind turns and comes straight at the viewer
+  washIn: [4.7, 5.1],        // petals cover the screen, then the colour takes over
+  cut: 5.15,
+  washOut: [5.25, 6.7],      // the colour opens from the sleeping petal outward
+  land: [5.15, 6.9],         // the petal is already asleep; it only settles with one slow breath
+  complete: 7.7,
+};
+const STORM_SPAWN_RATE = 110;     // petals per second while the gust feeds the stream
+const CALM_PETALS = 14, HERO_PETALS = 6;
+const GUST_FRONT_FROM = 15, GUST_FRONT_TO = 0;   // distance of each front from the centre line
+const SIDE_BREEZE_EASE = 2.5;                     // the side breeze softens near the centre, where the streams meet
+// Head-on: each petal flies along its own line to the viewer, so it holds its place on screen and grows.
+const RUSH_SPEED = 8.5, RUSH_CALM_SIDES = .85, RUSH_EDDY = .25;
+const NEAR_Z_MIN = -4, NEAR_Z_MAX = 7.5, NEAR_SPREAD = 1.15;
+const RUSH_PEAK = 3.9, NEAR_SHARE = .7, NEAR_SHARE_PEAK = .92;   // the last second is almost all close petals
+
+// ---------- Look ----------
+const THEMES = {
+  dark: { bg: [7, 6, 10], wash: [242, 186, 204], light: [255, 236, 226], lightGain: .1, fogTo: [7, 6, 10], fog: .55, ambient: .74 },
+  light: { bg: [246, 241, 238], wash: [246, 205, 216], light: [255, 248, 240], lightGain: .05, fogTo: [246, 241, 238], fog: .45, ambient: .9 },
+};
+const rgb = (c) => new THREE.Vector3(c[0] / 255, c[1] / 255, c[2] / 255);
+
+// ---------- Renderer ----------
+const canvas = document.getElementById("stage");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true, powerPreference: "high-performance" });
+renderer.outputColorSpace = THREE.LinearSRGBColorSpace;   // textures and shaders work in display (sRGB) values directly
+const camera = new THREE.PerspectiveCamera(CAMERA_FOV, 1, .05, 80);
+camera.position.set(0, 0, CAMERA_Z);
+const scene = new THREE.Scene();
+let target = null;
+
+const loader = new THREE.TextureLoader();
+const loadTexture = (url) => new Promise((resolve) => loader.load(url, (t) => {
+  // No anisotropic filtering: combined with depth-blur bias it streaks petal edges into a furry texture.
+  t.anisotropy = 1;
+  t.colorSpace = THREE.NoColorSpace;
+  resolve(t);
+}));
+
+// ---------- Petal shader ----------
+// Each petal is a curved surface: curl across, cup along, a slight twist, plus a flutter that grows with wind speed.
+const petalVertex = /* glsl */`
+  attribute vec2 aCellSeed;
+  attribute vec3 aShape;
+  attribute float aFlutter;
+  uniform float uTime;
+  varying vec2 vUv;
+  varying vec3 vNormal;
+  varying vec3 vView;
+  varying float vDepth;
+  varying float vCell;
+  void main() {
+    vec3 p = position;
+    float phase = uTime * 6.0 + aCellSeed.y * 31.0;
+    float cx = aShape.x + aFlutter * sin(phase);
+    float cy = aShape.y + aFlutter * .6 * sin(phase * 1.3 + 1.7);
+    float tw = aShape.z + aFlutter * .5 * cos(phase * .8);
+    p.z += cx * p.x * p.x + cy * p.y * p.y + tw * p.x * p.y;
+    vec3 n = normalize(vec3(-(2.0 * cx * p.x + tw * p.y), -(2.0 * cy * p.y + tw * p.x), 1.0));
+    vec4 mv = viewMatrix * modelMatrix * instanceMatrix * vec4(p, 1.0);
+    vNormal = normalize(mat3(viewMatrix) * mat3(modelMatrix) * mat3(instanceMatrix) * n);
+    vView = -mv.xyz;
+    vDepth = -mv.z;
+    vUv = uv;
+    vCell = aCellSeed.x;
+    gl_Position = projectionMatrix * mv;
+  }
+`;
+const petalFragment = /* glsl */`
+  #define MAX_BLUR_BIAS 3.6
+  uniform sampler2D uAtlas;
+  uniform vec2 uGrid;
+  uniform vec3 uLightDir;
+  uniform vec3 uKey;
+  uniform vec3 uFogTo;
+  uniform float uFog;
+  uniform float uFocus;
+  uniform float uNearBlur;
+  uniform float uFarBlur;
+  uniform float uTranslucency;
+  uniform float uOpacity;
+  uniform float uAmbient;
+  varying vec2 vUv;
+  varying vec3 vNormal;
+  varying vec3 vView;
+  varying float vDepth;
+  varying float vCell;
+  void main() {
+    float col = mod(vCell, uGrid.x);
+    float row = floor(vCell / uGrid.x + .001);
+    vec2 uv = (vec2(col, uGrid.y - 1.0 - row) + vUv) / uGrid;
+    // Depth of field from the texture's own blurred mip levels: near petals soft, far ones a touch soft.
+    float near = max(uFocus - vDepth, 0.0) / uFocus;
+    float far = max(vDepth - uFocus, 0.0) / 30.0;
+    float bias = clamp(near * near * uNearBlur + far * uFarBlur, 0.0, MAX_BLUR_BIAS);
+    vec4 tex = texture2D(uAtlas, uv, bias);
+    if (tex.a < .004) discard;
+    vec3 N = normalize(vNormal);
+    vec3 base = tex.rgb;
+    if (!gl_FrontFacing) { N = -N; base *= mix(vec3(.93, .86, .9), vec3(1.0), uAmbient - .7); }   // underside: a shade deeper
+    vec3 L = normalize(uLightDir);
+    vec3 V = normalize(vView);
+    float ndl = dot(N, L);
+    float wrap = uAmbient + (1.04 - uAmbient) * max(ndl, 0.0);
+    float through = max(-ndl, 0.0) * .55 * uTranslucency;          // light passing through the thin petal
+    float sheen = pow(max(dot(reflect(-L, N), V), 0.0), 22.0) * .14;
+    vec3 c = base * uKey * wrap + base * vec3(1.0, .82, .86) * through + sheen;
+    float fog = smoothstep(20.0, 46.0, vDepth) * uFog;
+    c = mix(c, uFogTo, fog);
+    gl_FragColor = vec4(c, tex.a * uOpacity);
+  }
+`;
+
+const makePetalMaterial = (texture, grid) => new THREE.ShaderMaterial({
+  uniforms: {
+    uAtlas: { value: texture }, uGrid: { value: new THREE.Vector2(grid[0], grid[1]) }, uTime: { value: 0 },
+    uLightDir: { value: new THREE.Vector3(-.45, .8, .5) }, uKey: { value: new THREE.Vector3(1, .98, .95) },
+    uFogTo: { value: new THREE.Vector3() }, uFog: { value: .8 }, uFocus: { value: 9 },
+    uNearBlur: { value: 7 }, uFarBlur: { value: 1.2 }, uTranslucency: { value: 1 }, uOpacity: { value: 1 }, uAmbient: { value: .74 },
+  },
+  vertexShader: petalVertex, fragmentShader: petalFragment,
+  transparent: true, depthWrite: false, side: THREE.DoubleSide,
+});
+
+const makePetalMesh = (material, count) => {
+  const geometry = new THREE.PlaneGeometry(1, 1, PLANE_SEGMENTS, PLANE_SEGMENTS);
+  geometry.setAttribute("aCellSeed", new THREE.InstancedBufferAttribute(new Float32Array(count * 2), 2));
+  geometry.setAttribute("aShape", new THREE.InstancedBufferAttribute(new Float32Array(count * 3), 3));
+  geometry.setAttribute("aFlutter", new THREE.InstancedBufferAttribute(new Float32Array(count), 1));
+  const mesh = new THREE.InstancedMesh(geometry, material, count);
+  mesh.frustumCulled = false;
+  mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  return mesh;
+};
+
+// ---------- Post pass: real / halftone / hybrid, colour wash, warm light ----------
+const postVertex = /* glsl */`varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`;
+const postFragment = /* glsl */`
+  uniform sampler2D uScene;
+  uniform vec2 uRes;
+  uniform float uPitch;
+  uniform int uMode;
+  uniform vec3 uBg;
+  uniform float uGlimmer;
+  uniform float uTime;
+  uniform vec3 uWash;
+  uniform float uWashAmount;
+  uniform vec3 uIris;      // x, y (screen uv), radius in screen heights
+  uniform float uAspect;
+  uniform vec3 uLight;
+  uniform float uLightGain;
+  varying vec2 vUv;
+  vec2 hexCenter(vec2 p, float s) {
+    vec2 r = vec2(1.0, 1.7320508) * s;
+    vec2 h = r * .5;
+    vec2 a = mod(p, r) - h;
+    vec2 b = mod(p - h, r) - h;
+    return p - (dot(a, a) < dot(b, b) ? a : b);
+  }
+  void main() {
+    vec3 real = texture2D(uScene, vUv).rgb;
+    vec3 col = real;
+    if (uMode != 0) {
+      vec2 px = vUv * uRes;
+      vec2 c = hexCenter(px, uPitch);
+      vec3 s = texture2D(uScene, c / uRes).rgb;
+      float presence = clamp(length(s - uBg) * 2.2, 0.0, 1.0);
+      float r = uPitch * .52 * sqrt(presence);
+      float d = length(px - c);
+      float dotMask = 1.0 - smoothstep(r - .8, r + .8, d);
+      float halo = exp(-max(d - r, 0.0) / (uPitch * .35)) * presence * .25;   // shine around each dot
+      float lum = dot(s, vec3(.299, .587, .114));
+      if (uMode == 1) {
+        col = mix(uBg, s * 1.06, dotMask) + s * halo * (1.0 - dotMask);
+      } else {
+        float bright = smoothstep(.62, .95, lum) * presence;
+        float twinkle = .55 + .45 * sin(uTime * 1.7 + c.x * .37 + c.y * .71);
+        col = real + dotMask * bright * uGlimmer * twinkle * .55;
+      }
+    }
+    // Warm light from the upper left, like late sun through a grove.
+    vec2 q = vUv - vec2(.2, .95);
+    col += uLight * uLightGain * exp(-dot(q, q) * 2.2);
+    vec2 ir = (vUv - uIris.xy) * vec2(uAspect, 1.0);
+    float open = smoothstep(uIris.z - .18, uIris.z, length(ir));   // inside the iris the hero shows through
+    col = mix(col, uWash, uWashAmount * (uIris.z > 0.0 ? open : 1.0));
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
+const postMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    uScene: { value: null }, uRes: { value: new THREE.Vector2() }, uPitch: { value: 14 }, uMode: { value: 0 },
+    uBg: { value: new THREE.Vector3() }, uGlimmer: { value: P.glimmer }, uTime: { value: 0 },
+    uWash: { value: new THREE.Vector3() }, uWashAmount: { value: 0 }, uIris: { value: new THREE.Vector3() }, uAspect: { value: 1 }, uLight: { value: new THREE.Vector3() }, uLightGain: { value: 0 },
+  },
+  vertexShader: postVertex, fragmentShader: postFragment, depthTest: false, depthWrite: false,
+});
+const postScene = new THREE.Scene();
+const postCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), postMaterial));
+
+// ---------- Simulation ----------
+const rng0 = 20261009;
+let rng = mulberry32(rng0);
+const petals = Array.from({ length: MAX_PETALS }, () => ({
+  alive: false, p: new THREE.Vector3(), v: new THREE.Vector3(), q: new THREE.Quaternion(), axis: new THREE.Vector3(1, 0, 0),
+  size: .5, cell: 0, seed: 0, shape: new THREE.Vector3(), flutter: 0, opacity: 1,
+}));
+const tmpV = new THREE.Vector3(), tmpN = new THREE.Vector3(), tmpQ = new THREE.Quaternion(), wind = new THREE.Vector3();
+const UNIT_Z = new THREE.Vector3(0, 0, 1);
+let time = 0, spawnDebt = 0;
+let theme = "dark";
+
+/** Half extents of what the camera sees at a given distance. */
+const viewHalf = (distance) => {
+  const h = distance * Math.tan((CAMERA_FOV / 2) * Math.PI / 180);
+  return { h, w: h * camera.aspect };
+};
+
+const gustEnvelope = (t) => smoothstep(T.gust[0], T.gust[0] + .6, t) * (1 - smoothstep(T.cut - .1, T.cut, t));
+const rushAmount = (t) => smoothstep(T.turn[0], T.turn[1], t) * (t < T.cut ? 1 : 0);
+const inHero = (t) => t >= T.cut;
+
+/** The single wind field: breezes from both sides, gust fronts closing in, then a straight rush at the viewer. */
+const windAt = (p, t, out) => {
+  const r = rushAmount(t) * P.gust;
+  const calm = 1 - RUSH_CALM_SIDES * Math.min(1, r);   // side air dies down as the rush takes over
+  const breeze = P.breeze * (inHero(t) ? .65 : 1) * (1 + .25 * Math.sin(t * .45)) * calm;
+  const side = p.x < 0 ? 1 : -1;                       // which way is "inward" from here
+  if (inHero(t)) out.set(1.5 * breeze, -.35 * breeze, .15 * breeze);   // after the storm: one gentle breeze from the left
+  else out.set(side * 1.5 * breeze * smoothstep(0, SIDE_BREEZE_EASE, Math.abs(p.x)), -.35 * breeze, .15 * breeze);
+  const g = gustEnvelope(t) * P.gust * calm;
+  if (g > 0) {
+    const front = lerp(GUST_FRONT_FROM, GUST_FRONT_TO, clamp01((t - T.gust[0]) / (T.gust[1] - T.gust[0])));
+    const behind = smoothstep(front - 4, front + 2, Math.abs(p.x));   // air outside the front is moving
+    out.x += side * 5.2 * g * (.35 + .65 * behind);
+    out.y += 1.4 * g * behind * Math.sin(p.x * .25 + t * 1.2);
+    out.z += 1.2 * g * behind;
+  }
+  if (r > 0) {
+    tmpW.set(-p.x, -p.y, CAMERA_Z - p.z).normalize();
+    out.addScaledVector(tmpW, r * RUSH_SPEED);
+  }
+  const e = (.7 + 1.4 * g) * calm + RUSH_EDDY * r;    // eddies: coherent and slow; quiet during the rush so it reads as straight
+  out.x += e * (Math.sin(p.y * .41 + t * .63) + .5 * Math.sin(p.z * .53 + t * .91));
+  out.y += e * .8 * (Math.sin(p.z * .29 + t * .52) + .5 * Math.sin(p.x * .43 - t * .71));
+  out.z += e * .6 * (Math.sin(p.x * .31 + t * .44) + .5 * Math.sin(p.y * .61 + t * .83));
+  return out;
+};
+const tmpW = new THREE.Vector3();
+
+const spawn = (pt, where) => {
+  pt.alive = true;
+  pt.cell = (rng() * ATLAS_CELLS) | 0;
+  pt.seed = rng();
+  pt.size = lerp(PETAL_SIZE_MIN, PETAL_SIZE_MAX, rng());
+  pt.shape.set((rng() - .5) * .7, (rng() - .25) * .5, (rng() - .5) * .45);
+  pt.q.setFromEuler(new THREE.Euler(rng() * TAU, rng() * TAU, rng() * TAU));
+  pt.axis.set(rng() - .5, rng() - .5, rng() - .5).normalize();
+  pt.opacity = 1;
+  if (where === "upstream") {             // enters from either side, inside a loose ribbon
+    const z = lerp(-9, 6, Math.pow(rng(), .8));
+    const half = viewHalf(CAMERA_Z - z);
+    const sideSign = rng() < .5 ? -1 : 1;   // breezes in from both edges
+    pt.p.set(sideSign * (half.w + .6 + rng() * 2), lerp(-.3, .95, rng()) * half.h + Math.sin(time * .8) * .4, z);
+  } else if (where === "back") {          // deep behind, feeding the rush to camera
+    const z = lerp(BACK_Z_MIN, BACK_Z_MAX, rng());
+    const half = viewHalf(CAMERA_Z - z);
+    pt.p.set((rng() - .5) * 1.6 * half.w, (rng() - .5) * 1.4 * half.h, z);
+  } else if (where === "near") {          // the rush: petals right in front of the viewer
+    const z = lerp(NEAR_Z_MIN, NEAR_Z_MAX, rng());
+    const half = viewHalf(CAMERA_Z - z);
+    pt.p.set((rng() * 2 - 1) * NEAR_SPREAD * half.w, (rng() * 2 - 1) * NEAR_SPREAD * half.h, z);
+    pt.size *= NEAR_SIZE_GAIN;
+  } else {                                // hero: far, small, drifting
+    const z = lerp(-16, -4, rng());
+    const half = viewHalf(CAMERA_Z - z);
+    pt.p.set(-half.w - rng() * 2, lerp(-.3, 1, rng()) * half.h, z);
+    pt.opacity = .55 + .35 * rng();
+  }
+  windAt(pt.p, time, pt.v);
+};
+
+const reset = () => {
+  rng = mulberry32(rng0);
+  time = 0; spawnDebt = 0;
+  for (const pt of petals) pt.alive = false;
+  // The scene opens mid-breath: a few petals already in the air.
+  for (let i = 0; i < CALM_PETALS; i++) {
+    spawn(petals[i], "upstream");
+    const half = viewHalf(CAMERA_Z - petals[i].p.z);
+    petals[i].p.x = (rng() * 1.6 - .9) * half.w;
+  }
+  hero.reset();
+};
+
+const aliveCount = () => petals.reduce((n, pt) => n + (pt.alive ? 1 : 0), 0);
+const freePetal = () => petals.find((pt) => !pt.alive);
+
+const stepPetals = (dt) => {
+  const t = time;
+  // Feeding: a calm trickle, then the gust's stream, then the rush, then the hero's few.
+  let want = CALM_PETALS, where = "upstream";
+  if (inHero(t)) { want = HERO_PETALS; where = "hero"; }
+  else if (rushAmount(t) > .05) { want = P.petals; where = rng() < (t > RUSH_PEAK ? NEAR_SHARE_PEAK : NEAR_SHARE) ? "near" : "back"; }
+  else if (gustEnvelope(t) > .05) { want = Math.round(lerp(CALM_PETALS, P.petals, gustEnvelope(t))); }
+  const alive = aliveCount();
+  if (alive < want) {
+    spawnDebt += STORM_SPAWN_RATE * dt * (inHero(t) ? .05 : 1);
+    while (spawnDebt >= 1) { const pt = freePetal(); if (!pt || aliveCount() >= want) break; spawn(pt, where); spawnDebt -= 1; }
+  } else spawnDebt = 0;
+
+  for (const pt of petals) {
+    if (!pt.alive) continue;
+    windAt(pt.p, t, wind);
+    tmpV.copy(wind).sub(pt.v);                         // air relative to the petal
+    const rel = tmpV.length();
+    tmpN.copy(UNIT_Z).applyQuaternion(pt.q);           // petal normal
+    const facing = rel > 1e-4 ? Math.abs(tmpN.dot(tmpV) / rel) : 0;
+    const k = lerp(DRAG_EDGE, DRAG_FACE, facing);
+    pt.v.addScaledVector(tmpV, Math.min(1, k * dt));
+    pt.v.y -= GRAVITY * dt * (1 - .8 * rushAmount(t));
+    // A petal edge-on to the air slides sideways: the classic falling-leaf slip.
+    pt.v.addScaledVector(tmpN.cross(tmpV), FLUTTER_LIFT * dt * (1 - facing));
+    pt.p.addScaledVector(pt.v, dt);
+    // Tumble faster in stronger air; the spin axis wanders so no two turns repeat.
+    pt.axis.x += (rng() - .5) * AXIS_WANDER * dt; pt.axis.y += (rng() - .5) * AXIS_WANDER * dt; pt.axis.z += (rng() - .5) * AXIS_WANDER * dt;
+    pt.axis.normalize();
+    tmpQ.setFromAxisAngle(pt.axis, (SPIN_BASE + rel * SPIN_PER_SPEED) * dt);
+    pt.q.premultiply(tmpQ);
+    pt.flutter = Math.min(FLUTTER_SHAPE_MAX, rel * FLUTTER_SHAPE_PER_SPEED);
+    const half = viewHalf(Math.max(.5, CAMERA_Z - pt.p.z));
+    if (pt.p.z > PASSED_CAMERA_Z || pt.p.y < Math.min(FIELD_Y_BOTTOM, -half.h - 1.5) || Math.abs(pt.p.x) > half.w + 3 || pt.p.z < BACK_Z_MIN - 6) pt.alive = false;
+    if (inHero(t) && pt.opacity >= 1) pt.alive = false;   // the storm's petals are gone after the cut
+  }
+};
+
+// ---------- The sleeping petal ----------
+const HERO_REST = { x: .15, y: -.55, z: 3.2, size: 1.45, tiltX: -.95, tiltY: .12, roll: .55 };
+const HERO_SETTLE = { lift: .12, roll: -.08, curl: .06 };   // how far it is from rest when the iris opens
+const HERO_BREATH_PERIOD = 7, HERO_BREATH = .035, HERO_SHAPE = { curl: -.18, cup: .22, twist: .1 };
+const hero = {
+  mesh: null, shadow: null, stir: 0,
+  reset() { this.stir = 0; },
+  update(t, dt) {
+    if (!this.mesh) return;
+    const visible = t >= T.land[0];
+    this.mesh.visible = visible; this.shadow.visible = visible;
+    if (!visible) return;
+    const k = easeOutCubic((t - T.land[0]) / (T.land[1] - T.land[0]));
+    // Already asleep when the iris opens: it only sinks the last few millimetres and lets the curl relax.
+    const sway = 0;
+    const x = HERO_REST.x;
+    const y = HERO_REST.y + HERO_SETTLE.lift * (1 - k);
+    const z = HERO_REST.z;
+    const breath = Math.sin(t * TAU / HERO_BREATH_PERIOD);
+    this.stir *= Math.exp(-dt * 1.5);
+    const e = new THREE.Euler(HERO_REST.tiltX, HERO_REST.tiltY + this.stir * .08, HERO_REST.roll + HERO_SETTLE.roll * (1 - k));
+    tmpQ.setFromEuler(e);
+    const m = new THREE.Matrix4().compose(new THREE.Vector3(x, y, z), tmpQ, new THREE.Vector3(HERO_REST.size, HERO_REST.size, HERO_REST.size));
+    this.mesh.setMatrixAt(0, m); this.mesh.instanceMatrix.needsUpdate = true;
+    const g = this.mesh.geometry;
+    g.attributes.aShape.setXYZ(0, HERO_SHAPE.curl + HERO_SETTLE.curl * (1 - k) + breath * HERO_BREATH + this.stir * .12, HERO_SHAPE.cup, HERO_SHAPE.twist);
+    g.attributes.aShape.needsUpdate = true;
+    g.attributes.aFlutter.setX(0, (1 - k) * .05 + this.stir * .04); g.attributes.aFlutter.needsUpdate = true;
+    // Soft contact shade under it, growing as it lands.
+    this.shadow.position.set(x + .12, y - .38, z - .25);
+    this.shadow.material.opacity = theme === "light" ? .22 : .16;
+  },
+};
+
+// ---------- Build ----------
+let storm = null;
+const sortIdx = new Int32Array(MAX_PETALS);
+const writeStorm = () => {
+  let n = 0;
+  for (let i = 0; i < MAX_PETALS; i++) if (petals[i].alive) sortIdx[n++] = i;
+  const idx = Array.from(sortIdx.subarray(0, n)).sort((a, b) => petals[a].p.z - petals[b].p.z);   // far first
+  const g = storm.geometry, cs = g.attributes.aCellSeed, sh = g.attributes.aShape, fl = g.attributes.aFlutter;
+  const m = new THREE.Matrix4(), s = new THREE.Vector3();
+  idx.forEach((i, k) => {
+    const pt = petals[i];
+    s.setScalar(pt.size);
+    m.compose(pt.p, pt.q, s);
+    storm.setMatrixAt(k, m);
+    cs.setXY(k, pt.cell, pt.seed); sh.setXYZ(k, pt.shape.x, pt.shape.y, pt.shape.z); fl.setX(k, pt.flutter);
+  });
+  storm.count = n;
+  storm.instanceMatrix.needsUpdate = true; cs.needsUpdate = true; sh.needsUpdate = true; fl.needsUpdate = true;
+};
+
+
+const applyTheme = () => {
+  const th = THEMES[theme];
+  document.documentElement.dataset.theme = theme;
+  renderer.setClearColor(new THREE.Color(th.bg[0] / 255, th.bg[1] / 255, th.bg[2] / 255), 1);
+  for (const mat of [storm.material, hero.mesh.material]) { mat.uniforms.uFogTo.value.copy(rgb(th.fogTo)); mat.uniforms.uFog.value = th.fog; mat.uniforms.uAmbient.value = th.ambient; }
+  postMaterial.uniforms.uBg.value.copy(rgb(th.bg));
+  postMaterial.uniforms.uWash.value.copy(rgb(th.wash));
+  postMaterial.uniforms.uLight.value.copy(rgb(th.light));
+  postMaterial.uniforms.uLightGain.value = th.lightGain;
+};
+
+const resize = () => {
+  const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+  const w = window.innerWidth, h = window.innerHeight;
+  renderer.setPixelRatio(dpr); renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+  target?.dispose();
+  target = new THREE.WebGLRenderTarget(Math.round(w * dpr), Math.round(h * dpr), { samples: Number(params.get("msaa") ?? MSAA_SAMPLES) });
+  postMaterial.uniforms.uScene.value = target.texture;
+  postMaterial.uniforms.uRes.value.set(w * dpr, h * dpr);
+  postMaterial.uniforms.uPitch.value = P.pitch * dpr;
+};
+
+const IRIS_MAX = 2.2;   // screen heights: enough to clear every corner
+const irisCenter = new THREE.Vector3();
+const washAt = (t) => (t < T.washIn[0] ? 0 : t < T.cut ? Math.pow(smoothstep(T.washIn[0], T.washIn[1], t), WASH_CURVE) : 1);
+const WASH_CURVE = 2.2;   // late and quick, so the dark never mixes into a muddy mauve
+/** After the cut the pink opens like an iris from the sleeping petal outward. */
+const irisAt = (t) => (t < T.cut ? 0 : .001 + IRIS_MAX * easeOutCubic((t - T.washOut[0]) / (T.washOut[1] - T.washOut[0])));
+
+const render = () => {
+  for (const mat of [storm.material, hero.mesh.material]) {
+    mat.uniforms.uTime.value = time;
+    mat.uniforms.uNearBlur.value = 7 * P.blur; mat.uniforms.uFarBlur.value = 1.2 * P.blur;
+    mat.uniforms.uTranslucency.value = P.translucency;
+  }
+  postMaterial.uniforms.uTime.value = time;
+  postMaterial.uniforms.uMode.value = P.mode === "real" ? 0 : P.mode === "halftone" ? 1 : 2;
+  postMaterial.uniforms.uGlimmer.value = P.glimmer;
+  postMaterial.uniforms.uWashAmount.value = washAt(time) * (irisAt(time) >= IRIS_MAX ? 0 : 1);
+  // The iris opens from wherever the sleeping petal rests on screen.
+  irisCenter.set(HERO_REST.x, HERO_REST.y, HERO_REST.z).project(camera);
+  postMaterial.uniforms.uIris.value.set(irisCenter.x * .5 + .5, irisCenter.y * .5 + .5, irisAt(time));
+  postMaterial.uniforms.uAspect.value = camera.aspect;
+  writeStorm();
+  renderer.setRenderTarget(target); renderer.render(scene, camera);
+  renderer.setRenderTarget(null); renderer.render(postScene, postCamera);
+};
+
+const step = (dt) => { time += dt; stepPetals(dt); hero.update(time, dt); };
+/** Deterministic: replays the same seeded simulation up to `t`. */
+const simulateTo = (t) => { reset(); while (time + FIXED_DT <= t) step(FIXED_DT); };
+
+// ---------- Loop ----------
+let raf = 0, prev = 0, acc = 0;
+const stats = { frames: 0, ms: 0 };
+const loop = (now) => {
+  raf = 0;
+  const elapsed = prev ? Math.min((now - prev) / 1000, .1) : 0; prev = now;
+  acc += elapsed;
+  let steps = 0;
+  while (acc >= FIXED_DT && steps < MAX_STEPS_PER_FRAME) { step(FIXED_DT); acc -= FIXED_DT; steps++; }
+  if (steps === MAX_STEPS_PER_FRAME) acc = 0;
+  const t0 = performance.now(); render(); stats.frames++; stats.ms += performance.now() - t0;
+  schedule();
+};
+const schedule = () => { if (!raf && !document.hidden && !frozen) raf = requestAnimationFrame(loop); };
+const params = new URLSearchParams(location.search);
+const frozen = params.has("t");
+
+// ---------- Cursor: your movement is wind too ----------
+let lastPointer = null;
+window.addEventListener("pointermove", (e) => {
+  const now = performance.now();
+  if (lastPointer) {
+    const speed = Math.hypot(e.clientX - lastPointer.x, e.clientY - lastPointer.y) / Math.max(1, now - lastPointer.t);
+    hero.stir = Math.min(1, hero.stir + speed * .05);
+  }
+  lastPointer = { x: e.clientX, y: e.clientY, t: now };
+}, { passive: true });
+
+// ---------- Panel ----------
+const panel = document.getElementById("panel");
+// The sequence stays clean: the panel opens only with ?tweak or the T key.
+const panelToggle = document.getElementById("panel-toggle");
+panelToggle.addEventListener("click", () => { panel.hidden = !panel.hidden; });
+const showPanel = () => { panelToggle.hidden = false; panel.hidden = false; };
+window.addEventListener("keydown", (e) => { if (e.key === "t" || e.key === "T") { if (panelToggle.hidden) showPanel(); else { panelToggle.hidden = true; panel.hidden = true; } } });
+const SLIDERS = [["petals", "Petals", 20, 160, 1], ["breeze", "Breeze", 0, 2.5, .05], ["gust", "Gust", 0, 2, .05], ["blur", "Depth blur", 0, 2, .05], ["translucency", "Translucency", 0, 2, .05], ["pitch", "Halftone px", 3, 16, 1], ["glimmer", "Glimmer", 0, 1.5, .05]];
+const buildPanel = () => {
+  panel.innerHTML = "";
+  const modes = document.createElement("div"); modes.className = "row";
+  for (const m of ["real", "halftone", "hybrid"]) {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = m; b.setAttribute("aria-pressed", String(P.mode === m));
+    b.addEventListener("click", () => { P.mode = m; buildPanel(); if (frozen) render(); }); modes.append(b);
+  }
+  panel.append(modes);
+  for (const [key, label, min, max, st] of SLIDERS) {
+    const row = document.createElement("label");
+    const a = document.createElement("span"); a.textContent = label;
+    const v = document.createElement("span"); v.textContent = String(P[key]);
+    const input = Object.assign(document.createElement("input"), { type: "range", min, max, step: st, value: P[key] });
+    input.addEventListener("input", () => { P[key] = Number(input.value); v.textContent = input.value; if (key === "pitch") resize(); if (frozen) render(); });
+    row.append(a, v, input); panel.append(row);
+  }
+  const actions = document.createElement("div"); actions.className = "row";
+  const mk = (label, fn) => { const b = document.createElement("button"); b.type = "button"; b.textContent = label; b.addEventListener("click", fn); actions.append(b); };
+  mk("Replay", () => { reset(); acc = 0; prev = 0; schedule(); });
+  mk(theme === "dark" ? "Light" : "Dark", () => { theme = theme === "dark" ? "light" : "dark"; applyTheme(); buildPanel(); if (frozen) render(); });
+  panel.append(actions);
+  const stat = document.createElement("div"); stat.className = "stat"; stat.id = "stat"; panel.append(stat);
+};
+setInterval(() => {
+  const el = document.getElementById("stat");
+  if (el && stats.frames) { el.textContent = `render ${(stats.ms / stats.frames).toFixed(2)} ms · ${aliveCount()} petals`; stats.frames = 0; stats.ms = 0; }
+}, 1000);
+
+// ---------- Review hooks ----------
+window.__cherryAt = (t, opts = {}) => {
+  if (opts.mode) P.mode = opts.mode;
+  if (opts.theme && opts.theme !== theme) { theme = opts.theme; applyTheme(); }
+  simulateTo(t); render(); return { t: time, petals: aliveCount() };
+};
+window.__cherrySheet = (from, to, count, cols, opts = {}) => {
+  if (opts.mode) P.mode = opts.mode;
+  if (opts.theme && opts.theme !== theme) { theme = opts.theme; applyTheme(); }
+  document.getElementById("sheet")?.remove();
+  const rows = Math.ceil(count / cols);
+  const sheet = document.createElement("canvas"); sheet.id = "sheet";
+  const cw = Math.floor(innerWidth / cols), ch = Math.floor(cw * innerHeight / innerWidth);
+  sheet.width = cw * cols; sheet.height = ch * rows;
+  Object.assign(sheet.style, { position: "fixed", left: "0", top: "0", zIndex: "9", background: "#000" });
+  const sctx = sheet.getContext("2d"); sctx.font = "11px Inter, sans-serif";
+  for (let i = 0; i < count; i++) {
+    const t = lerp(from, to, count > 1 ? i / (count - 1) : 0);
+    simulateTo(t); render();
+    sctx.drawImage(canvas, (i % cols) * cw, ((i / cols) | 0) * ch, cw, ch);
+    sctx.fillStyle = "#fff"; sctx.fillText(`${t.toFixed(2)} s · ${aliveCount()}`, (i % cols) * cw + 6, ((i / cols) | 0) * ch + 14);
+  }
+  document.body.append(sheet); return { count };
+};
+window.__cherryBench = (frames, from) => {
+  simulateTo(from); let ms = 0, worst = 0;
+  for (let i = 0; i < frames; i++) { step(FIXED_DT); const t0 = performance.now(); render(); renderer.getContext().finish(); const d = performance.now() - t0; ms += d; worst = Math.max(worst, d); }
+  return { avgMs: +(ms / frames).toFixed(2), worstMs: +worst.toFixed(1), petals: aliveCount() };
+};
+
+// ---------- Start ----------
+const [atlas, heroTex] = await Promise.all([loadTexture("assets/petal-atlas.webp"), loadTexture("assets/hero-petal.webp")]);
+storm = makePetalMesh(makePetalMaterial(atlas, [ATLAS_COLS, ATLAS_ROWS]), MAX_PETALS);
+scene.add(storm);
+const heroMat = makePetalMaterial(heroTex, [1, 1]);
+heroMat.uniforms.uFocus.value = CAMERA_Z - HERO_REST.z;
+hero.mesh = makePetalMesh(heroMat, 1);
+hero.mesh.geometry.attributes.aCellSeed.setXY(0, 0, .37);
+hero.mesh.renderOrder = 2;
+scene.add(hero.mesh);
+// Contact shade: a soft radial texture, drawn once.
+const shadeCanvas = Object.assign(document.createElement("canvas"), { width: 128, height: 128 });
+const sctx = shadeCanvas.getContext("2d");
+const grad = sctx.createRadialGradient(64, 64, 4, 64, 64, 64);
+grad.addColorStop(0, "rgba(60,30,40,1)"); grad.addColorStop(1, "rgba(60,30,40,0)");
+sctx.fillStyle = grad; sctx.fillRect(0, 0, 128, 128);
+hero.shadow = new THREE.Mesh(new THREE.PlaneGeometry(1.9, .9), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(shadeCanvas), transparent: true, depthWrite: false, opacity: 0 }));
+hero.shadow.renderOrder = 1;
+scene.add(hero.shadow);
+
+buildPanel();
+applyTheme();
+resize();
+// Compile every shader now; otherwise the sleeping petal's first frame stalls the cut by ~80 ms.
+hero.mesh.visible = true; hero.shadow.visible = true;
+renderer.compile(scene, camera);
+renderer.setRenderTarget(target); renderer.render(scene, camera); renderer.setRenderTarget(null);
+renderer.compile(postScene, postCamera);
+window.addEventListener("resize", () => { resize(); if (frozen) render(); });
+document.addEventListener("visibilitychange", schedule);
+if (params.get("theme") === "light") { theme = "light"; applyTheme(); buildPanel(); }
+if (params.get("mode")) P.mode = params.get("mode");
+if (params.has("tweak")) showPanel();
+if (frozen) { simulateTo(Number(params.get("t"))); render(); }
+else { reset(); schedule(); }
+</script>
+</body>
+</html>

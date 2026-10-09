@@ -1,0 +1,1142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pearl hero prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Newsreader:ital,opsz,wght@1,6..72,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05070C;
+    --ink: #E6EAF0;
+    --muted: #8A93A3;
+    --gutter: clamp(16px, 3vw, 40px);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; }
+  .hero { position: relative; height: 100svh; min-height: 520px; overflow: hidden; }
+  .hero canvas.dots, .echo-stage canvas.dots { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  /* The glow layer is the cached scene at one pixel per dot, scaled up and blurred on the GPU. */
+  canvas.glow { position: absolute; display: block; pointer-events: none; }
+  .quote {
+    position: absolute; left: 50%; bottom: 6vh; transform: translateX(-50%);
+    width: min(92vw, 620px); text-align: center; pointer-events: none;
+    font-family: Newsreader, Georgia, serif; font-style: italic;
+    font-size: clamp(17px, 1.9vw, 24px); line-height: 1.45; color: #D3D8E0;
+  }
+  /* Soft dark backing keeps text readable over the lit sand. */
+  .quote, .name { text-shadow: 0 0 14px var(--bg), 0 0 6px var(--bg), 0 0 2px var(--bg); }
+  .quote blockquote span.line { display: block; }
+  .quote figcaption { margin-top: .7em; font-family: Inter, system-ui, sans-serif; font-style: normal; font-size: 12px; letter-spacing: .06em; color: var(--muted); }
+  .quote.is-caption {
+    left: auto; right: var(--gutter); bottom: var(--gutter); transform: none;
+    width: min(58vw, 330px); text-align: right; font-size: 13px; line-height: 1.4; color: #AEB5C1;
+  }
+  .quote.is-caption figcaption { font-size: 11px; margin-top: .4em; }
+  .name {
+    position: absolute; left: var(--gutter); bottom: var(--gutter);
+    font-size: 15px; font-weight: 500; letter-spacing: .01em; opacity: 0;
+  }
+  .skip {
+    position: absolute; right: var(--gutter); top: var(--gutter);
+    background: none; border: 1px solid rgba(191, 216, 255, .25); color: var(--muted);
+    font: 12px Inter, system-ui, sans-serif; letter-spacing: .04em; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .skip:hover { color: var(--ink); border-color: rgba(191, 216, 255, .5); }
+  .skip[hidden] { display: none; }
+  .projects { min-height: 60vh; display: grid; place-items: center; color: var(--muted); border-top: 1px solid #111827; font-size: 14px; }
+  .echo { position: relative; padding: 56px var(--gutter) 40px; display: grid; justify-items: center; gap: 14px; color: var(--muted); font-size: 12px; background: var(--bg); transition: background .4s, color .4s; }
+  .echo[data-theme="light"] { --bg: #F6F5F1; background: #F6F5F1; color: #5B6475; }
+  .echo-stage { position: relative; width: 320px; height: 220px; overflow: hidden; }
+  .echo .theme-toggle { background: none; border: 1px solid currentColor; color: inherit; opacity: .6; font: 11px Inter, system-ui, sans-serif; padding: 4px 10px; border-radius: 999px; cursor: pointer; }
+  @media (max-width: 719px) {
+    .quote.is-caption { left: var(--gutter); right: var(--gutter); bottom: calc(var(--gutter) + 30px); width: auto; text-align: left; }
+  }
+
+  /* ---------- Tweak panel (prototype only) ---------- */
+  .tweak-toggle {
+    position: fixed; left: 12px; top: 12px; z-index: 20;
+    background: rgba(10, 14, 22, .8); border: 1px solid rgba(191, 216, 255, .2); color: var(--muted);
+    font: 12px Inter, system-ui, sans-serif; padding: 6px 10px; border-radius: 8px; cursor: pointer;
+  }
+  .tweak {
+    position: fixed; left: 12px; top: 48px; z-index: 20; width: 280px; max-height: calc(100vh - 60px); overflow: auto;
+    background: rgba(8, 11, 18, .92); border: 1px solid rgba(191, 216, 255, .16); border-radius: 10px;
+    padding: 12px; font: 12px Inter, system-ui, sans-serif; color: var(--ink); backdrop-filter: blur(6px);
+  }
+  .tweak[hidden] { display: none; }
+  .tweak h2 { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 10px 0 6px; }
+  .tweak h2:first-child { margin-top: 0; }
+  .tweak label { display: grid; grid-template-columns: 1fr 44px; gap: 2px 8px; align-items: center; margin-bottom: 6px; }
+  .tweak label span:last-child { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+  .tweak input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: #BFD8FF; }
+  .tweak .row { display: flex; gap: 6px; margin-top: 10px; }
+  .tweak button { flex: 1; background: #111827; color: var(--ink); border: 1px solid #1F2937; border-radius: 6px; padding: 6px; font: inherit; cursor: pointer; }
+  .tweak button:hover { border-color: #BFD8FF55; }
+  @media (max-width: 719px) { .tweak { width: calc(100vw - 24px); max-height: 55vh; } }
+</style>
+</head>
+<body>
+<main>
+  <section class="hero" id="hero" aria-labelledby="hero-name">
+    <canvas class="glow" aria-hidden="true"></canvas>
+    <canvas class="dots" aria-hidden="true"></canvas>
+    <figure class="quote" id="quote">
+      <blockquote>
+        <span class="line" id="line-1">The infant flower opens its bud and cries,</span>
+        <span class="line" id="line-2"><span class="w">“Dear</span> <span class="w">World,</span> <span class="w">please</span> <span class="w">do</span> <span class="w">not</span> <span class="w">fade.”</span></span>
+      </blockquote>
+      <figcaption id="attribution">Rabindranath Tagore · <cite>Stray Birds, 66</cite></figcaption>
+    </figure>
+    <h1 class="name" id="hero-name">Gaurav Gupta</h1>
+    <button class="skip" id="skip" type="button">Skip intro</button>
+  </section>
+
+  <section class="projects">Projects section (unchanged in the real site)</section>
+
+  <footer class="echo">
+    <div class="echo-stage">
+      <canvas class="glow" aria-hidden="true"></canvas>
+      <canvas class="dots" aria-hidden="true"></canvas>
+    </div>
+    <p>© Gaurav Gupta</p>
+    <button class="theme-toggle" id="footer-theme" type="button">Light footer</button>
+  </footer>
+</main>
+
+<button class="tweak-toggle" id="tweak-toggle" type="button" aria-expanded="false" aria-controls="tweak">Tweak</button>
+<form class="tweak" id="tweak" hidden></form>
+
+<script>
+(() => {
+  "use strict";
+
+  // ---------- Math helpers ----------
+  const TAU = Math.PI * 2;
+  const DEG = Math.PI / 180;
+  const SQRT3_HALF = Math.sqrt(3) / 2;
+  const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const smoothstep = (e0, e1, x) => { const t = clamp01((x - e0) / (e1 - e0)); return t * t * (3 - 2 * t); };
+  // Sine in-out: half the peak speed of a cubic, so the lid never snaps through the edge-on pose.
+  const easeInOutSine = (t) => -(Math.cos(Math.PI * t) - 1) / 2;
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+  const windowEase = (range, t) => smoothstep(range[0], range[1], t);
+  const windowLinear = (range, t) => clamp01((t - range[0]) / (range[1] - range[0]));
+  // Small, fast seeded generator so the art is the same on each load.
+  const mulberry32 = (seed) => () => {
+    seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+
+  // ---------- Tweakable parameters ----------
+  /** Every value the tweak panel can change. Defaults are the approved look. */
+  // Defaults are the values Gaurav tuned in the panel (2026-10-09).
+  const PARAM_DEFAULTS = {
+    dotSize: .51,          // dot radius at full light, as a share of the grid pitch
+    dotGamma: 1.18,        // < 1 makes mid tones read larger; > 1 gives crisper contrast
+    sand: .5,             // sand brightness
+    grainDensity: .08,     // share of sand cells that carry a grain
+    grainStrength: .43,     // how bright a grain is
+    caustic: 1.15,         // caustic light strength
+    causticSharpness: 63,  // higher = thinner, rarer light lines
+    glow: .55,              // bloom behind the dots
+    glowBlur: 10,          // bloom softness, px
+    drift: .15,            // how far the image drifts under the fixed grid, in pitches
+    specks: 9,
+    bubbles: 4,
+    glints: 9,
+    lidAngle: 69,          // degrees, hero pose
+    camera: 48,            // degrees above the sea bed
+    halo: 1.1,             // blue light the pearl throws on the shell
+    pearlShine: .15,       // specular highlight on the pearl
+    pearlRim: .77,         // bounce light on the pearl's lower edge
+    footerLid: 78,         // degrees, footer shell when open
+    footerPitch: 3,        // footer dot grid, px
+    footerContrast: 1.5,   // footer shell contrast around the mid tone
+  };
+  const PARAM_META = [
+    ["Dots", [["dotSize", "Dot size", .3, .7, .01], ["dotGamma", "Dot gamma", .35, 1.2, .01]]],
+    ["Sea bed", [["sand", "Sand light", 0, 2, .05], ["grainDensity", "Grain amount", 0, 1, .01], ["grainStrength", "Grain light", 0, .5, .01]]],
+    ["Water", [["caustic", "Caustic light", 0, 3, .05], ["causticSharpness", "Caustic thinness", 8, 64, 1], ["drift", "Drift", 0, 1.5, .05], ["specks", "Specks", 0, 200, 1], ["bubbles", "Bubbles", 0, 10, 1], ["glints", "Glints", 0, 12, 1]]],
+    ["Light", [["glow", "Glow", 0, 1.5, .05], ["glowBlur", "Glow blur", 0, 40, 1], ["halo", "Pearl halo", 0, 2, .05]]],
+    ["Shell", [["lidAngle", "Lid opening °", 40, 110, 1], ["camera", "Camera height °", 25, 70, 1]]],
+    ["Pearl", [["pearlShine", "Highlight", 0, 1, .01], ["pearlRim", "Bounce light", 0, 1, .01]]],
+    ["Footer", [["footerLid", "Lid opening °", 40, 110, 1], ["footerPitch", "Dot grid px", 2, 6, 1], ["footerContrast", "Contrast", 1, 2.5, .05]]],
+  ];
+  const PARAM_STORE_KEY = "pearl-tweaks";
+  const P = { ...PARAM_DEFAULTS };
+  try { Object.assign(P, JSON.parse(localStorage.getItem(PARAM_STORE_KEY) || "{}")); } catch { /* storage blocked: defaults */ }
+
+  // ---------- Palette ----------
+  const SHADOW_BLUE = [11, 27, 58];
+  const MID_BLUE = [43, 76, 155];
+  const PALE_BLUE = [191, 216, 255];
+  const WHITE = [255, 255, 255];
+  // Shell light: dark blue in shadow, cool grays in the middle, white where light hits.
+  const SHELL_STOPS = [[0, SHADOW_BLUE], [.22, [24, 42, 82]], [.45, [72, 83, 104]], [.7, [160, 166, 176]], [.88, [226, 229, 234]], [1, WHITE]];
+  // Pearl light: deep blue edge, pale blue middle, white core.
+  const PEARL_STOPS = [[0, SHADOW_BLUE], [.32, MID_BLUE], [.66, PALE_BLUE], [1, WHITE]];
+  const RAMP_STEPS = 256;
+  const buildRamp = (stops) => {
+    const lut = new Uint8ClampedArray(RAMP_STEPS * 3);
+    for (let i = 0; i < RAMP_STEPS; i++) {
+      const v = i / (RAMP_STEPS - 1);
+      let j = 0;
+      while (j < stops.length - 2 && v > stops[j + 1][0]) j++;
+      const [v0, c0] = stops[j], [v1, c1] = stops[j + 1];
+      const t = clamp01((v - v0) / (v1 - v0));
+      for (let k = 0; k < 3; k++) lut[i * 3 + k] = Math.round(lerp(c0[k], c1[k], t));
+    }
+    return lut;
+  };
+  const SHELL_LUT = buildRamp(SHELL_STOPS);
+  const PEARL_LUT = buildRamp(PEARL_STOPS);
+  const RAMP_MAX_INDEX = RAMP_STEPS - 1;
+  // Colours are grouped in 8-level steps per channel so one fill() call draws many dots.
+  const COLOR_QUANT_SHIFT = 3;
+  const COLOR_QUANT_HALF_STEP = 4;
+  // Early in the bloom every dot is white light; the blue shadows tint in later (as in the reference).
+  const EARLY_WHITE_GAIN = 1.25;
+
+  // Light theme: a dot is ink, sized by how dark the surface is (an engraving, not a light source).
+  const INK_FLOOR = .06, INK_RANGE = .94, INK_GAMMA = 1.15, INK_TINT = .85;
+  const INK_SOFT = [96, 106, 124], INK_NAVY = [11, 27, 58];
+  const INK_GLINT = "rgb(43,76,155)";
+  const MIN_COVER = .02;
+  const PEARL_INK_MIN = .04, PEARL_INK_RANGE = .85, PEARL_INK_GAMMA = 1, PEARL_INK_TINT_FROM = .85;
+  const CONTRAST_PIVOT = .35;     // mid tone of the shell; contrast stretches away from it
+  const LIGHT_GLOW = .55;
+
+  // ---------- Scene geometry (units: shell radius) ----------
+  const FAN_SPREAD = 1.3;                // half angle of the fan, radians
+  const OUTLINE_ROUND = .5, OUTLINE_ROUND_POW = 2.5;
+  const OUTLINE_TUCK = .4, OUTLINE_TUCK_POW = 4;
+  const RIB_COUNT = 16;
+  const RIB_FREQ = Math.PI * RIB_COUNT / (2 * FAN_SPREAD);
+  const RIM_LOBE = .035;                 // one rounded lobe per rib on the rim
+  const EAR_DEPTH = .2;                  // flat "ears" either side of the hinge
+  const EAR_HALF_WIDTH = .32;
+  const EAR_RISE = .15;
+  const EAR_LINE_FREQ = 140;
+  const EAR_RIB_FREQ = 40;
+  const FAN_APEX_SLACK = .005;
+  const VALVE_THICKNESS_ANGLE = 10 * DEG; // fakes shell thickness near the edge-on pose
+  // Around the edge-on pose the lid is a thin sliver. Inside this window the two poses either side
+  // are blended as light (dots shrink in one, grow in the other) instead of drawing the sliver.
+  const FLIP_MARGIN = 5 * DEG;
+  const LIP_DEPTH = .05;
+  const MIN_PROJECTION = .004;
+  const SHELL_BOX_X = 1.2, SHELL_BOX_TOP = -1.3, SHELL_BOX_BOTTOM = 1.05;
+  const PEARL_FAN_DEPTH = .46;
+  const PEARL_RADIUS = .165;
+  const PEARL_MIN_SCALE = .4;
+  const OPEN_CLOSED = 1.5 * DEG;
+  const GAP_OPEN_FROM = 2 * DEG;
+  const GAP_OPEN_TO = 8 * DEG;
+  /** Values derived from the tweakable camera and lid angles. */
+  const G = { e: 0, sinE: 0, cosE: 0, pearlCy: 0, openHero: 0 };
+  const applyGeometry = () => {
+    G.e = P.camera * DEG; G.sinE = Math.sin(G.e); G.cosE = Math.cos(G.e);
+    G.pearlCy = PEARL_FAN_DEPTH * G.sinE - PEARL_RADIUS * G.cosE;
+    G.openHero = P.lidAngle * DEG;
+  };
+  applyGeometry();
+
+  // ---------- Shading ----------
+  const EXT_BASE = .07, EXT_RANGE = .86, EXT_SLOPE = .55, EXT_RIB_FLOOR = .22, EXT_CREST_POW = 1.3;
+  const GROOVE_FLOOR = .45, GROOVE_WIDTH = .22;
+  const UMBO_L = .22, UMBO_REACH = .16;
+  const INT_BASE = .07, INT_RANGE = .46, INT_RIB_FLOOR = .4;
+  const UPPER_INT_RANGE = .46;
+  const RIM_HIGHLIGHT = .55, RIM_HIGHLIGHT_WIDTH = .025;
+  const GROWTH_L = .03, GROWTH_FREQ = 58;
+  const EAR_L = .2, EAR_LINE_L = .07;
+  const LIP_BASE = .07, LIP_RIB = .2;
+  const HINGE_SHADOW_REACH = .28;
+  const HALO_RADIUS = PEARL_RADIUS * 2.4;
+  const HALO_L = .14, HALO_TINT = .8, HALO_TONE = .3, HALO_TONE_RANGE = .25;
+  const SEAM_SPREAD = .75, SEAM_BASE_L = .3, SEAM_TONE = .62;
+  const SEAM_CLOSED = .55, SEAM_SWELL = .45;
+  // Pearl as a lit sphere: light from upper left, a soft specular spot, bounce light on the lower right edge.
+  const PEARL_LIGHT_RAW = [-.45, -.62, .64];
+  const PEARL_LIGHT_LEN = Math.hypot(...PEARL_LIGHT_RAW);
+  const [PLX, PLY, PLZ] = PEARL_LIGHT_RAW.map((v) => v / PEARL_LIGHT_LEN);
+  const PEARL_AMBIENT = .26, PEARL_DIFFUSE = .58;
+  const PEARL_SPEC_X = -.34, PEARL_SPEC_Y = -.4, PEARL_SPEC_WIDTH = .22;
+  const PEARL_EDGE_DARKEN = .45, PEARL_EDGE_DARKEN_FROM = .72;   // deep-blue edge; outlines the pearl on paper
+  const PEARL_RIM_FROM = .7, PEARL_RIM_DIR_X = .55, PEARL_RIM_DIR_Y = .83;
+  const PEARL_BASE_L = .4, PEARL_RANGE_L = .6, PEARL_EDGE_SOFT = .9, PEARL_EDGE_FADE = .3;
+  const PEARL_SHADOW_DROP = .78, PEARL_SHADOW_RX = 1.05, PEARL_SHADOW_RY = .32, PEARL_SHADOW_DEPTH = .7;
+  const PEARL_CAUSTIC = .016;
+  const FLOOR_TOP = -.95, FLOOR_FULL = .25;
+  const FLOOR_BASE = .13, FLOOR_SAND = .04, SAND_FX = 11, SAND_FY = 6;
+  const GRAIN_HASH_X = 127.1, GRAIN_HASH_Y = 311.7, GRAIN_HASH_SCALE = 43758.5453;
+  const POOL_RX = 1.7, POOL_RY = .95, POOL_CY = .35, POOL_MIN = .1;
+  const SHADOW_RX = .85, SHADOW_RY = .32, SHADOW_CY = .32, SHADOW_DEPTH = .6;
+  const CONTACT_RX = .62, CONTACT_RY = .13, CONTACT_CY = .5, CONTACT_DEPTH = .85;
+  const LIP_BURY = .09, BURY_FREQ = 23;
+  const FLOOR_CAUSTIC = .42, EXT_CAUSTIC = .5, INT_CAUSTIC = .38, LIP_CAUSTIC = .18;
+  const CAUSTIC_SCALE = 5.2, CAUSTIC_FLOOR_SQUASH = 1.7;
+  const CAUSTIC_L = .3, CAUSTIC_WHITEN = .55;
+
+  // ---------- Dots and layers ----------
+  const MIN_L = .012;
+  const MIN_RADIUS = .3;
+  const RECT_RADIUS = 1.05;   // below this a square is cheaper and looks the same
+  const MAX_DPR = 2;
+  const MOBILE_BREAKPOINT = 720;
+  const DESKTOP_CELLS = 112, DESKTOP_PITCH_MIN = 6, DESKTOP_PITCH_MAX = 10;
+  const MOBILE_CELLS = 72, MOBILE_PITCH_MIN = 5;
+  const BUFFER_MARGIN_PITCHES = 3;
+  const GLOW_MIN_L = .14, GLOW_FULL_L = .6, GLOW_POW = 1.6;   // only bright surfaces glow; dim cells would blur into a box
+  const GLOW_FRAME_STRIDE = 3;          // the bloom is blurred, so a third of the frame rate is enough
+
+  // ---------- Water motion ----------
+  // The grid never moves. The image drifts under it, as in the reference.
+  const DRIFT_K = .011, DRIFT_SPEED = .55;
+  const STIR_RADIUS = 110, STIR_AMP = 9, STIR_WAVE_K = .07, STIR_WAVE_SPEED = 5;
+  const STIR_GAIN = .0025, STIR_DECAY = 1.1, STIR_MIN = .01, STIR_REACH = 3;
+  const MOBILE_PARTICLE_SHARE = .45;
+  const SPECK_GLYPH_SHARE = .07;
+  const SPECK_SINK = 4, SPECK_DRIFT = 3.5, SPECK_FOLLOW = 1.8, SPECK_PUSH = 900, SPECK_PUSH_RADIUS = 130, SPECK_DAMP = .5;
+  const SPECK_ALPHA_MIN = .12, SPECK_ALPHA_RANGE = .3;
+  const BUBBLE_RISE_MIN = 26, BUBBLE_RISE_MAX = 52, BUBBLE_R_MIN = 1.8, BUBBLE_R_MAX = 4.2, BUBBLE_SWAY = 5, BUBBLE_GROW = .25;
+  const BUBBLE_WAIT_MIN = 1.5, BUBBLE_WAIT_MAX = 6, BUBBLE_FROM_SHELL = .7;
+  const GLYPH_SEQUENCE = [".", "+", "*", "+", "."];
+  const GLYPH_SIZE = 1.9;
+  const GLINT_LIFE = 1.3, GLINT_WAIT_MIN = .8, GLINT_WAIT_MAX = 4, GLINT_TRIES = 24, GLINT_MIN_CAUSTIC = .5;
+  const PEARL_GLINT_PERIOD = 5.5, PEARL_GLINT_ON = 1.6;
+  const SPECK_TWINKLE_MIN = 4, SPECK_TWINKLE_MAX = 9, SPECK_TWINKLE_ON = 1.3;
+  const MAX_FRAME_DT = .1;
+
+  // ---------- Opening timeline (seconds) ----------
+  // Bloom and tint timing follow the reference: ~3.6 s ease-out growth, colour arrives after the shape.
+  const TIMELINE = {
+    bloom: [.3, 3.9],
+    tintIn: [1.6, 3.9],
+    line1: [1.6, 2.9],
+    words: [2.5, 3.9],
+    wordFade: .55,
+    seamSwell: [3.3, 4.1],
+    open: [4.2, 7.2],
+    pearlForm: [4.5, 7.3],
+    attribution: [4.5, 5.3],
+    quoteOut: [7.4, 7.8],
+    captionSwap: 7.8,
+    captionIn: [7.9, 8.5],
+    nameIn: [7.8, 8.5],
+    complete: 8.5,
+  };
+  const TEXT_RISE_PX = 6, TEXT_BLUR_PX = 2, NAME_RISE_PX = 8;
+  const BLOOM_SCALE_FROM = .82;
+  const BLOOM_CENTER_Y = .3;          // shell units below the hinge
+  const BLOOM_REACH = 2.4;            // reveal radius at full bloom, shell units
+  const BLOOM_START = .04;
+  const BLOOM_EDGE = .22;             // soft edge of the reveal
+  const BLOOM_LOBES = 5, BLOOM_LOBE_AMP = .07;
+  const SESSION_KEY = "pearl-opening-played";
+  const STILL_WATER_TIME = 14.2;
+  const K_EMPTY = 0, K_FLOOR = 2, K_SHELL = 3, K_PEARL = 4;
+
+  const sceneStateAt = (time) => {
+    const open = easeInOutSine(windowLinear(TIMELINE.open, time));
+    const growth = windowEase(TIMELINE.pearlForm, time);
+    return {
+      a: lerp(OPEN_CLOSED, G.openHero, open),
+      bloom: easeOutCubic(windowLinear(TIMELINE.bloom, time)),
+      tint: windowEase(TIMELINE.tintIn, time),
+      seam: SEAM_CLOSED + SEAM_SWELL * windowEase(TIMELINE.seamSwell, time),
+      pearlGrowth: growth,
+      pearlGlow: growth,
+      open,
+    };
+  };
+
+  // Moving light: two warped sine fields cancel along thin lines. One set only, kept sparse.
+  const caustic = (x, y, t) => {
+    const a = Math.sin(x + 1.3 * Math.sin(y * 1.27 + t * .41) + t * .23);
+    const b = Math.sin(y * 1.13 + 1.1 * Math.sin(x * 1.61 - t * .33) - t * .19 + .7 * x);
+    return Math.pow(1 - Math.abs(a + b) * .5, P.causticSharpness);
+  };
+
+  // Scratch result of the fan test (no allocation per cell).
+  const F = { r: 0, th: 0, rib: 0, R: 1, rim: 0, ear: false, d: 0 };
+  const outlineRadius = (th) => {
+    const t = Math.abs(th) / FAN_SPREAD;
+    return 1 - OUTLINE_ROUND * t ** OUTLINE_ROUND_POW - OUTLINE_TUCK * t ** OUTLINE_TUCK_POW;
+  };
+  // One scallop valve in its own plane. Rib profile |cos|: broad rounded crests, narrow V grooves.
+  const fan = (x, d) => {
+    if (d < -FAN_APEX_SLACK) return false;
+    const r = Math.hypot(x, d), th = Math.atan2(x, d);
+    F.r = r; F.th = th; F.d = d; F.ear = false;
+    if (Math.abs(th) <= FAN_SPREAD) {
+      const rib = Math.abs(Math.cos(th * RIB_FREQ));
+      const R = outlineRadius(th) + RIM_LOBE * Math.sqrt(rib);
+      if (r < R) { F.rib = rib; F.R = R; F.rim = R - r; return true; }
+    }
+    const ax = Math.abs(x);
+    if (ax < EAR_HALF_WIDTH && d < EAR_DEPTH * (1 - EAR_RISE + EAR_RISE * ax / EAR_HALF_WIDTH)) {
+      F.ear = true; F.R = 1; F.rim = 1;
+      F.rib = .5 + .25 * Math.cos(d * EAR_LINE_FREQ) + .25 * Math.cos(x * EAR_RIB_FREQ);
+      return true;
+    }
+    return false;
+  };
+
+  const interiorLight = (range) => {
+    if (F.ear) return EAR_L * .8 + EAR_LINE_L * F.rib;
+    const bowl = smoothstep(.08, 1, F.r / F.R);
+    let L = (INT_BASE + range * bowl) * (INT_RIB_FLOOR + (1 - INT_RIB_FLOOR) * F.rib);
+    L += RIM_HIGHLIGHT * Math.exp(-((F.rim / RIM_HIGHLIGHT_WIDTH) ** 2)) + GROWTH_L * Math.sin(F.r * GROWTH_FREQ);
+    L *= GROOVE_FLOOR + (1 - GROOVE_FLOOR) * smoothstep(0, GROOVE_WIDTH, F.rib);
+    return L * (.4 + .6 * smoothstep(0, HINGE_SHADOW_REACH, F.r));
+  };
+  const shadowAt = (X, Y, rx, ry, cy) => {
+    const qx = X / rx, qy = (Y - cy) / ry, q = qx * qx + qy * qy;
+    return Math.exp(-q * q);
+  };
+  // Deterministic per-position hash: the sand looks the same on each load.
+  const sandGrain = (X, Y) => {
+    const h = Math.sin(X * GRAIN_HASH_X + Y * GRAIN_HASH_Y) * GRAIN_HASH_SCALE;
+    return h - Math.floor(h);
+  };
+
+  // Small contact shadow where the pearl rests on the lower valve.
+  const pearlShadow = (X, Y, st) => {
+    if (st.pearlR <= 0) return 1;
+    const qx = X / (st.pearlR * PEARL_SHADOW_RX), qy = (Y - G.pearlCy - st.pearlR * PEARL_SHADOW_DROP) / (st.pearlR * PEARL_SHADOW_RY);
+    const q = qx * qx + qy * qy;
+    return 1 - PEARL_SHADOW_DEPTH * st.pearlGrowth * Math.exp(-q * q);
+  };
+
+  /** Evaluates the hidden grayscale scene at one point. X, Y are in shell units from the hinge. */
+  const evalCell = (X, Y, st, o) => {
+    o.kind = K_EMPTY; o.L = 0; o.tint = 0; o.tone = 0; o.gain = 0;
+    const kExt = Math.sin(G.e - st.a);
+    const kInt = Math.sin(G.e - st.a - VALVE_THICKNESS_ANGLE);
+    const closedView = kExt > MIN_PROJECTION;
+    // 1. Lid seen from outside (shell closed or nearly closed).
+    if (closedView && Y >= 0 && fan(X, Y / kExt)) {
+      let L;
+      if (F.ear) L = EAR_L + EAR_LINE_L * F.rib;
+      else {
+        const q = F.r / F.R;
+        const ribLight = EXT_RIB_FLOOR + (1 - EXT_RIB_FLOOR) * Math.pow(F.rib, EXT_CREST_POW);
+        L = EXT_BASE + EXT_RANGE * (1 - EXT_SLOPE * q * q) * ribLight + GROWTH_L * Math.sin(F.r * GROWTH_FREQ);
+        L *= GROOVE_FLOOR + (1 - GROOVE_FLOOR) * smoothstep(0, GROOVE_WIDTH, F.rib);
+        L += UMBO_L * Math.exp(-((F.r / UMBO_REACH) ** 2));
+      }
+      o.kind = K_SHELL; o.L = L; o.gain = EXT_CAUSTIC;
+      return;
+    }
+    // 2. The pearl sits in front of both inner faces.
+    const pdy = Y - G.pearlCy, pd = Math.hypot(X, pdy);
+    if (st.pearlR > 0 && pd < st.pearlR && (!closedView || Y >= 0)) {
+      const dx = X / st.pearlR, dy = pdy / st.pearlR, rho = Math.hypot(dx, dy);
+      const nz = Math.sqrt(Math.max(0, 1 - rho * rho));
+      const diffuse = Math.max(0, dx * PLX + dy * PLY + nz * PLZ);
+      const spec = Math.exp(-((dx - PEARL_SPEC_X) ** 2 + (dy - PEARL_SPEC_Y) ** 2) / (PEARL_SPEC_WIDTH * PEARL_SPEC_WIDTH));
+      const rim = smoothstep(PEARL_RIM_FROM, 1, rho) * Math.max(0, dx * PEARL_RIM_DIR_X + dy * PEARL_RIM_DIR_Y);
+      const v = clamp01(PEARL_AMBIENT + PEARL_DIFFUSE * diffuse + P.pearlShine * spec + P.pearlRim * rim)
+        * (1 - PEARL_EDGE_DARKEN * smoothstep(PEARL_EDGE_DARKEN_FROM, 1, rho)) * st.pearlGlow;
+      o.kind = K_PEARL; o.tint = 1; o.tone = v; o.gain = PEARL_CAUSTIC;
+      o.L = (PEARL_BASE_L + PEARL_RANGE_L * v) * (1 - PEARL_EDGE_FADE * smoothstep(PEARL_EDGE_SOFT, 1, rho)) * st.pearlGrowth;
+      return;
+    }
+    const halo = st.pearlGlow * P.halo * Math.exp(-(pd * pd) / (HALO_RADIUS * HALO_RADIUS));
+    // 3. Lower valve, inner face. When the lid is down, only a thin seam of it shows.
+    if (Y >= 0 && fan(X, Y / G.sinE)) {
+      let L = interiorLight(INT_RANGE) * pearlShadow(X, Y, st) + HALO_L * halo;
+      let tint = Math.min(1, HALO_TINT * halo), tone = HALO_TONE + HALO_TONE_RANGE * halo;
+      if (closedView) {
+        const gapOpen = smoothstep(GAP_OPEN_FROM, GAP_OPEN_TO, st.a);
+        const along = Math.exp(-((F.th / SEAM_SPREAD) ** 2));
+        const seamL = st.seam * (SEAM_BASE_L + (1 - SEAM_BASE_L) * along);
+        L = lerp(seamL, L, gapOpen);
+        tint = lerp(1, tint, gapOpen);
+        tone = lerp(SEAM_TONE + (1 - SEAM_TONE) * along * st.seam, tone, gapOpen);
+      }
+      o.kind = K_SHELL; o.L = L; o.tint = tint; o.tone = tone; o.gain = INT_CAUSTIC;
+      return;
+    }
+    // 4. Lid, inner face (shell open).
+    if (kInt < -MIN_PROJECTION && Y < 0 && fan(X, Y / kInt)) {
+      o.kind = K_SHELL; o.L = interiorLight(UPPER_INT_RANGE) + HALO_L * halo;
+      o.tint = Math.min(1, HALO_TINT * halo); o.tone = HALO_TONE + HALO_TONE_RANGE * halo; o.gain = INT_CAUSTIC;
+      return;
+    }
+    // 5. Front face of the lower valve, partly buried in sand.
+    if (Y > 0 && fan(X, (Y - LIP_DEPTH) / G.sinE) && (!st.bury || F.rim > LIP_BURY * (.5 + .5 * Math.sin(X * BURY_FREQ)))) {
+      o.kind = K_SHELL; o.L = LIP_BASE + LIP_RIB * F.rib * F.rib; o.gain = LIP_CAUSTIC;
+      return;
+    }
+    // 6. Sea bed: smooth sand in a pool of light, sparse grains, the shell's contact shadow.
+    const fog = smoothstep(FLOOR_TOP, FLOOR_FULL, Y);
+    if (fog <= 0) return;
+    const sand = .5 + .5 * Math.sin(X * SAND_FX + 1.4 * Math.sin(Y * SAND_FY));
+    const g = sandGrain(X, Y), cut = 1 - P.grainDensity;
+    const grain = P.grainDensity > 0 && g > cut ? P.grainStrength * (g - cut) / P.grainDensity : 0;
+    const px = X / POOL_RX, py = (Y - POOL_CY) / POOL_RY;
+    const pool = POOL_MIN + (1 - POOL_MIN) * Math.exp(-(px * px + py * py));
+    const shade = (1 - SHADOW_DEPTH * shadowAt(X, Y, SHADOW_RX, SHADOW_RY, SHADOW_CY))
+      * (1 - CONTACT_DEPTH * shadowAt(X, Y, CONTACT_RX, CONTACT_RY, CONTACT_CY));
+    o.kind = K_FLOOR;
+    o.L = ((FLOOR_BASE + FLOOR_SAND * sand) * P.sand + grain) * fog * pool * shade;
+    o.gain = FLOOR_CAUSTIC * fog * pool * shade;
+  };
+
+  /**
+   * One halftone scene bound to a canvas pair. The hero and the footer echo are two instances.
+   * The scene is cached in a square buffer at one sample per dot. Each frame the fixed hex grid
+   * samples that buffer through a slowly drifting offset, so the dots never move: only their sizes do.
+   */
+  const createScene = (canvas, glowCanvas, opts) => {
+    const ctx = canvas.getContext("2d");
+    const gctx = glowCanvas.getContext("2d");
+    let rng = mulberry32(opts.seed);
+    let W = 0, H = 0, mobile = false;
+    let lay = { s: 1, hx: 0, hy: 0, pitch: 8 };
+    // Buffer (square, one sample per pitch) and grid (hex, the dots).
+    let bw = 0, bh = 0, bx0 = 0, by0 = 0, step = 8;
+    let bL = new Float32Array(0), bTint = bL, bTone = bL, bGain = bL, bX = bL, bY = bL, bA = bL;
+    let shellCells = new Int32Array(0), shellCellCount = 0;
+    let gx = bL, gy = bL, gEdge = bL, gn = 0;
+    let glowImage = null;
+    let stateKey = "", staticDone = false, frameCount = 0;
+    let st = null;
+    const out = { kind: 0, L: 0, tint: 0, tone: 0, gain: 0 };
+    const outB = { kind: 0, L: 0, tint: 0, tone: 0, gain: 0 };
+    const buckets = new Map();
+    const specks = [], bubbles = [], glints = [];
+    const pointer = { x: -1e5, y: -1e5, stir: 0, has: false };
+
+    const pushDot = (r, g, b, x, y, rad) => {
+      const key = ((r >> COLOR_QUANT_SHIFT) << 10) | ((g >> COLOR_QUANT_SHIFT) << 5) | (b >> COLOR_QUANT_SHIFT);
+      let bk = buckets.get(key);
+      if (!bk) {
+        const q = (c) => ((c >> COLOR_QUANT_SHIFT) << COLOR_QUANT_SHIFT) + COLOR_QUANT_HALF_STEP;
+        bk = { css: `rgb(${q(r)},${q(g)},${q(b)})`, d: [], n: 0 };
+        buckets.set(key, bk);
+      }
+      const d = bk.d; d[bk.n] = x; d[bk.n + 1] = y; d[bk.n + 2] = rad; bk.n += 3;
+    };
+    const flushDots = () => {
+      for (const bk of buckets.values()) {
+        if (!bk.n) continue;
+        ctx.fillStyle = bk.css; ctx.beginPath();
+        const d = bk.d;
+        for (let i = 0; i < bk.n; i += 3) {
+          const x = d[i], y = d[i + 1], r = d[i + 2];
+          if (r < RECT_RADIUS) ctx.rect(x - r, y - r, r * 2, r * 2);
+          else { ctx.moveTo(x + r, y); ctx.arc(x, y, r, 0, TAU); }
+        }
+        ctx.fill(); bk.n = 0;
+      }
+    };
+
+    const bloomCenter = () => ({ x: lay.hx, y: lay.hy + BLOOM_CENTER_Y * lay.s });
+
+    const resize = () => {
+      const box = canvas.getBoundingClientRect();
+      W = box.width; H = box.height;
+      if (!W || !H) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      mobile = W < MOBILE_BREAKPOINT;
+      lay = opts.layout(W, H, mobile);
+      step = lay.pitch;
+      const margin = BUFFER_MARGIN_PITCHES * lay.pitch;
+      bx0 = -margin; by0 = -margin;
+      bw = Math.ceil((W + 2 * margin) / step) + 2; bh = Math.ceil((H + 2 * margin) / step) + 2;
+      const n = bw * bh;
+      bL = new Float32Array(n); bTint = new Float32Array(n); bTone = new Float32Array(n); bGain = new Float32Array(n); bA = new Float32Array(n);
+      bX = new Float32Array(n); bY = new Float32Array(n);
+      for (let j = 0; j < bh; j++) for (let i = 0; i < bw; i++) {
+        const k = j * bw + i;
+        bX[k] = (bx0 + i * step - lay.hx) / lay.s; bY[k] = (by0 + j * step - lay.hy) / lay.s;
+      }
+      shellCells = new Int32Array(n);
+      // Fixed hex grid of dots, with each dot's distance on the bloom's lobed reveal front.
+      const rowH = lay.pitch * SQRT3_HALF;
+      const rows = Math.ceil(H / rowH) + 2, cols = Math.ceil(W / lay.pitch) + 2;
+      gx = new Float32Array(rows * cols); gy = new Float32Array(rows * cols); gEdge = new Float32Array(rows * cols);
+      const c = bloomCenter();
+      gn = 0;
+      for (let r = 0; r < rows; r++) for (let q = 0; q < cols; q++) {
+        const x = q * lay.pitch + (r & 1) * lay.pitch / 2, y = r * rowH;
+        const dx = (x - c.x) / lay.s, dy = (y - c.y) / lay.s, ang = Math.atan2(dy, dx);
+        gx[gn] = x; gy[gn] = y; gEdge[gn] = Math.hypot(dx, dy) * (1 + BLOOM_LOBE_AMP * Math.sin(BLOOM_LOBES * ang + 1)); gn++;
+      }
+      glowCanvas.width = bw; glowCanvas.height = bh;
+      glowCanvas.style.left = `${bx0 - step / 2}px`; glowCanvas.style.top = `${by0 - step / 2}px`;
+      glowCanvas.style.width = `${bw * step}px`; glowCanvas.style.height = `${bh * step}px`;
+      glowImage = gctx.createImageData(bw, bh);
+      stateKey = ""; staticDone = false;
+      if (opts.particles) seedParticles();
+    };
+
+    const rebuild = (state) => {
+      const key = `${state.a.toFixed(5)}|${state.seam.toFixed(4)}|${state.pearlGrowth.toFixed(4)}`;
+      if (key === stateKey) return;
+      // Far from the shell there is only sand, which never changes: evaluate it once per layout.
+      const fullPass = !staticDone;
+      staticDone = true;
+      stateKey = key;
+      const g = state.pearlGrowth;
+      st = { ...state, bury: opts.floor, pearlR: g > 0 ? PEARL_RADIUS * lerp(PEARL_MIN_SCALE, 1, g) : 0 };
+      const flipFrom = G.e - VALVE_THICKNESS_ANGLE - FLIP_MARGIN, flipTo = G.e + FLIP_MARGIN;
+      const flipping = st.a > flipFrom && st.a < flipTo;
+      const stA = flipping ? { ...st, a: flipFrom } : st, stB = { ...st, a: flipTo };
+      const mix = flipping ? smoothstep(flipFrom, flipTo, st.a) : 0;
+      shellCellCount = 0;
+      for (let k = 0; k < bL.length; k++) {
+        const X = bX[k], Y = bY[k];
+        const near = X > -SHELL_BOX_X && X < SHELL_BOX_X && Y > SHELL_BOX_TOP && Y < SHELL_BOX_BOTTOM;
+        if (!fullPass && !near) continue;
+        evalCell(X, Y, stA, out);
+        let cover = out.kind === K_SHELL || out.kind === K_PEARL ? 1 : 0;
+        if (flipping) {
+          evalCell(X, Y, stB, outB);
+          cover = lerp(cover, outB.kind === K_SHELL || outB.kind === K_PEARL ? 1 : 0, mix);
+          if (out.kind === K_EMPTY) { out.L = 0; out.tint = outB.tint; out.tone = outB.tone; out.gain = outB.gain; }
+          if (outB.kind === K_EMPTY) { outB.L = 0; outB.tint = out.tint; outB.tone = out.tone; outB.gain = out.gain; }
+          out.L = lerp(out.L, outB.L, mix); out.tint = lerp(out.tint, outB.tint, mix);
+          out.tone = lerp(out.tone, outB.tone, mix); out.gain = lerp(out.gain, outB.gain, mix);
+          if (out.kind === K_EMPTY || (outB.kind !== K_EMPTY && mix > .5)) out.kind = outB.kind;
+        }
+        if (!opts.floor && out.kind === K_FLOOR) out.kind = K_EMPTY;
+        if (out.kind === K_EMPTY) { bL[k] = 0; bTint[k] = 0; bTone[k] = 0; bGain[k] = 0; bA[k] = 0; continue; }
+        bA[k] = cover;
+        bL[k] = out.L; bTint[k] = out.tint; bTone[k] = out.tone;
+        bGain[k] = out.gain * (out.kind === K_FLOOR ? -1 : 1); // sign marks floor: its caustics are squashed by perspective
+        if (out.kind === K_SHELL && out.gain >= INT_CAUSTIC && out.L > .1) shellCells[shellCellCount++] = k;
+      }
+    };
+
+    /** Colour of one sample, written to `rgb`. tintMix 0 = white light only, 1 = full blue-gray. */
+    const rgb = [0, 0, 0];
+    const colorOf = (L, tint, tone, c, tintMix) => {
+      const si = ((L > 1 ? 1 : L) * RAMP_MAX_INDEX | 0) * 3;
+      let r = SHELL_LUT[si], g = SHELL_LUT[si + 1], b = SHELL_LUT[si + 2];
+      if (tint > 0) {
+        const pi = ((tone < 0 ? 0 : tone > 1 ? 1 : tone) * RAMP_MAX_INDEX | 0) * 3;
+        r += (PEARL_LUT[pi] - r) * tint; g += (PEARL_LUT[pi + 1] - g) * tint; b += (PEARL_LUT[pi + 2] - b) * tint;
+      }
+      if (tintMix < 1) {
+        const w = Math.min(255, L * EARLY_WHITE_GAIN * 255);
+        r = lerp(w, r, tintMix); g = lerp(w, g, tintMix); b = lerp(w, b, tintMix);
+      }
+      if (c > 0) {
+        const wv = Math.min(1, c * CAUSTIC_WHITEN);
+        r += (255 - r) * wv; g += (255 - g) * wv; b += (255 - b) * wv;
+      }
+      rgb[0] = r | 0; rgb[1] = g | 0; rgb[2] = b | 0;
+    };
+
+    const revealAt = (edge, bloom) => {
+      const R = lerp(BLOOM_START, BLOOM_REACH, bloom);
+      return 1 - smoothstep(R - BLOOM_EDGE, R + BLOOM_EDGE, edge);
+    };
+
+    const drawDots = (t, state, motion) => {
+      const light = opts.theme() === "light";
+      const stir = pointer.stir > STIR_MIN ? pointer.stir : 0;
+      const reach = STIR_RADIUS * STIR_REACH;
+      const drift = motion ? P.drift * lay.pitch : 0;
+      const c = bloomCenter();
+      const scale = lerp(BLOOM_SCALE_FROM, 1, state.bloom);
+      const invScale = 1 / scale;
+      const maxR = lay.pitch * P.dotSize;
+      const causticOn = P.caustic > 0 && opts.caustics && !light;
+      const invStep = 1 / step;
+      for (let i = 0; i < gn; i++) {
+        const reveal = state.bloom >= 1 ? 1 : revealAt(gEdge[i], state.bloom);
+        if (reveal <= 0) continue;
+        const px = gx[i], py = gy[i];
+        // Where this fixed dot looks into the scene: drift, cursor ripple, bloom scale.
+        let sx = px + drift * Math.sin(py * DRIFT_K + t * DRIFT_SPEED);
+        let sy = py + drift * .6 * Math.sin(px * DRIFT_K * .8 + t * DRIFT_SPEED * 1.2);
+        let lift = 0;
+        if (stir) {
+          const dx = px - pointer.x, dy = py - pointer.y;
+          if (dx < reach && dx > -reach && dy < reach && dy > -reach) {
+            const d = Math.hypot(dx, dy) + 1e-3;
+            const f = Math.exp(-d / STIR_RADIUS) * stir;
+            const wave = Math.sin(d * STIR_WAVE_K - t * STIR_WAVE_SPEED);
+            sx += (dx / d) * f * wave * STIR_AMP; sy += (dy / d) * f * wave * STIR_AMP;
+            lift = f * wave;
+          }
+        }
+        if (scale !== 1) { sx = c.x + (sx - c.x) * invScale; sy = c.y + (sy - c.y) * invScale; }
+        const fx = (sx - bx0) * invStep, fy = (sy - by0) * invStep;
+        const ix = fx | 0, iy = fy | 0;
+        if (ix < 0 || iy < 0 || ix >= bw - 1 || iy >= bh - 1) continue;
+        const k00 = iy * bw + ix, k10 = k00 + 1, k01 = k00 + bw, k11 = k01 + 1;
+        const l00 = bL[k00], l10 = bL[k10], l01 = bL[k01], l11 = bL[k11];
+        if (l00 === 0 && l10 === 0 && l01 === 0 && l11 === 0) continue;
+        const tx = fx - ix, ty = fy - iy;
+        const w00 = (1 - tx) * (1 - ty), w10 = tx * (1 - ty), w01 = (1 - tx) * ty, w11 = tx * ty;
+        let L = l00 * w00 + l10 * w10 + l01 * w01 + l11 * w11;
+        const tint = bTint[k00] * w00 + bTint[k10] * w10 + bTint[k01] * w01 + bTint[k11] * w11;
+        const tone = bTone[k00] * w00 + bTone[k10] * w10 + bTone[k01] * w01 + bTone[k11] * w11;
+        const gRaw = bGain[k00] * w00 + bGain[k10] * w10 + bGain[k01] * w01 + bGain[k11] * w11;
+        let cv = 0;
+        if (causticOn && gRaw !== 0) {
+          const X = (sx - lay.hx) / lay.s, Y = (sy - lay.hy) / lay.s;
+          const squash = gRaw < 0 ? CAUSTIC_FLOOR_SQUASH : 1;
+          cv = caustic(X * CAUSTIC_SCALE, Y * CAUSTIC_SCALE * squash, t) * Math.abs(gRaw) * P.caustic;
+          L += cv * CAUSTIC_L;
+        }
+        if (lift) L *= 1 + .2 * lift;
+        if (opts.contrast) L = lerp(clamp01(CONTRAST_PIVOT + (L - CONTRAST_PIVOT) * opts.contrast()), L, tint);
+        if (light) {
+          const A = bA[k00] * w00 + bA[k10] * w10 + bA[k01] * w01 + bA[k11] * w11;
+          if (A < MIN_COVER) continue;
+          // Pearl light (tint) is drawn as blue ink that thickens toward its shadow side.
+          const shellInk = INK_FLOOR + INK_RANGE * Math.pow(clamp01(1 - L), INK_GAMMA);
+          const pearlInk = PEARL_INK_MIN + PEARL_INK_RANGE * Math.pow(clamp01(1 - tone), PEARL_INK_GAMMA);
+          // Only the pearl and the seam (tint near 1) use blue form-ink; the halo just lightens the shell.
+          const ink = A * reveal * lerp(shellInk, pearlInk, smoothstep(PEARL_INK_TINT_FROM, 1, tint));
+          if (ink < MIN_L) continue;
+          const rad = maxR * Math.pow(ink > 1 ? 1 : ink, P.dotGamma);
+          if (rad < MIN_RADIUS) continue;
+          const mixT = Math.min(1, tint * INK_TINT);
+          let r = lerp(INK_SOFT[0], INK_NAVY[0], ink), g = lerp(INK_SOFT[1], INK_NAVY[1], ink), b = lerp(INK_SOFT[2], INK_NAVY[2], ink);
+          r = lerp(r, MID_BLUE[0], mixT); g = lerp(g, MID_BLUE[1], mixT); b = lerp(b, MID_BLUE[2], mixT);
+          pushDot(r | 0, g | 0, b | 0, px, py, rad);
+          continue;
+        }
+        L *= reveal;
+        if (L < MIN_L) continue;
+        const rad = maxR * Math.pow(L > 1 ? 1 : L, P.dotGamma);
+        if (rad < MIN_RADIUS) continue;
+        colorOf(L, tint, tone, cv * reveal, state.tint);
+        pushDot(rgb[0], rgb[1], rgb[2], px, py, rad);
+      }
+      flushDots();
+    };
+
+    // Bloom: the cached scene at one pixel per sample, blurred by CSS. Cheap, and steady by design.
+    const drawGlow = (state) => {
+      const data = glowImage.data;
+      const light = opts.theme() === "light";
+      const c = bloomCenter();
+      for (let k = 0; k < bL.length; k++) {
+        const L = bL[k];
+        const o = k * 4;
+        if (L < GLOW_MIN_L || P.glow <= 0) { data[o + 3] = 0; continue; }
+        let reveal = 1;
+        if (state.bloom < 1) {
+          const x = bx0 + (k % bw) * step, y = by0 + ((k / bw) | 0) * step;
+          const dx = (x - c.x) / lay.s, dy = (y - c.y) / lay.s;
+          reveal = revealAt(Math.hypot(dx, dy) * (1 + BLOOM_LOBE_AMP * Math.sin(BLOOM_LOBES * Math.atan2(dy, dx) + 1)), state.bloom);
+        }
+        colorOf(L, bTint[k], bTone[k], 0, state.tint);
+        data[o] = rgb[0]; data[o + 1] = rgb[1]; data[o + 2] = rgb[2];
+        // On paper only the pearl's blue light can glow; white light would vanish into the page.
+        const strength = (light ? LIGHT_GLOW * bTint[k] * L : Math.pow(L, GLOW_POW)) * smoothstep(GLOW_MIN_L, GLOW_FULL_L, L);
+        data[o + 3] = Math.min(255, 255 * P.glow * strength * reveal);
+      }
+      gctx.putImageData(glowImage, 0, 0);
+      glowCanvas.style.filter = `blur(${P.glowBlur}px)`;
+    };
+
+    const particleCount = (n) => Math.round(n * (mobile ? MOBILE_PARTICLE_SHARE : 1));
+    const seedParticles = () => {
+      rng = mulberry32(opts.seed);
+      specks.length = 0; bubbles.length = 0; glints.length = 0;
+      for (let i = 0; i < particleCount(P.specks); i++) {
+        const glyph = rng() < SPECK_GLYPH_SHARE;
+        specks.push({
+          x: rng() * W, y: rng() * H, vx: 0, vy: 0, size: .5 + rng() * (glyph ? 1 : .8), alpha: SPECK_ALPHA_MIN + rng() * SPECK_ALPHA_RANGE,
+          phase: rng() * TAU, glyph, twinkleAt: rng() * SPECK_TWINKLE_MAX, period: lerp(SPECK_TWINKLE_MIN, SPECK_TWINKLE_MAX, rng()),
+        });
+      }
+      for (let i = 0; i < particleCount(P.bubbles); i++) bubbles.push({ alive: false, wait: lerp(BUBBLE_WAIT_MIN, BUBBLE_WAIT_MAX, rng()), x: 0, y: 0, y0: 0, r: 0, v: 0, phase: 0 });
+      for (let i = 0; i < particleCount(P.glints); i++) glints.push({ alive: false, wait: lerp(GLINT_WAIT_MIN, GLINT_WAIT_MAX, rng()), x: 0, y: 0, age: 0 });
+    };
+
+    const stepParticles = (t, dt, state) => {
+      pointer.stir *= Math.exp(-dt / STIR_DECAY);
+      for (const p of specks) {
+        const tx = SPECK_DRIFT * Math.sin(t * .2 + p.phase), ty = SPECK_SINK * (.6 + p.size * .5);
+        p.vx += (tx - p.vx) * Math.min(1, SPECK_FOLLOW * dt);
+        p.vy += (ty - p.vy) * Math.min(1, SPECK_FOLLOW * dt);
+        if (pointer.has) {
+          const dx = p.x - pointer.x, dy = p.y - pointer.y, d = Math.hypot(dx, dy);
+          if (d < SPECK_PUSH_RADIUS && d > 1) {
+            const f = SPECK_PUSH * (1 - d / SPECK_PUSH_RADIUS) * (.25 + pointer.stir) * dt;
+            p.vx += (dx / d) * f; p.vy += (dy / d) * f;
+          }
+        }
+        p.vx *= Math.exp(-SPECK_DAMP * dt); p.vy *= Math.exp(-SPECK_DAMP * dt);
+        p.x += p.vx * dt; p.y += p.vy * dt;
+        if (p.y > H + 4) { p.y = -4; p.x = rng() * W; }
+        if (p.y < -6) p.y = H + 2;
+        if (p.x > W + 4) p.x = -4; else if (p.x < -4) p.x = W + 4;
+      }
+      for (const b of bubbles) {
+        if (!b.alive) {
+          if (state.open < .6) continue;
+          b.wait -= dt;
+          if (b.wait > 0) continue;
+          const fromShell = rng() < BUBBLE_FROM_SHELL;
+          b.x = fromShell ? lay.hx + (rng() - .5) * .5 * lay.s : rng() * W;
+          b.y = fromShell ? lay.hy + (G.pearlCy - PEARL_RADIUS) * lay.s : H * (.82 + rng() * .15);
+          b.y0 = b.y; b.r = lerp(BUBBLE_R_MIN, BUBBLE_R_MAX, rng()); b.v = lerp(BUBBLE_RISE_MIN, BUBBLE_RISE_MAX, rng());
+          b.phase = rng() * TAU; b.alive = true;
+          continue;
+        }
+        b.y -= b.v * dt;
+        if (b.y < -10) { b.alive = false; b.wait = lerp(BUBBLE_WAIT_MIN, BUBBLE_WAIT_MAX, rng()); }
+      }
+      for (const g of glints) {
+        if (g.alive) { g.age += dt; if (g.age > GLINT_LIFE) { g.alive = false; g.wait = lerp(GLINT_WAIT_MIN, GLINT_WAIT_MAX, rng()); } continue; }
+        if (state.bloom < 1) continue;
+        g.wait -= dt;
+        if (g.wait > 0 || !shellCellCount) continue;
+        for (let k = 0; k < GLINT_TRIES; k++) {
+          const i = shellCells[(rng() * shellCellCount) | 0];
+          const cv = caustic(bX[i] * CAUSTIC_SCALE, bY[i] * CAUSTIC_SCALE, t);
+          if (cv > GLINT_MIN_CAUSTIC) {
+            g.x = lay.hx + bX[i] * lay.s; g.y = lay.hy + bY[i] * lay.s; g.age = 0; g.alive = true; break;
+          }
+        }
+        if (!g.alive) g.wait = GLINT_WAIT_MIN;
+      }
+    };
+
+    const glyphFor = (phase) => GLYPH_SEQUENCE[Math.min(GLYPH_SEQUENCE.length - 1, (phase * GLYPH_SEQUENCE.length) | 0)];
+    const drawGlyph = (ch, x, y, color) => {
+      ctx.fillStyle = color;
+      if (ch === ".") { ctx.beginPath(); ctx.arc(x, y, lay.pitch * .2, 0, TAU); ctx.fill(); return; }
+      ctx.fillText(ch, x, y);
+    };
+
+    const drawOverlay = (t, state, still) => {
+      const fade = state.bloom;
+      ctx.fillStyle = "rgb(196,204,218)";
+      for (const p of specks) {
+        if (p.glyph) continue;
+        ctx.globalAlpha = p.alpha;
+        ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+      }
+      ctx.globalAlpha = 1;
+      ctx.lineWidth = 1;
+      for (const b of bubbles) {
+        if (!b.alive) continue;
+        const rise = clamp01((b.y0 - b.y) / H);
+        const r = b.r * (1 + BUBBLE_GROW * rise);
+        const x = b.x + BUBBLE_SWAY * Math.sin(t * 2.1 + b.phase);
+        ctx.strokeStyle = "rgba(191,216,255,.5)";
+        ctx.beginPath(); ctx.arc(x, b.y, r, 0, TAU); ctx.stroke();
+        ctx.fillStyle = "rgba(255,255,255,.85)";
+        ctx.fillRect(x - r * .45, b.y - r * .45, 1, 1);
+      }
+      // Glyph glitter: rare, and always twinkles . + * + .
+      const light = opts.theme() === "light";
+      ctx.font = `${Math.round(lay.pitch * GLYPH_SIZE * opts.glyphScale)}px "JetBrains Mono", ui-monospace, Menlo, monospace`;
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.globalAlpha = fade;
+      for (const p of specks) {
+        if (!p.glyph) continue;
+        const local = still ? SPECK_TWINKLE_ON / 2 : (t + p.twinkleAt) % p.period;
+        if (local < SPECK_TWINKLE_ON) drawGlyph(glyphFor(local / SPECK_TWINKLE_ON), p.x, p.y, "rgba(191,216,255,.8)");
+        else { ctx.fillStyle = "rgba(196,204,218,.4)"; ctx.fillRect(p.x - .7, p.y - .7, 1.4, 1.4); }
+      }
+      for (const g of glints) if (g.alive) drawGlyph(glyphFor(g.age / GLINT_LIFE), g.x, g.y, "#fff");
+      if (st && st.pearlGlow > .6 && state.open > .9) {
+        const local = still ? PEARL_GLINT_ON / 2 : t % PEARL_GLINT_PERIOD;
+        if (local < PEARL_GLINT_ON) {
+          const rPx = st.pearlR * lay.s;
+          const x = lay.hx + PEARL_SPEC_X * rPx, y = lay.hy + G.pearlCy * lay.s + PEARL_SPEC_Y * rPx;
+          drawGlyph(glyphFor(local / PEARL_GLINT_ON), x, y, light ? INK_GLINT : "#fff");
+        }
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    /** Draws one frame. `water` is the free-running water clock; `state` is the shell state. */
+    const render = (water, dt, state, still) => {
+      if (!W || !H) return;
+      const changed = stateKey === "" || !st;
+      rebuild(state);
+      if (opts.particles && !still) stepParticles(water, dt, state);
+      ctx.clearRect(0, 0, W, H);
+      drawDots(water, state, opts.motion && !still);
+      if (changed || state.bloom < 1 || state.open < 1 || frameCount % GLOW_FRAME_STRIDE === 0) drawGlow(state);
+      frameCount++;
+      if (opts.particles || opts.pearlGlint) drawOverlay(water, state, still);
+    };
+
+    const stirAt = (x, y, speed) => {
+      if (pointer.has) pointer.stir = Math.min(1, pointer.stir + speed * STIR_GAIN);
+      pointer.x = x; pointer.y = y; pointer.has = true;
+    };
+    const invalidate = (reseed) => { stateKey = ""; staticDone = false; if (reseed && opts.particles) seedParticles(); };
+
+    return { resize, render, stirAt, invalidate };
+  };
+
+  // ---------- Hero wiring ----------
+  const params = new URLSearchParams(location.search);
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const heroEl = document.getElementById("hero");
+  const quote = document.getElementById("quote");
+  const line1 = document.getElementById("line-1");
+  const words = Array.from(document.querySelectorAll("#line-2 .w"));
+  const attribution = document.getElementById("attribution");
+  const nameEl = document.getElementById("hero-name");
+  const skipBtn = document.getElementById("skip");
+
+  const heroLayout = (W, H, mobile) => mobile
+    ? { s: Math.min(W * .44, H * .28), hx: W / 2, hy: H * .45, pitch: Math.max(MOBILE_PITCH_MIN, Math.round(W / MOBILE_CELLS)) }
+    : { s: Math.min(W * .3, H * .38), hx: W / 2, hy: H * .43, pitch: Math.min(DESKTOP_PITCH_MAX, Math.max(DESKTOP_PITCH_MIN, Math.round(Math.min(W, H) / DESKTOP_CELLS))) };
+  const echoLayout = (W, H) => ({ s: Math.min(W * .4, H * .6), hx: W / 2, hy: H * .45, pitch: P.footerPitch });
+  const FOOTER_GLYPH_SCALE = 2.2;
+
+  const hero = createScene(heroEl.querySelector(".dots"), heroEl.querySelector(".glow"), { seed: 20260, layout: heroLayout, particles: true, floor: true, motion: true, caustics: true, pearlGlint: true, glyphScale: 1, theme: () => "dark" });
+  const echoStage = document.querySelector(".echo-stage");
+  const footerEl = document.querySelector(".echo");
+  const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+  footerEl.dataset.theme = prefersLight ? "light" : "dark";
+  const echo = createScene(echoStage.querySelector(".dots"), echoStage.querySelector(".glow"), {
+    seed: 7, layout: echoLayout, particles: false, floor: false, motion: false, caustics: false,
+    pearlGlint: true, glyphScale: FOOTER_GLYPH_SCALE, theme: () => footerEl.dataset.theme, contrast: () => P.footerContrast,
+  });
+
+  // Footer: the shell opens when the footer comes into view and presents the pearl.
+  const FOOTER_TIMELINE = { seamSwell: [0, .4], open: [.3, 2.9], pearlForm: [1, 3.1], complete: 3.1 };
+  const FOOTER_SHOW_RATIO = .6;
+  const footerStateAt = (time) => {
+    const open = easeInOutSine(windowLinear(FOOTER_TIMELINE.open, time));
+    const growth = windowEase(FOOTER_TIMELINE.pearlForm, time);
+    return {
+      a: lerp(OPEN_CLOSED, P.footerLid * DEG, open), bloom: 1, tint: 1,
+      seam: SEAM_CLOSED + SEAM_SWELL * windowEase(FOOTER_TIMELINE.seamSwell, time),
+      pearlGrowth: growth, pearlGlow: growth, open,
+    };
+  };
+  let footerTime = 0, footerWater = 0, footerRaf = 0, footerPrev = 0, footerVisible = false, footerPlaying = false, footerHeld = false;
+  const drawEcho = () => echo.render(footerWater, 0, footerStateAt(footerTime), reduced.matches);
+  const footerLoop = (now) => {
+    footerRaf = 0;
+    const dt = footerPrev ? Math.min((now - footerPrev) / 1000, MAX_FRAME_DT) : 0;
+    footerPrev = now; footerWater += dt;
+    if (footerPlaying) footerTime = Math.min(FOOTER_TIMELINE.complete, footerTime + dt);
+    echo.render(footerWater, dt, footerStateAt(footerTime), false);
+    scheduleFooter();
+  };
+  const scheduleFooter = () => {
+    if (footerRaf || !footerVisible || document.hidden || reduced.matches) return;
+    footerRaf = requestAnimationFrame(footerLoop);
+  };
+  const playFooter = () => { footerTime = 0; footerPlaying = true; footerPrev = 0; drawEcho(); scheduleFooter(); };
+  new IntersectionObserver(([entry]) => {
+    footerVisible = entry.isIntersecting;
+    if (footerHeld) return;
+    if (reduced.matches) { footerTime = FOOTER_TIMELINE.complete; drawEcho(); return; }
+    if (entry.intersectionRatio >= FOOTER_SHOW_RATIO && !footerPlaying) playFooter();
+    if (!entry.isIntersecting) { footerPlaying = false; footerTime = 0; drawEcho(); }
+    scheduleFooter();
+  }, { threshold: [0, FOOTER_SHOW_RATIO] }).observe(echoStage);
+  document.addEventListener("visibilitychange", scheduleFooter);
+  const themeBtn = document.getElementById("footer-theme");
+  const syncThemeLabel = () => { themeBtn.textContent = footerEl.dataset.theme === "light" ? "Dark footer" : "Light footer"; };
+  syncThemeLabel();
+  themeBtn.addEventListener("click", () => {
+    footerEl.dataset.theme = footerEl.dataset.theme === "light" ? "dark" : "light";
+    syncThemeLabel(); echo.invalidate(false); drawEcho();
+  });
+
+  const readPlayed = () => { try { return sessionStorage.getItem(SESSION_KEY) === "1"; } catch { return false; } };
+  const markPlayed = () => { try { sessionStorage.setItem(SESSION_KEY, "1"); } catch { /* storage blocked: replay next time */ } };
+
+  const freeze = params.get("freeze");
+  const frozenAt = freeze === "hero" ? TIMELINE.complete : freeze !== null ? Number(freeze) : null;
+  let openingTime = (params.has("replay") || frozenAt !== null) ? 0 : readPlayed() ? TIMELINE.complete : 0;
+  if (frozenAt !== null) openingTime = frozenAt;
+  let water = frozenAt !== null ? frozenAt + STILL_WATER_TIME : 0;
+
+  const fadeRise = (el, progress, rise) => {
+    el.style.opacity = String(progress);
+    el.style.transform = progress >= 1 ? "" : `translateY(${(1 - progress) * rise}px)`;
+    el.style.filter = progress >= 1 ? "" : `blur(${(1 - progress) * TEXT_BLUR_PX}px)`;
+  };
+  const applyDom = (time) => {
+    fadeRise(line1, windowEase(TIMELINE.line1, time), TEXT_RISE_PX);
+    const span = TIMELINE.words[1] - TIMELINE.words[0] - TIMELINE.wordFade;
+    words.forEach((w, i) => {
+      const start = TIMELINE.words[0] + (span * i) / (words.length - 1);
+      w.style.display = "inline-block";
+      fadeRise(w, smoothstep(start, start + TIMELINE.wordFade, time), TEXT_RISE_PX);
+    });
+    attribution.style.opacity = String(windowEase(TIMELINE.attribution, time));
+    const caption = time >= TIMELINE.captionSwap;
+    quote.classList.toggle("is-caption", caption);
+    quote.style.opacity = String(caption ? windowEase(TIMELINE.captionIn, time) : 1 - windowEase(TIMELINE.quoteOut, time));
+    fadeRise(nameEl, windowEase(TIMELINE.nameIn, time), NAME_RISE_PX);
+    skipBtn.hidden = time >= TIMELINE.complete;
+  };
+
+  const stats = { frames: 0, total: 0, worst: 0 };
+  const draw = (dt, still) => {
+    const t0 = performance.now();
+    hero.render(water, dt, sceneStateAt(openingTime), still);
+    const ms = performance.now() - t0;
+    stats.frames++; stats.total += ms; stats.worst = Math.max(stats.worst, ms);
+  };
+
+  const skip = () => {
+    if (openingTime >= TIMELINE.complete) return;
+    openingTime = TIMELINE.complete; markPlayed(); applyDom(openingTime); draw(0, false);
+  };
+  skipBtn.addEventListener("click", (e) => { e.stopPropagation(); skip(); });
+  heroEl.addEventListener("click", skip);
+  window.addEventListener("keydown", (e) => {
+    if (e.target instanceof HTMLElement && e.target.closest(".tweak")) return;
+    if (openingTime < TIMELINE.complete && e.key !== "Tab") skip();
+  });
+
+  let last = { x: 0, y: 0, t: 0 };
+  window.addEventListener("pointermove", (e) => {
+    const box = heroEl.getBoundingClientRect();
+    const x = e.clientX - box.left, y = e.clientY - box.top;
+    const now = performance.now();
+    const speed = Math.hypot(x - last.x, y - last.y) / Math.max(1, now - last.t) * 16;
+    last = { x, y, t: now };
+    hero.stirAt(x, y, speed);
+  }, { passive: true });
+
+  let raf = 0, prev = 0, heroVisible = true;
+  const loop = (now) => {
+    raf = 0;
+    const dt = prev ? Math.min((now - prev) / 1000, MAX_FRAME_DT) : 0;
+    prev = now;
+    water += dt;
+    if (openingTime < TIMELINE.complete) {
+      openingTime = Math.min(TIMELINE.complete, openingTime + dt);
+      applyDom(openingTime);
+      if (openingTime >= TIMELINE.complete) markPlayed();
+    }
+    draw(dt, false);
+    schedule();
+  };
+  const schedule = () => {
+    if (raf || document.hidden || !heroVisible || reduced.matches || frozenAt !== null) return;
+    raf = requestAnimationFrame(loop);
+  };
+  const stop = () => { if (raf) cancelAnimationFrame(raf); raf = 0; prev = 0; };
+
+  const renderStill = () => {
+    if (reduced.matches && frozenAt === null) { openingTime = TIMELINE.complete; water = STILL_WATER_TIME; }
+    applyDom(openingTime);
+    draw(0, true);
+  };
+  const onResize = () => {
+    hero.resize(); echo.resize(); drawEcho();
+    if (reduced.matches || frozenAt !== null) renderStill(); else draw(0, false);
+  };
+  const replay = () => { openingTime = 0; water = 0; applyDom(0); hero.invalidate(true); if (reduced.matches || frozenAt !== null) renderStill(); else schedule(); };
+
+  // ---------- Tweak panel ----------
+  const panel = document.getElementById("tweak");
+  const toggle = document.getElementById("tweak-toggle");
+  const GEOMETRY_KEYS = new Set(["lidAngle", "camera"]);
+  const PARTICLE_KEYS = new Set(["specks", "bubbles", "glints"]);
+  const saveParams = () => { try { localStorage.setItem(PARAM_STORE_KEY, JSON.stringify(P)); } catch { /* storage blocked: session only */ } };
+  const decimals = (stepValue) => (String(stepValue).split(".")[1] || "").length;
+  const buildPanel = () => {
+    panel.innerHTML = "";
+    for (const [group, items] of PARAM_META) {
+      const h = document.createElement("h2"); h.textContent = group; panel.append(h);
+      for (const [key, label, min, max, stepValue] of items) {
+        const row = document.createElement("label");
+        const name = document.createElement("span"); name.textContent = label;
+        const value = document.createElement("span"); value.textContent = Number(P[key]).toFixed(decimals(stepValue));
+        const input = document.createElement("input");
+        Object.assign(input, { type: "range", min, max, step: stepValue, value: P[key], name: key });
+        input.addEventListener("input", () => {
+          P[key] = Number(input.value); value.textContent = P[key].toFixed(decimals(stepValue));
+          if (GEOMETRY_KEYS.has(key)) applyGeometry();
+          if (key === "footerPitch") echo.resize();
+          hero.invalidate(PARTICLE_KEYS.has(key)); echo.invalidate(false);
+          drawEcho(); saveParams();
+          if (raf === 0) draw(0, true);
+        });
+        row.append(name, value, input); panel.append(row);
+      }
+    }
+    const buttons = document.createElement("div"); buttons.className = "row";
+    const mk = (label, fn) => { const b = document.createElement("button"); b.type = "button"; b.textContent = label; b.addEventListener("click", fn); buttons.append(b); };
+    mk("Replay", replay);
+    mk("Open footer", () => { footerVisible = true; playFooter(); });
+    mk("Copy values", () => navigator.clipboard?.writeText(JSON.stringify(P, null, 2)));
+    mk("Reset", () => { Object.assign(P, PARAM_DEFAULTS); applyGeometry(); saveParams(); buildPanel(); hero.invalidate(true); echo.invalidate(false); drawEcho(); if (raf === 0) draw(0, true); });
+    panel.append(buttons);
+  };
+  buildPanel();
+  toggle.addEventListener("click", () => { panel.hidden = !panel.hidden; toggle.setAttribute("aria-expanded", String(!panel.hidden)); });
+  if (params.has("tweak")) { panel.hidden = false; toggle.setAttribute("aria-expanded", "true"); }
+
+  // ---------- Debug hooks for review ----------
+  // Renders frames on demand (rAF pauses while the tab or pane is hidden).
+  window.__pearlBench = (frames, fromTime) => {
+    const stepT = 1 / 60, saved = openingTime;
+    let total = 0, worst = 0;
+    openingTime = fromTime;
+    for (let i = 0; i < frames; i++) {
+      openingTime = Math.min(TIMELINE.complete, openingTime + stepT); water += stepT;
+      const t0 = performance.now(); hero.render(water, stepT, sceneStateAt(openingTime), false);
+      const ms = performance.now() - t0; total += ms; worst = Math.max(worst, ms);
+    }
+    openingTime = saved;
+    return { avgMs: +(total / frames).toFixed(2), worstMs: +worst.toFixed(1) };
+  };
+  // Contact sheet of the opening: renders frames from `from` to `to` into one overlay canvas.
+  window.__pearlSheet = (from, to, count, cols) => {
+    const src = heroEl.querySelector(".dots");
+    const rows = Math.ceil(count / cols);
+    const sheet = document.createElement("canvas");
+    const cw = Math.floor(innerWidth / cols), ch = Math.floor(cw * src.height / src.width);
+    sheet.width = cw * cols; sheet.height = ch * rows;
+    Object.assign(sheet.style, { position: "fixed", left: "0", top: "0", zIndex: "30", background: "#05070C" });
+    const sctx = sheet.getContext("2d");
+    sctx.font = "11px Inter, sans-serif"; sctx.fillStyle = "#8A93A3";
+    for (let i = 0; i < count; i++) {
+      const time = lerp(from, to, count > 1 ? i / (count - 1) : 0);
+      hero.render(STILL_WATER_TIME + time, 0, sceneStateAt(time), true);
+      sctx.drawImage(src, (i % cols) * cw, ((i / cols) | 0) * ch, cw, ch);
+      sctx.fillStyle = "#8A93A3"; sctx.fillText(`${time.toFixed(2)} s`, (i % cols) * cw + 6, ((i / cols) | 0) * ch + 14);
+    }
+    document.body.append(sheet);
+    return { count };
+  };
+  // Renders the footer shell at a given time of its opening (for stills and sheets).
+  window.__footerAt = (time, theme) => {
+    if (theme) { footerEl.dataset.theme = theme; syncThemeLabel(); echo.invalidate(false); }
+    footerHeld = true; footerTime = time; footerPlaying = false; drawEcho();
+    return footerStateAt(time);
+  };
+  window.__pearlDebug = () => ({ raf, heroVisible, hidden: document.hidden, openingTime, water, reduced: reduced.matches });
+
+  new ResizeObserver(onResize).observe(document.body);
+  new IntersectionObserver(([entry]) => { heroVisible = entry.isIntersecting; if (heroVisible) schedule(); else stop(); }).observe(heroEl);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) stop(); else schedule(); });
+  reduced.addEventListener("change", () => { stop(); onResize(); schedule(); });
+  document.fonts?.ready.then(() => { if (reduced.matches || frozenAt !== null) renderStill(); });
+
+  onResize();
+  applyDom(openingTime);
+  schedule();
+})();
+</script>
+</body>
+</html>

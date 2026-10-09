@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Closing petal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0A0A0A; --ink: #EDEDED; --muted: #8E8E8E; --line: #262626; --glow: 255, 168, 194; --shade: 0, 0, 0; }
+  :root[data-theme="light"] { --bg: #FAFAF8; --ink: #161616; --muted: #6B6B6B; --line: #E4E4E0; --glow: 255, 190, 208; --shade: 60, 30, 40; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; }
+  .spacer { height: 110vh; display: grid; place-items: center; color: var(--muted); font-size: 13px; border-bottom: 1px solid var(--line); }
+  /* Mirrors the live closing section. */
+  .closing { position: relative; min-height: 80vh; display: grid; place-content: center; justify-items: center; text-align: center; gap: 20px; padding: 120px 24px 160px; }
+  .closing h2 { font-family: Newsreader, Georgia, serif; font-weight: 400; font-size: clamp(32px, 4vw, 52px); line-height: 1.12; letter-spacing: -.01em; }
+  .closing p { color: var(--muted); font-size: 14px; max-width: 30ch; line-height: 1.5; }
+  .cta { margin-top: 8px; color: var(--ink); background: none; border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; font: 13px Inter, sans-serif; cursor: pointer; }
+  .cta:hover { border-color: var(--muted); }
+  footer { display: flex; justify-content: space-between; padding: 22px clamp(16px, 3vw, 40px); border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+  footer nav { display: flex; gap: 22px; }
+  /* The petal: a real photo, turned in 3D by CSS. Absolutely placed inside the closing section. */
+  .petal { position: absolute; left: 0; top: 0; width: 52px; height: 52px; pointer-events: none; transform-origin: 50% 50%; will-change: transform, opacity; opacity: 0; }
+  .petal img { width: 100%; height: 100%; display: block; }
+  /* Rest cue: a soft shadow on paper, a faint warm glow in the dark. Fades in only once the petal has landed. */
+  .petal-rest { position: absolute; width: 74px; height: 22px; pointer-events: none; opacity: 0; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(var(--shade), .28), rgba(var(--shade), 0)); }
+  :root[data-theme="dark"] .petal-rest { background: radial-gradient(closest-side, rgba(var(--glow), .22), rgba(var(--glow), 0)); }
+  .toggle { position: fixed; right: 12px; top: 12px; z-index: 5; background: none; color: var(--muted); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font: 12px Inter, sans-serif; cursor: pointer; }
+</style>
+</head>
+<body>
+<button class="toggle" id="toggle" type="button">Light / dark</button>
+<div class="spacer">↓ scroll to the closing section</div>
+<section class="closing" id="closing" aria-labelledby="closing-title">
+  <h2 id="closing-title">Creativity and ideas<br>travel further together.</h2>
+  <p>Start with a thought. The rest can be figured out together.</p>
+  <button class="cta" id="cta" type="button">Say hello</button>
+  <div class="petal-rest" id="rest" aria-hidden="true"></div>
+  <div class="petal" id="petal" aria-hidden="true"><img src="assets/hero-petal.webp" alt=""></div>
+</section>
+<footer><span>Gaurav Gupta</span><nav><span>GitHub</span><span>LinkedIn</span><span>Notes</span></nav></footer>
+
+<script>
+(() => {
+  "use strict";
+  const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const smoothstep = (e0, e1, x) => { const t = clamp01((x - e0) / (e1 - e0)); return t * t * (3 - 2 * t); };
+
+  // ---- Choreography (seconds, px) ----
+  const FALL = 2.6;                 // from entering to touching down
+  const SETTLE = 1.1;               // the rock after landing
+  const UNDER_CTA = 32;             // gap between the button and the resting petal
+  const ENTRY = { dx: -260, dy: -220 };   // starts up and to the left of its resting place, off in the air
+  const SWAY = 70;                  // width of each S-curve
+  const SWAY_TURNS = 2;             // two soft S-curves on the way down
+  const FLIPS = 1.5;                // it turns over one and a half times while falling
+  const REST = { rotate: 28, tiltX: 34, tiltY: -8 };   // asleep: lying back a little, still reads as a petal
+  const SPRING = { freq: 2.2, damp: 4.2, amount: 9 };   // one small rock as it lands, in degrees
+  const BREATH = { period: 7, amount: 2.5 };            // degrees of tilt at rest
+  const STIR = { radius: 140, gain: .045, decay: 2.2, amount: 10 };
+  const SHOW_RATIO = .5;
+
+  const section = document.getElementById("closing"), cta = document.getElementById("cta");
+  const petal = document.getElementById("petal"), rest = document.getElementById("rest");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let start = null, raf = 0, stir = 0, last = null;
+
+  /** Where the petal rests, in section coordinates: centred, just under the button. */
+  const restPoint = () => {
+    const s = section.getBoundingClientRect(), b = cta.getBoundingClientRect();
+    return { x: b.left - s.left + b.width / 2 - petal.offsetWidth / 2 + 10, y: b.bottom - s.top + UNDER_CTA - petal.offsetHeight / 2 + 6 };
+  };
+
+  /** The whole motion as a pure function of time since it started. */
+  const pose = (t) => {
+    const r = restPoint();
+    if (t >= FALL) {
+      const s = t - FALL;
+      const spring = SPRING.amount * Math.exp(-SPRING.damp * s) * Math.sin(SPRING.freq * Math.PI * 2 * s);
+      const breath = BREATH.amount * Math.sin((t - FALL - SETTLE) * Math.PI * 2 / BREATH.period) * smoothstep(0, SETTLE, s);
+      return { x: r.x, y: r.y, rotate: REST.rotate + spring * .6, tiltX: REST.tiltX + spring + breath + stir * STIR.amount, tiltY: REST.tiltY, opacity: 1, rested: smoothstep(0, SETTLE, s) };
+    }
+    const u = t / FALL;
+    const glide = 1 - Math.pow(1 - u, 2.2);              // it slows as it comes down: air, not gravity
+    const sway = Math.sin(u * Math.PI * SWAY_TURNS) * SWAY * (1 - u);
+    const x = r.x + ENTRY.dx * (1 - glide) + sway;
+    const y = r.y + ENTRY.dy * (1 - glide);
+    // Tumble: it turns over in the air and arrives already lying back, so the landing needs no snap.
+    const turn = (1 - glide) * FLIPS * 360;
+    return {
+      x, y, rotate: REST.rotate - sway * .35 + (1 - glide) * 40,
+      tiltX: REST.tiltX + turn, tiltY: REST.tiltY + Math.sin(u * Math.PI * 3) * 25 * (1 - u),
+      opacity: smoothstep(0, .12, u), rested: 0,
+    };
+  };
+
+  const apply = (p) => {
+    petal.style.opacity = String(p.opacity);
+    petal.style.transform = `translate(${p.x}px, ${p.y}px) perspective(400px) rotate(${p.rotate}deg) rotateX(${p.tiltX}deg) rotateY(${p.tiltY}deg)`;
+    const r = restPoint();
+    rest.style.left = `${r.x + petal.offsetWidth / 2 - 37}px`; rest.style.top = `${r.y + petal.offsetHeight * .62}px`;
+    rest.style.opacity = String(p.rested);
+  };
+
+  const loop = (now) => {
+    raf = 0;
+    stir *= Math.exp(-STIR.decay / 60);
+    apply(pose((now - start) / 1000));
+    if (!document.hidden) raf = requestAnimationFrame(loop);
+  };
+  const begin = () => {
+    if (start !== null) return;
+    if (reduced) { start = 0; apply(pose(FALL + SETTLE)); return; }
+    start = performance.now(); raf = requestAnimationFrame(loop);
+  };
+
+  new IntersectionObserver(([e]) => { if (e.intersectionRatio >= SHOW_RATIO) begin(); }, { threshold: [SHOW_RATIO] }).observe(section);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && start !== null && !reduced && !raf) raf = requestAnimationFrame(loop); });
+  // A breath of air when the cursor passes close.
+  addEventListener("pointermove", (e) => {
+    const b = petal.getBoundingClientRect(), d = Math.hypot(e.clientX - (b.left + b.width / 2), e.clientY - (b.top + b.height / 2));
+    const now = performance.now();
+    if (last && d < STIR.radius) stir = Math.min(1, stir + Math.hypot(e.clientX - last.x, e.clientY - last.y) / Math.max(1, now - last.t) * STIR.gain * (1 - d / STIR.radius));
+    last = { x: e.clientX, y: e.clientY, t: now };
+  }, { passive: true });
+  addEventListener("resize", () => { if (start !== null) apply(pose(raf ? (performance.now() - start) / 1000 : FALL + SETTLE + 1)); });
+  document.getElementById("toggle").addEventListener("click", () => {
+    const root = document.documentElement; root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+  });
+
+  // Review hook: pose at any time without the loop.
+  window.__footerPetalAt = (t, theme) => { if (theme) document.documentElement.dataset.theme = theme; section.scrollIntoView(); start = start ?? 0; apply(pose(t)); return t; };
+})();
+</script>
+</body>
+</html>

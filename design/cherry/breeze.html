@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A breeze</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0A090B; --ink: #EFE8EB; --warm: 255, 160, 188; }
+  :root[data-theme="light"] { --bg: #F6F2EF; --ink: #2A2226; --warm: 255, 182, 202; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; overflow: hidden; height: 100%; }
+  /* Warmth arrives as light behind the petal, never as a colour fill. */
+  #warmth { position: fixed; inset: 0; pointer-events: none; opacity: 0;
+    background: radial-gradient(42% 46% at 50% 47%, rgba(var(--warm), .2), rgba(var(--warm), .06) 45%, rgba(var(--warm), 0) 75%); }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  .name { position: fixed; left: 0; right: 0; top: 70%; text-align: center; font-size: 14px; font-weight: 500; letter-spacing: .06em; opacity: 0; pointer-events: none; }
+  .panel-toggle { position: fixed; left: 12px; top: 12px; z-index: 5; background: rgba(20, 16, 18, .6); color: #ddd; border: 1px solid rgba(255, 255, 255, .15); border-radius: 8px; font: 12px Inter, sans-serif; padding: 6px 10px; cursor: pointer; }
+  .panel-toggle[hidden], .panel[hidden] { display: none; }
+  .panel { position: fixed; left: 12px; top: 48px; z-index: 5; width: 220px; background: rgba(14, 11, 13, .92); color: #eee; border: 1px solid rgba(255, 255, 255, .12); border-radius: 10px; padding: 12px; font: 12px Inter, sans-serif; display: grid; gap: 6px; }
+  .panel button { background: #1E1A1C; color: #eee; border: 1px solid #333; border-radius: 6px; padding: 7px; font: inherit; cursor: pointer; }
+  .panel .stat { color: #aaa; }
+</style>
+<script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }</script>
+</head>
+<body>
+<div id="warmth" aria-hidden="true"></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<h1 class="name" id="name">Gaurav Gupta</h1>
+<button class="panel-toggle" id="panel-toggle" type="button" hidden>Panel</button>
+<div class="panel" id="panel" hidden>
+  <button type="button" id="replay">Replay</button>
+  <button type="button" id="theme">Light / dark</button>
+  <div class="stat" id="stat"></div>
+</div>
+
+<script type="module">
+import * as THREE from "three";
+
+// ================= Helpers =================
+const TAU = Math.PI * 2;
+const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
+const lerp = (a, b, t) => a + (b - a) * t;
+const smoothstep = (e0, e1, x) => { const t = clamp01((x - e0) / (e1 - e0)); return t * t * (3 - 2 * t); };
+const easeInOutSine = (t) => -(Math.cos(Math.PI * clamp01(t)) - 1) / 2;
+const easeOutCubic = (t) => 1 - Math.pow(1 - clamp01(t), 3);
+/** 0 → 1 → 0 across a range: a soft rise and fall. */
+const bump = (a, b, t) => Math.sin(Math.PI * clamp01((t - a) / (b - a)));
+const mulberry32 = (seed) => () => {
+  seed = (seed + 0x6D2B79F5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+const rng = mulberry32(20261010);
+
+// ================= Timeline (seconds) =================
+// One petal, one breeze, one resting place. Everything slow; nothing flashes.
+const T = {
+  petalIn: [.5, 1.8],      // the first petal appears at the centre, out of the dark
+  stir: [1.8, 2.4],        // the first breath of wind touches it
+  spawn: [1.9, 3.3],       // petals set off; the nearest pass the viewer around 3.5–5.3 s
+  push: [2.4, 4.6],        // the breeze carries the centre petal a little
+  settle: [4.7, 6.3],      // it rocks once and comes to rest
+  warmth: [2.2, 5.4],
+  nameIn: [6, 6.8],
+  end: 6.8,
+};
+const AMBIENT_FIRST = 7.5, AMBIENT_PERIOD = 7;   // after the opening: a single petal now and then
+
+// ================= Camera and the centre petal =================
+const CAMERA_Z = 10, FOV = 35;
+const CENTER = { x: 0, y: .2, z: 2, size: 1.7 };
+const CENTER_FLOAT = { tiltX: -.22, tiltY: .1, roll: .35 };     // hovering, facing us
+const CENTER_REST = { y: .05, tiltX: -.62, tiltY: .14, roll: .6, curl: -.16, cup: .22 };   // asleep
+const FOCUS = CAMERA_Z - CENTER.z;
+
+// ================= The breeze =================
+const NEAR_COUNT = 18, MID_COUNT = 16, FAR_COUNT = 10;
+const NEAR_DURATION = [1.7, 2.3], MID_DURATION = [3, 4.2], FAR_DURATION = [3.6, 5];
+const PASS_Z = CAMERA_Z - 1.4;          // near petals pass about an arm's length from the lens: large, still a petal
+const EDGE_REACH = [.8, 1.3];           // near petals leave past the edges, never across the centre
+const WIND_BIAS = .5;                   // the breeze blows from left to right
+const PETAL_SIZE = [.4, .6];
+const ATLAS = [4, 6], ATLAS_CELLS = 24;
+const MAX_DPR = 2;
+const THEMES = { dark: [10, 9, 11], light: [246, 242, 239] };
+
+// ================= Renderer =================
+const gl = document.getElementById("gl");
+const renderer = new THREE.WebGLRenderer({ canvas: gl, antialias: true, alpha: true, preserveDrawingBuffer: true, powerPreference: "high-performance" });
+renderer.setClearColor(0x000000, 0);
+const camera = new THREE.PerspectiveCamera(FOV, 1, .05, 100);
+camera.position.set(0, 0, CAMERA_Z);
+const scene = new THREE.Scene();
+const loader = new THREE.TextureLoader();
+const loadTexture = (url) => new Promise((resolve) => loader.load(url, (t) => { t.anisotropy = 1; t.colorSpace = THREE.NoColorSpace; resolve(t); }));
+const [atlas, heroTex] = await Promise.all([loadTexture("assets/petal-atlas.webp"), loadTexture("assets/hero-petal.webp")]);
+
+// ================= Petal material: a curved, lit, translucent petal with depth of field =================
+const petalVertex = /* glsl */`
+  attribute vec2 aCellSeed; attribute vec3 aShape; attribute float aFlutter; attribute float aAlpha;
+  uniform float uTime;
+  varying vec2 vUv; varying vec3 vNormal; varying vec3 vView; varying float vDepth; varying float vCell; varying float vAlpha;
+  void main() {
+    vec3 p = position;
+    float phase = uTime * 5.0 + aCellSeed.y * 31.0;
+    float cx = aShape.x + aFlutter * sin(phase), cy = aShape.y + aFlutter * .6 * sin(phase * 1.3 + 1.7), tw = aShape.z + aFlutter * .5 * cos(phase * .8);
+    p.z += cx * p.x * p.x + cy * p.y * p.y + tw * p.x * p.y;
+    vec3 n = normalize(vec3(-(2.0 * cx * p.x + tw * p.y), -(2.0 * cy * p.y + tw * p.x), 1.0));
+    vec4 mv = viewMatrix * modelMatrix * instanceMatrix * vec4(p, 1.0);
+    vNormal = normalize(mat3(viewMatrix) * mat3(modelMatrix) * mat3(instanceMatrix) * n);
+    vView = -mv.xyz; vDepth = -mv.z; vUv = uv; vCell = aCellSeed.x; vAlpha = aAlpha;
+    gl_Position = projectionMatrix * mv;
+  }
+`;
+const petalFragment = /* glsl */`
+  #define MAX_BLUR_BIAS 3.4
+  uniform sampler2D uMap; uniform vec2 uGrid; uniform vec3 uLightDir; uniform float uFocus; uniform float uNearBlur; uniform float uFarBlur;
+  uniform vec3 uBg; uniform float uAmbient;
+  varying vec2 vUv; varying vec3 vNormal; varying vec3 vView; varying float vDepth; varying float vCell; varying float vAlpha;
+  void main() {
+    float col = mod(vCell, uGrid.x), row = floor(vCell / uGrid.x + .001);
+    vec2 uv = (vec2(col, uGrid.y - 1.0 - row) + vUv) / uGrid;
+    float near = max(uFocus - vDepth, 0.0) / uFocus, far = max(vDepth - uFocus, 0.0) / 30.0;
+    vec4 tex = texture2D(uMap, uv, clamp(near * near * uNearBlur + far * uFarBlur, 0.0, MAX_BLUR_BIAS));
+    if (tex.a < .004) discard;
+    vec3 N = normalize(vNormal); vec3 base = tex.rgb;
+    if (!gl_FrontFacing) { N = -N; base *= mix(vec3(.94, .88, .91), vec3(1.0), uAmbient - .7); }
+    vec3 L = normalize(uLightDir); vec3 V = normalize(vView);
+    float ndl = dot(N, L);
+    vec3 c = base * (uAmbient + (1.06 - uAmbient) * max(ndl, 0.0)) + base * vec3(1.0, .82, .86) * max(-ndl, 0.0) * .45
+           + pow(max(dot(reflect(-L, N), V), 0.0), 22.0) * .1;
+    c = mix(c, uBg, smoothstep(18.0, 42.0, vDepth) * .85);   // the distance dissolves into the background
+    gl_FragColor = vec4(c, tex.a * vAlpha);
+  }
+`;
+const makePetals = (texture, grid, count, renderOrder) => {
+  const geometry = new THREE.PlaneGeometry(1, 1, 12, 12);
+  for (const [name, size] of [["aCellSeed", 2], ["aShape", 3], ["aFlutter", 1], ["aAlpha", 1]]) geometry.setAttribute(name, new THREE.InstancedBufferAttribute(new Float32Array(count * size), size));
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      uMap: { value: texture }, uGrid: { value: new THREE.Vector2(...grid) }, uTime: { value: 0 },
+      uLightDir: { value: new THREE.Vector3(-.45, .8, .5) }, uFocus: { value: FOCUS }, uNearBlur: { value: 5.5 }, uFarBlur: { value: 1.4 },
+      uBg: { value: new THREE.Vector3() }, uAmbient: { value: .8 },
+    },
+    vertexShader: petalVertex, fragmentShader: petalFragment, transparent: true, depthWrite: false, side: THREE.DoubleSide,
+  });
+  const mesh = new THREE.InstancedMesh(geometry, material, count);
+  mesh.frustumCulled = false; mesh.renderOrder = renderOrder; mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  scene.add(mesh);
+  return mesh;
+};
+// Petals behind the centre petal, the centre petal, then petals in front: correct layering without sorting everything.
+const behind = makePetals(atlas, ATLAS, NEAR_COUNT + MID_COUNT + FAR_COUNT + 2, 0);
+const centre = makePetals(heroTex, [1, 1], 1, 1);
+const front = makePetals(atlas, ATLAS, NEAR_COUNT + MID_COUNT + FAR_COUNT + 2, 2);
+
+const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), E = new THREE.Euler();
+const write = (mesh, i, pos, rot, size, cell, seed, shape, flutter, alpha) => {
+  Q.setFromEuler(E.set(rot[0], rot[1], rot[2]));
+  M.compose(pos, Q, S.setScalar(size));
+  mesh.setMatrixAt(i, M);
+  const a = mesh.geometry.attributes;
+  a.aCellSeed.setXY(i, cell, seed); a.aShape.setXYZ(i, shape[0], shape[1], shape[2]); a.aFlutter.setX(i, flutter); a.aAlpha.setX(i, alpha);
+};
+const flush = (mesh, count) => {
+  mesh.count = count; mesh.instanceMatrix.needsUpdate = true;
+  for (const k of ["aCellSeed", "aShape", "aFlutter", "aAlpha"]) mesh.geometry.attributes[k].needsUpdate = true;
+};
+
+// ================= Petal paths: deterministic, each a soft curve =================
+const viewHalf = (distance) => { const h = distance * Math.tan((FOV / 2) * Math.PI / 180); return { h, w: h * camera.aspect }; };
+const cubic = (a, b, c, d, t, out) => {
+  const u = 1 - t;
+  return out.set(
+    u * u * u * a.x + 3 * u * u * t * b.x + 3 * u * t * t * c.x + t * t * t * d.x,
+    u * u * u * a.y + 3 * u * u * t * b.y + 3 * u * t * t * c.y + t * t * t * d.y,
+    u * u * u * a.z + 3 * u * u * t * b.z + 3 * u * t * t * c.z + t * t * t * d.z);
+};
+const makePath = (kind, t0) => {
+  const p = {
+    kind, t0, cell: (rng() * ATLAS_CELLS) | 0, seed: rng(), size: lerp(PETAL_SIZE[0], PETAL_SIZE[1], rng()),
+    spin: [(rng() - .5) * 2.2, (rng() - .5) * 2.2, (rng() - .5) * 1.6], rot0: [rng() * TAU, rng() * TAU, rng() * TAU],
+    shape: [(rng() - .5) * .55, .05 + rng() * .3, (rng() - .5) * .35], unit: null,
+  };
+  if (kind === "near") {
+    // From the deep left toward the viewer, leaving past an edge of the screen: it brushes your face.
+    p.dur = lerp(...NEAR_DURATION, rng());
+    p.a = new THREE.Vector3(lerp(-4.5, 1.5, rng()), lerp(-1.6, 2.2, rng()), lerp(-12, -5, rng()));
+    p.exit = { angle: lerp(-1.2, 1.9, rng()) + (rng() < .25 ? Math.PI : 0), reach: lerp(...EDGE_REACH, rng()) };
+  } else if (kind === "mid") {
+    // Across the middle distance, left to right, falling a little.
+    p.dur = lerp(...MID_DURATION, rng());
+    const z = lerp(-4, 4.5, rng());
+    p.a = new THREE.Vector3(-1, lerp(-.4, 1.1, rng()), z);   // x is set from the view width at render time
+    p.d = new THREE.Vector3(1, lerp(-1, .2, rng()), z + lerp(-1, 2, rng()));
+  } else {
+    // Far and small, a hint of depth.
+    p.dur = lerp(...FAR_DURATION, rng());
+    const z = lerp(-26, -14, rng());
+    p.a = new THREE.Vector3(-1, lerp(-.2, 1, rng()), z);
+    p.d = new THREE.Vector3(1, lerp(-.6, .3, rng()), z + lerp(0, 3, rng()));
+  }
+  return p;
+};
+const spawnTimes = (count) => Array.from({ length: count }, (_, i) => lerp(T.spawn[0], T.spawn[1], (i + rng() * .8) / count));
+const PATHS = [
+  ...spawnTimes(FAR_COUNT).map((t) => makePath("far", t - .6)),
+  ...spawnTimes(MID_COUNT).map((t) => makePath("mid", t - .3)),
+  ...spawnTimes(NEAR_COUNT).map((t) => makePath("near", t)),
+];
+const ambient = (k) => { const p = makePath("mid", AMBIENT_FIRST + k * AMBIENT_PERIOD); p.dur *= 1.6; p.size *= .85; return p; };
+const AMBIENT = Array.from({ length: 40 }, (_, k) => ambient(k));
+
+const P0 = new THREE.Vector3(), P1 = new THREE.Vector3(), P2 = new THREE.Vector3(), P3 = new THREE.Vector3(), POS = new THREE.Vector3();
+/** Position of a breeze petal at time t, or null when it is not on screen. */
+const placeOf = (p, t) => {
+  const u = (t - p.t0) / p.dur;
+  if (u <= 0 || u >= 1) return null;
+  if (p.kind === "near") {
+    const half = viewHalf(CAMERA_Z - PASS_Z);
+    const ex = Math.cos(p.exit.angle) * half.w * p.exit.reach * (1 + WIND_BIAS * .3);
+    const ey = Math.sin(p.exit.angle) * half.h * p.exit.reach;
+    P0.copy(p.a); P3.set(ex, ey, PASS_Z);
+    P1.set(lerp(p.a.x, ex, .2) - 1, p.a.y + .9, lerp(p.a.z, PASS_Z, .35));
+    P2.set(lerp(p.a.x, ex, .7) + 1.2, lerp(p.a.y, ey, .6) + .5, lerp(p.a.z, PASS_Z, .75));
+    return { pos: cubic(P0, P1, P2, P3, easeInOutSine(u), POS), u };
+  }
+  const half = viewHalf(CAMERA_Z - p.a.z);
+  const span = half.w + 1.2;
+  P0.set(-span, p.a.y * half.h, p.a.z); P3.set(span, p.d.y * half.h, p.d.z);
+  P1.set(-span * .35, P0.y + .7, lerp(P0.z, P3.z, .3)); P2.set(span * .35, P3.y - .5, lerp(P0.z, P3.z, .7));
+  return { pos: cubic(P0, P1, P2, P3, u, POS), u };
+};
+
+// ================= Frame =================
+const warmth = document.getElementById("warmth"), nameEl = document.getElementById("name");
+let theme = new URLSearchParams(location.search).get("theme") === "light" ? "light" : "dark";
+let stir = 0;
+const centrePose = (t) => {
+  const appear = easeOutCubic((t - T.petalIn[0]) / (T.petalIn[1] - T.petalIn[0]));
+  const hover = Math.sin(t * 1.3) * .03 * (1 - smoothstep(T.settle[0], T.settle[1], t));
+  const stirred = bump(T.stir[0], T.stir[1], t);
+  const push = bump(T.push[0], T.push[1], t);
+  const rest = easeInOutSine((t - T.settle[0]) / (T.settle[1] - T.settle[0]));
+  const rock = Math.sin(clamp01((t - T.settle[0]) / (T.settle[1] - T.settle[0])) * Math.PI * 2) * (1 - rest) * .18;
+  const breath = Math.sin(t * TAU / 7) * rest;
+  const pos = POS.set(CENTER.x + .32 * push + stir * .05, lerp(CENTER.y, CENTER_REST.y, rest) + hover + .08 * stirred, CENTER.z);
+  const rot = [
+    lerp(CENTER_FLOAT.tiltX, CENTER_REST.tiltX, rest) + .12 * stirred + .1 * push + stir * .06,
+    lerp(CENTER_FLOAT.tiltY, CENTER_REST.tiltY, rest) + .15 * push,
+    lerp(CENTER_FLOAT.roll, CENTER_REST.roll, rest) + .25 * push + rock,
+  ];
+  const shape = [lerp(-.05, CENTER_REST.curl, rest) + .035 * breath + stir * .05, lerp(.12, CENTER_REST.cup, rest), .06];
+  return { pos, rot, size: CENTER.size * lerp(.94, 1, appear), alpha: appear, flutter: .02 + .07 * (stirred + push) * (1 - rest) + stir * .04, shape };
+};
+
+const render = (t) => {
+  const bg = THEMES[theme];
+  for (const m of [behind, centre, front]) {
+    const u = m.material.uniforms;
+    u.uTime.value = t; u.uBg.value.set(bg[0] / 255, bg[1] / 255, bg[2] / 255); u.uAmbient.value = theme === "light" ? .9 : .8;
+  }
+  const c = centrePose(t);
+  write(centre, 0, c.pos, c.rot, c.size, 0, .37, c.shape, c.flutter, c.alpha);
+  flush(centre, 1);
+  const centreZ = c.pos.z;
+  let nb = 0, nf = 0;
+  const all = t < AMBIENT_FIRST - 1 ? PATHS : PATHS.concat(AMBIENT);
+  for (const p of all) {
+    const place = placeOf(p, t);
+    if (!place) continue;
+    const { pos, u } = place;
+    // Fade in from the dark at the start of each path; near petals stay fully opaque as they pass.
+    const alpha = smoothstep(0, .12, u) * (p.kind === "near" ? 1 : 1 - smoothstep(.92, 1, u));
+    const rot = [p.rot0[0] + p.spin[0] * (t - p.t0), p.rot0[1] + p.spin[1] * (t - p.t0), p.rot0[2] + p.spin[2] * (t - p.t0)];
+    const flutter = p.kind === "near" ? .05 : .07;
+    if (pos.z < centreZ) write(behind, nb++, pos, rot, p.size, p.cell, p.seed, p.shape, flutter, alpha);
+    else write(front, nf++, pos, rot, p.size, p.cell, p.seed, p.shape, flutter, alpha);
+  }
+  flush(behind, nb); flush(front, nf);
+  renderer.render(scene, camera);
+  const warm = t < T.warmth[1] ? smoothstep(T.warmth[0], lerp(...T.warmth, .55), t) : lerp(1, .55, smoothstep(T.warmth[1], T.warmth[1] + 1.5, t));
+  warmth.style.opacity = String(warm);
+  const n = smoothstep(T.nameIn[0], T.nameIn[1], t);
+  nameEl.style.opacity = String(n); nameEl.style.transform = `translateY(${(1 - n) * 6}px)`;
+};
+
+const resize = () => {
+  const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+  renderer.setPixelRatio(dpr); renderer.setSize(innerWidth, innerHeight, false);
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+};
+const applyTheme = () => { document.documentElement.dataset.theme = theme; };
+
+// ================= Loop, cursor, controls =================
+const params = new URLSearchParams(location.search);
+const frozen = params.has("t");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let start = performance.now(), raf = 0, last = null;
+const stats = { frames: 0, ms: 0 };
+const loop = (now) => {
+  raf = 0;
+  stir *= Math.exp(-(1 / 60) * 1.6);
+  const c0 = performance.now(); render((now - start) / 1000); stats.frames++; stats.ms += performance.now() - c0;
+  if (!document.hidden) raf = requestAnimationFrame(loop);
+};
+// Your movement is a breath of air on the petal.
+addEventListener("pointermove", (e) => {
+  const now = performance.now();
+  if (last) stir = Math.min(1, stir + Math.hypot(e.clientX - last.x, e.clientY - last.y) / Math.max(1, now - last.t) * .04);
+  last = { x: e.clientX, y: e.clientY, t: now };
+}, { passive: true });
+const panel = document.getElementById("panel"), toggle = document.getElementById("panel-toggle");
+toggle.addEventListener("click", () => { panel.hidden = !panel.hidden; });
+addEventListener("keydown", (e) => { if (e.key === "t" || e.key === "T") { toggle.hidden = !toggle.hidden; panel.hidden = toggle.hidden; } });
+document.getElementById("replay").addEventListener("click", () => { start = performance.now(); if (!raf) raf = requestAnimationFrame(loop); });
+document.getElementById("theme").addEventListener("click", () => { theme = theme === "dark" ? "light" : "dark"; applyTheme(); if (frozen) render(Number(params.get("t"))); });
+document.addEventListener("visibilitychange", () => { if (!document.hidden && !frozen && !reduced && !raf) raf = requestAnimationFrame(loop); });
+setInterval(() => { if (stats.frames) { document.getElementById("stat").textContent = `render ${(stats.ms / stats.frames).toFixed(2)} ms`; stats.frames = 0; stats.ms = 0; } }, 1000);
+
+// ================= Review hooks =================
+window.__breezeAt = (t, th) => { resize(); if (th) { theme = th; applyTheme(); } document.getElementById("sheet")?.remove(); render(t); return t; };
+window.__breezeSheet = (from, to, count, cols, th) => {
+  resize();
+  if (th) { theme = th; applyTheme(); }
+  document.getElementById("sheet")?.remove();
+  const sheet = document.createElement("canvas"); sheet.id = "sheet";
+  const cw = Math.floor(innerWidth / cols), ch = Math.floor(cw * innerHeight / innerWidth), rows = Math.ceil(count / cols);
+  sheet.width = cw * cols; sheet.height = ch * rows;
+  Object.assign(sheet.style, { position: "fixed", left: "0", top: "0", zIndex: "9", width: `${cw * cols}px`, height: `${ch * rows}px` });
+  const s = sheet.getContext("2d"); s.font = "11px Inter, sans-serif";
+  const bg = THEMES[theme];
+  for (let i = 0; i < count; i++) {
+    const t = lerp(from, to, count > 1 ? i / (count - 1) : 0);
+    render(t);
+    const x = (i % cols) * cw, y = ((i / cols) | 0) * ch;
+    s.fillStyle = `rgb(${bg})`; s.fillRect(x, y, cw, ch);
+    s.drawImage(gl, x, y, cw, ch);
+    s.fillStyle = theme === "dark" ? "#fff" : "#000"; s.fillText(`${t.toFixed(2)} s`, x + 6, y + 14);
+  }
+  document.body.append(sheet); return count;
+};
+window.__breezeBench = (from, frames) => {
+  const ctx = renderer.getContext(); let ms = 0, worst = 0;
+  for (let i = 0; i < frames; i++) { const t0 = performance.now(); render(from + i / 60); ctx.finish(); const d = performance.now() - t0; ms += d; worst = Math.max(worst, d); }
+  return { avgMs: +(ms / frames).toFixed(2), worstMs: +worst.toFixed(1) };
+};
+
+applyTheme(); resize();
+addEventListener("resize", () => { resize(); if (frozen) render(Number(params.get("t"))); });
+renderer.compile(scene, camera);
+if (params.has("tweak")) { toggle.hidden = false; panel.hidden = false; }
+if (frozen) render(Number(params.get("t")));
+else if (reduced) render(T.end + 1);
+else raf = requestAnimationFrame(loop);
+</script>
+</body>
+</html>

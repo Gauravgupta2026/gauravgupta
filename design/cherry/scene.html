@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The path</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #000; --ink: #EFE8EB; --gutter: clamp(16px, 3vw, 40px); }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; overflow: hidden; height: 100%; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  #fx { pointer-events: none; }
+  .name { position: fixed; left: var(--gutter); bottom: var(--gutter); font-size: 15px; font-weight: 500; letter-spacing: .01em; opacity: 0; pointer-events: none; }
+  .panel-toggle { position: fixed; left: 12px; top: 12px; z-index: 5; background: rgba(20, 16, 18, .6); color: #ddd; border: 1px solid rgba(255, 255, 255, .15); border-radius: 8px; font: 12px Inter, sans-serif; padding: 6px 10px; cursor: pointer; }
+  .panel-toggle[hidden], .panel[hidden] { display: none; }
+  .panel { position: fixed; left: 12px; top: 48px; z-index: 5; width: 240px; background: rgba(14, 11, 13, .92); color: #eee; border: 1px solid rgba(255, 255, 255, .12); border-radius: 10px; padding: 12px; font: 12px Inter, sans-serif; display: grid; gap: 6px; }
+  .panel button { background: #1E1A1C; color: #eee; border: 1px solid #333; border-radius: 6px; padding: 7px; font: inherit; cursor: pointer; }
+  .panel .stat { color: #aaa; }
+</style>
+<script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }</script>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+<h1 class="name" id="name">Gaurav Gupta</h1>
+<button class="panel-toggle" id="panel-toggle" type="button" hidden>Panel</button>
+<div class="panel" id="panel" hidden>
+  <button type="button" id="replay">Replay</button>
+  <button type="button" id="replay-sound">Replay with sound</button>
+  <div class="stat" id="stat"></div>
+</div>
+
+<script type="module">
+import * as THREE from "three";
+
+// ================= Helpers =================
+const TAU = Math.PI * 2;
+const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
+const lerp = (a, b, t) => a + (b - a) * t;
+const smoothstep = (e0, e1, x) => { const t = clamp01((x - e0) / (e1 - e0)); return t * t * (3 - 2 * t); };
+const easeInOut = (t) => { t = clamp01(t); return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+const easeInOutSine = (t) => -(Math.cos(Math.PI * clamp01(t)) - 1) / 2;
+const easeOut = (t) => 1 - Math.pow(1 - clamp01(t), 3);
+const span = (range, t) => clamp01((t - range[0]) / (range[1] - range[0]));
+const mulberry32 = (seed) => () => {
+  seed = (seed + 0x6D2B79F5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+const rng = mulberry32(20261009);
+
+// ================= Timeline (seconds), from Gaurav's narration =================
+// Photosensitivity: no flash, no shake, no fast large-area alternation. The storm builds instead of striking.
+const T = {
+  breeze: .8,
+  walk: [.8, 2.88],
+  footInHole: 2.88,
+  freeze: [2.88, 3.03],          // 0.15 s, hand still raised
+  drop: [3.03, 3.1],             // gone in four frames
+  hit: 3.1,                      // storm 2 begins: 0.1 s of silence, then the whoosh
+  windLines: [3.3, 5.4],
+  giants: [3.6, 5],              // a few giant petals drift past the lens
+  cover: [4.9, 5.6],             // the last petal arrives slowly
+  coverHold: [5.6, 6.3],
+  worldOff: 5.9,                 // behind the petal the world becomes the hero
+  peel: [6.3, 7.5],
+  heroLand: [6.4, 7.8],
+  nameIn: [7.2, 8],
+  end: 8.4,
+};
+const CYCLE = 1.1;               // s per full walk cycle (two steps)
+const STEP_TIMES = [1.1, 1.65, 2.2];
+
+// ================= Layout (metres) =================
+const CAMERA = { y: 1.5, z: 18.5, lookY: .9, lookZ: -40, fov: 40, pushIn: 1.2 };
+const HOLE = { x: .05, z: 3.4, rx: .62, rz: .4, clear: .1 };
+const FIGURE_SPEED = 1.15;
+const FIGURE_START_Z = HOLE.z + FIGURE_SPEED * (T.footInHole - T.walk[0]) + .25;
+const FIELD = { x: 14, zNear: 16, zFar: -70 };
+const CARPET = { x: 4.5, zNear: 13, zFar: -8 };   // a dense band around his path, so the hole reads as an absence
+const GROUND_FLOWERS = 3200, GROUND_PETALS = 6000, PATH_CARPET = 6000, AIR_FLOWERS = 300, AIR_PETALS = 3000, HOLE_PETALS = 900;
+const PETALS_PER_FLOWER = 5;
+const FLOWER_PETAL_SIZE = .12, FLOWER_RADIUS = .06, FLOWER_CUP = .35;
+const AIR = { yMin: .2, yMax: 7.5, fall: .35 };          // m/s: slow snow of petals
+const STORM_SPEED = 26;                                   // m/s, half the first version
+const RELEASE_SPREAD = 1.4, RELEASE_JITTER = .3;          // s: the storm builds from far to near
+const TARGET_SPREAD = { x: 3.6, y: 2.1 };
+const FADE = [10, 70];                                    // m: the field fades into black
+const COLOR = { bg: "#000000", figure: "#F2F0F0" };
+const FIGURE_GLOW = 0x9a9898;   // self-light: he reads white on black, with only a soft hint of form
+const MAGENTA_TINT = [1, .58, .82], MAGENTA_SHARE = .3;
+
+// ================= Renderer, cameras, scenes =================
+const gl = document.getElementById("gl");
+const renderer = new THREE.WebGLRenderer({ canvas: gl, antialias: true, preserveDrawingBuffer: true, powerPreference: "high-performance" });
+renderer.autoClear = false;
+renderer.localClippingEnabled = true;
+renderer.setClearColor(0x000000, 1);
+const MAX_DPR = 2;
+const camera = new THREE.PerspectiveCamera(CAMERA.fov, 1, .05, 300);
+const lensCamera = new THREE.PerspectiveCamera(CAMERA.fov, 1, .02, 50);
+const heroCamera = new THREE.PerspectiveCamera(CAMERA.fov, 1, .05, 100);
+heroCamera.position.set(0, 0, 10);
+const world = new THREE.Scene(), hero = new THREE.Scene(), lens = new THREE.Scene();
+world.add(new THREE.HemisphereLight(0xffffff, 0x101010, 1.4));
+const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(-2, 6, 8); world.add(key);
+
+const loader = new THREE.TextureLoader();
+const loadTexture = (url) => new Promise((resolve) => loader.load(url, (t) => { t.anisotropy = 1; t.colorSpace = THREE.NoColorSpace; resolve(t); }));
+const [atlas, heroTex] = await Promise.all([loadTexture("assets/petal-atlas.webp"), loadTexture("assets/hero-petal.webp")]);
+const ATLAS = [4, 6], ATLAS_CELLS = 24;
+
+// ================= The field: flowers and petals, one instanced set =================
+// Kinds: ground flower petal, loose ground petal, hole burst, air petal. Motion is a pure function of time.
+const KIND_FLOWER = 0, KIND_GROUND = 1, KIND_HOLE = 2, KIND_AIR = 3;
+const fieldVertex = /* glsl */`
+  attribute vec3 aRest; attribute vec3 aEuler; attribute vec2 aTarget; attribute vec3 aTint;
+  attribute float aSize; attribute float aCell; attribute float aDelay; attribute float aSeed; attribute float aDrift; attribute float aKind;
+  uniform float uTime; uniform float uStorm; uniform float uHit; uniform vec3 uCam; uniform float uSpeed; uniform vec3 uAir;
+  varying vec2 vUv; varying vec3 vTint; varying float vCell; varying float vDepth; varying float vLight;
+  mat3 eulerXYZ(vec3 a) {
+    float cx = cos(a.x), sx = sin(a.x), cy = cos(a.y), sy = sin(a.y), cz = cos(a.z), sz = sin(a.z);
+    return mat3(cy * cz, cx * sz + sx * sy * cz, sx * sz - cx * sy * cz,
+                -cy * sz, cx * cz - sx * sy * sz, sx * cz + cx * sy * sz,
+                sy, -sx * cy, cx * cy);
+  }
+  // Idle place at time t: ground items breathe in the breeze; air items fall slowly like snow and wrap around.
+  vec3 idleAt(float t) {
+    vec3 p = aRest;
+    if (aKind > 2.5) {
+      float h = uAir.y - uAir.x;
+      p.y = uAir.x + mod(aRest.y - uAir.x - t * uAir.z * (.6 + .8 * aDrift), h);
+      p.x += sin(t * .4 + aDrift * 20.0) * .6;
+      p.z += cos(t * .3 + aDrift * 13.0) * .3;
+    } else if (aKind < 1.5) {
+      p.y += sin(t * 1.4 + aDrift * 20.0) * .006;
+    }
+    return p;
+  }
+  void main() {
+    float tau = uStorm - aDelay;
+    vec3 pos = idleAt(uTime);
+    vec3 euler = aEuler;
+    float visible = aKind > 1.5 && aKind < 2.5 ? 0.0 : 1.0;   // the hole burst appears only when it erupts
+    if (aKind > 2.5) euler += vec3(uTime * (.4 + aDrift), uTime * .3, 0.0);
+    if (tau > 0.0) {
+      vec3 start = idleAt(uHit + aDelay);
+      vec3 target = uCam + vec3(aTarget, -.6);
+      float dur = length(target - start) / uSpeed + .6;
+      float u = tau / dur;
+      float e = u * u * (3.0 - 2.0 * u);                     // smooth in, smooth arrival: no jolts
+      float lift = aKind > 1.5 && aKind < 2.5 ? 2.2 : aKind < 1.5 ? .8 : .2;
+      pos = mix(start, target, min(e, 1.0));
+      pos.y += lift * sin(min(u, 1.0) * 3.14159);
+      pos.xy += vec2(sin(tau * 2.2 + aSeed * 30.0), cos(tau * 1.9 + aSeed * 17.0)) * .45 * (1.0 - min(u, 1.0));
+      euler += vec3(tau * (1.6 + aSeed * 2.4), tau * (1.2 + aSeed * 1.8), tau * .8);
+      visible = u < 1.0 ? 1.0 : 0.0;
+    }
+    mat3 R = eulerXYZ(euler);
+    vec3 local = R * vec3(position.xy * aSize, 0.0);
+    vec4 mv = viewMatrix * vec4(pos + local, 1.0);
+    vDepth = -mv.z;
+    vec3 n = normalize(mat3(viewMatrix) * (R * vec3(0.0, 0.0, 1.0)));
+    vLight = .55 + .45 * abs(dot(n, normalize(vec3(-.3, .8, .5))));
+    vUv = uv; vTint = aTint; vCell = aCell;
+    gl_Position = visible > .5 ? projectionMatrix * mv : vec4(2.0, 2.0, 2.0, 1.0);
+  }
+`;
+const fieldFragment = /* glsl */`
+  uniform sampler2D uAtlas; uniform vec2 uGrid; uniform vec2 uFade;
+  varying vec2 vUv; varying vec3 vTint; varying float vCell; varying float vDepth; varying float vLight;
+  void main() {
+    float col = mod(vCell, uGrid.x), row = floor(vCell / uGrid.x + .001);
+    vec4 tex = texture2D(uAtlas, (vec2(col, uGrid.y - 1.0 - row) + vUv) / uGrid);
+    if (tex.a < .45) discard;
+    float fade = 1.0 - smoothstep(uFade.x, uFade.y, vDepth);   // distance fades to black
+    gl_FragColor = vec4(tex.rgb * vTint * vLight * fade, 1.0);
+  }
+`;
+const fieldUniforms = {
+  uTime: { value: 0 }, uStorm: { value: -1 }, uHit: { value: T.hit }, uCam: { value: new THREE.Vector3() }, uSpeed: { value: STORM_SPEED },
+  uAir: { value: new THREE.Vector3(AIR.yMin, AIR.yMax, AIR.fall) },
+  uAtlas: { value: atlas }, uGrid: { value: new THREE.Vector2(...ATLAS) }, uFade: { value: new THREE.Vector2(...FADE) },
+};
+{
+  const plane = new THREE.PlaneGeometry(1, 1);
+  const g = new THREE.InstancedBufferGeometry();
+  g.index = plane.index; g.setAttribute("position", plane.getAttribute("position")); g.setAttribute("uv", plane.getAttribute("uv"));
+  const total = (GROUND_FLOWERS + AIR_FLOWERS) * PETALS_PER_FLOWER + GROUND_PETALS + PATH_CARPET + AIR_PETALS + HOLE_PETALS;
+  const A = (n) => new Float32Array(total * n);
+  const rest = A(3), euler = A(3), target = A(2), tint = A(3), size = A(1), cell = A(1), delay = A(1), seed = A(1), drift = A(1), kind = A(1);
+  const releaseDelay = (z) => RELEASE_SPREAD * clamp01((z - FIELD.zFar) / (FIELD.zNear - FIELD.zFar)) + rng() * RELEASE_JITTER;
+  const inHole = (x, z) => ((x - HOLE.x) / (HOLE.rx + HOLE.clear)) ** 2 + ((z - HOLE.z) / (HOLE.rz + HOLE.clear)) ** 2 < 1;
+  const fieldPoint = () => {
+    for (;;) {
+      const z = lerp(FIELD.zNear, FIELD.zFar, Math.pow(rng(), 1.4));    // denser near the viewer
+      const x = (rng() * 2 - 1) * FIELD.x;
+      if (!inHole(x, z)) return [x, z];
+    }
+  };
+  let n = 0;
+  const e = new THREE.Euler();
+  const put = (p, eu, k, s, d, dr, tintArr, c) => {
+    rest.set(p, n * 3); euler.set(eu, n * 3);
+    const a = rng() * TAU, r = Math.sqrt(rng());
+    target.set([Math.cos(a) * r * TARGET_SPREAD.x, Math.sin(a) * r * TARGET_SPREAD.y], n * 2);
+    tint.set(tintArr, n * 3); size[n] = s; cell[n] = c; delay[n] = d; seed[n] = rng(); drift[n] = dr; kind[n] = k; n++;
+  };
+  const pickTint = () => (rng() < MAGENTA_SHARE ? MAGENTA_TINT : [1, 1, 1]);
+  // A flower: five petals around a centre, cupped a little, all sharing the flower's tint and drift.
+  const flower = (center, q, k, d, dr) => {
+    const t = pickTint(), c0 = (rng() * ATLAS_CELLS) | 0, scale = .8 + rng() * .5;
+    for (let i = 0; i < PETALS_PER_FLOWER; i++) {
+      const ang = (i / PETALS_PER_FLOWER) * TAU + rng() * .2;
+      const petalQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, ang - Math.PI / 2));
+      petalQ.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(Math.cos(ang), Math.sin(ang), 0).cross(new THREE.Vector3(0, 0, 1)).normalize(), -FLOWER_CUP));
+      const local = new THREE.Vector3(Math.cos(ang), Math.sin(ang), 0).multiplyScalar(FLOWER_RADIUS * scale + FLOWER_PETAL_SIZE * scale * .45);
+      local.applyQuaternion(q);
+      const world = new THREE.Quaternion().copy(q).multiply(petalQ);
+      e.setFromQuaternion(world, "XYZ");
+      put([center[0] + local.x, center[1] + local.y, center[2] + local.z], [e.x, e.y, e.z], k, FLOWER_PETAL_SIZE * scale, d, dr, t, (c0 + i) % ATLAS_CELLS);
+    }
+  };
+  const faceUp = () => new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2 + (rng() - .5) * .5, (rng() - .5) * .5, rng() * TAU));
+  for (let i = 0; i < GROUND_FLOWERS; i++) { const [x, z] = fieldPoint(); flower([x, .04, z], faceUp(), KIND_FLOWER, releaseDelay(z), rng()); }
+  for (let i = 0; i < GROUND_PETALS; i++) {
+    const [x, z] = fieldPoint();
+    put([x, .015, z], [-Math.PI / 2 + (rng() - .5) * .5, (rng() - .5) * .5, rng() * TAU], KIND_GROUND, .08 + rng() * .05, releaseDelay(z) + .1, rng(), pickTint(), (rng() * ATLAS_CELLS) | 0);
+  }
+  for (let i = 0; i < PATH_CARPET; i++) {
+    let x, z;
+    do { x = (rng() * 2 - 1) * CARPET.x; z = lerp(CARPET.zNear, CARPET.zFar, rng()); } while (inHole(x, z));
+    put([x, .015, z], [-Math.PI / 2 + (rng() - .5) * .5, (rng() - .5) * .5, rng() * TAU], KIND_GROUND, .08 + rng() * .05, releaseDelay(z) + .1, rng(), pickTint(), (rng() * ATLAS_CELLS) | 0);
+  }
+  const airPoint = () => [(rng() * 2 - 1) * FIELD.x, lerp(AIR.yMin, AIR.yMax, rng()), lerp(FIELD.zNear, FIELD.zFar * .8, Math.pow(rng(), 1.2))];
+  for (let i = 0; i < AIR_FLOWERS; i++) {
+    const p = airPoint(), dr = rng();
+    flower(p, new THREE.Quaternion().setFromEuler(new THREE.Euler(rng() * TAU, rng() * TAU, rng() * TAU)), KIND_AIR, releaseDelay(p[2]), dr);
+  }
+  for (let i = 0; i < AIR_PETALS; i++) {
+    const p = airPoint();
+    put(p, [rng() * TAU, rng() * TAU, rng() * TAU], KIND_AIR, .07 + rng() * .05, releaseDelay(p[2]), rng(), pickTint(), (rng() * ATLAS_CELLS) | 0);
+  }
+  for (let i = 0; i < HOLE_PETALS; i++) {
+    const a = rng() * TAU, r = Math.sqrt(rng());
+    put([HOLE.x + Math.cos(a) * r * HOLE.rx * .8, -.05, HOLE.z + Math.sin(a) * r * HOLE.rz * .8], [rng() * TAU, rng() * TAU, rng() * TAU], KIND_HOLE, .1 + rng() * .06, .2 + rng() * .8, rng(), pickTint(), (rng() * ATLAS_CELLS) | 0);
+  }
+  g.instanceCount = n;
+  const ia = (arr, k) => new THREE.InstancedBufferAttribute(arr, k);
+  for (const [name, arr, k] of [["aRest", rest, 3], ["aEuler", euler, 3], ["aTarget", target, 2], ["aTint", tint, 3], ["aSize", size, 1], ["aCell", cell, 1], ["aDelay", delay, 1], ["aSeed", seed, 1], ["aDrift", drift, 1], ["aKind", kind, 1]]) g.setAttribute(name, ia(arr, k));
+  const field = new THREE.Mesh(g, new THREE.ShaderMaterial({ uniforms: fieldUniforms, vertexShader: fieldVertex, fragmentShader: fieldFragment, side: THREE.DoubleSide }));
+  field.frustumCulled = false;
+  world.add(field);
+}
+
+// ================= The figure =================
+// A slim, lit figure with real joints. Faces away from the camera; walks, follows a petal, reaches, falls.
+const figure = (() => {
+  const keepAboveGround = [new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)];   // he sinks into the hole
+  const mat = new THREE.MeshLambertMaterial({ color: COLOR.figure, emissive: FIGURE_GLOW, clippingPlanes: keepAboveGround });
+  const capsule = (r, len, sx = 1, sz = 1) => { const m = new THREE.Mesh(new THREE.CapsuleGeometry(r, len, 6, 14), mat); m.scale.set(sx, 1, sz); return m; };
+  const ball = (r, sx, sy, sz) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), mat); m.scale.set(sx, sy, sz); return m; };
+  const group = (parent, x, y, z) => { const g = new THREE.Group(); g.position.set(x, y, z); parent.add(g); return g; };
+  const root = new THREE.Group(); world.add(root);
+  const PELVIS_Y = .93;
+  const hips = group(root, 0, PELVIS_Y, 0);
+  const pelvis = ball(.115, 1.25, .8, .85); hips.add(pelvis);
+  const chest = group(hips, 0, .08, 0);
+  const torso = capsule(.125, .26, 1.18, .78); torso.position.y = .2; chest.add(torso);
+  const neck = group(chest, 0, .42, 0);
+  const neckMesh = capsule(.035, .05); neckMesh.position.y = .02; neck.add(neckMesh);
+  const head = ball(.098, .9, 1.1, .97); head.position.y = .14; neck.add(head);
+  const arm = (side) => {
+    const shoulder = group(chest, side * .175, .37, 0);
+    const upper = capsule(.035, .23); upper.position.y = -.14; shoulder.add(upper);
+    const elbow = group(shoulder, 0, -.29, 0);
+    const fore = capsule(.03, .21); fore.position.y = -.125; elbow.add(fore);
+    const hand = ball(.04, .7, 1.25, .5); hand.position.y = -.27; elbow.add(hand);
+    const tip = group(elbow, 0, -.31, 0);
+    return { shoulder, elbow, tip };
+  };
+  const leg = (side) => {
+    const hip = group(hips, side * .085, -.04, 0);
+    const thigh = capsule(.055, .32); thigh.position.y = -.2; hip.add(thigh);
+    const knee = group(hip, 0, -.41, 0);
+    const shin = capsule(.044, .33); shin.position.y = -.2; knee.add(shin);
+    const ankle = group(knee, 0, -.42, 0);
+    const foot = capsule(.035, .13); foot.rotation.x = Math.PI / 2; foot.position.set(0, -.015, .05); ankle.add(foot);
+    return { hip, knee, ankle };
+  };
+  const armL = arm(-1), armR = arm(1), legL = leg(-1), legR = leg(1);
+  const legPose = (l, phase) => {
+    // Thigh swings forward and back; the knee bends most just after toe-off; the foot stays level.
+    const swing = Math.sin(phase);
+    l.hip.rotation.x = -.42 * swing;
+    l.knee.rotation.x = .12 + .75 * Math.max(0, Math.sin(phase + 1.25));
+    l.ankle.rotation.x = -(l.hip.rotation.x + l.knee.rotation.x) * .6;
+  };
+  const target = new THREE.Vector3(), local = new THREE.Vector3();
+  return {
+    root,
+    update(t, petal) {
+      const walkT = clamp01((Math.min(t, T.footInHole) - T.walk[0]) / (T.footInHole - T.walk[0]));
+      const walking = t >= T.walk[0] && t < T.footInHole;
+      const startEase = smoothstep(T.walk[0], T.walk[0] + .35, t);           // he eases into the first step
+      const phase = Math.max(0, Math.min(t, T.footInHole) - T.walk[0]) / CYCLE * TAU;
+      const gait = walking ? startEase : 0;
+      const z = FIGURE_START_Z - FIGURE_SPEED * Math.max(0, Math.min(t, T.footInHole) - T.walk[0]);
+      root.position.set(HOLE.x * walkT, 0, z);
+      root.rotation.y = Math.PI;
+      // Legs and hips.
+      legPose(legL, phase); legPose(legR, phase + Math.PI);
+      for (const l of [legL, legR]) { l.hip.rotation.x *= gait; l.knee.rotation.x = lerp(.05, l.knee.rotation.x, gait); l.ankle.rotation.x *= gait; }
+      hips.position.y = PELVIS_Y + gait * (.018 * Math.cos(2 * phase) - .012);
+      hips.rotation.y = gait * .07 * Math.sin(phase);
+      chest.rotation.y = -gait * .11 * Math.sin(phase);
+      // Arms swing opposite the legs, elbows soft.
+      armL.shoulder.rotation.set(gait * .32 * Math.sin(phase), 0, -.08);
+      armL.elbow.rotation.x = -.22 - gait * .12 * Math.max(0, Math.sin(phase));
+      // Distraction: the head follows the petal; the right arm rises to catch it; the chest lifts.
+      const look = smoothstep(1.2, 1.9, t);
+      if (petal) {
+        neck.worldToLocal(target.copy(petal));
+        local.copy(target).normalize();
+        const yaw = Math.atan2(local.x, local.z), pitch = Math.atan2(local.y, Math.hypot(local.x, local.z));
+        neck.rotation.set(-pitch * .7 * look, yaw * .7 * look, 0);
+      } else neck.rotation.set(-.3 * look, .2 * look, 0);
+      const reach = smoothstep(1.85, 2.65, t);
+      armR.shoulder.rotation.set(lerp(-gait * .32 * Math.sin(phase), -2.55, reach), 0, lerp(.08, -.22, reach));
+      armR.elbow.rotation.x = lerp(-.25, -.08, reach);
+      chest.rotation.x = -.07 * reach;
+      // The foot finds nothing: weight pitches forward, the free arm startles up, then he is gone.
+      const fall = smoothstep(T.footInHole, T.freeze[1], t);
+      if (t >= T.footInHole) {
+        legR.hip.rotation.x = -.55; legR.knee.rotation.x = .05; legR.ankle.rotation.x = .2;
+        legL.hip.rotation.x = .3; legL.knee.rotation.x = .45;
+        hips.rotation.x = .22 * fall; hips.position.y = PELVIS_Y - .08 * fall;
+        armL.shoulder.rotation.set(-1.1 * fall, 0, -.35 * fall); armL.elbow.rotation.x = -.5 * fall;
+      } else hips.rotation.x = 0;
+      root.position.y = t >= T.drop[0] ? -2.4 * span(T.drop, t) : 0;
+      root.visible = t < T.drop[1];
+    },
+    handWorld(out) { return armR.tip.getWorldPosition(out); },
+  };
+})();
+
+// ================= Real petals: drifters, giants, the cover, the hero =================
+const petalVertex = /* glsl */`
+  attribute vec2 aCellSeed; attribute vec3 aShape; attribute float aFlutter;
+  uniform float uTime;
+  varying vec2 vUv; varying vec3 vNormal; varying vec3 vView; varying float vDepth; varying float vCell;
+  void main() {
+    vec3 p = position;
+    float phase = uTime * 6.0 + aCellSeed.y * 31.0;
+    float cx = aShape.x + aFlutter * sin(phase), cy = aShape.y + aFlutter * .6 * sin(phase * 1.3 + 1.7), tw = aShape.z + aFlutter * .5 * cos(phase * .8);
+    p.z += cx * p.x * p.x + cy * p.y * p.y + tw * p.x * p.y;
+    vec3 n = normalize(vec3(-(2.0 * cx * p.x + tw * p.y), -(2.0 * cy * p.y + tw * p.x), 1.0));
+    vec4 mv = viewMatrix * modelMatrix * instanceMatrix * vec4(p, 1.0);
+    vNormal = normalize(mat3(viewMatrix) * mat3(modelMatrix) * mat3(instanceMatrix) * n);
+    vView = -mv.xyz; vDepth = -mv.z; vUv = uv; vCell = aCellSeed.x;
+    gl_Position = projectionMatrix * mv;
+  }
+`;
+const petalFragment = /* glsl */`
+  #define MAX_BLUR_BIAS 3.6
+  uniform sampler2D uAtlas; uniform vec2 uGrid; uniform vec3 uLightDir; uniform float uFocus; uniform float uNearBlur; uniform float uOpacity;
+  varying vec2 vUv; varying vec3 vNormal; varying vec3 vView; varying float vDepth; varying float vCell;
+  void main() {
+    float col = mod(vCell, uGrid.x), row = floor(vCell / uGrid.x + .001);
+    vec2 uv = (vec2(col, uGrid.y - 1.0 - row) + vUv) / uGrid;
+    float near = max(uFocus - vDepth, 0.0) / uFocus;
+    vec4 tex = texture2D(uAtlas, uv, clamp(near * near * uNearBlur, 0.0, MAX_BLUR_BIAS));
+    if (tex.a < .004) discard;
+    vec3 N = normalize(vNormal); vec3 base = tex.rgb;
+    if (!gl_FrontFacing) { N = -N; base *= vec3(.94, .88, .91); }
+    vec3 L = normalize(uLightDir); vec3 V = normalize(vView);
+    float ndl = dot(N, L);
+    vec3 c = base * (.84 + .2 * max(ndl, 0.0)) + base * vec3(1.0, .82, .86) * max(-ndl, 0.0) * .45
+           + pow(max(dot(reflect(-L, N), V), 0.0), 22.0) * .1;
+    gl_FragColor = vec4(c, tex.a * uOpacity);
+  }
+`;
+const makePetalMesh = (texture, grid, count, focus, nearBlur) => {
+  const geometry = new THREE.PlaneGeometry(1, 1, 10, 10);
+  geometry.setAttribute("aCellSeed", new THREE.InstancedBufferAttribute(new Float32Array(count * 2), 2));
+  geometry.setAttribute("aShape", new THREE.InstancedBufferAttribute(new Float32Array(count * 3), 3));
+  geometry.setAttribute("aFlutter", new THREE.InstancedBufferAttribute(new Float32Array(count), 1));
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      uAtlas: { value: texture }, uGrid: { value: new THREE.Vector2(...grid) }, uTime: { value: 0 },
+      uLightDir: { value: new THREE.Vector3(-.45, .8, .5) }, uFocus: { value: focus }, uNearBlur: { value: nearBlur }, uOpacity: { value: 1 },
+    },
+    vertexShader: petalVertex, fragmentShader: petalFragment, transparent: true, depthWrite: false, side: THREE.DoubleSide,
+  });
+  const mesh = new THREE.InstancedMesh(geometry, material, count);
+  mesh.frustumCulled = false; mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  return mesh;
+};
+const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), V3 = new THREE.Vector3(), S3 = new THREE.Vector3(), E = new THREE.Euler();
+const setPetal = (mesh, i, pos, rot, size, cell, seed, shape, flutter) => {
+  Q.setFromEuler(E.set(rot[0], rot[1], rot[2]));
+  M.compose(pos, Q, S3.setScalar(size));
+  mesh.setMatrixAt(i, M);
+  const g = mesh.geometry;
+  g.attributes.aCellSeed.setXY(i, cell, seed); g.attributes.aShape.setXYZ(i, shape[0], shape[1], shape[2]); g.attributes.aFlutter.setX(i, flutter);
+};
+const flush = (mesh, count) => {
+  mesh.count = count;
+  mesh.instanceMatrix.needsUpdate = true;
+  for (const k of ["aCellSeed", "aShape", "aFlutter"]) mesh.geometry.attributes[k].needsUpdate = true;
+};
+const bezier = (a, b, c, t, out) => out.set(
+  (1 - t) * (1 - t) * a.x + 2 * (1 - t) * t * b.x + t * t * c.x,
+  (1 - t) * (1 - t) * a.y + 2 * (1 - t) * t * b.y + t * t * c.y,
+  (1 - t) * (1 - t) * a.z + 2 * (1 - t) * t * b.z + t * t * c.z);
+
+// ---- Storm 1: petals drift past him; one comes to his hand ----
+const DRIFTER_COUNT = 22, DRIFT_WINDOW = 1.7;
+const DRIFTERS = Array.from({ length: DRIFTER_COUNT }, (_, i) => {
+  const side = i % 2 ? 1 : -1;
+  return {
+    t0: .95 + i * DRIFT_WINDOW / DRIFTER_COUNT + rng() * .08, dur: 2.2 + rng() * .8, cell: (rng() * ATLAS_CELLS) | 0, seed: rng(), size: .18 + rng() * .08,
+    from: new THREE.Vector3(side * (1.6 + rng()), 2.8 + rng() * .8, FIGURE_START_Z - 1 - rng() * 3),
+    mid: new THREE.Vector3(side * .4 + (rng() - .5), 2.1 + rng() * .6, FIGURE_START_Z - .5 + rng() * 2),
+    to: new THREE.Vector3(-side * (2 + rng() * 2), .6 + rng(), FIGURE_START_Z + 3 + rng() * 3),
+    spin: [rng() * 2, rng() * 2, rng() * 2], shape: [(rng() - .5) * .6, rng() * .3, (rng() - .5) * .3],
+  };
+});
+const CATCHER = DRIFTERS[10];
+CATCHER.t0 = 1.6; CATCHER.dur = 2.2; CATCHER.catch = true;
+const drifters = makePetalMesh(atlas, ATLAS, DRIFTER_COUNT, 6, 4);
+world.add(drifters);
+const handPos = new THREE.Vector3(), catchPos = new THREE.Vector3(), catchMid = new THREE.Vector3();
+let catchVisible = false;
+const updateDrifters = (t) => {
+  let n = 0;
+  catchVisible = false;
+  for (const d of DRIFTERS) {
+    const u = (t - d.t0) / d.dur;
+    if (u <= 0 || u >= 1 || t >= T.hit) continue;
+    if (d.catch) {
+      // It floats just beyond his fingertips: he reaches, it stays out of reach.
+      figure.handWorld(handPos);
+      catchMid.copy(d.mid).lerp(handPos.clone().add(V3.set(.08, .22, -.25)), smoothstep(0, .6, u));
+      bezier(d.from, catchMid, catchMid, Math.min(1, u / .6), catchPos);
+      V3.copy(catchPos); catchVisible = true;
+    } else bezier(d.from, d.mid, d.to, u, V3);
+    setPetal(drifters, n++, V3, [d.spin[0] * t, d.spin[1] * t + 1, d.spin[2] * t], d.size, d.cell, d.seed, d.shape, .05);
+  }
+  flush(drifters, n);
+};
+
+// ---- Storm 2, near layer: a few giant petals drift past the lens, slowly ----
+const GIANT_COUNT = 10;
+const GIANTS = Array.from({ length: GIANT_COUNT }, (_, i) => {
+  const side = i % 2 ? 1 : -1;
+  return {
+    t0: lerp(T.giants[0], T.giants[1], i / (GIANT_COUNT - 1)) + (rng() - .5) * .08, dur: .95 + rng() * .35,
+    cell: (rng() * ATLAS_CELLS) | 0, seed: rng(), size: 1.5 + rng() * .8,
+    from: new THREE.Vector3(side * (2.8 + rng()), (rng() - .5) * 1.8, -(3 + rng() * 1.4)),
+    to: new THREE.Vector3(-side * (2.6 + rng()), (rng() - .5) * 1.8, -(1.1 + rng() * .4)),
+    roll: rng() * TAU, spin: (rng() - .5) * 1.4, shape: [(rng() - .5) * .5, .1 + rng() * .25, (rng() - .5) * .3],
+  };
+});
+const giants = makePetalMesh(atlas, ATLAS, GIANT_COUNT, 3.2, 2.6);
+lens.add(giants);
+const updateGiants = (t) => {
+  let n = 0;
+  for (const g of GIANTS) {
+    const u = (t - g.t0) / g.dur;
+    if (u <= 0 || u >= 1) continue;
+    V3.copy(g.from).lerp(g.to, easeInOutSine(u));
+    setPetal(giants, n++, V3, [.3 * Math.sin(u * 2 + g.seed * 9), .25 * Math.cos(u * 1.5), g.roll + g.spin * u], g.size, g.cell, g.seed, g.shape, .04);
+  }
+  flush(giants, n);
+};
+
+// ---- The cover: the last petal arrives slowly, fills the frame, then peels away ----
+const cover = makePetalMesh(heroTex, [1, 1], 1, 1.2, 0);
+lens.add(cover);
+const COVER_REST = new THREE.Vector3(0, 0, -.5), COVER_FROM = new THREE.Vector3(.4, -.3, -7);
+const COVER_SIZE = 3;
+const updateCover = (t) => {
+  if (t < T.cover[0] || t > T.peel[1]) { flush(cover, 0); return; }
+  const arrive = easeInOutSine(span(T.cover, t)), hold = span(T.coverHold, t), peel = easeInOut(span(T.peel, t));
+  V3.copy(COVER_FROM).lerp(COVER_REST, arrive);
+  V3.z += .08 * hold;
+  V3.x -= peel * 1.6; V3.z -= peel * .2;
+  setPetal(cover, 0, V3, [0, peel * 1.75, .25 + hold * .06 - peel * .3], COVER_SIZE * (1 + .06 * hold), 0, .37, [-.12 * (1 - peel), .18, .05], .02 * (1 - arrive));
+  flush(cover, 1);
+};
+
+// ---- The hero: the storm thins, one sleeping petal settles ----
+const sleeper = makePetalMesh(heroTex, [1, 1], 1, 6.8, 0);
+hero.add(sleeper);
+const THINNING_COUNT = 18;
+const thinning = makePetalMesh(atlas, ATLAS, THINNING_COUNT, 6, 3);
+hero.add(thinning);
+const THINNING = Array.from({ length: THINNING_COUNT }, () => ({
+  from: new THREE.Vector3(-4 - rng() * 3, 1.5 + rng() * 2.5, -4 - rng() * 8), to: new THREE.Vector3(5 + rng() * 3, -2 - rng() * 2, -2 - rng() * 6),
+  t0: T.peel[0] - .4 + rng() * 1.6, dur: 3.5 + rng() * 2, cell: (rng() * ATLAS_CELLS) | 0, seed: rng(), size: .3 + rng() * .2,
+}));
+const updateHero = (t) => {
+  const k = easeOut(span(T.heroLand, t)), breath = Math.sin(t * TAU / 7);
+  V3.set(.15, -.55 + .55 * (1 - k), 3.2);
+  setPetal(sleeper, 0, V3, [-.95, .12, .55 - .5 * (1 - k)], 1.45, 0, .37, [-.18 + .035 * breath + .08 * (1 - k), .22, .1], .05 * (1 - k));
+  flush(sleeper, 1);
+  let n = 0;
+  for (const p of THINNING) {
+    const u = (t - p.t0) / p.dur;
+    if (u <= 0 || u >= 1) continue;
+    V3.copy(p.from).lerp(p.to, u); V3.y += Math.sin(u * 6 + p.seed * 9) * .3;
+    setPetal(thinning, n++, V3, [t * 1.1 + p.seed * 5, t * .8, t * .6], p.size, p.cell, p.seed, [.2, .2, .1], .06);
+  }
+  flush(thinning, n);
+};
+
+// ================= Wind lines: few, faint, slow =================
+const fx = document.getElementById("fx");
+const fctx = fx.getContext("2d");
+const WIND_LINE_COUNT = 24, WIND_LINE_ALPHA = .28;
+const WIND_LINES = Array.from({ length: WIND_LINE_COUNT }, () => ({ t0: lerp(T.windLines[0], T.windLines[1] - .8, rng()), dur: .8 + rng() * .5, ang: rng() * TAU, curl: (rng() - .5) * .8, width: .8 + rng() * 1, len: .2 + rng() * .25 }));
+const projected = new THREE.Vector3();
+const drawFx = (t) => {
+  const w = fx.clientWidth, h = fx.clientHeight;
+  fctx.clearRect(0, 0, w, h);
+  if (t < T.windLines[0] || t > T.windLines[1] + 1.5) return;
+  projected.set(HOLE.x, .4, HOLE.z).project(camera);
+  const cx = (projected.x * .5 + .5) * w, cy = (-projected.y * .5 + .5) * h, R = Math.hypot(w, h) * .62;
+  fctx.lineCap = "round";
+  for (const l of WIND_LINES) {
+    const u = (t - l.t0) / l.dur;
+    if (u <= 0 || u >= 1) continue;
+    const head = easeInOutSine(u), tail = Math.max(0, head - l.len);
+    fctx.strokeStyle = `rgba(255,255,255,${WIND_LINE_ALPHA * Math.sin(u * Math.PI)})`;
+    fctx.lineWidth = l.width;
+    fctx.beginPath();
+    for (let s = 0; s <= 10; s++) {
+      const r = lerp(tail, head, s / 10), a = l.ang + l.curl * r;
+      const x = cx + Math.cos(a) * r * R, y = cy + Math.sin(a) * r * R * .75;
+      if (s) fctx.lineTo(x, y); else fctx.moveTo(x, y);
+    }
+    fctx.stroke();
+  }
+};
+
+// ================= Frame =================
+const nameEl = document.getElementById("name");
+const look = new THREE.Vector3();
+const render = (t) => {
+  const push = CAMERA.pushIn * smoothstep(0, T.hit + 1, t);
+  camera.position.set(0, CAMERA.y, CAMERA.z - push);
+  camera.lookAt(look.set(0, CAMERA.lookY, CAMERA.lookZ));
+  camera.updateMatrixWorld();
+  fieldUniforms.uTime.value = t;
+  fieldUniforms.uStorm.value = t - T.hit;
+  fieldUniforms.uCam.value.copy(camera.position);
+  // Pose once to find his hand, place the petal he reaches for, then pose again so his head follows it.
+  figure.update(t, null);
+  updateDrifters(t);
+  figure.update(t, catchVisible ? catchPos : null);
+  updateGiants(t); updateCover(t); updateHero(t);
+  for (const m of [drifters, giants, cover, sleeper, thinning]) m.material.uniforms.uTime.value = t;
+  renderer.clear();
+  if (t < T.worldOff) renderer.render(world, camera); else renderer.render(hero, heroCamera);
+  renderer.clearDepth();
+  renderer.render(lens, lensCamera);
+  drawFx(t);
+  const n = smoothstep(T.nameIn[0], T.nameIn[1], t);
+  nameEl.style.opacity = String(n); nameEl.style.transform = `translateY(${(1 - n) * 8}px)`;
+};
+
+const resize = () => {
+  const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR), w = innerWidth, h = innerHeight;
+  renderer.setPixelRatio(dpr); renderer.setSize(w, h, false);
+  for (const c of [camera, lensCamera, heroCamera]) { c.aspect = w / h; c.updateProjectionMatrix(); }
+  fx.width = Math.round(w * dpr); fx.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+};
+
+// ================= Sound (synthesised; starts only from a click) =================
+let audio = null;
+const playSound = () => {
+  const ac = new AudioContext(), t0 = ac.currentTime + .05, out = ac.createGain();
+  out.connect(ac.destination);
+  const noise = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate);
+  const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const noiseSource = (loop = true) => { const s = ac.createBufferSource(); s.buffer = noise; s.loop = loop; return s; };
+  const at = (sec) => t0 + sec;
+  const wind = noiseSource(), windF = ac.createBiquadFilter(), windG = ac.createGain();
+  windF.type = "lowpass"; windF.frequency.value = 420; windG.gain.value = 0;
+  wind.connect(windF).connect(windG).connect(out); wind.start(t0);
+  windG.gain.setValueAtTime(0, at(T.breeze)); windG.gain.linearRampToValueAtTime(.1, at(T.breeze + .8));
+  windG.gain.setValueAtTime(.1, at(T.hit)); windG.gain.setValueAtTime(0, at(T.hit + .001));
+  windG.gain.setValueAtTime(0, at(T.hit + .1)); windG.gain.linearRampToValueAtTime(.24, at(T.hit + .6));
+  windF.frequency.setValueAtTime(420, at(T.hit + .1)); windF.frequency.linearRampToValueAtTime(1100, at(T.hit + 1.2));
+  windF.frequency.linearRampToValueAtTime(260, at(T.coverHold[0]));
+  windG.gain.linearRampToValueAtTime(.06, at(T.coverHold[1])); windG.gain.linearRampToValueAtTime(0, at(T.end));
+  for (const s of STEP_TIMES) {
+    const f = noiseSource(false), bp = ac.createBiquadFilter(), g = ac.createGain();
+    bp.type = "bandpass"; bp.frequency.value = 160; bp.Q.value = 1.2;
+    g.gain.setValueAtTime(0, at(s)); g.gain.linearRampToValueAtTime(.45, at(s + .012)); g.gain.exponentialRampToValueAtTime(.001, at(s + .16));
+    f.connect(bp).connect(g).connect(out); f.start(at(s)); f.stop(at(s + .2));
+  }
+  const chime = (s, gain) => {
+    for (const [freq, k] of [[1318.5, 1], [1975.5, .5], [2637, .25]]) {
+      const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = freq;
+      g.gain.setValueAtTime(0, at(s)); g.gain.linearRampToValueAtTime(gain * k, at(s + .01)); g.gain.exponentialRampToValueAtTime(.0005, at(s + 1.6));
+      o.connect(g).connect(out); o.start(at(s)); o.stop(at(s + 1.7));
+    }
+  };
+  chime(1, .045); chime(1.75, .035); chime(T.peel[0] + .3, .045);
+  const whoosh = noiseSource(false), wf = ac.createBiquadFilter(), wg = ac.createGain();
+  wf.type = "lowpass"; wf.frequency.setValueAtTime(110, at(T.hit + .1)); wf.frequency.exponentialRampToValueAtTime(700, at(T.hit + .7)); wf.frequency.exponentialRampToValueAtTime(180, at(T.hit + 2.2));
+  wg.gain.setValueAtTime(0, at(T.hit + .1)); wg.gain.linearRampToValueAtTime(.7, at(T.hit + .3)); wg.gain.exponentialRampToValueAtTime(.01, at(T.hit + 2.3));
+  whoosh.connect(wf).connect(wg).connect(out); whoosh.start(at(T.hit + .1)); whoosh.stop(at(T.hit + 2.4));
+  const sub = ac.createOscillator(), sg = ac.createGain(); sub.frequency.setValueAtTime(52, at(T.hit + .1)); sub.frequency.exponentialRampToValueAtTime(30, at(T.hit + .9));
+  sg.gain.setValueAtTime(0, at(T.hit + .1)); sg.gain.linearRampToValueAtTime(.45, at(T.hit + .2)); sg.gain.exponentialRampToValueAtTime(.001, at(T.hit + 1.1));
+  sub.connect(sg).connect(out); sub.start(at(T.hit + .1)); sub.stop(at(T.hit + 1.2));
+  return { ac, t0 };
+};
+
+// ================= Loop and controls =================
+const params = new URLSearchParams(location.search);
+const frozen = params.has("t");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let start = 0, raf = 0;
+const stats = { frames: 0, ms: 0 };
+const loop = (now) => {
+  raf = 0;
+  const t = audio ? audio.ac.currentTime - audio.t0 : (now - start) / 1000;
+  const c0 = performance.now(); render(Math.min(t, T.end + 30)); stats.frames++; stats.ms += performance.now() - c0;
+  if (!document.hidden) raf = requestAnimationFrame(loop);
+};
+const play = (withSound) => {
+  if (audio) { audio.ac.close(); audio = null; }
+  if (withSound) audio = playSound();
+  start = performance.now();
+  cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
+};
+const panel = document.getElementById("panel"), toggle = document.getElementById("panel-toggle");
+toggle.addEventListener("click", () => { panel.hidden = !panel.hidden; });
+window.addEventListener("keydown", (e) => { if (e.key === "t" || e.key === "T") { toggle.hidden = !toggle.hidden; panel.hidden = toggle.hidden; } });
+document.getElementById("replay").addEventListener("click", () => play(false));
+document.getElementById("replay-sound").addEventListener("click", () => play(true));
+document.addEventListener("visibilitychange", () => { if (!document.hidden && !frozen && !raf) raf = requestAnimationFrame(loop); });
+setInterval(() => { if (stats.frames) { document.getElementById("stat").textContent = `render ${(stats.ms / stats.frames).toFixed(2)} ms`; stats.frames = 0; stats.ms = 0; } }, 1000);
+
+// ================= Review hooks =================
+window.__sceneAt = (t) => { document.getElementById("sheet")?.remove(); render(t); return t; };
+window.__sceneSheet = (from, to, count, cols) => {
+  document.getElementById("sheet")?.remove();
+  const sheet = document.createElement("canvas"); sheet.id = "sheet";
+  const cw = Math.floor(innerWidth / cols), ch = Math.floor(cw * innerHeight / innerWidth), rows = Math.ceil(count / cols);
+  sheet.width = cw * cols; sheet.height = ch * rows;
+  Object.assign(sheet.style, { position: "fixed", left: "0", top: "0", zIndex: "9", width: `${cw * cols}px`, height: `${ch * rows}px` });
+  const s = sheet.getContext("2d"); s.font = "11px Inter, sans-serif";
+  for (let i = 0; i < count; i++) {
+    const t = lerp(from, to, count > 1 ? i / (count - 1) : 0);
+    render(t);
+    const x = (i % cols) * cw, y = ((i / cols) | 0) * ch;
+    s.drawImage(gl, x, y, cw, ch); s.drawImage(fx, x, y, cw, ch);
+    s.fillStyle = "#fff"; s.fillText(`${t.toFixed(2)} s`, x + 6, y + 14);
+  }
+  document.body.append(sheet); return count;
+};
+/** Mean screen luminance per frame, for the photosensitivity check. */
+window.__sceneLuma = (from, to, fps) => {
+  const small = Object.assign(document.createElement("canvas"), { width: 64, height: 40 }), sc = small.getContext("2d", { willReadFrequently: true });
+  const out = [];
+  for (let t = from; t <= to; t += 1 / fps) {
+    render(t); sc.drawImage(gl, 0, 0, 64, 40);
+    const d = sc.getImageData(0, 0, 64, 40).data; let sum = 0;
+    for (let i = 0; i < d.length; i += 4) sum += .2126 * d[i] + .7152 * d[i + 1] + .0722 * d[i + 2];
+    out.push(+(sum / (d.length / 4) / 255).toFixed(3));
+  }
+  return out;
+};
+window.__sceneBench = (from, frames) => {
+  const ctx = renderer.getContext(); let ms = 0, worst = 0;
+  for (let i = 0; i < frames; i++) { const t0 = performance.now(); render(from + i / 60); ctx.finish(); const d = performance.now() - t0; ms += d; worst = Math.max(worst, d); }
+  return { avgMs: +(ms / frames).toFixed(2), worstMs: +worst.toFixed(1) };
+};
+
+resize();
+addEventListener("resize", () => { resize(); if (frozen) render(Number(params.get("t"))); });
+renderer.compile(world, camera); renderer.compile(hero, heroCamera); renderer.compile(lens, lensCamera);
+if (params.has("tweak")) { toggle.hidden = false; panel.hidden = false; }
+if (frozen) render(Number(params.get("t")));
+else if (reduced) render(T.end);
+else play(false);
+</script>
+</body>
+</html>
