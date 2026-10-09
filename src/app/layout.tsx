@@ -1,168 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Inter,
-  Allison,
-  Benne,
-  Geist_Mono,
-} from "next/font/google";
 import localFont from "next/font/local";
-import { LazyMotion, domAnimation } from "framer-motion";
-import "./globals.css";
-import "./legacy-components.css";
-import "./layout-tokens.css";
-import { ContactEnding } from "@/components/sections/ContactEnding";
-import { Nav } from "@/components/sections/Nav";
-import { LayoutMetrics } from "@/components/LayoutMetrics";
 import { PostHogProvider } from "@/components/PostHogProvider";
-
-/** Display serif, weight 300 roman — headings only. */
-const newsreader = localFont({
-  src: [
-    { path: "./fonts/Newsreader-Variable.ttf", style: "normal" },
-    { path: "./fonts/Newsreader-Italic-Variable.ttf", style: "italic" },
-  ],
-  variable: "--font-newsreader",
-  display: "swap",
-});
-
-/** Body copy. */
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-/** UI / labels / nav / meta. */
-const dmMono = localFont({
-  src: [
-    { path: "./fonts/DMMono-Light.ttf", weight: "300", style: "normal" },
-    { path: "./fonts/DMMono-Regular.ttf", weight: "400", style: "normal" },
-    { path: "./fonts/DMMono-Medium.ttf", weight: "500", style: "normal" },
-  ],
-  variable: "--font-jetbrains",
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-/** Logo mark — "GG" wordmark. */
-const allison = Allison({
-  variable: "--font-allison",
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-});
-
-/** Editorial nameplate used in the landing hero. */
-const benne = Benne({
-  variable: "--font-benne",
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-});
-
-/** Local Seratonin display face used in the landing hero. */
-const seratonin = localFont({
-  src: "./fonts/Seratonin-Regular.otf",
-  variable: "--font-seratonin-local",
-  display: "swap",
-});
-
-const editorial = localFont({
-  src: [
-    { path: "../../public/fonts/itc-garamond/ITCGaramondStd-Lt.ttf", weight: "300", style: "normal" },
-    { path: "../../public/fonts/itc-garamond/ITCGaramondStd-LtIta.ttf", weight: "300", style: "italic" },
-    { path: "../../public/fonts/itc-garamond/ITCGaramondStd-Bk.ttf", weight: "700", style: "normal" },
-  ],
-  variable: "--font-editorial-local",
-  display: "swap",
-});
-
-const projectWordmark = localFont({
-  src: "../../public/fonts/Pixelta.ttf",
-  variable: "--font-project-local",
-  display: "swap",
-});
-
-const albert = localFont({
-  src: "../../public/fonts/frosted/albert.ttf",
-  variable: "--font-edna-ui",
-  weight: "400",
-  display: "swap",
-});
-const switzer = localFont({
-  src: "../../public/fonts/frosted/switzer.woff2",
-  variable: "--font-giants-body",
-  weight: "400",
-  display: "swap",
-});
-
+import { PaperShell } from "@/components/paper/PaperShell";
+import "./globals.css";
+const serif = localFont({ src: "../../public/assets/fonts/Newsreader-VariableFont_opsz,wght.ttf", variable: "--font-paper-serif", display: "swap", weight: "200 800" });
+const script = localFont({ src: "../../public/reference-dwija/JaneAusten.ttf", variable: "--font-paper-script", display: "swap" });
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-const TITLE = "Gaurav Gupta — Design Engineer";
-const DESCRIPTION =
-  "I design and build thoughtful digital products, moving from idea and interface to shipped software.";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  robots: { index: false, follow: false },
-  title: TITLE,
-  description: DESCRIPTION,
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: "/",
-    siteName: "Gaurav Gupta",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-  },
+ metadataBase: new URL(SITE_URL), title: "Gaurav Gupta — Design & code",
+ description: "A small collection of products, experiments and notes by Gaurav Gupta, a designer and engineer in Bengaluru.",
+ robots: { index: false, follow: false },
+ openGraph: { title: "Gaurav Gupta — Design & code", description: "Products, experiments and notes. A little corner of the internet.", url: "/", siteName: "Gaurav Gupta", type: "website" },
+ twitter: { card: "summary_large_image", title: "Gaurav Gupta — Design & code" },
 };
-
-export const viewport: Viewport = {
-  themeColor: "#080808",
-  viewportFit: "cover",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${newsreader.variable} ${inter.variable} ${dmMono.variable} ${geistMono.variable} ${allison.variable} ${benne.variable} ${seratonin.variable} ${editorial.variable} ${projectWordmark.variable} ${albert.variable} ${switzer.variable}`}
-    >
-      <body>
-        <script
-          // Runs before paint so a stored "dark" choice never flashes light first.
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}",
-          }}
-        />
-        <PostHogProvider>
-          {/* strict: throws if any component reaches for `motion` (full
-              bundle) instead of `m` — keeps the site on the small
-              domAnimation feature set (whileInView + basic transitions
-              only, no gestures/layout/drag) instead of Framer Motion's
-              full ~35kb bundle. */}
-          <LazyMotion features={domAnimation} strict>
-            <LayoutMetrics />
-            <Nav />
-            {children}
-            <ContactEnding />
-          </LazyMotion>
-        </PostHogProvider>
-      </body>
-    </html>
-  );
+export const viewport: Viewport = { themeColor: "#ffffff", viewportFit: "cover" };
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+ return <html lang="en" className={`${serif.variable} ${script.variable}`}><body><PostHogProvider><PaperShell>{children}</PaperShell></PostHogProvider></body></html>;
 }
