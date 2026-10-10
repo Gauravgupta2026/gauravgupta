@@ -1,15 +1,31 @@
 @import "tailwindcss";
 @theme {
- --color-bg:#ffffff;--color-ink:#1a1a1a;--color-soft-ink:#1a1a1a;--color-mute:#74716d;--color-border:#e8e5df;--color-surface:#fafafa;
- --font-display:var(--font-paper-serif),Georgia,serif;--font-body:var(--font-paper-serif),Georgia,serif;--font-editorial:var(--font-paper-serif),Georgia,serif;--font-mono:ui-monospace,monospace;
+ --color-bg:#fff9e6;--color-ink:#0c0b0b;--color-soft-ink:#0c0b0b;--color-mute:#7e7e7e;--color-border:#e0e0e0;--color-surface:#fff9e6;--color-accent:#3060a0;
+ --font-display:var(--font-site-sans),Arial,sans-serif;--font-body:var(--font-site-sans),Arial,sans-serif;--font-editorial:var(--font-site-sans),Arial,sans-serif;--font-mono:ui-monospace,monospace;
+}
+:root {
+ --cf-bg:#fff9e6;--cf-accent:#3060a0;--cf-ink:#0c0b0b;--cf-muted:#7e7e7e;--cf-faint:rgba(12,11,11,.4);--cf-rule:rgba(12,11,11,.1);--cf-white:#fff;
+ --cf-font:var(--font-site-sans),Arial,sans-serif;
+ --cf-headline-size:55px;--cf-headline-leading:50px;--cf-headline-tracking:-1px;
+ --cf-impact-size:42px;--cf-impact-leading:40px;--cf-impact-tracking:-.8px;
+ --cf-secondary-size:28px;--cf-secondary-leading:30px;--cf-secondary-tracking:-.8px;
+ --cf-body-size:14px;--cf-body-leading:15px;--cf-body-tracking:.2px;
+ --cf-label-size:10px;--cf-label-leading:10px;--cf-label-tracking:.4px;
+ --cf-gutter:30px;
 }
 *{box-sizing:border-box}
-html{background:#fafafa;color:#1a1a1a;scrollbar-gutter:stable}
-body{margin:0;font:400 16px/1.5 var(--font-paper-serif),Georgia,serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html{background:var(--cf-bg);color:var(--cf-ink);scrollbar-gutter:stable}
+body{margin:0;font:400 var(--cf-body-size)/var(--cf-body-leading) var(--cf-font);letter-spacing:var(--cf-body-tracking);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 body:has(dialog[open]){overflow:hidden}
 a{color:inherit}
-button,input{font:inherit}
+button,input,textarea,select{font:inherit}
 button{color:inherit}
 img{max-width:100%}
-::selection{background:#d9739a66;color:inherit}
+::selection{background:#0c0b0b26;color:inherit}
+@media(max-width:767px){:root{--cf-headline-size:26px;--cf-headline-leading:28px;--cf-headline-tracking:-.2px;--cf-impact-size:26px;--cf-impact-leading:28px;--cf-impact-tracking:-.2px;--cf-secondary-size:20px;--cf-secondary-leading:24px;--cf-secondary-tracking:-.3px;--cf-body-size:14px;--cf-body-leading:20px;--cf-label-tracking:.5px;--cf-gutter:24px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{scroll-behavior:auto!important}}
+
+/* Shared by the approved hero, project captions and footers. */
+@font-face{font-family:"ITC Garamond Hero";src:url("/fonts/itc-garamond/ITCGaramondStd-Bk.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap}
+
+:root{--portfolio-serif:"ITC Garamond Hero",Georgia,serif;--portfolio-sans:var(--font-site-sans),Arial,sans-serif;--portfolio-title-size:20px;--portfolio-body-size:16px;--portfolio-label-size:12px;--portfolio-column:660px;--portfolio-gutter:24px}

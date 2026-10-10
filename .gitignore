@@ -49,3 +49,7 @@ tmp/
 design-reports/
 output/
 src/app/prototype/
+
+# Reference research stays local; ship only assets used by the implementation.
+/docs/reference-*/
+/public/fonts/neue-montreal/SOURCES.md

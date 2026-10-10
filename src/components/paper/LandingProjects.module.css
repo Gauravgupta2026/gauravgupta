@@ -1,0 +1,21 @@
+.section{--font-editorial-local:var(--cf-font);position:relative;padding:calc(48px / var(--page-scale)) 0 calc(64px / var(--page-scale));scroll-margin-top:64px}
+.list{display:grid;gap:calc(80px / var(--page-scale));max-width:calc(660px / var(--page-scale));margin:0 auto}
+.project{min-width:0}
+.preview{position:relative;display:block;aspect-ratio:3;overflow:hidden;border-radius:5px;background:#fffdf6;color:inherit}
+.preview img{object-fit:contain;background:#fffdf6}
+.preview strong{font-weight:400}
+.caption{--cf-font:"ITC Garamond Hero",Georgia,serif;font-family:var(--cf-font);display:grid;grid-template-columns:1fr 1fr;gap:calc(24px / var(--page-scale));margin-top:calc(24px / var(--page-scale));align-items:start}
+.name{font:400 var(--landing-label-size)/1.5 var(--font-site-sans),Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--cf-muted);margin:0 0 12px}
+.caption h3{font:400 var(--landing-title-size)/1.25 var(--cf-font);letter-spacing:-.005em;margin:0;max-width:21ch;text-wrap:balance}
+.caption h3 a{text-decoration:none!important}
+.description>p:first-child{font-size:var(--landing-body-size);line-height:var(--landing-body-leading);letter-spacing:-.005em;color:var(--cf-muted);margin:0 0 20px;max-width:44ch}
+.description>a{font-family:var(--font-site-sans),Arial,sans-serif;font-weight:400;letter-spacing:0;display:inline-flex;align-items:center;gap:8px;min-height:calc(44px / var(--page-scale));font-size:var(--landing-body-size);line-height:var(--landing-body-leading);text-underline-offset:4px}
+@media(max-width:767px){.section{padding:calc(32px / var(--page-scale)) 0 calc(48px / var(--page-scale))}.list{gap:calc(48px / var(--page-scale))}.preview{aspect-ratio:1.5}.caption{grid-template-columns:1fr;gap:20px;margin-top:24px}.caption h3{max-width:25ch}.name{margin-bottom:8px}}
+@media(forced-colors:active){.preview{border:1px solid CanvasText}}
+
+.explore{position:relative;text-decoration:none!important}
+.explore::after{content:"";position:absolute;left:0;right:0;bottom:7px;height:6px;background:currentColor;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='6' viewBox='0 0 16 6'%3E%3Cpath d='M0 3 Q4 0 8 3 T16 3' fill='none' stroke='black' stroke-width='1'/%3E%3C/svg%3E") repeat-x 0 0/16px 6px;opacity:0;transition:opacity .2s ease}
+.project[data-focused=true] .explore::after,.explore:focus-visible::after{opacity:1;animation:underlineWave .8s linear infinite}
+@keyframes underlineWave{to{mask-position:-16px 0}}
+@media(prefers-reduced-motion:reduce){.explore::after{opacity:1;animation:none!important;transition:none}}
+@media(forced-colors:active){.explore::after{background:CanvasText;forced-color-adjust:none}}

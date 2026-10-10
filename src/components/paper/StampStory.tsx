@@ -39,7 +39,7 @@ export function StampStory() {
   return <>
     <div ref={scene} className={styles.stampScene}>
       <div className={styles.stampStage}>
-        <div className={styles.stampDeck}>{stamps.map((stamp, index) => <button ref={e => { cards.current[index] = e; }} className={styles.stamp} key={stamp.title} style={{ backgroundColor: stamp.color, "--stamp-order": index } as React.CSSProperties} aria-label={`Read: ${stamp.title}`} onClick={e => { source.current = e.currentTarget; setSelected(index); dialog.current?.showModal(); }}>
+        <div className={styles.stampDeck}>{stamps.map((stamp, index) => <button ref={e => { cards.current[index] = e; }} className={styles.stamp} key={stamp.title} style={{ "--stamp-order": index } as React.CSSProperties} aria-label={`Read: ${stamp.title}`} onClick={e => { source.current = e.currentTarget; setSelected(index); dialog.current?.showModal(); }}>
           <span className={styles.stampNumber}>GAURAV’S · {String(index + 1).padStart(2, "0")}</span>
           <InkDrawing kind={stamp.illustration} className={styles.stampDrawing} />
           <h2>{stamp.title}</h2><p>{stamp.text}</p>
@@ -54,7 +54,7 @@ export function StampStory() {
     </div>
     <dialog ref={dialog} className={styles.lightbox} aria-label="About Gaurav" onClick={e => { if (e.target === e.currentTarget) close(); }} onClose={() => source.current?.focus({ preventScroll: true })}>
       <button className={styles.close} aria-label="Close chapter" onClick={close}>×</button>
-      {selected !== null && <article className={styles.openStamp} style={{ backgroundColor: stamps[selected].color }}><InkDrawing kind={stamps[selected].illustration} className={styles.stampDrawing} /><h2>{stamps[selected].title}</h2><p>{stamps[selected].text}</p></article>}
+      {selected !== null && <article className={styles.openStamp}><InkDrawing kind={stamps[selected].illustration} className={styles.stampDrawing} /><h2>{stamps[selected].title}</h2><p>{stamps[selected].text}</p></article>}
     </dialog>
   </>;
 }

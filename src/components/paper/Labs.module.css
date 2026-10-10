@@ -1,0 +1,17 @@
+.page{min-height:100svh;padding:155px 0 100px}
+.intro{margin:0 var(--cf-gutter) 80px;display:grid;grid-template-columns:1.2fr 1fr;gap:12%;align-items:start}
+.intro h1{font:400 var(--cf-impact-size)/var(--cf-impact-leading) var(--cf-font);letter-spacing:var(--cf-impact-tracking);margin:0;max-width:16ch}
+.intro p{font:400 14px/15px var(--cf-font);letter-spacing:.2px;color:var(--cf-faint);margin:0}
+.controls{margin:0 var(--cf-gutter) 24px;display:flex;justify-content:space-between;align-items:center;font-size:10px;line-height:10px;letter-spacing:.4px;text-transform:uppercase}
+.controls>div{display:flex;gap:8px}
+.controls button{width:44px;height:44px;border:0;background:none;font-size:18px;cursor:pointer}
+.rail{position:relative;display:flex;align-items:flex-start;gap:24px;overflow-x:auto;scroll-snap-type:x proximity;padding:0 var(--cf-gutter) 32px;scroll-padding-inline:var(--cf-gutter);overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:var(--cf-muted) var(--cf-bg)}
+.tile{flex:0 0 360px;min-width:0;scroll-snap-align:start;display:flex;flex-direction:column;align-items:stretch;text-align:left;background:none;border:0;padding:0;color:var(--cf-ink);cursor:pointer}
+.narrow{flex-basis:240px}
+.media{height:300px;display:flex;align-items:flex-end;margin-bottom:20px}
+.media img{display:block;width:100%;height:auto;max-height:300px;object-fit:contain;object-position:bottom}
+.title{display:flex;justify-content:space-between;gap:16px;font-size:14px;line-height:15px;letter-spacing:.2px}
+.caption{font-size:14px;line-height:15px;letter-spacing:.2px;color:var(--cf-muted);margin-top:12px;min-height:30px}
+.kind{font-size:10px;line-height:10px;letter-spacing:.4px;text-transform:uppercase;margin-top:16px;color:var(--cf-muted)}
+.tile:hover .title{text-decoration:underline;text-underline-offset:4px}
+@media(max-width:767px){.page{padding-top:120px;padding-bottom:64px}.intro{grid-template-columns:1fr;gap:32px;margin-bottom:48px}.intro p{font-size:14px;line-height:20px}.tile{flex-basis:68vw}.narrow{flex-basis:48vw}.media{height:210px}.media img{max-height:210px}.title,.caption{font-size:14px;line-height:20px}.caption{min-height:36px}}

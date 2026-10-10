@@ -60,8 +60,6 @@ const TAIL_SLICE = 3;
 const MIN_SLICE_DEVICE_PX = 1.5;
 /** Frozen moment shown to people who prefer reduced motion. */
 const STILL_TIME = 1.1;
-/** Footer height used when the canvas is not inside a footer element. */
-const FALLBACK_REVEAL_PX = 560;
 
 const smoothstep = (edge0: number, edge1: number, x: number) => {
   const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)));
@@ -217,14 +215,24 @@ export function MonkeySeat({
     };
     const sync = () => (revealed && !document.hidden && !reducedMotion.matches && sprites ? start() : stop());
 
-    // The footer sits behind the page and is uncovered by scrolling to the end, so ordinary
-    // "is it on screen" checks are always true. Animate only when the footer has been uncovered.
+    // Animate only while the monkey can be seen. Two cases:
+    //  - Anywhere in normal flow: it is seen when it is on screen (IntersectionObserver).
+    //  - In a footer that sits fixed or sticky behind the page: it is always "on screen" but covered until the
+    //    page is scrolled to the end, so we also check how far from the bottom the page is.
+    let onScreen = true;
     const checkReveal = () => {
-      const footerHeight = canvasEl.closest("footer")?.clientHeight ?? FALLBACK_REVEAL_PX;
+      const footer = canvasEl.closest("footer");
+      const footerPosition = footer ? getComputedStyle(footer).position : "";
+      const coveredFooter = footerPosition === "fixed" || footerPosition === "sticky";
       const remaining = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
-      revealed = remaining < footerHeight;
+      revealed = onScreen && (!coveredFooter || remaining < (footer?.clientHeight ?? 0));
       sync();
     };
+    const visibility = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      checkReveal();
+    });
+    visibility.observe(canvasEl);
 
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvasEl);
@@ -249,6 +257,7 @@ export function MonkeySeat({
       cancelled = true;
       stop();
       resizeObserver.disconnect();
+      visibility.disconnect();
       window.removeEventListener("scroll", checkReveal);
       window.removeEventListener("resize", checkReveal);
       document.removeEventListener("visibilitychange", sync);

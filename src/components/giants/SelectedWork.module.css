@@ -87,3 +87,9 @@
 @media (max-width: 600px) { .context { display: none; } }
 
 @media (max-width: 600px) { .transition { align-items: center; padding: 96px var(--page-gutter); } }
+
+/* Compact previews keep the existing artwork legible inside the landing feature panels. */
+.compact .playCard{padding:16px}
+.compact .playCard strong{font-size:clamp(20px,2.3vw,30px);line-height:1;font-weight:400}
+.compact .playCard>span:last-child{display:none}
+@media(max-width:767px){.compact .playCard{padding:12px}.compact .artLabel,.compact .artCaption{display:none}.compact .machine{padding:12px}.compact .reels{margin:12px 0}.compact .reels span{font-size:64px}}
