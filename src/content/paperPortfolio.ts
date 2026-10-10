@@ -1,4 +1,7 @@
 export const EMAIL = "mailto:hey@gauravguptas.com";
+/** Drop the PDF at public/Gaurav-Gupta-Resume.pdf. The sidebar and mobile menu link here. */
+export const RESUME_FILENAME = "Gaurav-Gupta-Resume.pdf";
+export const RESUME_HREF = `/${RESUME_FILENAME}`;
 export const SOCIALS = [
   { label: "github", href: "https://github.com/Gauravgupta2026" },
   { label: "linkedin", href: "https://in.linkedin.com/in/gaurav-gupta-218a08202" },

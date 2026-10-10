@@ -1,6 +1,6 @@
 .body{display:flex;flex-direction:column;gap:24px}
 .paragraph,.listItem{margin:0;font:400 18px/1.65 var(--font-paper-serif),Georgia,serif;color:#1a1a1a}
-.heading{margin:36px 0 0;font:400 24px/1.4 var(--font-paper-script),cursive}
+.heading{margin:36px 0 0;font:400 24px/1.4 var(--font-paper-serif),Georgia,serif}
 .quote{margin:24px 0;padding:24px;border-left:2px solid #b4265b;background:#faf8f5}
 .quote blockquote{margin:0;font:400 22px/1.5 var(--font-paper-serif),Georgia,serif}
 .quote figcaption{margin-top:12px;color:#74716d;font-size:14px}

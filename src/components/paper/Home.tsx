@@ -3,10 +3,10 @@ import Image from "next/image";
 import { paperProjects, EMAIL, SOCIALS } from "@/content/paperPortfolio";
 import { articles } from "@/content/articles";
 import { InkDrawing } from "./InkDrawing";
-import { Welcome } from "./Welcome";
+import { Opening } from "@/components/opening/Opening";
 import styles from "./Paper.module.css";
 export function Home() {
-  return <><Welcome /><main id="main-content" className={styles.home}>
+  return <><Opening /><main id="main-content" className={styles.home}>
     <div className={styles.column}>
       <div className={styles.homeIntro}>
         <InkDrawing kind="house" className={styles.house} />
