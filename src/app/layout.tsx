@@ -15,7 +15,7 @@ export const metadata: Metadata = {
  openGraph: { title: "Gaurav Gupta — Design & code", description: "Products, experiments and notes. A little corner of the internet.", url: "/", siteName: "Gaurav Gupta", type: "website" },
  twitter: { card: "summary_large_image", title: "Gaurav Gupta — Design & code" },
 };
-export const viewport: Viewport = { themeColor: "#fff9e6", viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#ffffff", colorScheme: "light", viewportFit: "cover" };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
  return <html lang="en" className={sans.variable} suppressHydrationWarning><body><PostHogProvider><PaperShell>{children}</PaperShell></PostHogProvider></body></html>;
 }

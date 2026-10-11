@@ -1,21 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { markEntered, needsEntrance } from "./openingSession";
 import { GreetingWindow } from "./GreetingWindow";
 import styles from "./OpeningSequence.module.css";
 
-const ENTRY_KEY = "portfolio-window-entered";
 const SHUTTER_DURATION_MS = 950;
 const GREETING_HOLD_MS = 700;
 const subscribe = () => () => {};
-const needsEntrance = () => {
-  try {
-    return new URLSearchParams(location.search).has("intro") || sessionStorage.getItem(ENTRY_KEY) !== "1";
-  } catch {
-    return true;
-  }
-};
-const bootstrap = `try{if(!new URLSearchParams(location.search).has('intro')&&sessionStorage.getItem('${ENTRY_KEY}')==='1'){document.documentElement.dataset.greetingEntered='true'}}catch{}`;
+
 
 export function OpeningSequence() {
   const needsEntry = useSyncExternalStore(subscribe, needsEntrance, () => true);
@@ -27,13 +20,13 @@ export function OpeningSequence() {
 
   const finish = useCallback(() => {
     dialogRef.current?.close();
-    try { sessionStorage.setItem(ENTRY_KEY, "1"); } catch { /* Entry still works when storage is unavailable. */ }
+    markEntered();
     setDismissed(true);
     document.getElementById("home-title")?.focus({ preventScroll: true });
   }, []);
 
   useLayoutEffect(() => {
-    if (!active) return;
+    if (!active || !needsEntrance()) return;
     const dialog = dialogRef.current;
     if (!dialog) return;
     const overflow = document.documentElement.style.overflow;
@@ -60,7 +53,6 @@ export function OpeningSequence() {
   }, [active, phase, finish]);
 
   return <>
-    <script dangerouslySetInnerHTML={{ __html: bootstrap }} />
     <noscript><style>{`dialog.${styles.entrance}{display:none}`}</style></noscript>
     {active && <dialog ref={dialogRef} open className={styles.entrance} data-phase={phase} aria-label="Welcome to Gaurav’s portfolio" onCancel={event => { event.preventDefault(); finish(); }} onAnimationEnd={event => { if (event.target === event.currentTarget && phase === "revealing") finish(); }}>
       <div className={styles.composition}>

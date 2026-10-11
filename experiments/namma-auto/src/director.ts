@@ -21,11 +21,10 @@ export interface DirectorUi {
 const TUNE = {
   idleShake: 0.7,
   /** The auto hops and honks by itself, so people know to tap it. */
-  firstNudge: 2.2,
-  nudgeEvery: 7,
-  inactivitySeconds: 12,
-  hire: { duration: 0.55, lift: 24, scale: 0.94 },
-  nudgeHop: 16,
+  firstNudge: 0.9,
+  nudgeEvery: 2,
+  confirmationSeconds: 3,
+  nudgeHop: 18,
 
   intro: { offscreenMargin: 90, duration: 1.55, brakeAt: 0.95, nose: 2.4 },
 
@@ -100,11 +99,12 @@ const PHASE_LABELS: Record<Phase, string> = {
 };
 /** Camera push-in on the rear window, so the sign is easier to read in a small square. */
 const PRESENT_ZOOM = 2.2;
-const PRESENT_ZOOM_S = 0.9;
+const PRESENT_ZOOM_S = 0.35;
 
 export class Director {
   private phase: Phase = 'loading';
   private active = true;
+  private hiring = false;
   private started = false;
   private readonly s: RigState;
   private readonly cam: Camera = { zoom: 1, x: 0, y: 0, shake: 0 };
@@ -114,6 +114,7 @@ export class Director {
   private main: gsap.core.Timeline | null = null;
   private departureCall: gsap.core.Tween | null = null;
   private nudgeCall: gsap.core.Tween | null = null;
+  private nudgeMotion: gsap.core.Timeline | null = null;
   private launchFrom = { x: 0, y: 0, scale: 1 };
   private readonly cx: number;
   private readonly gy: number;
@@ -148,13 +149,13 @@ export class Director {
     this.phase = phase;
     document.body.dataset.state = phase;
     this.ui.autoButton.setAttribute('aria-label', PHASE_LABELS[phase]);
-    this.ui.autoButton.toggleAttribute('disabled', phase === 'departed' || phase === 'hired');
+    this.ui.autoButton.toggleAttribute('disabled', phase === 'departed' || phase === 'hired' || phase === 'launch');
   }
 
   setActive(active: boolean): void {
     this.active = active;
     // Once hiring is confirmed, scrolling away must not strand navigation.
-    gsap.globalTimeline.paused(!active && this.phase !== 'hired');
+    gsap.globalTimeline.paused(!active && !this.hiring);
     this.sound.setActive(active);
     if (active && !this.started) this.start();
   }
@@ -168,17 +169,7 @@ export class Director {
   tap(): void {
     this.sound.unlock();
     if (this.phase === 'idle') this.drift();
-    else if (this.phase === 'presenting') {
-      this.clearIdleCalls();
-      this.setPhase('hired');
-      this.sound.engineOff(TUNE.hire.duration);
-      if (this.reduced) this.onHire();
-      else {
-        this.main?.kill();
-        this.main = gsap.timeline({ onComplete: this.onHire })
-          .to(this.s, { y: this.s.y - TUNE.hire.lift, scale: this.s.scale * TUNE.hire.scale, opacity: 0, duration: TUNE.hire.duration, ease: 'power2.inOut' });
-      }
-    }
+    else if (this.phase === 'presenting') this.launch(true);
   }
 
   private resetScene(): void {
@@ -231,7 +222,6 @@ export class Director {
     this.sound.engineOn();
     this.sound.setRpm(0, 1);
     this.scheduleNudge(TUNE.firstNudge);
-    this.scheduleDeparture();
   }
 
   // ------------------------------------------------------------ hint & nudge
@@ -239,30 +229,30 @@ export class Director {
   private clearIdleCalls(): void {
     this.nudgeCall?.kill();
     this.nudgeCall = null;
+    this.nudgeMotion?.kill();
+    this.nudgeMotion = null;
+    if (this.phase === 'idle') this.s.y = this.gy;
     this.departureCall?.kill();
     this.departureCall = null;
   }
 
   private scheduleDeparture(): void {
-    this.departureCall = gsap.delayedCall(TUNE.inactivitySeconds, () => {
-      if (this.phase === 'idle' || this.phase === 'presenting') this.launch();
+    this.departureCall = gsap.delayedCall(TUNE.confirmationSeconds, () => {
+      if (this.phase === 'presenting') this.launch();
     });
   }
 
-  /** Now and then the auto hops and honks, so people know it is alive. */
+  /** A small, silent double bounce invites the first tap without moving away. */
   private scheduleNudge(delay: number): void {
     if (this.reduced) return;
     this.nudgeCall?.kill();
     this.nudgeCall = gsap.delayedCall(delay, () => {
-      if (this.phase !== 'idle' && this.phase !== 'presenting') return;
-      this.sound.honk(2);
-      gsap
-        .timeline()
-        .to(this.s, { y: `-=${TUNE.nudgeHop}`, squashY: 1.015, duration: 0.12, ease: 'power2.out' })
-        .to(this.s, { y: `+=${TUNE.nudgeHop}`, squashY: 0.985, duration: 0.14, ease: 'power2.in' })
-        .to(this.s, { squashY: 1, duration: 0.4, ease: 'elastic.out(1,0.35)' })
-        .to(this.s, { y: `-=${TUNE.nudgeHop * 0.6}`, duration: 0.1, ease: 'power2.out' }, 0.2)
-        .to(this.s, { y: `+=${TUNE.nudgeHop * 0.6}`, duration: 0.12, ease: 'power2.in' }, 0.3);
+      if (this.phase !== 'idle') return;
+      this.nudgeMotion = gsap.timeline()
+        .to(this.s, { y: this.gy - TUNE.nudgeHop, duration: 0.22, ease: 'sine.out' }, 0)
+        .to(this.s, { y: this.gy, duration: 0.22, ease: 'sine.in' }, 0.22)
+        .to(this.s, { y: this.gy - TUNE.nudgeHop * 0.5, duration: 0.18, ease: 'sine.out' }, 0.44)
+        .to(this.s, { y: this.gy, duration: 0.18, ease: 'sine.in' }, 0.62);
       this.scheduleNudge(TUNE.nudgeEvery);
     });
   }
@@ -322,7 +312,7 @@ export class Director {
       .to({}, { duration: d.readyAt - d.revealAt }, d.revealAt);
   }
 
-  /** The black rear glass lights up like an old neon sign. */
+  /** Show the sign steadily while the camera finishes its short push-in. */
   private revealSign(): void {
     const overlay = this.rig.overlay;
     if (!overlay) return;
@@ -331,17 +321,7 @@ export class Director {
       this.cam.zoom = PRESENT_ZOOM;
       return;
     }
-    const flicker: Array<[number, number]> = [
-      [0, 0.9],
-      [0.07, 0.15],
-      [0.14, 1],
-      [0.27, 0.3],
-      [0.33, 1],
-      [0.46, 0.7],
-      [0.5, 1],
-    ];
-    const tl = gsap.timeline();
-    for (const [at, level] of flicker) tl.call(() => overlay.setLit(level), [], at);
+    overlay.setLit(1);
     this.sound.honk(1);
     gsap.to(this.cam, { zoom: PRESENT_ZOOM, duration: PRESENT_ZOOM_S, ease: 'power2.inOut', overwrite: 'auto' });
   }
@@ -350,13 +330,14 @@ export class Director {
     this.setPhase('presenting');
     this.s.shake = this.reduced ? 0 : TUNE.idleShake;
     this.flags.exhaustRate = this.reduced ? 0 : TUNE.exhaustIdleRate;
-    this.scheduleNudge(TUNE.nudgeEvery);
     this.scheduleDeparture();
   }
 
   // -------------------------------------------------------------- tap two
 
-  private launch(): void {
+  private launch(hiring = false): void {
+    this.hiring = hiring;
+    this.main?.kill();
     this.clearIdleCalls();
     this.setPhase('launch');
     if (this.reduced) {
@@ -463,7 +444,8 @@ export class Director {
     this.flags.exhaustRate = 0;
     this.flags.trail = 0;
     this.sound.engineOff(0.4);
-    this.setPhase('departed');
+    this.setPhase(this.hiring ? 'hired' : 'departed');
+    if (this.hiring) this.onHire();
   }
 
   // ---------------------------------------------------------------- frame
@@ -570,7 +552,7 @@ export class Director {
 
     const shakeX = (Math.random() - 0.5) * 2 * cam.shake;
     const shakeY = (Math.random() - 0.5) * 2 * cam.shake;
-    ui.world.style.transform = `translate3d(${cam.x + shakeX}px, ${cam.y + shakeY}px, 0) scale(${cam.zoom})`;
+    ui.world.style.transform = `translate(${cam.x + shakeX}px, ${cam.y + shakeY}px) scale(${cam.zoom})`;
 
     this.emit(dt);
     this.fx.update(dt);

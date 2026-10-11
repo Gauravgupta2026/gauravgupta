@@ -54,24 +54,35 @@ describe('hiring requires a second tap', () => {
     expect(director.currentPhase).toBe('idle');
     expect(show).not.toHaveBeenCalled();
   });
-  it('leaves after inactivity without navigating, even with a contact hash', () => {
+  it('stays parked until tapped, even after a minute with a contact hash', () => {
     const { director, show, autoButton } = setup();
-    vi.advanceTimersByTime(12000);
-    expect(director.currentPhase).toBe('departed');
+    vi.advanceTimersByTime(60000);
+    expect(director.currentPhase).toBe('idle');
     expect(show).not.toHaveBeenCalled();
-    expect(autoButton.toggleAttribute).toHaveBeenLastCalledWith('disabled', true);
+    expect(autoButton.toggleAttribute).toHaveBeenLastCalledWith('disabled', false);
   });
-  it('resets the timeout after the first tap and leaves without navigating', () => {
+  it('stays parked with motion enabled and stops the bounce when tapped', () => {
+    vi.stubGlobal('window', { matchMedia: () => ({ matches: false }) });
+    const { director, show } = setup();
+    vi.advanceTimersByTime(60000);
+    expect(director.currentPhase).toBe('idle');
+    director.tap();
+    vi.advanceTimersByTime(2500);
+    expect(director.currentPhase).toBe('presenting');
+    expect(show).not.toHaveBeenCalled();
+  });
+  it('allows three seconds for the second tap, then leaves without navigating', () => {
     const { director, show } = setup();
     vi.advanceTimersByTime(10000);
     director.tap();
-    vi.advanceTimersByTime(2000);
+    vi.advanceTimersByTime(2999);
     expect(director.currentPhase).toBe('presenting');
-    vi.advanceTimersByTime(10000);
+    expect(show).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(1);
     expect(director.currentPhase).toBe('departed');
     expect(show).not.toHaveBeenCalled();
   });
-  it('waits for the second-tap animation and ignores repeated taps during it', () => {
+  it('waits until the auto vanishes into the horizon and ignores repeated taps', () => {
     vi.stubGlobal('window', { matchMedia: () => ({ matches: false }) });
     const { director, show } = setup();
     vi.advanceTimersByTime(2400);
@@ -82,7 +93,7 @@ describe('hiring requires a second tap', () => {
     director.tap(); director.tap();
     director.setActive(false);
     expect(gsap.globalTimeline.paused).toHaveBeenLastCalledWith(false);
-    vi.advanceTimersByTime(549);
+    vi.advanceTimersByTime(3199);
     expect(show).not.toHaveBeenCalled();
     vi.advanceTimersByTime(1);
     expect(show).toHaveBeenCalledExactlyOnceWith();

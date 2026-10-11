@@ -65,7 +65,6 @@ body {
   position: absolute;
   inset: 0;
   transform-origin: 540px 1120px;
-  will-change: transform;
 }
 
 #scene {
@@ -143,7 +142,6 @@ body {
   cursor: pointer;
   transform-origin: 0 0;
   outline: none;
-  will-change: transform, filter;
 }
 
 .pose {
@@ -204,10 +202,7 @@ body:not([data-state='idle']):not([data-state='presenting']) #autoBtn {
   font-family: var(--font-sign);
   color: #ffe6a0;
   letter-spacing: 0.03em;
-  text-shadow:
-    0 0 0.12em rgba(255, 190, 70, 0.95),
-    0 0 0.4em rgba(255, 140, 30, 0.75),
-    0 0 0.9em rgba(255, 90, 20, 0.45);
+  text-shadow: 0 0 0.12em rgba(255, 190, 70, 0.45);
 }
 
 .sign-sub {
@@ -357,6 +352,8 @@ body:not([data-state='idle']):not([data-state='presenting']) #autoBtn {
   transform: none;
   width: var(--art-size);
   height: var(--art-size);
+  /* Trim the long lower fade without clipping the separate audio or hiring controls. */
+  clip-path: inset(0 0 12% 0);
 }
 
 .embedded #grain {

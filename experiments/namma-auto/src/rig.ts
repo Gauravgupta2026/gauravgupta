@@ -170,10 +170,13 @@ export class AutoRig {
     }
     view.el.style.transform = `scaleX(${scaleX})`;
 
-    this.root.style.transform = `translate3d(${s.x + jitterX}px, ${s.y + jitterY}px, 0) scale(${s.scale})`;
+    this.root.style.transform = `translate(${s.x + jitterX}px, ${s.y + jitterY}px) scale(${s.scale})`;
     this.root.style.opacity = String(s.opacity);
+    // Keep resting text in 2D; a permanent perspective layer can cache it at
+    // the smaller pre-zoom resolution. Only the wheelie needs perspective.
+    const pitchTransform = s.pitch === 0 ? '' : ` perspective(${PERSPECTIVE_PX}px) rotateX(${s.pitch}deg)`;
     this.holder.style.transform =
-      `rotate(${s.tilt}deg) perspective(${PERSPECTIVE_PX}px) rotateX(${s.pitch}deg) scale(${s.squashX}, ${s.squashY})`;
+      `rotate(${s.tilt}deg)${pitchTransform} scale(${s.squashX}, ${s.squashY})`;
     this.holder.style.filter = s.blur > 0.05 ? `blur(${s.blur}px)` : 'none';
 
     const shadowWidth = Math.round(pose.width * scaleX * SHADOW_WIDTH_FILL);

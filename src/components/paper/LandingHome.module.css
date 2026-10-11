@@ -8,10 +8,10 @@
 .hero{display:flex;flex-direction:column;align-items:center;gap:calc(24px / var(--page-scale));width:100%;padding:calc(96px / var(--page-scale)) var(--landing-gutter) calc(64px / var(--page-scale))}
 /* Keep the auto in the former artwork position above the hero identity. */
 .heroArt{align-self:flex-start;margin:0}
-.heroArt:global(.namma-auto-slot){width:calc(184px / var(--page-scale));max-width:100%;height:calc(224px / var(--page-scale));margin-bottom:calc(-40px / var(--page-scale))}
+.heroArt:global(.namma-auto-slot){width:calc(211.6px / var(--page-scale));max-width:100%;height:calc(257.6px / var(--page-scale));margin-bottom:calc(-6.72px / var(--page-scale))}
 .heroContent{font-family:var(--portfolio-serif);display:flex;flex-direction:column;align-items:flex-start;gap:calc(16px / var(--page-scale));width:100%;font-size:var(--landing-body-size);line-height:var(--landing-body-leading);letter-spacing:calc(-.08px / var(--page-scale));text-align:left}
 .heroIdentity{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:calc(4px / var(--page-scale)) calc(16px / var(--page-scale));width:100%}
-.hero h1{font-family:inherit;font-weight:var(--portfolio-weight-heading);font-size:var(--landing-title-size);line-height:1.25;letter-spacing:calc(-.1px / var(--page-scale));margin:0;outline-offset:8px}
+.hero h1{font-family:inherit;font-weight:var(--portfolio-weight-heading);font-size:var(--landing-title-size);line-height:1.25;letter-spacing:calc(-.1px / var(--page-scale));margin:0;outline:none}
 .heroIdentity>span{font:400 calc(14px / var(--page-scale))/calc(20px / var(--page-scale)) var(--cf-font);letter-spacing:0}
 .heroDescription{display:grid;gap:calc(12px / var(--page-scale));align-self:stretch;text-wrap:pretty}
 .heroDescription p{margin:0}
@@ -31,4 +31,4 @@
 
 .heroLinks a[aria-disabled=true]{color:var(--cf-muted);cursor:default}
 
-@media(max-width:767px){.heroArt:global(.namma-auto-slot){width:calc(160px / var(--page-scale));height:calc(200px / var(--page-scale));margin-bottom:calc(-32px / var(--page-scale))}}
+@media(max-width:767px){.heroArt:global(.namma-auto-slot){width:calc(184px / var(--page-scale));height:calc(230px / var(--page-scale));margin-bottom:calc(-6.72px / var(--page-scale))}}

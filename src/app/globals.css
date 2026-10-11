@@ -14,8 +14,8 @@
  --cf-gutter:30px;
 }
 *{box-sizing:border-box}
-html{background:var(--cf-bg);color:var(--cf-ink);scrollbar-gutter:stable}
-body{margin:0;font:400 var(--cf-body-size)/var(--cf-body-leading) var(--cf-font);letter-spacing:var(--cf-body-tracking);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html{background:#fff;color-scheme:light;color:var(--cf-ink);scrollbar-gutter:stable}
+body{margin:0;background:#fff;font:400 var(--cf-body-size)/var(--cf-body-leading) var(--cf-font);letter-spacing:var(--cf-body-tracking);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 body:has(dialog[open]){overflow:hidden}
 a{color:inherit}
 button,input,textarea,select{font:inherit}
