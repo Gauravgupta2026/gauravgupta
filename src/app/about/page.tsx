@@ -14,7 +14,7 @@ export default function About() {
       <div className={styles.prose}>{aboutParagraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div>
     </header>
     <figure className={styles.photo}>
-      <Image src={aboutPhoto.src} alt={aboutPhoto.alt} width={1280} height={960} sizes="(max-width: 767px) calc(100vw - 48px), 660px" priority />
+      <Image src={aboutPhoto.src} alt={aboutPhoto.alt} width={1280} height={960} sizes="(max-width: 767px) calc(100vw - 24px), 660px" priority />
       <figcaption className={editorial.label}>{aboutPhoto.caption}</figcaption>
     </figure>
     <section className={styles.context} aria-labelledby="context-title">

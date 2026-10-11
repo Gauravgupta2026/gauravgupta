@@ -1,7 +1,7 @@
 .section{--font-editorial-local:var(--cf-font);position:relative;padding:calc(120px / var(--page-scale)) 0 calc(64px / var(--page-scale) + 4cm / var(--page-scale));scroll-margin-top:64px}
-.list{display:grid;gap:calc(100px / var(--page-scale));max-width:calc(660px / var(--page-scale));margin:0 auto}
+.list{display:grid;gap:calc(100px / var(--page-scale));max-width:calc(var(--portfolio-column) / var(--page-scale));margin:0 auto}
 /* Section heading: Garamond 20/25, the design system's heading role. It sits close to the first project. */
-.section .heading{max-width:calc(660px / var(--page-scale));margin:0 auto calc(24px / var(--page-scale));font:400 var(--landing-title-size)/1.25 var(--portfolio-serif);letter-spacing:-.005em}
+.section .heading{max-width:calc(var(--portfolio-column) / var(--page-scale));margin:0 auto calc(24px / var(--page-scale));font:var(--portfolio-weight-heading) var(--landing-title-size)/1.25 var(--portfolio-serif);letter-spacing:-.005em}
 .project{min-width:0}
 .preview{position:relative;display:block;aspect-ratio:3;overflow:hidden;border-radius:5px;background:#fffdf6;color:inherit}
 .preview img{object-fit:contain;background:#fffdf6}
@@ -10,7 +10,7 @@
 .preview strong{font-weight:400}
 .caption{--cf-font:"ITC Garamond Hero",Georgia,serif;font-family:var(--cf-font);display:grid;grid-template-columns:1fr 1fr;gap:calc(24px / var(--page-scale));margin-top:calc(24px / var(--page-scale));align-items:start}
 .name{font:400 var(--landing-label-size)/1.5 var(--font-site-sans),Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--cf-muted);margin:0 0 12px}
-.caption h3{font:400 var(--landing-title-size)/1.25 var(--cf-font);letter-spacing:-.005em;margin:0;max-width:21ch;text-wrap:balance}
+.caption h3{font:var(--portfolio-weight-heading) var(--landing-title-size)/1.25 var(--cf-font);letter-spacing:-.005em;margin:0;max-width:21ch;text-wrap:balance}
 .caption h3 a{text-decoration:none!important}
 .description>p:first-child{font-size:var(--landing-body-size);line-height:var(--landing-body-leading);letter-spacing:-.005em;color:var(--cf-muted);margin:0 0 20px;max-width:44ch}
 .description>a{font-family:var(--font-site-sans),Arial,sans-serif;font-weight:400;letter-spacing:0;display:inline-flex;align-items:center;gap:8px;min-height:calc(44px / var(--page-scale));font-size:var(--landing-body-size);line-height:var(--landing-body-leading);text-underline-offset:4px}
@@ -23,3 +23,5 @@
 @keyframes underlineWave{to{mask-position:-16px 0}}
 @media(prefers-reduced-motion:reduce){.explore::after{opacity:1;animation:none!important;transition:none}}
 @media(forced-colors:active){.explore::after{background:CanvasText;forced-color-adjust:none}}
+
+@media(max-width:767px){.section{padding-top:calc(48px / var(--page-scale));padding-bottom:calc(80px / var(--page-scale))}.list{gap:calc(48px / var(--page-scale))}.caption{gap:calc(12px / var(--page-scale));margin-top:calc(16px / var(--page-scale))}.description>p:first-child{margin-bottom:calc(12px / var(--page-scale))}}

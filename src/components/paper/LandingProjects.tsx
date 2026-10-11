@@ -13,7 +13,7 @@ export function LandingProjects() {
         const media = featuredWork.find(item => item.slug === project.slug)!;
         return <LandingProject className={styles.project} key={project.slug}>
           <Link href={`/projects/${project.slug}`} className={styles.preview} data-slug={project.slug} aria-label={`View ${media.title} project`}>
-            <ProjectMedia compact project={media} sizes="(max-width: 767px) calc(100vw - 48px), 660px" />
+            <ProjectMedia compact project={media} sizes="(max-width: 767px) calc(100vw - 24px), 660px" />
           </Link>
           <div className={styles.caption}>
             <div><p className={styles.name}>{media.title}</p><h3><Link href={`/projects/${project.slug}`}>{project.headline}</Link></h3></div>

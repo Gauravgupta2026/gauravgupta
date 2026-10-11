@@ -1,5 +1,5 @@
-.page{--cf-font:var(--portfolio-serif);--cf-secondary-size:calc(var(--portfolio-title-size) / var(--page-scale));--cf-secondary-leading:calc(25px / var(--page-scale));--body-size:calc(var(--portfolio-body-size) / var(--page-scale));--title-size:calc(var(--portfolio-title-size) / var(--page-scale));--label-size:calc(var(--portfolio-label-size) / var(--page-scale));--gutter:calc(var(--portfolio-gutter) / var(--page-scale));--section-gap:calc(80px / var(--page-scale));width:100%;max-width:calc(708px / var(--page-scale));min-height:100svh;margin-inline:auto;padding:calc(192px / var(--page-scale)) var(--gutter) var(--section-gap);font:400 var(--body-size)/1.5 var(--portfolio-serif);letter-spacing:-.005em;color:var(--cf-ink)}
-.page h1,.page h2{font:400 var(--title-size)/1.25 var(--portfolio-serif);letter-spacing:-.005em;margin:0}
+.page{--cf-font:var(--portfolio-serif);--cf-secondary-size:calc(var(--portfolio-title-size) / var(--page-scale));--cf-secondary-leading:calc(25px / var(--page-scale));--body-size:calc(var(--portfolio-body-size) / var(--page-scale));--title-size:calc(var(--portfolio-title-size) / var(--page-scale));--label-size:calc(var(--portfolio-label-size) / var(--page-scale));--gutter:calc(var(--portfolio-gutter) / var(--page-scale));--section-gap:calc(80px / var(--page-scale));width:100%;max-width:calc((var(--portfolio-column) + 2 * var(--portfolio-gutter)) / var(--page-scale));min-height:100svh;margin-inline:auto;padding:calc(192px / var(--page-scale)) var(--gutter) var(--section-gap);font:400 var(--body-size)/1.5 var(--portfolio-serif);letter-spacing:-.005em;color:var(--cf-ink)}
+.page h1,.page h2{font:var(--portfolio-weight-heading) var(--title-size)/1.25 var(--portfolio-serif);letter-spacing:-.005em;margin:0}
 .intro{display:flex;flex-direction:column;gap:calc(16px / var(--page-scale));margin-bottom:var(--section-gap)}
 .intro p{margin:0;max-width:60ch}
 .label{font:400 var(--label-size)/1.5 var(--portfolio-sans);letter-spacing:0;color:var(--cf-muted)}
@@ -16,3 +16,11 @@
 .article figcaption{font:400 var(--label-size)/1.5 var(--portfolio-sans)}
 .article header .label{font:400 var(--label-size)/1.5 var(--portfolio-sans)}
 @media(max-width:767px){.page{--section-gap:calc(48px / var(--page-scale));padding-top:calc(112px / var(--page-scale))}.notes a{grid-template-columns:calc(68px / var(--page-scale)) minmax(0,1fr);gap:calc(12px / var(--page-scale))}}
+
+.intro p{font-weight:var(--portfolio-weight-light);text-wrap:pretty}
+.article header>p:last-child{font-weight:var(--portfolio-weight-light)}
+.article blockquote{font-weight:var(--portfolio-weight-light)}
+.noteTitle{font-weight:var(--portfolio-weight-heading)}
+@media(max-width:767px){.page{padding-top:calc(96px / var(--page-scale));--section-gap:calc(40px / var(--page-scale))}.notes a{padding-block:calc(12px / var(--page-scale))}.article header{margin-bottom:calc(32px / var(--page-scale))}}
+
+.intro p,.article p,.article li{color:var(--portfolio-body-ink)}

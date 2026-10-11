@@ -10,7 +10,7 @@
 .context{display:flex;flex-direction:column;gap:calc(24px / var(--page-scale));margin-bottom:var(--section-gap)}
 .context ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) calc(104px / var(--page-scale));gap:calc(16px / var(--page-scale));align-items:baseline;padding:calc(12px / var(--page-scale)) 0}
-.name{font:400 var(--body-size)/1.5 var(--portfolio-serif)}
+.name{font:var(--portfolio-weight-heading) var(--body-size)/1.5 var(--portfolio-serif)}
 .detail,.period{font:400 var(--label-size)/1.5 var(--portfolio-sans);letter-spacing:0;color:var(--cf-muted)}
 .period{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 
@@ -19,3 +19,5 @@
   .row{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name period" "detail detail";gap:calc(2px / var(--page-scale)) calc(16px / var(--page-scale));padding:calc(10px / var(--page-scale)) 0}
   .name{grid-area:name}.period{grid-area:period}.detail{grid-area:detail}
 }
+
+.prose p{color:var(--portfolio-body-ink)}

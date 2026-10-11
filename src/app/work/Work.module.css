@@ -18,3 +18,5 @@
 .details p{margin:0 0 calc(4px / var(--page-scale))}
 .projectLink:hover h2,.projectLink:focus-visible h2{text-decoration:underline;text-underline-offset:4px}
 @media(max-width:767px){.toolbar{gap:12px;margin-bottom:calc(24px / var(--page-scale))}.copy{margin-top:calc(16px / var(--page-scale))}}
+
+.purpose{color:var(--portfolio-body-ink)}

@@ -1,0 +1,12 @@
+.entrance{--page-scale:1;position:fixed;inset:0;z-index:100;width:100%;height:100dvh;max-width:none;max-height:none;margin:0;padding:36px;border:0;background:#fff;color:var(--cf-ink);overflow:hidden;opacity:1}
+.entrance[open]{display:grid;place-items:center}
+.entrance::backdrop{background:transparent}
+:global(html[data-greeting-entered=true]) .entrance{display:none}
+.composition{display:flex;flex-direction:column;align-items:center;gap:24px}
+.enter{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:64px;min-height:44px;padding:4px 12px;border:0;background:transparent;color:inherit;font-family:var(--portfolio-serif)!important;font-size:16px!important;font-weight:400;line-height:1.5;transition:opacity 300ms ease}
+.enter:hover{color:var(--cf-muted)}
+.entrance[data-phase=opening] .enter,.entrance[data-phase=revealing] .enter{opacity:0;pointer-events:none}
+.entrance[data-phase=revealing]{animation:reveal 1200ms cubic-bezier(.65,0,.35,1) both}
+@keyframes reveal{from{transform:translateY(0)}to{transform:translateY(-100%)}}
+@media(max-width:767px){.enter{font-size:14px!important}}
+@media(prefers-reduced-motion:reduce){.entrance[data-phase=revealing]{animation:none;transform:translateY(-100%)}.enter{transition:none}}

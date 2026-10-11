@@ -27,5 +27,8 @@ img{max-width:100%}
 
 /* Shared by the approved hero, project captions and footers. */
 @font-face{font-family:"ITC Garamond Hero";src:url("/fonts/itc-garamond/ITCGaramondStd-Bk.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"ITC Garamond Hero";src:url("/fonts/itc-garamond/ITCGaramondStd-Lt.ttf") format("truetype");font-weight:300;font-style:normal;font-display:swap}
 
-:root{--portfolio-measure:34em;--portfolio-serif:"ITC Garamond Hero",Georgia,serif;--portfolio-sans:var(--font-site-sans),Arial,sans-serif;--portfolio-title-size:20px;--portfolio-body-size:16px;--portfolio-label-size:12px;--portfolio-column:660px;--portfolio-gutter:24px}
+:root{--portfolio-measure:34em;--portfolio-serif:"ITC Garamond Hero",Georgia,serif;--portfolio-sans:var(--font-site-sans),Arial,sans-serif;--portfolio-title-size:20px;--portfolio-body-size:16px;--portfolio-label-size:12px;--portfolio-column:660px;--portfolio-gutter:24px;--portfolio-weight-light:300;--portfolio-weight-regular:400;--portfolio-weight-heading:400;--portfolio-body-leading:1.5;--portfolio-body-ink:#45433f}
+
+@media(max-width:767px){:root{--portfolio-title-size:18px;--portfolio-body-size:14px;--portfolio-gutter:12px;--cf-gutter:12px;--portfolio-body-leading:1.5}}

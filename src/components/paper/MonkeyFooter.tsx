@@ -16,7 +16,7 @@ export function MonkeyFooter() {
       <MonkeySeat className={styles.monkey} label="A monkey in a blue jacket sits holding a tasselled parasol." />
       <div className={styles.copy}>
         <h2>Creativity and ideas<br />travel further together.</h2>
-        <p>Start with a thought. The rest can be figured out together.</p>
+        <p><span>Start with a thought.</span>{" "}<span>The rest can be figured out together.</span></p>
         <a href={EMAIL} className={styles.button}>Say hello <span aria-hidden="true">↗</span></a>
         <nav aria-label="Footer social links">{SOCIALS.map(item => <a href={item.href} key={item.href}>{item.label === "github" ? "GitHub" : "LinkedIn"}</a>)}</nav>
       </div>

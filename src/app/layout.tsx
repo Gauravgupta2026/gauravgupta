@@ -17,5 +17,5 @@ export const metadata: Metadata = {
 };
 export const viewport: Viewport = { themeColor: "#fff9e6", viewportFit: "cover" };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
- return <html lang="en" className={sans.variable}><body><PostHogProvider><PaperShell>{children}</PaperShell></PostHogProvider></body></html>;
+ return <html lang="en" className={sans.variable} suppressHydrationWarning><body><PostHogProvider><PaperShell>{children}</PaperShell></PostHogProvider></body></html>;
 }

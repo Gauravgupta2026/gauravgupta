@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, type CSSProperties } from "react";
+import { type CSSProperties } from "react";
 import { WINDOW_GEOMETRY as G } from "./windowGeometry";
 import styles from "./GreetingWindow.module.css";
 
@@ -12,12 +12,11 @@ const place = (box: { x: number; y: number; w: number; h: number }): CSSProperti
   height: `${box.h / G.window.h * 100}%`,
 });
 
-export function GreetingWindow() {
-  const [open, setOpen] = useState(false);
-  return <button type="button" className={styles.window} data-open={open} aria-expanded={open} aria-label={open ? "Close the greeting window" : "Open the greeting window"} title={open ? "Close the window" : "Open the window"} onClick={() => setOpen(value => !value)}>
+export function GreetingWindow({ open }: { open: boolean }) {
+  return <div className={styles.window} data-open={open} role="img" aria-label="A painted blue window revealing hands joined in namaste">
     <span className={styles.scene}>
       <span className={styles.pane} style={place(G.panel)}>
-        <span className={styles.greeting}>Namaste</span>
+        <Image className={styles.greeting} src="/opening/namaste-poster.png" alt="" fill sizes="110px" loading="eager" draggable={false} />
       </span>
       <Image className={styles.frame} src="/opening/window-frame.webp" alt="" width={G.window.w} height={G.window.h} unoptimized />
       {(["left", "right"] as const).map(side => {
@@ -28,5 +27,5 @@ export function GreetingWindow() {
         </span>;
       })}
     </span>
-  </button>;
+  </div>;
 }
