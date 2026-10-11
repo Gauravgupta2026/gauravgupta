@@ -83,10 +83,20 @@ const SPRITE_SRC = {
 const loadImage = (src: string) =>
   new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image();
+    image.decoding = "async";
     image.onload = () => resolve(image);
     image.onerror = () => reject(new Error(`Could not load ${src}`));
     image.src = src;
   });
+
+// Share decoded artwork between both monkeys; request it only near the footer.
+let spritePromise: Promise<Sprites> | undefined;
+function loadSprites(): Promise<Sprites> {
+  spritePromise ??= Promise.all(Object.values(SPRITE_SRC).map(loadImage))
+    .then(([body, tail, parasolBase, parasolTassels]) => ({ body, tail, parasolBase, parasolTassels }))
+    .catch(error => { spritePromise = undefined; throw error; });
+  return spritePromise;
+}
 
 /** Parasol swing angle in radians and its rate of change in radians per second. */
 function parasolSway(time: number) {
@@ -174,6 +184,8 @@ export function MonkeySeat({
     const ctx: CanvasRenderingContext2D = context;
 
     let sprites: Sprites | null = null;
+    let loadingSprites = false;
+    let cancelled = false;
     let frame = 0;
     let running = false;
     let revealed = false;
@@ -225,7 +237,17 @@ export function MonkeySeat({
       const footerPosition = footer ? getComputedStyle(footer).position : "";
       const coveredFooter = footerPosition === "fixed" || footerPosition === "sticky";
       const remaining = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
-      revealed = onScreen && (!coveredFooter || remaining < (footer?.clientHeight ?? 0));
+      const footerHeight = footer?.clientHeight ?? 0;
+      if (!loadingSprites && onScreen && (!coveredFooter || remaining < footerHeight + window.innerHeight)) {
+        loadingSprites = true;
+        void loadSprites().then(images => {
+          if (cancelled) return;
+          sprites = images;
+          resize();
+          checkReveal();
+        }).catch(error => { loadingSprites = false; console.error("Could not load footer artwork", error); });
+      }
+      revealed = onScreen && (!coveredFooter || remaining < footerHeight);
       sync();
     };
     const visibility = new IntersectionObserver(([entry]) => {
@@ -245,13 +267,7 @@ export function MonkeySeat({
     };
     reducedMotion.addEventListener("change", onMotionPreference);
 
-    let cancelled = false;
-    Promise.all(Object.values(SPRITE_SRC).map(loadImage)).then(([body, tail, parasolBase, parasolTassels]) => {
-      if (cancelled) return;
-      sprites = { body, tail, parasolBase, parasolTassels };
-      resize();
-      checkReveal();
-    });
+    checkReveal();
 
     return () => {
       cancelled = true;

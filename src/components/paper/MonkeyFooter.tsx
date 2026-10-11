@@ -1,7 +1,8 @@
 "use client";
 
 import { MonkeySeat } from "@/components/monkeys/MonkeySeat";
-import { EMAIL, SOCIALS } from "@/content/paperPortfolio";
+import Link from "next/link";
+import { SOCIALS } from "@/content/paperPortfolio";
 import styles from "./MonkeyFooter.module.css";
 
 const MONKEY_DELAY_SECONDS = 1.4;
@@ -17,7 +18,7 @@ export function MonkeyFooter() {
       <div className={styles.copy}>
         <h2>Creativity and ideas<br />travel further together.</h2>
         <p><span>Start with a thought.</span>{" "}<span>The rest can be figured out together.</span></p>
-        <a href={EMAIL} className={styles.button}>Say hello <span aria-hidden="true">↗</span></a>
+        <Link href="/about#contact" className={styles.button}>Say hello</Link>
         <nav aria-label="Footer social links">{SOCIALS.map(item => <a href={item.href} key={item.href}>{item.label === "github" ? "GitHub" : "LinkedIn"}</a>)}</nav>
       </div>
       <MonkeySeat mirrored delay={MONKEY_DELAY_SECONDS} className={styles.monkey} label="A second monkey sits facing the first, also holding a tasselled parasol." />

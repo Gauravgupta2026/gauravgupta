@@ -30,18 +30,18 @@ export function MediaGallery() {
   };
   const close = () => { dialog.current?.close(); source.current?.focus({ preventScroll: true }); };
   return <>
-    <div className={labs.controls}><span>Studies &amp; experiments · {String(playgroundItems.length).padStart(2, "0")}</span><div><button disabled={edges.start} aria-label="Previous experiments" onClick={() => move(-1)}>←</button><button disabled={edges.end} aria-label="Next experiments" onClick={() => move(1)}>→</button></div></div>
+    <div className={labs.controls}><span>Studies &amp; experiments · {String(playgroundItems.length).padStart(2, "0")}</span><div><button disabled={edges.start} aria-label="Previous experiments" onClick={() => move(-1)}>Previous</button><button disabled={edges.end} aria-label="Next experiments" onClick={() => move(1)}>Next</button></div></div>
     <div ref={rail} className={labs.rail} role="region" aria-label="Design experiments, scroll horizontally" tabIndex={0}>
       {playgroundItems.map((item,index) => <button className={`${labs.tile} ${index % 3 === 1 ? labs.narrow : ""}`} key={item.title} aria-label={`Enlarge: ${item.title}`} onClick={e => { source.current = e.currentTarget; setSelected(item); dialog.current?.showModal(); }}>
         <span className={labs.media}><Image src={item.src} alt={item.alt} width={1000} height={750} sizes="(max-width: 767px) 78vw, 360px" /></span>
-        <span className={labs.title}>{item.title}<span aria-hidden="true">↗</span></span>
+        <span className={labs.title}>{item.title}</span>
         <span className={labs.caption}>{item.caption}</span>
         <span className={labs.kind}>{item.kind}</span>
       </button>)}
     </div>
     <dialog ref={dialog} className={styles.lightbox} aria-label={selected ? selected.title : "Enlarged artwork"} onClick={e => { if (e.target === e.currentTarget) close(); }} onClose={() => source.current?.focus({ preventScroll: true })}>
       <button className={styles.close} aria-label="Close enlarged view" onClick={close}>×</button>
-      {selected && <figure><Image src={selected.src} alt={selected.alt} width={1400} height={1000} sizes="90vw" /><figcaption><strong>{selected.title}</strong><p>{selected.caption}</p>{selected.href && <Link href={selected.href} onClick={close}>Read the project ↗</Link>}</figcaption></figure>}
+      {selected && <figure><Image src={selected.src} alt={selected.alt} width={1400} height={1000} sizes="90vw" /><figcaption><strong>{selected.title}</strong><p>{selected.caption}</p>{selected.href && <Link href={selected.href} onClick={close}>Read the project</Link>}</figcaption></figure>}
     </dialog>
   </>;
 }

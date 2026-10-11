@@ -6,8 +6,9 @@
 .heroCover{min-height:calc(100svh / var(--page-scale));display:grid;align-items:center;--hero-paper:var(--cf-bg);position:relative;z-index:2;isolation:isolate;background:var(--hero-paper);margin:0 calc(-1 * var(--landing-gutter))}
 .heroCover::before{content:"";position:absolute;inset:0 auto 0 50%;width:calc(100vw / var(--page-scale));transform:translateX(-50%);z-index:-1;pointer-events:none;background:linear-gradient(#fffffff2,#fffffff2),url("/reference-dwija/paper.png") center/736px auto,var(--hero-paper)}
 .hero{display:flex;flex-direction:column;align-items:center;gap:calc(24px / var(--page-scale));width:100%;padding:calc(96px / var(--page-scale)) var(--landing-gutter) calc(64px / var(--page-scale))}
-/* Reserve the approved art footprint for the next hero illustration. */
-.heroArt{align-self:flex-start;margin:0;height:calc(198px / var(--page-scale))}
+/* Keep the auto in the former artwork position above the hero identity. */
+.heroArt{align-self:flex-start;margin:0}
+.heroArt:global(.namma-auto-slot){width:calc(184px / var(--page-scale));max-width:100%;height:calc(224px / var(--page-scale));margin-bottom:calc(-40px / var(--page-scale))}
 .heroContent{font-family:var(--portfolio-serif);display:flex;flex-direction:column;align-items:flex-start;gap:calc(16px / var(--page-scale));width:100%;font-size:var(--landing-body-size);line-height:var(--landing-body-leading);letter-spacing:calc(-.08px / var(--page-scale));text-align:left}
 .heroIdentity{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:calc(4px / var(--page-scale)) calc(16px / var(--page-scale));width:100%}
 .hero h1{font-family:inherit;font-weight:var(--portfolio-weight-heading);font-size:var(--landing-title-size);line-height:1.25;letter-spacing:calc(-.1px / var(--page-scale));margin:0;outline-offset:8px}
@@ -30,4 +31,4 @@
 
 .heroLinks a[aria-disabled=true]{color:var(--cf-muted);cursor:default}
 
-@media(max-width:767px){.heroArt{height:calc(180px / var(--page-scale))}}
+@media(max-width:767px){.heroArt:global(.namma-auto-slot){width:calc(160px / var(--page-scale));height:calc(200px / var(--page-scale));margin-bottom:calc(-32px / var(--page-scale))}}
