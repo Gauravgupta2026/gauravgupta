@@ -1,0 +1,21 @@
+/* Shares the Notes column and tokens. --section-gap, --body-size and --label-size come from EditorialPage's .page. */
+.header{display:flex;flex-direction:column;gap:calc(24px / var(--page-scale));margin-bottom:var(--section-gap)}
+.prose{display:flex;flex-direction:column;gap:calc(24px / var(--page-scale))}
+.prose p{margin:0;max-width:var(--portfolio-measure);font:400 var(--body-size)/1.5 var(--portfolio-serif)}
+
+.photo{margin:0 0 var(--section-gap);display:flex;flex-direction:column;gap:calc(12px / var(--page-scale))}
+/* 16:9 keeps the head and shoulders in frame; the crop sits low on the photo. */
+.photo img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;object-position:50% 80%;border-radius:5px}
+
+.context{display:flex;flex-direction:column;gap:calc(24px / var(--page-scale));margin-bottom:var(--section-gap)}
+.context ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) calc(104px / var(--page-scale));gap:calc(16px / var(--page-scale));align-items:baseline;padding:calc(12px / var(--page-scale)) 0}
+.name{font:400 var(--body-size)/1.5 var(--portfolio-serif)}
+.detail,.period{font:400 var(--label-size)/1.5 var(--portfolio-sans);letter-spacing:0;color:var(--cf-muted)}
+.period{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+@media(max-width:767px){
+  .photo img{aspect-ratio:4/3}
+  .row{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name period" "detail detail";gap:calc(2px / var(--page-scale)) calc(16px / var(--page-scale));padding:calc(10px / var(--page-scale)) 0}
+  .name{grid-area:name}.period{grid-area:period}.detail{grid-area:detail}
+}

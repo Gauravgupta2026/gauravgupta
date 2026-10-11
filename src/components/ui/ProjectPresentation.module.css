@@ -1,7 +1,0 @@
-.frame { position: relative; overflow: hidden; border: 1px solid #2e2e2e; border-radius: 8px; background: #171717; }
-.title { margin: 0; font: 400 var(--project-title-size)/1.15 var(--font-giants-body), system-ui, sans-serif; letter-spacing: -.025em; }
-.purpose { margin: 8px 0 0; font: 400 var(--project-purpose-size)/1.4 var(--font-giants-body), system-ui, sans-serif; letter-spacing: -.01em; }
-.facts { font: 400 12px/1.5 var(--font-giants-body), system-ui, sans-serif; letter-spacing: 0; color: #a4a4a4; text-transform: none; }
-@media (max-width: 1023px) {
-  .frame { width: var(--project-media-width); height: var(--project-media-height); aspect-ratio: auto; flex-shrink: 0; }
-}

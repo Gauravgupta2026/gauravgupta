@@ -4,17 +4,15 @@
 .intro p{margin:0;max-width:60ch}
 .label{font:400 var(--label-size)/1.5 var(--portfolio-sans);letter-spacing:0;color:var(--cf-muted)}
 .action{display:inline-flex;align-items:center;min-height:calc(44px / var(--page-scale));font:400 var(--body-size)/1.5 var(--portfolio-sans);letter-spacing:0;text-underline-offset:4px}
-.notes{list-style:none;margin:0;padding:0;border-top:1px solid var(--cf-rule)}
-.notes li{border-bottom:1px solid var(--cf-rule)}
+.notes{list-style:none;margin:0;padding:0}
 .notes a{display:grid;grid-template-columns:calc(88px / var(--page-scale)) minmax(0,1fr);gap:calc(16px / var(--page-scale));align-items:baseline;min-height:calc(44px / var(--page-scale));padding:calc(16px / var(--page-scale)) 0;text-decoration:none!important}
 .notes time{font:400 var(--label-size)/1.5 var(--portfolio-sans);letter-spacing:0;color:var(--cf-muted);white-space:nowrap;font-variant-numeric:tabular-nums}
-.noteTitle{border-left:1px solid var(--cf-rule);padding-left:calc(16px / var(--page-scale))}
+.noteTitle{min-width:0}
 .notes a:hover .noteTitle{text-decoration:underline;text-underline-offset:4px}
 .article header{display:flex;flex-direction:column;align-items:flex-start;gap:calc(16px / var(--page-scale));margin-bottom:calc(48px / var(--page-scale))}
 .article header p{margin:0}
-.article p,.article li{font:400 var(--body-size)/1.5 var(--portfolio-serif)}
+.article p,.article li{font:400 var(--body-size)/1.5 var(--portfolio-serif);max-width:var(--portfolio-measure)}
 .article h2{margin-top:calc(32px / var(--page-scale))}
 .article figcaption{font:400 var(--label-size)/1.5 var(--portfolio-sans)}
 .article header .label{font:400 var(--label-size)/1.5 var(--portfolio-sans)}
-@media(max-width:767px){.page{--section-gap:calc(48px / var(--page-scale));padding-top:calc(112px / var(--page-scale))}.notes a{grid-template-columns:calc(68px / var(--page-scale)) minmax(0,1fr);gap:calc(12px / var(--page-scale))}.noteTitle{padding-left:calc(12px / var(--page-scale))}}
-@media(forced-colors:active){.notes,.notes li,.noteTitle{border-color:CanvasText}}
+@media(max-width:767px){.page{--section-gap:calc(48px / var(--page-scale));padding-top:calc(112px / var(--page-scale))}.notes a{grid-template-columns:calc(68px / var(--page-scale)) minmax(0,1fr);gap:calc(12px / var(--page-scale))}}

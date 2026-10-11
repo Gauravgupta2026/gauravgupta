@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: projectRoot,
   },
+  // The contact card now closes the About page.
+  async redirects() {
+    return [{ source: "/contact", destination: "/about#contact", permanent: false }];
+  },
 };
 
 export default nextConfig;

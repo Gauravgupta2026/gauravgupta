@@ -1,0 +1,16 @@
+/* One quiet card, centred in a full-height section. The type and spacing match the landing page. */
+.section{min-height:100svh;display:grid;place-items:center;padding:calc(96px / var(--page-scale, 1)) 0 calc(64px / var(--page-scale, 1))}
+.card{width:min(480px,100%);display:flex;flex-direction:column;gap:48px;padding:48px 44px 40px;background:#fcfaf3;border:1px solid var(--cf-rule);border-radius:6px;box-shadow:0 24px 48px -32px rgba(12,11,11,.22)}
+.card header{display:flex;flex-direction:column;gap:12px}
+.section .card h2{font:400 var(--cf-impact-size)/var(--cf-impact-leading) var(--portfolio-serif);letter-spacing:var(--cf-impact-tracking);margin:0}
+.card p{margin:0;max-width:34ch;font:400 17px/25px var(--portfolio-serif);color:var(--cf-muted);text-wrap:balance}
+.rows{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.section .card .rows a{display:grid;grid-template-columns:minmax(0,1fr) auto 16px;align-items:center;gap:16px;min-height:48px;margin:0 -12px;padding:0 12px;border-radius:4px;text-decoration:none;font:400 15px/20px var(--portfolio-sans);letter-spacing:0;transition:background-color .2s ease}
+.section .card .rows a:hover{background:rgba(12,11,11,.04);color:inherit}
+.section .card .rows a:focus-visible{outline:2px solid var(--cf-ink);outline-offset:2px}
+.value{font-size:13px;color:var(--cf-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arrow{justify-self:end;transition:transform .2s ease}
+.rows a:hover .arrow{transform:translate(2px,-2px)}
+@media(max-width:767px){.section{padding:72px 0 40px}.card{gap:36px;padding:32px 24px 24px}.value{display:none}.section .card .rows a{grid-template-columns:minmax(0,1fr) 16px}}
+@media(prefers-reduced-motion:reduce){.section .card .rows a,.arrow{transition:none}.rows a:hover .arrow{transform:none}}
+@media(forced-colors:active){.card{border-color:CanvasText}}

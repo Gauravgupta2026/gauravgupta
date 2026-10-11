@@ -2,21 +2,21 @@
 .article{min-width:0}
 .header{position:relative;min-height:280px;display:flex;align-items:flex-end;justify-content:center;padding:96px var(--case-inset) 64px}
 .header h1{font:400 var(--cf-secondary-size)/var(--cf-secondary-leading) var(--cf-font);letter-spacing:var(--cf-secondary-tracking);margin:0}
-.back{position:absolute;top:24px;left:var(--case-inset);display:inline-flex;align-items:center;min-height:44px;font-size:12px;color:var(--cf-muted)}
+.back{position:absolute;top:24px;left:var(--case-inset);display:inline-flex;align-items:center;min-height:calc(44px / var(--page-scale, 1));font-size:12px;color:var(--cf-muted)}
 .image{display:block;width:100%;height:auto;border-radius:0;margin:0}
 .overview{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.45fr);gap:64px;padding:64px var(--case-inset) 0}
 .overview h2{font:400 var(--cf-secondary-size)/var(--cf-secondary-leading) var(--cf-font);letter-spacing:var(--cf-secondary-tracking);max-width:24ch;margin:0;text-wrap:balance}
-.explore{display:inline-flex;align-items:center;justify-content:center;gap:16px;min-height:44px;padding:12px 24px;margin-top:28px;border-radius:10px;background:var(--cf-ink);color:#fff;text-decoration:none!important;font-size:14px}
+.explore{display:inline-flex;align-items:center;justify-content:center;gap:16px;min-height:calc(44px / var(--page-scale, 1));padding:12px 24px;margin-top:28px;border-radius:10px;background:var(--cf-ink);color:#fff;text-decoration:none!important;font-size:14px}
 .article .explore:hover{background:var(--cf-accent);color:#fff}
 .facts{display:grid;gap:24px;margin:0;font-size:14px;line-height:22px}
-.facts dt{font-size:10px;line-height:14px;text-transform:uppercase;letter-spacing:.5px;color:var(--cf-muted);margin-bottom:8px}
+.facts dt{font-size:12px;line-height:14px;text-transform:uppercase;letter-spacing:.5px;color:var(--cf-muted);margin-bottom:8px}
 .facts dd{margin:0}
 .story{padding:100px var(--case-inset) 96px;scroll-margin-top:88px}
 .story p{max-width:660px;font:400 16px/26px var(--cf-font);margin:0 0 24px;color:var(--cf-muted)}
 .story p:last-child{margin-bottom:0}
 .next{padding:64px var(--case-inset) 80px}
-.next a{display:inline-flex;flex-direction:column;justify-content:center;gap:12px;min-height:44px;text-decoration:none!important}
-.next span{font-size:10px;line-height:14px;text-transform:uppercase;letter-spacing:.5px;color:var(--cf-muted)}
+.next a{display:inline-flex;flex-direction:column;justify-content:center;gap:12px;min-height:calc(44px / var(--page-scale, 1));text-decoration:none!important}
+.next span{font-size:12px;line-height:14px;text-transform:uppercase;letter-spacing:.5px;color:var(--cf-muted)}
 .next strong{font:400 var(--cf-secondary-size)/var(--cf-secondary-leading) var(--cf-font);letter-spacing:var(--cf-secondary-tracking)}
-@media(max-width:767px){.page{--case-inset:16px;padding:76px 0 40px}.header{min-height:168px;padding:80px var(--case-inset) 32px}.header h1{font-size:20px;line-height:24px}.back{top:12px;font-size:11px}.overview{grid-template-columns:1fr;gap:28px;padding-top:28px}.overview h2{font-size:20px;line-height:24px}.explore{margin-top:20px;padding:10px 18px;font-size:12px}.facts{grid-template-columns:1fr 1fr;gap:20px;font-size:12px;line-height:18px}.facts dt{font-size:9px;line-height:12px}.story{padding-top:48px;padding-bottom:40px;scroll-margin-top:72px}.story p{font-size:14px;line-height:22px;margin-bottom:20px}.next{padding:32px var(--case-inset) 40px}}
+@media(max-width:767px){.page{--case-inset:16px;padding:76px 0 40px}.header{min-height:168px;padding:80px var(--case-inset) 32px}.header h1{font-size:20px;line-height:24px}.back{top:12px;font-size:12px}.overview{grid-template-columns:1fr;gap:28px;padding-top:28px}.overview h2{font-size:20px;line-height:24px}.explore{margin-top:20px;padding:10px 18px;font-size:12px}.facts{grid-template-columns:1fr 1fr;gap:20px;font-size:12px;line-height:18px}.facts dt{font-size:12px;line-height:12px}.story{padding-top:48px;padding-bottom:40px;scroll-margin-top:72px}.story p{font-size:14px;line-height:22px;margin-bottom:20px}.next{padding:32px var(--case-inset) 40px}}
 @media(forced-colors:active){.page{background:Canvas}.explore{background:ButtonFace;color:ButtonText;border:1px solid ButtonText}}

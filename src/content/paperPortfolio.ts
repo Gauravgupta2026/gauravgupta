@@ -36,3 +36,22 @@ export const playgroundItems = [
   { src: "/assets/about.jpeg", alt: "Gaurav looking across a mountain landscape", title: "A different pace", caption: "A little space to look around.", kind: "photograph" },
   { src: "/photos/mountains.png", alt: "A mountain landscape", title: "Further out", caption: "Some things are worth stopping for.", kind: "photograph" },
 ] as const;
+
+export const aboutParagraphs = [
+  "I design and build digital products, with care for how they work and feel.",
+  "I work across product design, interfaces, and code. My portfolio includes projects, prototypes, and experiments, along with the questions I’m still working through.",
+  "Away from the screen, I make room for music, reading, poetry, sketching, and the outdoors. I want the work to stay ambitious without losing that side of me.",
+] as const;
+
+export const aboutPhoto = {
+  src: "/assets/about.jpeg",
+  alt: "Gaurav standing in a snow-covered mountain valley, looking out at the clouds",
+  caption: "Gaurav Gupta · Away from the screen",
+} as const;
+
+export const aboutContext = [
+  { name: "KPMG", detail: "Risk", period: "2026" },
+  { name: "Volvo Group", detail: "Campus Ambassador", period: "2023 — 2025" },
+  { name: "Product & design", detail: "Focus", period: "Current" },
+  { name: "Bengaluru, IN", detail: "Location", period: "Current" },
+] as const;

@@ -1,3 +1,4 @@
+import { GreetingWindow } from "./GreetingWindow";
 import { EMAIL, SOCIALS } from "@/content/paperPortfolio";
 import styles from "./LandingHome.module.css";
 import { LandingProjects } from "./LandingProjects";
@@ -6,7 +7,7 @@ export function Home() {
   return <main id="main-content" className={styles.page}>
       <div className={styles.heroCover}>
         <section className={styles.hero} aria-labelledby="home-title">
-          <div className={styles.heroArt} aria-hidden="true" />
+          <div className={styles.heroArt}><GreetingWindow /></div>
           <div className={styles.heroContent}>
             <div className={styles.heroIdentity}>
               <h1 id="home-title" tabIndex={-1}>Gaurav Gupta</h1>

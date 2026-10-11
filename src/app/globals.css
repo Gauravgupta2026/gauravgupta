@@ -1,10 +1,10 @@
 @import "tailwindcss";
 @theme {
- --color-bg:#fff9e6;--color-ink:#0c0b0b;--color-soft-ink:#0c0b0b;--color-mute:#7e7e7e;--color-border:#e0e0e0;--color-surface:#fff9e6;--color-accent:#3060a0;
+ --color-bg:#fff9e6;--color-ink:#0c0b0b;--color-soft-ink:#0c0b0b;--color-mute:#6b6b6b;--color-border:#e0e0e0;--color-surface:#fff9e6;--color-accent:#3060a0;
  --font-display:var(--font-site-sans),Arial,sans-serif;--font-body:var(--font-site-sans),Arial,sans-serif;--font-editorial:var(--font-site-sans),Arial,sans-serif;--font-mono:ui-monospace,monospace;
 }
 :root {
- --cf-bg:#fff9e6;--cf-accent:#3060a0;--cf-ink:#0c0b0b;--cf-muted:#7e7e7e;--cf-faint:rgba(12,11,11,.4);--cf-rule:rgba(12,11,11,.1);--cf-white:#fff;
+ --cf-bg:#fff9e6;--cf-accent:#3060a0;--cf-ink:#0c0b0b;--cf-muted:#6b6b6b;--cf-faint:rgba(12,11,11,.4);--cf-rule:rgba(12,11,11,.1);--cf-white:#fff;
  --cf-font:var(--font-site-sans),Arial,sans-serif;
  --cf-headline-size:55px;--cf-headline-leading:50px;--cf-headline-tracking:-1px;
  --cf-impact-size:42px;--cf-impact-leading:40px;--cf-impact-tracking:-.8px;
@@ -28,4 +28,4 @@ img{max-width:100%}
 /* Shared by the approved hero, project captions and footers. */
 @font-face{font-family:"ITC Garamond Hero";src:url("/fonts/itc-garamond/ITCGaramondStd-Bk.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap}
 
-:root{--portfolio-serif:"ITC Garamond Hero",Georgia,serif;--portfolio-sans:var(--font-site-sans),Arial,sans-serif;--portfolio-title-size:20px;--portfolio-body-size:16px;--portfolio-label-size:12px;--portfolio-column:660px;--portfolio-gutter:24px}
+:root{--portfolio-measure:34em;--portfolio-serif:"ITC Garamond Hero",Georgia,serif;--portfolio-sans:var(--font-site-sans),Arial,sans-serif;--portfolio-title-size:20px;--portfolio-body-size:16px;--portfolio-label-size:12px;--portfolio-column:660px;--portfolio-gutter:24px}

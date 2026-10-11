@@ -5,15 +5,16 @@
 .page a:hover{color:var(--cf-accent)}
 .heroCover{--hero-paper:var(--cf-bg);position:relative;z-index:2;isolation:isolate;background:var(--hero-paper);margin:0 calc(-1 * var(--landing-gutter))}
 .heroCover::before{content:"";position:absolute;inset:0 auto 0 50%;width:calc(100vw / var(--page-scale));transform:translateX(-50%);z-index:-1;pointer-events:none;background:linear-gradient(#fffffff2,#fffffff2),url("/reference-dwija/paper.png") center/736px auto,var(--hero-paper)}
-.hero{display:flex;flex-direction:column;align-items:center;gap:calc(40px / var(--page-scale));padding:calc(192px / var(--page-scale)) var(--landing-gutter) var(--major-gap)}
-.heroArt{aspect-ratio:1232/928;width:calc(300px / var(--page-scale));max-width:calc((100vw - 72px) / var(--page-scale));margin:0}
+.hero{display:flex;flex-direction:column;align-items:center;gap:calc(24px / var(--page-scale));padding:calc(192px / var(--page-scale)) var(--landing-gutter) var(--major-gap)}
+/* The greeting window hugs its own size and sits on the left, directly above the name. */
+.heroArt{align-self:flex-start;margin:0}
 .heroContent{font-family:var(--portfolio-serif);display:flex;flex-direction:column;align-items:flex-start;gap:calc(16px / var(--page-scale));width:100%;font-size:var(--landing-body-size);line-height:var(--landing-body-leading);letter-spacing:calc(-.08px / var(--page-scale));text-align:left}
 .heroIdentity{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:calc(4px / var(--page-scale)) calc(16px / var(--page-scale));width:100%}
 .hero h1{font-family:inherit;font-size:var(--landing-title-size);line-height:1.25;letter-spacing:calc(-.1px / var(--page-scale));margin:0;outline-offset:8px}
 .heroIdentity>span{font:400 calc(14px / var(--page-scale))/calc(20px / var(--page-scale)) var(--cf-font);letter-spacing:0}
-.heroDescription{margin:0}
+.heroDescription{margin:0;max-width:var(--portfolio-measure)}
 .heroLinks{display:flex;flex-wrap:wrap;gap:calc(16px / var(--page-scale))}
-.heroLinks a{display:inline-flex;align-items:center;min-height:calc(44px / var(--page-scale));text-decoration:underline dotted;text-underline-offset:4px}
+.heroLinks a{display:inline-flex;align-items:center;min-height:calc(44px / var(--page-scale));padding-inline:8px;margin-inline:-8px;text-decoration:underline dotted;text-underline-offset:4px}
 @media(max-width:767px){.page{--major-gap:calc(48px / var(--page-scale));padding-bottom:var(--major-gap)}}
 
 @media(forced-colors:active){.heroCover{background:Canvas}.heroCover::before{display:none}.page{background:Canvas;color:CanvasText}}

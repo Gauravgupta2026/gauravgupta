@@ -41,23 +41,23 @@
 .context { margin: 14px 0 0; max-width: 75ch; font-size: 14px; line-height: 1.45; color: var(--landing-muted); }
 .wyldeArt, .luckyArt { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
 .wyldeArt { background: #e7dfce; color: #29291f; }
-.artLabel { position: absolute; top: 24px; left: 28px; font-size: 10px; letter-spacing: .1em; }
-.artCaption { position: absolute; bottom: 20px; right: 28px; font-size: 11px; opacity: .65; }
+.artLabel { position: absolute; top: 24px; left: 28px; font-size: 12px; letter-spacing: .1em; }
+.artCaption { position: absolute; bottom: 20px; right: 28px; font-size: 12px; opacity: .8; }
 .deck { position: relative; height: 75%; aspect-ratio: .73; transform: rotate(5deg); transition: transform 600ms ease; }
 .cardBack, .playCard { position: absolute; inset: 0; border-radius: 12px; }
 .cardBack { background: #626947; border: 10px solid #c5ccb1; transform: rotate(-15deg) translate(-15px, 4px); box-shadow: 0 15px 40px #26261e33; }
 .playCard { display: flex; justify-content: space-between; flex-direction: column; padding: 24px; background: #f8f3e7; border: 1px solid #c4bca9; box-shadow: 0 10px 30px #26261e26; }
-.playCard span { font-size: 10px; letter-spacing: .07em; }
+.playCard span { font-size: 12px; letter-spacing: .07em; }
 .playCard strong { font-family: var(--font-editorial-local), Georgia, serif; font-size: clamp(32px, 4vw, 58px); font-weight: 300; line-height: .95; letter-spacing: -.035em; }
 .playCard i { color: #646a49; }
 .mediaLink:hover .deck { transform: rotate(0); }
 .luckyArt { background: radial-gradient(ellipse at 50% 35%, #55534a, #232521 75%); color: #282a25; }
 .luckyArt .artLabel, .luckyArt .artCaption { color: #d3d2c8; }
 .machine { width: 52%; padding: 18px 24px 22px; border: 1px solid #d7d7cc; border-radius: 18px; background: linear-gradient(125deg, #b0b1a7, #eeeee4 22%, #92958d 52%, #dfe0d4 85%); box-shadow: 0 30px 70px #0006, inset 0 0 0 5px #ffffff18; text-align: center; transform: rotate(-4deg); }
-.machine > span { font-size: 11px; letter-spacing: .15em; }
+.machine > span { font-size: 12px; letter-spacing: .15em; }
 .reels { display: grid; grid-template-columns: repeat(3, 1fr); overflow: hidden; border: 5px solid #434940; border-radius: 8px; margin: 20px 0; background: #eeeee3; }
 .reels span { font-family: var(--font-editorial-local), Georgia, serif; font-size: clamp(72px, 12vw, 170px); line-height: 1.1; border-right: 1px solid #bbbdaf; background: linear-gradient(#c5c8b8, #f7f7eb 35%, #f7f7eb 65%, #c5c8b8); }
-.machine .machineFoot { font-size: 8px; }
+.machine .machineFoot { font-size: 12px; }
 @media (max-width: 1023px) {
   .section { --card-width: calc(var(--project-media-width) + var(--page-gutter) * 2); }
 
@@ -76,8 +76,8 @@
   .machine { width: 80%; padding: 18px 12px; }
   .reels span { font-size: 90px; }
   .deck { height: 70%; }
-  .artLabel { top: 16px; left: 16px; font-size: 8px; }
-  .artCaption { bottom: 14px; right: 16px; font-size: 9px; }
+  .artLabel { top: 16px; left: 16px; font-size: 12px; }
+  .artCaption { bottom: 14px; right: 16px; font-size: 12px; }
   .playCard { padding: 18px; }
   .playCard strong { font-size: 38px; }
 }
