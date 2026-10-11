@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./theme.js" defer></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Allison&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #0b0b0b; }
+  body { font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #bdbbff; text-decoration: none; }
+  a:hover { color: #d6d5ff; }
+</style>
+</helmet>
+
+<div style="position: relative; width: 1512px; min-height: 1000px; margin: 0 auto; background: #0b0b0b; color: #f3f3f3; padding-bottom: 240px">
+
+  <nav style="position: absolute; top: 103.2px; left: 230.5px; width: 1051px; display: flex; align-items: baseline; font-size: 16px; line-height: 16px; letter-spacing: 0.06em; color: #8a8a8a">
+    <a href="Landing.dc.html" title="Back to home" style="margin-right: 66px; font-family: Allison, cursive; font-size: 46px; line-height: 16px; letter-spacing: 0; color: #d10000; transition: color .35s ease" style-hover="color: #f3f3f3">GG</a>
+    <div style="display: flex; align-items: baseline; gap: 124px">
+      <a href="Landing.dc.html" style="color: #f3f3f3">WORK</a>
+      <a href="Labs.dc.html" style="color: #8a8a8a" style-hover="color: #f3f3f3">LABS</a>
+    </div>
+    <a href="Contact.dc.html" style="margin-left: auto; display: flex; align-items: baseline; gap: 8px; color: #8a8a8a" style-hover="color: #f3f3f3">
+      <span>SAY</span><span>HELLO</span>
+    </a>
+  </nav>
+
+  <h1 style="position: absolute; top: 328px; left: 230.5px; margin: 0; font-family: Newsreader, serif; font-size: 50px; line-height: 50px; font-weight: 300; letter-spacing: -0.008em; color: #ffffff">Work</h1>
+  <p style="position: absolute; top: 412px; left: 230.5px; width: 676.5px; margin: 0; font-size: 18px; line-height: 29px; color: #929292; text-wrap: pretty">Case studies in full &mdash; the constraint, what shipped, and whether it worked. Three write-ups in progress.</p>
+  <div style="position: absolute; top: 520px; left: 0; width: 1512px; height: 1px; background: #414141"></div>
+
+  <div style="position: absolute; top: 600px; left: 230.5px; width: 1051px">
+    <sc-for list="{{ items }}" as="p" hint-placeholder-count="3">
+      <a href="{{ p.href }}" style="height: 147px; display: flex; align-items: baseline; gap: 65px; border-bottom: 1px solid #1c1c1c; color: inherit" style-hover="opacity: .72">
+        <div style="font-size: 24px; line-height: 40px; color: #464646">{{ p.num }}</div>
+        <div style="font-size: 40px; line-height: 40px; letter-spacing: -0.02em; color: #716e6e">{{ p.title }}</div>
+        <div style="margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 40px; color: #5c5c5c">{{ p.status }}</div>
+      </a>
+    </sc-for>
+  </div>
+
+  <a href="Landing.dc.html" style="position: absolute; top: 1130px; left: 230.5px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #f3f3f3" style-hover="color: #bdbbff">&larr; BACK HOME</a>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1512,&quot;height&quot;:1000}}">
+class Component extends DCLogic {
+  renderVals() {
+    return { items: [
+      { num: '01', title: 'Sachetana', status: 'WRITE-UP IN PROGRESS', href: '#' },
+      { num: '02', title: 'Wylde', status: 'CASE STUDY', href: 'Wylde.dc.html' },
+      { num: '03', title: 'Lucky Day', status: 'WRITE-UP IN PROGRESS', href: '#' }
+    ] };
+  }
+}
+
+</script>
+</body>
+</html>

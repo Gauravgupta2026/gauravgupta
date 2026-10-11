@@ -1,127 +1,47 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { ArtifactFiles } from "@/components/sections/ArtifactFiles";
-import { DecisionLog } from "@/components/sections/DecisionLog";
-import { FaqAccordion } from "@/components/sections/FaqAccordion";
-import { TechStack } from "@/components/ui/TechStack";
-import { MediaPlaceholder } from "@/components/ui/MediaPlaceholder";
-import { getProjectDetail, projectDetails, type ProjectDetail, type Section } from "@/content/projectDetails";
-import { projects } from "@/content/projects";
-import styles from "./ProjectCaseStudy.module.css";
+import { paperProjects } from "@/content/paperPortfolio";
+import paperStyles from "@/components/paper/Paper.module.css";
+import styles from "./Project.module.css";
+import sachetanaHero from "../../../../public/assets/work/sachetana-wellness.jpg";
+import sachetanaDetail from "../../../../public/assets/work/sachetana-detail.jpg";
+import wyldeHero from "../../../../public/assets/work/wylde-space.jpg";
+import wyldeDetail from "../../../../public/assets/work/wylde-detail.jpg";
+import luckyDayHero from "../../../../public/assets/work/lucky-day-hero.jpg";
+import luckyDayDetail from "../../../../public/assets/work/lucky-day-detail.jpg";
 
-const PROJECT_MEDIA: Record<string, { hero: string; detail: string }> = {
-  sachetana: { hero: "/assets/work/sachetana-wellness.jpg", detail: "/assets/work/sachetana-detail.jpg" },
-  wylde: { hero: "/assets/work/wylde-space.jpg", detail: "/assets/work/wylde-detail.jpg" },
-  "lucky-day": { hero: "/assets/work/lucky-day-hero.jpg", detail: "/assets/work/lucky-day-detail.jpg" },
+const projectImages = {
+ "sachetana": { hero: sachetanaHero, detail: sachetanaDetail },
+ "wylde": { hero: wyldeHero, detail: wyldeDetail },
+ "lucky-day": { hero: luckyDayHero, detail: luckyDayDetail },
 };
-
-const PROOF_LABELS = { demo: "Working demo", loom: "Watch the walkthrough", evalSheet: "Eval sheet" } as const;
-const pad = (value: number) => String(value).padStart(2, "0");
-
-function narrativeSections(project: ProjectDetail): Section[] {
-  const result: Section[] = [project.realProblem, project.beforeAfter];
-  if (project.kind === "ai") result.push(project.aiWorkflow, project.evaluation, project.guardrails);
-  else result.push(project.process);
-  result.push(project.business);
-  return result;
-}
-
-export function generateStaticParams() {
-  return Object.keys(projectDetails).map((slug) => ({ slug }));
-}
-
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
-  const project = getProjectDetail(slug);
-  if (!project) return { title: "Project not found" };
-  return { title: `${project.title} — Gaurav Gupta`, description: project.tagline };
-}
-
-export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const project = getProjectDetail(slug);
-  if (!project) notFound();
-
-  const sections = narrativeSections(project);
-  const media = PROJECT_MEDIA[slug];
-  const projectIndex = projects.findIndex(item => item.slug === slug);
-  const nextProject = projects[(projectIndex + 1) % projects.length];
-  let nextSectionNumber = sections.length;
-  const forksNumber = project.forks ? ++nextSectionNumber : 0;
-  const filesNumber = project.files ? ++nextSectionNumber : 0;
-  const faqsNumber = project.faqs ? ++nextSectionNumber : 0;
-
-  return (
-    <main className={styles.page}>
-      <article>
-        <header className={styles.header}>
-          <h1>{project.title}</h1>
-          <p className={styles.standfirst}>{project.tagline}</p>
-          {project.meta && (
-            <dl className={styles.meta}>
-              {project.meta.map((item) => <div key={item.k}><dt>{item.k}</dt><dd>{item.v}</dd></div>)}
-            </dl>
-          )}
-        </header>
-
-        <figure className={styles.leadVisual}>
-          {media ? (
-            <Image src={media.hero} alt={`${project.title} project overview`} fill priority sizes="(max-width: 1023px) calc(100vw - 48px), min(960px, calc(100vw - 128px))" />
-          ) : (
-            <MediaPlaceholder label={project.showcaseLabel} seed={`${slug}-lead`} className={styles.placeholder} />
-          )}
-        </figure>
-
-        <aside className={styles.principle}>
-          <span>The product principle</span>
-          <p>{project.statement}</p>
-        </aside>
-
-        <div className={styles.readingColumn}>
-          <section className={styles.contextGrid}>
-            <div><span>Tech stack</span><TechStack technologies={project.techStack} /></div>
-            <div><span>Built with</span><p>{project.stakeholders.join(" · ")}</p></div>
-          </section>
-
-          {project.proof && (
-            <section className={styles.proof} aria-label="Project proof">
-              <div className={styles.proofLinks}>
-                {(Object.keys(PROOF_LABELS) as Array<keyof typeof PROOF_LABELS>).map((key) => {
-                  const href = project.proof?.[key];
-                  return href ? <a key={key} href={href} target="_blank" rel="noopener noreferrer">{PROOF_LABELS[key]} ↗</a> : null;
-                })}
-              </div>
-              {project.proof.feedback && <p>{project.proof.feedback}</p>}
-            </section>
-          )}
-
-          {sections.map((section, index) => (
-            <section className={styles.storySection} key={section.heading}>
-              <span>{pad(index + 1)} / {section.heading}</span>
-              <h2>{section.heading}</h2>
-              {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-            </section>
-          ))}
-        </div>
-
-        {media && (
-          <figure className={styles.detailVisual}>
-            <Image src={media.detail} alt={`${project.title} interface detail`} fill sizes="(max-width: 1023px) calc(100vw - 48px), min(960px, calc(100vw - 128px))" />
-          </figure>
-        )}
-
-        <div className={styles.supportingSections}>
-          {project.forks && <section><span>{pad(forksNumber)} / Decisions</span><h2>Decision log</h2><DecisionLog forks={project.forks} /></section>}
-          {project.files && <section><span>{pad(filesNumber)} / Process</span><h2>Artefacts &amp; trigger files</h2><ArtifactFiles files={project.files} /></section>}
-          {project.faqs && <section><span>{pad(faqsNumber)} / Questions</span><h2>Questions I get asked</h2><FaqAccordion faqs={project.faqs} /></section>}
-        </div>
-
-        <footer className={styles.nextProjects}>
-          <Link href={`/projects/${nextProject.slug}`}><span>Next project</span><span>{nextProject.title}</span></Link>
-        </footer>
-      </article>
-    </main>
-  );
+const IMAGE_SIZES = "100vw";
+export function generateStaticParams() { return [...paperProjects.map(p => ({ slug: p.slug })), { slug: 'new-project' }]; }
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> { const { slug } = await params; const p = paperProjects.find(p => p.slug === slug); return { title: p ? p.title + " — Gaurav Gupta" : slug === "new-project" ? "Work in progress — Gaurav Gupta" : "Project not found", description: p?.purpose }; }
+export default async function Project({ params }: { params: Promise<{ slug: string }> }) {
+ const { slug } = await params; const p = paperProjects.find(p => p.slug === slug);
+ if (!p && slug === "new-project") return <main id="main-content" className={paperStyles.readingPage}><Link href="/labs">Back to labs</Link><h1>A work in progress.</h1><p>This idea is still taking shape. There will be more to share when there is something useful to show.</p></main>;
+ if (!p) notFound();
+ const next = paperProjects[(paperProjects.indexOf(p) + 1) % paperProjects.length];
+ const images = projectImages[p.slug];
+ return <main id="main-content" className={styles.page}>
+  <article className={styles.article}>
+   <header className={styles.header}>
+    <Link className={styles.back} href="/work">Back to work</Link>
+    <h1>{p.title}</h1>
+   </header>
+   <Image src={images.hero} alt={p.alt} sizes={IMAGE_SIZES} className={styles.image} />
+   <section className={styles.overview} aria-label="Project overview">
+    <div><h2>{p.purpose}</h2><Link className={styles.explore} href="#project-story">Explore</Link></div>
+    <dl className={styles.facts}><div><dt>Role</dt><dd>{p.role}</dd></div><div><dt>Status</dt><dd>{p.state}</dd></div></dl>
+   </section>
+   <section id="project-story" className={styles.story} aria-label="Project story">
+    {p.paragraphs.map(text => <p key={text}>{text}</p>)}
+   </section>
+   <Image src={images.detail} alt={p.title + " visual study"} sizes={IMAGE_SIZES} className={styles.image} />
+   <nav className={styles.next} aria-label="Next project"><Link href={`/projects/${next.slug}`}><span>Next case study</span><strong>{next.title}</strong></Link></nav>
+  </article>
+ </main>;
 }

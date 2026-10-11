@@ -1,0 +1,30 @@
+{
+  "name": "namma-auto",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check:release": "node scripts/check-release.mjs",
+    "release": "npm run check:release && npm test && npm run build"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0"
+  },
+  "devDependencies": {
+    "@fontsource/baloo-tamma-2": "^5.3.0",
+    "@fontsource/oswald": "^5.3.0",
+    "@fontsource/rozha-one": "^5.3.0",
+    "sharp": "^0.35.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3"
+  },
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+  }
+}

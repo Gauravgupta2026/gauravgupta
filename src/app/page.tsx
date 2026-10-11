@@ -1,3 +1,2 @@
-import { LandingPage } from "@/components/giants/LandingPage";
-
-export default function Home() { return <LandingPage />; }
+import { Home } from "@/components/paper/Home";
+export default function Page() { return <Home />; }

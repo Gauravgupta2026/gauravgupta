@@ -1,0 +1,98 @@
+.site{--paper:var(--cf-bg);--ink:var(--cf-ink);--muted:var(--cf-muted);--serif:var(--cf-font);color:var(--ink);background:var(--cf-bg);font:400 var(--cf-body-size)/var(--cf-body-leading) var(--cf-font);letter-spacing:var(--cf-body-tracking);min-height:100svh}
+.site a{text-decoration-line:underline;text-decoration-style:dotted;text-underline-offset:4px;text-decoration-thickness:1px;text-decoration-skip-ink:none}
+.site a:hover{color:var(--cf-muted)}
+.site :is(a,button,input):focus-visible{outline:2px solid var(--cf-ink);outline-offset:5px}
+.site button{font:inherit;cursor:pointer}
+.site button:disabled{opacity:.3;cursor:default}
+.surface{position:relative;z-index:2;min-height:100svh;background:var(--paper);margin-bottom:0}
+/* Keep the original page proportions while reducing its rendered size and flow height. */
+.pageContent{--page-scale:.972;zoom:var(--page-scale);width:calc(100% * var(--page-scale));margin-inline:auto}
+.skip{position:fixed;top:12px;left:16px;z-index:100;background:var(--cf-bg);padding:12px;transform:translateY(-150%)}
+.skip:focus{transform:none}
+.close{position:fixed;top:16px;right:16px;width:44px;height:44px;display:grid;place-items:center;border:0;background:transparent;font-size:28px!important;color:var(--cf-ink);z-index:2}
+.script{font:400 var(--cf-secondary-size)/var(--cf-secondary-leading) var(--cf-font);margin:0}
+
+.footer{font-family:"ITC Garamond Hero",Georgia,serif;font-weight:400;overflow:hidden;position:relative;z-index:1;height:560px;color:#1a1a1a;background:#fff6cc url('/reference-dwija/paper.png') center/cover;background-blend-mode:soft-light}
+.lightbox{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:70px 24px 32px;border:0;background:var(--cf-bg);color:var(--ink);overflow:auto}
+.lightbox::backdrop{background:var(--cf-bg)}
+.lightbox[open]{display:flex;align-items:center;justify-content:center}
+.lightbox figure{width:min(100%,1000px);margin:auto}
+.lightbox figure>img{width:100%;height:auto;max-height:70svh;object-fit:contain;border-radius:10px}
+.lightbox figcaption{margin:18px auto 0;max-width:660px;text-align:center}
+.lightbox figcaption strong{font-weight:400;font-size:20px}
+.lightbox figcaption p{margin:8px 0}
+.lightbox figcaption a{display:inline-flex;min-height:44px;align-items:center}
+.stampScene{height:500svh;position:relative}
+.stampStage{height:100svh;position:sticky;top:0;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-top:110px}
+.stampDeck{position:relative;width:min(450px,46vw);height:460px;margin-right:250px}
+.stamp{position:absolute;inset:0;width:100%;height:100%;border:0;outline:1px solid #00000006;box-shadow:0 8px 26px #00000008;padding:37px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;will-change:transform;mask:url('/paper-stamp-edge.svg') center/100% 100% no-repeat;color:var(--cf-ink);transform:translateX(calc(var(--stamp-order)*66px)) scale(.88)}
+.stamp h2{font:400 var(--cf-secondary-size)/var(--cf-secondary-leading) var(--cf-font);margin:0;text-align:center}
+.stamp p{margin:0;text-align:center;font-size:14px;line-height:15px}
+.stampNumber,.stampFoot{font-size:10px;line-height:10px;letter-spacing:.4px;text-transform:uppercase}
+.stampDrawing{height:125px;width:170px;object-fit:contain;flex-shrink:0}
+.stampDots{position:absolute;bottom:7svh;display:flex;gap:0}
+.stampDots button{width:44px;height:44px;border:0;background:none;display:grid;place-items:center}
+.stampDots button:after{content:"";width:7px;height:7px;border-radius:50%;background:var(--cf-rule)}
+.stampDots button[aria-pressed=true]:after{background:var(--cf-muted)}
+.scrollHint{position:absolute;bottom:3svh;font-size:12px;color:var(--muted);margin:0}
+.openStamp{max-width:540px;width:100%;padding:36px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px;border:12px solid var(--cf-bg);box-shadow:0 12px 40px #00000014}
+.openStamp h2{font:400 var(--cf-secondary-size)/var(--cf-secondary-leading) var(--cf-font);letter-spacing:var(--cf-secondary-tracking);margin:0}
+.openStamp p{font-size:14px;line-height:22px;margin:0}
+.contactPage{min-height:100svh;display:flex;align-items:center;justify-content:center;padding:192px 24px 120px}
+.contactBody{width:540px;max-width:100%;display:flex;align-items:center;flex-direction:column;gap:24px;text-align:center}
+.phone{width:180px;height:138px;object-fit:contain;transform-origin:50% 85%}
+.phone:hover{animation:ring 1.3s ease-in-out infinite}
+.contactBody p{margin:0}
+.contactRows{display:flex;flex-direction:column;gap:0}
+.contactRows>div{display:flex;justify-content:center;gap:24px}
+.contactRows a{display:flex;align-items:center;min-height:44px}
+@keyframes ring{0%,33%,100%{transform:rotate(0)}5%{transform:rotate(-6deg)}12%{transform:rotate(5deg)}20%{transform:rotate(-3deg)}}
+.photoFooter{padding:60px 0 24px;height:100%;display:flex;flex-direction:column;gap:28px;text-align:center;justify-content:center}
+.photoFooter>p{margin:0}
+.photoStrip{display:flex;gap:28px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;align-items:center;padding:0 24px;position:relative}
+.photoStrip::-webkit-scrollbar{display:none}
+.photoStrip figure{flex:0 0 auto;width:520px;max-width:80vw;margin:0;scroll-snap-align:start}
+.photoStrip img{display:block;width:100%;height:300px;object-fit:cover;border:3px solid white;border-radius:5px;box-shadow:0 0 0 1px #00000008}
+.photoControls{display:flex;gap:24px;justify-content:center}
+.photoControls button{min-width:44px;min-height:44px;background:none;border:0;text-decoration:underline dotted;text-underline-offset:4px}
+.readingPage{width:660px;max-width:calc(100% - 48px);margin:auto;padding:192px 0 120px;min-height:100svh}
+.readingPage>header{margin-bottom:48px}
+.readingPage h1{font:400 var(--cf-impact-size)/var(--cf-impact-leading) var(--cf-font);letter-spacing:var(--cf-impact-tracking);margin:24px 0 12px}
+.readingPage h2{font:400 var(--cf-secondary-size)/var(--cf-secondary-leading) var(--cf-font);letter-spacing:var(--cf-secondary-tracking);margin:40px 0 16px}
+.readingPage p{margin:0 0 20px;line-height:22px}
+.readingPage .meta{font-size:14px;color:var(--muted)}
+.readingPage .lead{font-size:var(--cf-secondary-size);line-height:var(--cf-secondary-leading)}
+.readingImage{width:100%;height:auto;border-radius:8px;margin:24px 0 40px}
+.srOnly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+@media(min-width:1280px){.readingPage{padding-top:132px}.stampStage{padding-top:0}.contactPage{padding-top:120px}}
+@media(max-width:767px){.stampDeck{margin-right:160px}.stamp{padding:18px}.stampDrawing{height:100px}}
+@media(max-width:639px){
+
+
+
+  .surface{margin-bottom:0}.footer{position:relative;height:auto;min-height:520px;z-index:1}
+
+
+    .lightbox{padding:72px 16px 24px}.lightbox[open]{align-items:flex-start}
+  .stampScene{height:auto;padding:112px 24px 72px}.stampStage{height:auto;position:static;overflow:visible;padding:0}.stampDeck{display:flex;flex-direction:column;width:100%;height:auto;margin:0;gap:32px}
+  .stamp{position:relative;inset:auto;height:auto;min-height:380px;transform:none!important;opacity:1!important;will-change:auto;padding:24px}
+  .stampDrawing{height:130px}.stamp p{font-size:14px;line-height:20px}.stampDots,.scrollHint{display:none}
+  .openStamp{padding:24px}.openStamp p{font-size:14px;line-height:22px}
+  .contactPage{padding:112px 24px 80px;min-height:90svh}.contactBody{gap:32px}
+  .photoFooter{padding:36px 0}.photoStrip img{height:260px}.photoStrip{gap:20px}
+  .readingPage{padding:112px 0 72px}
+}
+@media(max-height:540px) and (min-width:640px){.stampDeck{height:320px}.stampDrawing{height:80px}.stampStage{padding-top:60px}.stampDots{bottom:0}.scrollHint{display:none}.stamp p{font-size:14px}.stamp h2{font-size:16px}.stamp{gap:8px;padding:16px}.surface{margin-bottom:0}.footer{position:relative}}
+@media(prefers-reduced-motion:reduce){.phone:hover{animation:none}.stampScene{height:auto;padding:160px 24px 100px}.stampStage{height:auto;position:static;padding:0;overflow:visible}.stampDeck{display:flex;flex-direction:column;gap:32px;height:auto;max-width:540px;width:100%;margin:0}.stamp{position:relative;min-height:380px;height:auto;transform:none!important;opacity:1!important;will-change:auto}.stampDots,.scrollHint{display:none}}
+
+.stamp,.openStamp{background:var(--cf-bg)}
+
+.footer button:focus-visible{outline-color:#b4265b}
+
+/* Accent interactions belong to the page and navigation; the footer keeps its own palette. */
+.site :is(header,main) a:hover{color:var(--cf-accent)}
+.site :is(header,main) :is(a,button,input):focus-visible{outline-color:var(--cf-accent)}
+
+.site[data-landing=true],.site[data-case-study=true],.site[data-editorial=true]{--cf-bg:#fff;--paper:#fff}
+
+@media(max-width:767px){.pageContent{width:100%}}
