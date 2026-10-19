@@ -18,6 +18,8 @@
 .tile:hover .title{color:var(--cf-accent)}
 .tile:focus-visible{outline:2px solid var(--cf-accent);outline-offset:6px}
 @media(max-width:767px){.page{padding-top:calc(112px / var(--page-scale));padding-bottom:calc(96px / var(--page-scale))}.intro{margin-bottom:calc(48px / var(--page-scale))}.tile{flex-basis:68vw}.narrow{flex-basis:48vw}.media{height:calc(210px / var(--page-scale))}.media img{max-height:calc(210px / var(--page-scale))}}
+/* A live experiment fills the enlarged view. */
+.live{display:block;width:100%;height:68svh;border:0;border-radius:10px;background:#fff}
 @media(prefers-reduced-motion:reduce){.rail{scroll-behavior:auto}}
 
 .intro p{font-weight:var(--portfolio-weight-light);text-wrap:pretty}

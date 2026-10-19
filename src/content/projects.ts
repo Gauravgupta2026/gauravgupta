@@ -6,21 +6,20 @@ export const projects: Project[] = [
     slug: "sachetana",
     act: "Act.01",
     title: "Sachetana",
-    subtitle: "A mental wellness app",
+    subtitle: "A student mental health app",
     quote:
-      "Built to help students check in with themselves — quick, unhurried, and private by default.",
+      "Built so MAHE students could find campus counselling and reach it with less friction. Closed after the college's backing ended.",
     cta: "View Case Study",
     imageLabel: "[ APP SCREENS ]",
     meta: [
       { label: "Role", value: "Design + Build" },
-      { label: "Timeline", value: "6 months" },
+      { label: "Timeline", value: "2024 – 2025 · Closed" },
     ],
     stack: [
       { name: "Flutter", slug: "flutter" },
-      { name: "React", slug: "react" },
       { name: "Next.js", slug: "nextdotjs" },
       { name: "Supabase", slug: "supabase" },
-      { name: "ChatGPT", slug: "openai" },
+      { name: "Firebase" },
     ],
   },
   {

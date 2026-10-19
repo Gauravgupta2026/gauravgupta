@@ -4,7 +4,7 @@
 .page a{text-decoration:none}
 .page a:hover{color:var(--cf-accent)}
 .heroCover{min-height:calc(100svh / var(--page-scale));display:grid;align-items:center;--hero-paper:var(--cf-bg);position:relative;z-index:2;isolation:isolate;background:var(--hero-paper);margin:0 calc(-1 * var(--landing-gutter))}
-.heroCover::before{content:"";position:absolute;inset:0 auto 0 50%;width:calc(100vw / var(--page-scale));transform:translateX(-50%);z-index:-1;pointer-events:none;background:linear-gradient(#fffffff2,#fffffff2),url("/reference-dwija/paper.png") center/736px auto,var(--hero-paper)}
+.heroCover::before{content:"";position:absolute;inset:0 auto 0 50%;width:calc(100vw / var(--page-scale));transform:translateX(-50%);z-index:-1;pointer-events:none;background:linear-gradient(#fffffff2,#fffffff2),var(--hero-paper)}
 .hero{display:flex;flex-direction:column;align-items:center;gap:calc(24px / var(--page-scale));width:100%;padding:calc(96px / var(--page-scale)) var(--landing-gutter) calc(64px / var(--page-scale))}
 /* Keep the auto in the former artwork position above the hero identity. */
 .heroArt{align-self:flex-start;margin:0}

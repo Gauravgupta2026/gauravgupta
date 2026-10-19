@@ -6,7 +6,7 @@ import Link from "next/link";
 import { paperProjects } from "@/content/paperPortfolio";
 import { featuredWork } from "@/content/featuredWork";
 import { CollectionFilter } from "@/components/ui/CollectionFilter";
-import sachetana from "../../../public/assets/work/sachetana-wellness.jpg";
+import sachetana from "../../../public/assets/sachetana/mockups/onboarding-duo.jpeg";
 import wylde from "../../../public/assets/work/wylde-space.jpg";
 import luckyDay from "../../../public/assets/work/lucky-day-hero.jpg";
 import styles from "./Work.module.css";
@@ -15,12 +15,15 @@ const FILTERS = [
   { key: "all", label: "All work" },
   { key: "build", label: "In build" },
   { key: "writeup", label: "Write-ups in progress" },
+  { key: "closed", label: "Closed" },
 ] as const;
+/** Which `state` each filter shows. "all" shows every project. */
+const STATE_BY_FILTER = { build: "In build", writeup: "Write-up in progress", closed: "Closed" } as const;
 const IMAGES = { sachetana, wylde, "lucky-day": luckyDay };
 
 export function WorkGallery() {
   const [filter, setFilter] = useState("all");
-  const projects = paperProjects.filter(project => filter === "all" || (filter === "build" ? project.state === "In build" : project.state === "Write-up in progress"));
+  const projects = paperProjects.filter(project => filter === "all" || project.state === STATE_BY_FILTER[filter as keyof typeof STATE_BY_FILTER]);
   return <>
     <div className={styles.toolbar}>
       <div className={styles.filters}><CollectionFilter options={FILTERS} value={filter} onChange={setFilter} label="Filter projects by current status" /></div>
