@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { playgroundItems } from "@/content/paperPortfolio";
 import styles from "./Paper.module.css";
 import labs from "./Labs.module.css";
-type Item = { src: string; alt: string; title: string; caption: string; href?: string; kind: string };
+type Item = { src: string; alt: string; title: string; caption: string; href?: string; live?: string; kind: string };
 
 export function MediaGallery() {
   const rail = useRef<HTMLDivElement>(null);
@@ -39,9 +39,9 @@ export function MediaGallery() {
         <span className={labs.kind}>{item.kind}</span>
       </button>)}
     </div>
-    <dialog ref={dialog} className={styles.lightbox} aria-label={selected ? selected.title : "Enlarged artwork"} onClick={e => { if (e.target === e.currentTarget) close(); }} onClose={() => source.current?.focus({ preventScroll: true })}>
+    <dialog ref={dialog} className={styles.lightbox} aria-label={selected ? selected.title : "Enlarged artwork"} onClick={e => { if (e.target === e.currentTarget) close(); }} onClose={() => { setSelected(null); source.current?.focus({ preventScroll: true }); }}>
       <button className={styles.close} aria-label="Close enlarged view" onClick={close}>×</button>
-      {selected && <figure><Image src={selected.src} alt={selected.alt} width={1400} height={1000} sizes="90vw" /><figcaption><strong>{selected.title}</strong><p>{selected.caption}</p>{selected.href && <Link href={selected.href} onClick={close}>Read the project</Link>}</figcaption></figure>}
+      {selected && <figure>{selected.live ? <iframe className={labs.live} src={selected.live} title={selected.title} allow="autoplay" /> : <Image src={selected.src} alt={selected.alt} width={1400} height={1000} sizes="90vw" />}<figcaption><strong>{selected.title}</strong><p>{selected.caption}</p>{selected.href && <Link href={selected.href} onClick={close}>Read the project</Link>}</figcaption></figure>}
     </dialog>
   </>;
 }

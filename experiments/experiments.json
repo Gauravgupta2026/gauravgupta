@@ -1,0 +1,35 @@
+{
+  "note": "Facts are checked against the code. Every 'blurbDraft' is an AI draft: rewrite it in your own words before publishing.",
+  "experiments": [
+    {
+      "slug": "halftone-pearl",
+      "title": "Halftone Pearl",
+      "path": "halftone-pearl/index.html",
+      "year": 2026,
+      "technique": "Canvas 2D halftone on a fixed hex grid; scene cached in a buffer and sampled through a slow drift; GPU-blurred glow layer",
+      "controls": "Plays on load. Click or any key skips the opening; click again replays. Cursor stirs the water. 'Adjust' (or T) opens the tuning panel.",
+      "dependencies": "None (Google Fonts only)",
+      "blurbDraft": "A scallop on the sea bed opens and a pearl lights up, drawn only with dots of light."
+    },
+    {
+      "slug": "shell-keepsake",
+      "title": "Shell Keepsake",
+      "path": "shell-keepsake/index.html",
+      "year": 2026,
+      "technique": "Same halftone engine; light theme draws dots as ink, sized by how dark the surface is",
+      "controls": "Opens when in view. Click the shell to close it and open it again. Light / Dark toggle. 'Adjust' (or T) opens the tuning panel.",
+      "dependencies": "None (Google Fonts only)",
+      "blurbDraft": "A small shell that opens and offers a pearl. Light on dark, ink on paper."
+    },
+    {
+      "slug": "petal-rush",
+      "title": "Petal Rush",
+      "path": "petal-rush/index.html",
+      "year": 2026,
+      "technique": "three.js 0.160.0 (unpkg, pinned); real petal photos on bent, lit, translucent 3D planes; one wind field; depth of field from texture mips; real / halftone / hybrid post pass",
+      "controls": "Plays on load. Click replays. Cursor stirs the resting petal. 'Adjust' (or T): petal count, breeze, gust, blur, translucency, look (real / halftone / hybrid), light / dark.",
+      "dependencies": "three@0.160.0 from unpkg; assets/petal-atlas.webp, assets/hero-petal.webp",
+      "blurbDraft": "One wind carries a hundred real petals toward you, then lets a single one fall asleep."
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-.footer{position:sticky;bottom:0;z-index:1;background:#fff6cc url('/reference-dwija/paper.png') center/cover;background-blend-mode:soft-light;color:#1a1a1a;padding:80px 24px;font-family:"ITC Garamond Hero",Georgia,serif;font-weight:400;overflow:hidden}
+.footer{position:sticky;bottom:0;z-index:1;background:#fff6cc;color:#1a1a1a;padding:80px 24px;font-family:"ITC Garamond Hero",Georgia,serif;font-weight:400;overflow:hidden}
 .composition{max-width:1400px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) minmax(0,1fr);gap:24px;align-items:center}
 .monkey{max-width:420px;justify-self:center}
 .copy{text-align:center;max-width:400px;justify-self:center}

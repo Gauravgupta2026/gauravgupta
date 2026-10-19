@@ -18,7 +18,9 @@ const projectImages = {
  "lucky-day": { hero: luckyDayHero, detail: luckyDayDetail },
 };
 const IMAGE_SIZES = "100vw";
-export function generateStaticParams() { return [...paperProjects.map(p => ({ slug: p.slug })), { slug: 'new-project' }]; }
+/** Projects with their own route under src/app/projects/<slug>/ are not built from this template. */
+const CUSTOM_ROUTE_SLUGS = new Set<string>(["sachetana"]);
+export function generateStaticParams() { return [...paperProjects.filter(p => !CUSTOM_ROUTE_SLUGS.has(p.slug)).map(p => ({ slug: p.slug })), { slug: 'new-project' }]; }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> { const { slug } = await params; const p = paperProjects.find(p => p.slug === slug); return { title: p ? p.title + " — Gaurav Gupta" : slug === "new-project" ? "Work in progress — Gaurav Gupta" : "Project not found", description: p?.purpose }; }
 export default async function Project({ params }: { params: Promise<{ slug: string }> }) {
  const { slug } = await params; const p = paperProjects.find(p => p.slug === slug);
