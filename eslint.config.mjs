@@ -17,6 +17,8 @@ const eslintConfig = defineConfig([
     // Already-built standalone runtime; lint the React integration instead.
     "public/namma-auto/assets/index-*.js",
     "experiments/namma-auto/**",
+    // Local agent worktrees are full repo copies, not part of this app.
+    ".claude/**",
   ]),
 ]);
 
