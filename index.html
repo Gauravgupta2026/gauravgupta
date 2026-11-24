@@ -1,0 +1,2226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gaurav Gupta · Associate Product Manager</title>
+<meta name="description" content="Gaurav Gupta, an Associate Product Manager with a design habit. Four years of Manipal in one 3D stadium, selected work, and a note written in stars.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: #07060a; color: #f4ede0; font-family: 'IBM Plex Sans', system-ui, sans-serif; overflow-x: hidden; }
+  canvas { position: fixed; inset: 0; width: 100vw; height: 100svh; display: block; }
+  #stars { z-index: 0; }
+  #gl { z-index: 1; }
+  /* Riso-style grain over the render. */
+  .grain {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: .22; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  .nav { position: fixed; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 24px clamp(20px, 4vw, 64px); z-index: 3; }
+  .wordmark { font: 24px/1 'Caprasimo', serif; }
+  .nav .links { display: flex; gap: 24px; font-size: 14px; }
+  .nav a { color: inherit; text-decoration: none; opacity: .85; display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
+  .nav a:hover { opacity: 1; }
+  .nav .links a:last-child { padding: 8px 16px; min-height: 40px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(244,237,224,.3); }
+  .nav .links a:last-child:hover { box-shadow: inset 0 0 0 1px #f4ede0; }
+  /* Hero type. The name runs along the front rim of the bowl (Caprasimo, like the wordmark and the site's name card);
+     the role sits under it in Plex, in two tones like Gaurav's own intro line. */
+  .hero-name { position: fixed; top: 0; left: 0;   /* fixed with the scene; the work card slides over it */ inset: 0; width: 100vw; height: 100svh; z-index: 3; pointer-events: none; overflow: visible; }
+  .hero-name text { font-family: 'Caprasimo', serif; fill: #f4ede0; letter-spacing: .045em; }
+  .hero-copy { position: fixed; left: 0; right: 0; z-index: 3; text-align: center; pointer-events: none; opacity: 0; transition: opacity .6s; }
+  .hero-copy .role { font-size: clamp(14px, 1.25vw, 18px); line-height: 1.4; color: #f4ede0; }
+  .hero-copy .role span { color: #a09bb2; }
+  .hero-copy .now { margin-top: 6px; font: 500 13px/1.4 'IBM Plex Sans', system-ui, sans-serif; font-variant-caps: all-small-caps; letter-spacing: .05em; color: #a09bb2; }
+  .hero-copy .next { pointer-events: auto; display: inline-block; margin-top: 18px; padding: 12px 18px; font-size: 14px; color: #f4ede0; text-decoration: none; border: 1px solid rgba(244,237,224,.28); border-radius: 999px; }
+  .hero-copy .next:hover { border-color: #f4ede0; }
+  .hero-copy .next:focus-visible, .pause:focus-visible, .nav a:focus-visible { outline: 2px solid #6aaef2; outline-offset: 3px; }
+  .pause { position: fixed; right: clamp(20px, 4vw, 64px); bottom: 24px; z-index: 3; min-width: 44px; min-height: 44px; padding: 8px 16px; font: 500 13px 'IBM Plex Sans', sans-serif; color: #a09bb2; background: none; border: 1px solid rgba(244,237,224,.2); border-radius: 999px; cursor: pointer; }
+  .pause:hover { color: #f4ede0; }
+  /* Lens cursor: a small liquid-glass lens. The backdrop bends at the rim (SVG displacement, see #lensGlass) and is a
+     touch brighter and more saturated; specular highlights on the inner edge sell the glass. No handle, no ring. */
+  .lens-cursor { position: fixed; left: 0; top: 0; z-index: 6; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; pointer-events: none; opacity: 0; transition: opacity .15s;
+    backdrop-filter: url(#lensGlass) saturate(1.5) brightness(1.08); -webkit-backdrop-filter: blur(.6px) saturate(1.5) brightness(1.08);
+    box-shadow: inset 0 1.5px 1px rgba(255,255,255,.75), inset 0 -1px 2px rgba(255,255,255,.3), inset 0 0 0 1px rgba(255,255,255,.22), inset 0 10px 14px -10px rgba(255,255,255,.5), 0 6px 16px rgba(0,0,0,.35); }
+  .lens-cursor.on { opacity: 1; }
+  /* Story: iMessage bubbles floating in the scene beside the subject (the camera centres it), no panel behind them. */
+  .story { position: fixed; z-index: 5; left: calc(50% + 70px); top: 50%; transform: translateY(-50%); width: min(320px, calc(100vw - 32px)); display: flex; flex-direction: column; align-items: flex-start; gap: 8px; pointer-events: none; opacity: 0; transition: opacity .25s; }
+  .story.open { opacity: 1; }
+  .story-tag { padding: 5px 12px; border-radius: 999px; background: #e0338a; color: #fff; font: 500 12px/1.3 'IBM Plex Sans', sans-serif; }
+  .story-list { list-style: none; padding: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .bubble { max-width: 100%; padding: 9px 14px; border-radius: 19px 19px 19px 6px; background: #2f6bf0; color: #fff; font: 15px/1.4 'IBM Plex Sans', sans-serif;
+    box-shadow: 0 6px 18px rgba(7,6,10,.35); transform-origin: 0 100%; animation: pop .3s cubic-bezier(.2,1.4,.4,1) both; }
+  .bubble.typing { display: flex; gap: 4px; padding: 12px 14px; }
+  .bubble.typing span { width: 6px; height: 6px; border-radius: 50%; background: #fff; opacity: .6; animation: dot 1s infinite; }
+  .bubble.typing span:nth-child(2) { animation-delay: .15s; } .bubble.typing span:nth-child(3) { animation-delay: .3s; }
+  .story-close { pointer-events: auto; margin-top: 6px; min-height: 40px; padding: 8px 16px; border-radius: 999px; border: 0; background: rgba(244,237,224,.92); color: #07060a; font: 500 13px 'IBM Plex Sans', sans-serif; cursor: pointer; }
+  .story-close:focus-visible, .stories button:focus-visible { outline: 2px solid #6aaef2; outline-offset: 2px; }
+  @keyframes pop { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+  @keyframes dot { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(-3px); opacity: 1; } }
+  body.zoomed .hero-name, body.zoomed .hero-copy { opacity: 0 !important; transition: opacity .3s; }
+  /* Keyboard / screen-reader way into the stories: hidden until focused. */
+  .stories { position: fixed; z-index: 5; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 90vw;
+    clip-path: inset(50%); }
+  .stories:focus-within { clip-path: none; }
+  .stories button { min-height: 44px; padding: 8px 16px; border-radius: 999px; border: 0; background: #2c2a35; color: #f4ede0; font: 14px 'IBM Plex Sans', sans-serif; }
+  @media (max-width: 640px) { .story { top: auto; bottom: 24px; left: 16px; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .bubble, .bubble.typing span { animation: none; } .story { transition: none; } }
+  .hero-copy .now i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #f2401f; margin: 0 6px 1px 0; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  /* ===== Below the hero: dark sections that slide up over the fixed scene. Type: Caprasimo display, Plex text. ===== */
+  :root { --ink-bg: #0b0a10; --rule: rgba(244,237,224,.12); --muted: #a09bb2; --bone: #f4ede0; --cobalt: #2f6bf0; --mag: #e0338a; --margin: clamp(20px, 4vw, 64px); --gutter: clamp(12px, 1.6vw, 24px); }
+  .work { position: relative; z-index: 4; margin-top: 100svh; background: var(--ink-bg); border-radius: 14px 14px 0 0; box-shadow: 0 -1px 0 var(--rule); }
+  .label { font: 500 13px/1.4 'IBM Plex Sans', sans-serif; font-variant-caps: all-small-caps; letter-spacing: .05em; color: var(--muted); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Projects */
+  .projects { padding: 88px 0 40px; }
+  .sec-head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 var(--margin) 28px; }
+  .sec-head h2 { font: clamp(34px, 4vw, 60px)/1 'Caprasimo', serif; }
+  .sec-link { color: var(--muted); text-decoration: none; font: 500 15px 'IBM Plex Sans', sans-serif; padding: 12px 0; }
+  .sec-link:hover { color: var(--bone); }
+  .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px 16px; padding: 0 var(--margin); }
+  .p-card { display: block; color: inherit; text-decoration: none; }
+  .p-card.feature { grid-column: 1 / -1; }
+  .p-img { position: relative; aspect-ratio: 3 / 2; border-radius: 6px; overflow: hidden; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+  .p-card.feature .p-img { aspect-ratio: 21 / 9; }
+  .p-card:hover .p-img { transform: scale(.99); }
+  .p-card:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 6px; border-radius: 8px; }
+  .c-cobalt { background: #23319c; } .c-vermilion { background: #c7381d; } .c-bone { background: #e3dccd; }   /* the poster colours, one step quieter */
+  .phone { position: absolute; left: 50%; top: 50%; width: 15%; aspect-ratio: 9 / 19.5; transform: translate(-50%, -50%); border-radius: 16% / 7.5%; background: rgba(7,6,10,.88); box-shadow: inset 0 0 0 5px rgba(244,237,224,.14); }
+  .feature .phone { width: 9%; transform: translate(-115%, -50%); } .feature .phone + .phone { transform: translate(15%, -44%); }
+  .c-bone .phone { background: #141217; }
+  /* A hint of an app inside each phone: a header bar and two content cards. */
+  .phone::before { content: ''; position: absolute; inset: 12% 11% 14%; border-radius: 6px;
+    background: linear-gradient(rgba(244,237,224,.85) 0 0) 0 0 / 55% 6% no-repeat, linear-gradient(rgba(244,237,224,.16) 0 0) 0 16% / 100% 34% no-repeat, linear-gradient(rgba(244,237,224,.1) 0 0) 0 62% / 100% 24% no-repeat; }
+  .idx { margin-right: 14px; color: var(--muted); font: 500 13px 'IBM Plex Sans', sans-serif; font-variant-numeric: tabular-nums; vertical-align: 2px; }
+  .p-cap { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-top: 14px; }
+  .p-cap h3 { font: 500 20px/1.3 'IBM Plex Sans', sans-serif; }
+  .p-cap span { color: var(--muted); font: 14px 'IBM Plex Sans', sans-serif; }
+  .p-line { margin-top: 4px; padding-left: 33px; color: var(--muted); font: 14px/1.5 'IBM Plex Sans', sans-serif; }
+
+  /* Closing: a crayon constellation on black paper, drawn as you scroll. Two people holding hands, made of stars;
+     a small bright star rises from their hands. Words in the hero's Caprasimo, labels in Plex. The CTA is written
+     on the ground they stand on, so it is part of the drawing. */
+  .sky-story { position: relative; height: 380vh; }
+  .sky-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; background: #07060a; }
+  .sky-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sky-eyebrow { position: absolute; left: var(--margin); top: clamp(20px, 5vh, 48px); font: 500 12px/1.4 'IBM Plex Sans', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #a09bb2; }
+  .sky-word { position: absolute; font: clamp(15px, 1.7vw, 26px)/1.1 'Caprasimo', serif; color: var(--bone); white-space: nowrap; opacity: 0; transform: translateY(6px) rotate(var(--tilt, 0deg)); transition: opacity .6s, transform .6s cubic-bezier(.2,.8,.2,1); }
+  .sky-word.on { opacity: 1; transform: rotate(var(--tilt, 0deg)); }
+  .sky-cta { position: absolute; left: 50%; transform: translate(-50%, 12px); text-align: center; opacity: 0; pointer-events: none; transition: opacity .8s, transform .8s cubic-bezier(.2,.8,.2,1); width: min(920px, 92vw); }
+  .sky-cta.on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  .sky-cta h2 { font: clamp(24px, 3vw, 46px)/1.08 'Caprasimo', serif; margin-bottom: 18px; text-wrap: balance; }
+  .sky-cta .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .ghost { display: inline-flex; align-items: center; min-height: 56px; padding: 12px 24px; border-radius: 999px; color: var(--bone); text-decoration: none; font: 500 16px 'IBM Plex Sans', sans-serif; box-shadow: inset 0 0 0 1px rgba(244,237,224,.28); }
+  .ghost:hover { box-shadow: inset 0 0 0 1px var(--bone); }
+  .ghost:focus-visible { outline: 2px solid #6aaef2; outline-offset: 4px; }
+  @media (prefers-reduced-motion: reduce) { .sky-word, .sky-cta { transition: none; } }
+  .say { display: inline-flex; align-items: center; min-height: 56px; padding: 12px 28px; border-radius: 999px; background: var(--bone); color: #07060a; font: 500 17px/1 'IBM Plex Sans', sans-serif; text-decoration: none; box-shadow: 3px 3px 0 var(--mag); transition: transform .15s, box-shadow .15s; }
+  .say:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--mag); }
+  .say:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--mag); }
+  .say:focus-visible { outline: 2px solid #6aaef2; outline-offset: 4px; }
+  .foot-meta { display: flex; justify-content: space-between; gap: 16px; padding: 16px var(--margin) 20px; border-top: 1px solid var(--rule); }
+  .foot-meta a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
+  .foot-meta a:hover { color: var(--bone); }
+  @media (max-width: 760px) {
+    .p-grid { grid-template-columns: 1fr; } .p-card.feature .p-img { aspect-ratio: 4 / 3; }
+    .sec-head h2 { font-size: 30px; } .sec-link { white-space: nowrap; font-size: 14px; }
+  }
+  .loading { position: fixed; inset: 0; display: grid; place-items: center; z-index: 4; font: 500 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; color: #8d88a0; pointer-events: none; transition: opacity .6s; }
+</style>
+<script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "lil-gui": "https://unpkg.com/lil-gui@0.19.2/dist/lil-gui.esm.js" } }</script>
+</head>
+<body>
+<span id="top"></span>
+<canvas id="stars" aria-hidden="true"></canvas>
+<canvas id="gl" role="img" aria-label="A 3D stadium bowl at night holding four years of Manipal. Snowy ranges fill the far stands: two trekkers climb a switchback trail to a summit, three skiers carve down a groomed run, and a glacier pours into the Arabian Sea, where friends swim and splash. On the right, Student Plaza sits in the foothills with friends on its steps, and Royal Embassy rises out of the clouds above the bay. On the red ground NCC cadets drill, a boxer shadow-boxes, a cyclist rides, and Gaurav fixes his go-kart, then laps the whole bowl in it. A black scoreboard reads '26."></canvas>
+<div class="grain"></div>
+<div class="loading">Building the bowl…</div>
+<svg class="hero-name" aria-hidden="true"><path id="nameArc" fill="none"/><text><textPath href="#nameArc" startOffset="50%" text-anchor="middle">GAURAV GUPTA</textPath></text></svg>
+<div class="hero-copy">
+  <h1 class="sr-only">Gaurav Gupta</h1>
+  <p class="role">Associate Product Manager <span>with a design habit.</span></p>
+  <p class="now">Building Wylde &middot; <i aria-hidden="true"></i>Open to new roles</p>
+  <a class="next" href="#work">See the work &darr;</a>
+</div>
+<button class="pause" type="button" aria-pressed="false">Pause</button>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="lensGlass" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+  <feImage id="lensMap" x="0" y="0" width="46" height="46" preserveAspectRatio="none" result="map"/>
+  <feDisplacementMap in="SourceGraphic" in2="map" scale="22" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<div class="lens-cursor" aria-hidden="true"></div>
+<div class="story" aria-live="polite">
+  <span class="story-tag"></span>
+  <ol class="story-list"></ol>
+  <button class="story-close" type="button">&times; Back to the bowl</button>
+</div>
+<nav class="stories" aria-label="Stories in the scene">
+  <button type="button" data-story="kart">The kart</button><button type="button" data-story="trek">Summit day</button><button type="button" data-story="ski">First runs</button><button type="button" data-story="sp">SP steps</button><button type="button" data-story="endpoint">End Point</button><button type="button" data-story="ncc">NCC drill</button><button type="button" data-story="sea">The beach</button><button type="button" data-story="embassy">Royal Embassy</button>
+</nav>
+<nav class="nav" aria-label="Primary"><span class="wordmark">GG</span><span class="links"><a href="#work">Work</a><a href="#">About</a><a href="#hello">Say hello</a></span></nav>
+
+<main class="work" id="work">
+  <!-- Projects: Analogue's header row + Jarcos' big colour-field cards with a two-part caption. Dark, like the scene. -->
+  <section class="projects" aria-labelledby="work-title">
+    <header class="sec-head">
+      <h2 id="work-title">Selected work</h2>
+      <a class="sec-link" href="#">All projects &rarr;</a>
+    </header>
+    <div class="p-grid">
+      <a class="p-card feature" href="#">
+        <div class="p-img c-cobalt"><i class="phone" aria-hidden="true"></i><i class="phone" aria-hidden="true"></i></div>
+        <div class="p-cap"><h3><span class="idx">01</span>Wylde</h3><span>Product, Design</span></div>
+        <p class="p-line">Building now.</p>
+      </a>
+      <a class="p-card" href="#">
+        <div class="p-img c-vermilion"><i class="phone" aria-hidden="true"></i></div>
+        <div class="p-cap"><h3><span class="idx">02</span>Project two</h3><span>iOS · 2025</span></div>
+        <p class="p-line">One line on what it does.</p>
+      </a>
+      <a class="p-card" href="#">
+        <div class="p-img c-bone"><i class="phone" aria-hidden="true"></i></div>
+        <div class="p-cap"><h3><span class="idx">03</span>Project three</h3><span>iOS · 2024</span></div>
+        <p class="p-line">One line on what it does.</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Closing: scroll draws a star chart that spells the line; its last star carries the CTA. -->
+  <section class="sky-story" id="hello" aria-labelledby="sky-line">
+    <div class="sky-stage">
+      <canvas aria-hidden="true"></canvas>
+      <p class="sky-eyebrow" aria-hidden="true">Two people, holding the same star</p>
+      <p class="sr-only" id="sky-line">Different people, different rhythms, but we share the same spaces on the internet. Let's make it beautiful.</p>
+      <div class="sky-cta">
+        <h2>Let's make something people love.</h2>
+        <div class="row"><a class="say" href="#">Say hello</a><a class="ghost" href="#">Download resume</a></div>
+      </div>
+    </div>
+  </section>
+  <footer class="foot-meta label"><span>© 2026 Gaurav Gupta · Bengaluru</span><a href="#top">Back to the bowl ↑</a></footer>
+</main>
+
+<script>
+/* Below-the-hero behaviour: the closing constellation and the glass lens map. */
+(() => {
+  const NS = 'http://www.w3.org/2000/svg', REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent && parent.append(n); return n; };
+
+  /*
+   * Crayon constellation: two people holding hands, drawn in stars on black paper. A string runs from their joined
+   * hands up to one bright star (the thing they make together). They stand on a crayon hill; the CTA is written on
+   * the ground below it.
+   *
+   * Everything is drawn on a canvas with a crayon look: each stroke is several thin, jittered passes with uneven
+   * pressure and small skips where the "paper tooth" catches, and stars are scribble-filled with hatching. All
+   * randomness is seeded and baked once per layout, so strokes never shimmer while you scroll.
+   *
+   * SHAPE switches the figure ('friends' or the 'heart' fallback). Points are in a box: x 0..1, y 0..1.
+   */
+  const SHAPE = 'friends';
+  const SHAPES = {
+    friends: {
+      aspect: 1.3,
+      pts: { ah: [.27, .14], an: [.29, .28], ap: [.31, .52], af1: [.22, .8], af2: [.37, .79], ao: [.12, .4], j: [.5, .46],
+             bn: [.71, .3], bh: [.73, .16], bp: [.69, .54], bf1: [.63, .8], bf2: [.79, .81], bo: [.88, .32], st: [.5, .2] },
+      // [from, to, colour], drawn in this order.
+      segs: [['ah', 'an', 'pink'], ['an', 'ap', 'pink'], ['ap', 'af1', 'pink'], ['ap', 'af2', 'pink'], ['an', 'ao', 'pink'], ['an', 'j', 'pink'],
+             ['j', 'bn', 'sky'], ['bn', 'bh', 'sky'], ['bn', 'bo', 'sky'], ['bn', 'bp', 'sky'], ['bp', 'bf1', 'sky'], ['bp', 'bf2', 'sky'], ['j', 'st', 'butter']],
+      // Words: [star, text, side (l/r/t/b), tilt in degrees]. A word appears when its star lights up.
+      words: [['ah', 'different people,', 'l', -3], ['ao', 'different rhythms,', 'l', 2], ['j', 'but we share', 'b', -2], ['bh', 'the same spaces', 'r', 2],
+              ['bo', 'on the internet.', 'r', -2], ['bp', "let's make it", 'r', 3], ['st', 'beautiful.', 't', -2]],
+      big: 'st', ground: .85, heads: [['ah', 'pink'], ['bh', 'sky']],
+    },
+    heart: {
+      aspect: 1.1,
+      pts: { a: [.5, .3], b: [.32, .12], c: [.12, .22], d: [.14, .46], e: [.5, .86], f: [.86, .46], g: [.88, .22], h: [.68, .12] },
+      segs: [['a', 'b', 'pink'], ['b', 'c', 'pink'], ['c', 'd', 'pink'], ['d', 'e', 'pink'], ['e', 'f', 'sky'], ['f', 'g', 'sky'], ['g', 'h', 'sky'], ['h', 'a', 'sky']],
+      words: [['b', 'different people,', 't', -3], ['c', 'different rhythms,', 'l', 2], ['d', 'but we share', 'l', -2], ['e', 'the same spaces', 'b', 2],
+              ['f', 'on the internet.', 'r', -2], ['g', "let's make it", 'r', 3], ['a', 'beautiful.', 'b', -2]],
+      big: 'a', ground: null,
+    },
+  };
+  const INK = { pink: '#f5a3c7', sky: '#9cc9f5', butter: '#f6dc8c', mint: '#a8e0c0', lilac: '#c4b2f0', peach: '#f7b08a', bone: '#f1e9dc' };
+  const STAR_COLS = ['butter', 'pink', 'sky', 'mint', 'peach', 'lilac'];
+  const DRAW = [.05, .86];                     // scroll share of the section that draws; the CTA follows
+  const NARROW = 600;                          // px: below this the words become a stacked poem
+  const story = document.querySelector('.sky-story'), stage = story.querySelector('.sky-stage'), cv = stage.querySelector('canvas'), cta = stage.querySelector('.sky-cta');
+  const ctx = cv.getContext('2d');
+  let seed = 1; const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  let L = null;                                // the baked layout for the current stage size
+
+  /** One crayon stroke from a to b, baked into passes of short sub-segments with jitter, pressure and skips. */
+  function bakeStroke(a, b, col, w) {
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, n = Math.max(2, Math.round(len / 3)), nx = -(b[1] - a[1]) / len, ny = (b[0] - a[0]) / len;
+    const bow = (rand() - .5) * len * .03, passes = [];                       // a hand-drawn line is never quite straight
+    for (let p = 0; p < 4; p++) {
+      const off = (rand() - .5) * w * 1.1, pts = [];
+      for (let i = 0; i <= n; i++) {
+        const t = i / n, side = Math.sin(t * Math.PI) * bow + off + (rand() - .5) * w * .5;
+        pts.push([a[0] + (b[0] - a[0]) * t + nx * side, a[1] + (b[1] - a[1]) * t + ny * side, .25 + rand() * .5, rand() < .07]);
+      }
+      passes.push({ pts, lw: w * (.35 + rand() * .45) });
+    }
+    return { col, passes, len };
+  }
+  function drawStroke(c, S, u) {
+    if (u <= 0) return;
+    c.strokeStyle = INK[S.col]; c.lineCap = 'round';
+    S.passes.forEach(({ pts, lw }) => {
+      const m = Math.floor((pts.length - 1) * u); c.lineWidth = lw;
+      for (let i = 1; i <= m; i++) { if (pts[i][3]) continue; c.globalAlpha = pts[i][2]; c.beginPath(); c.moveTo(pts[i - 1][0], pts[i - 1][1]); c.lineTo(pts[i][0], pts[i][1]); c.stroke(); }
+    });
+    c.globalAlpha = 1;
+  }
+  /** A crayon star: a wobbly five-point outline, scribble-filled with hatching. */
+  function bakeStar(x, y, r, col) {
+    const rot = (rand() - .5) * .5, poly = [];
+    for (let i = 0; i < 10; i++) { const rr = (i % 2 ? r * .46 : r) * (.86 + rand() * .28), a = rot - Math.PI / 2 + i * Math.PI / 5; poly.push([x + Math.cos(a) * rr, y + Math.sin(a) * rr]); }
+    const outline = poly.map((p, i) => bakeStroke(p, poly[(i + 1) % poly.length], col, Math.max(1.6, r * .16)));
+    const hatch = [], ang = .6 + rand() * .4, step = Math.max(1.8, r * .16);
+    for (let d = -r * 1.2; d <= r * 1.2; d += step) {
+      const hx = x + Math.cos(ang + Math.PI / 2) * d, hy = y + Math.sin(ang + Math.PI / 2) * d;
+      hatch.push(bakeStroke([hx - Math.cos(ang) * r * 1.2, hy - Math.sin(ang) * r * 1.2], [hx + Math.cos(ang) * r * 1.2, hy + Math.sin(ang) * r * 1.2], col, Math.max(1.2, r * .1)));
+    }
+    return { x, y, r, poly, outline, hatch };
+  }
+  function drawStar(c, st, lit) {
+    if (lit <= 0) { c.globalAlpha = .55; c.fillStyle = INK.bone; c.beginPath(); c.arc(st.x, st.y, 1.6, 0, 6.3); c.fill(); c.globalAlpha = 1; return; }
+    c.save(); c.beginPath(); st.poly.forEach(([px, py], i) => (i ? c.lineTo(px, py) : c.moveTo(px, py))); c.closePath(); c.clip();
+    const nh = Math.ceil(st.hatch.length * Math.min(1, lit * 1.4)); for (let i = 0; i < nh; i++) drawStroke(c, st.hatch[i], 1);
+    c.restore();
+    st.outline.forEach(o => drawStroke(c, o, Math.min(1, lit * 1.6)));
+  }
+
+  /** Lay the drawing out for the current stage size and bake every stroke. */
+  function bake() {
+    seed = 7;
+    const dpr = Math.min(devicePixelRatio, 2), w = stage.clientWidth, h = stage.clientHeight, S = SHAPES[SHAPE];
+    cv.width = w * dpr; cv.height = h * dpr;
+    // The figure box: as large as fits above the CTA, centred.
+    const narrow = w < NARROW;                  // phones: bigger drawing, words stacked as a poem under it
+    const bh = narrow ? Math.min(h * .42, (w * .96) / S.aspect) : Math.min(h * .62, (w * .9) / S.aspect), bw = bh * S.aspect, bx = (w - bw) / 2, by = h * (narrow ? .1 : .12);
+    const at = (k) => [bx + S.pts[k][0] * bw, by + S.pts[k][1] * bh], unit = Math.max(.7, Math.min(1.3, bh / 520));
+    // Paper (baked once): black, a little tooth, chalk dust, and a few small crayon stars around the figure.
+    const bg = document.createElement('canvas'); bg.width = cv.width; bg.height = cv.height; const g = bg.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.fillStyle = '#07060a'; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < w * h / 90; i++) { g.globalAlpha = rand() * .05; g.fillStyle = INK.bone; g.fillRect(rand() * w, rand() * h, 1, 1); }
+    for (let i = 0; i < w * h / 2600; i++) { g.globalAlpha = .25 + rand() * .5; g.fillStyle = rand() < .7 ? INK.bone : INK[STAR_COLS[i % STAR_COLS.length]]; g.beginPath(); g.arc(rand() * w, rand() * h, .5 + rand() * 1.3, 0, 6.3); g.fill(); }
+    g.globalAlpha = 1;
+    for (let i = 0, n = Math.round(w / 140); i < n; i++) {
+      let x, y; do { x = rand() * w; y = rand() * h * .8; } while (x > bx - 24 && x < bx + bw + 24 && y > by - 24 && y < by + bh + 24);
+      drawStar(g, bakeStar(x, y, (5 + rand() * 6) * unit, STAR_COLS[Math.floor(rand() * STAR_COLS.length)]), 1);
+    }
+    // Constellation strokes and stars.
+    const segs = S.segs.map(([a, b, col]) => ({ to: b, ...bakeStroke(at(a), at(b), col, 4.2 * unit) }));
+    const stars = {}; Object.keys(S.pts).forEach((k, i) => { const [x, y] = at(k); stars[k] = bakeStar(x, y, (k === S.big ? 20 : 9 + rand() * 4) * unit, k === S.big ? 'butter' : STAR_COLS[i % STAR_COLS.length]); });
+    // Heads: a loose crayon circle (slightly open, overdrawn) around each head star, so the stars read as people.
+    const heads = (S.heads || []).map(([k, col]) => {
+      const [hx, hy] = at(k), rr = bh * .075, n = 20, start = rand() * 6.28, pts = [];
+      for (let i = 0; i <= n + 3; i++) { const a = start + i / n * 6.28, q = rr * (.94 + rand() * .12); pts.push([hx + Math.cos(a) * q, hy + Math.sin(a) * q]); }
+      return { k, strokes: pts.slice(1).map((p, i) => bakeStroke(pts[i], p, col, 3.4 * unit)) };
+    });
+    // Ground: a soft crayon hill under their feet, then a few tufts.
+    const ground = [];
+    if (S.ground) {
+      const gy = by + S.ground * bh, gp = [];
+      for (let i = 0; i <= 24; i++) { const t = i / 24; gp.push([bx - bw * .15 + t * bw * 1.3, gy - Math.sin(t * Math.PI) * bh * .05 + Math.sin(t * 9) * 2]); }
+      gp.slice(1).forEach((p, i) => ground.push(bakeStroke(gp[i], p, i % 3 ? 'mint' : 'lilac', 3 * unit)));
+      for (let i = 0; i < 10; i++) { const p = gp[2 + Math.floor(rand() * 20)]; ground.push(bakeStroke(p, [p[0] + (rand() - .5) * 8, p[1] - 8 - rand() * 8], 'mint', 1.8 * unit)); }
+    }
+    // Drawing order: segments (each lights the star at its end), then the ground. Each gets scroll in proportion to length.
+    const items = segs.map(sg => ({ sg, w: sg.len }));
+    if (ground.length) items.push({ ground: true, w: bw * .6 });
+    const total = items.reduce((a, it) => a + it.w, 0); let acc = 0; items.forEach(it => { it.a = acc / total; acc += it.w; it.b = acc / total; });
+    // Words: HTML in Caprasimo beside their stars; moved under the star or clamped so they never leave the screen.
+    stage.querySelectorAll('.sky-word').forEach(n => n.remove());
+    let poemLine = 0;
+    const words = S.words.map(([k, text, side, tilt]) => {
+      const st = stars[k], d = document.createElement('span'); d.className = 'sky-word'; d.textContent = text; d.style.setProperty('--tilt', tilt + 'deg'); stage.append(d);
+      const ww = d.offsetWidth, wh = d.offsetHeight, gap = st.r + 10; let x, y;
+      const place = (sd) => { if (sd === 'r') { x = st.x + gap; y = st.y - wh / 2; } else if (sd === 'l') { x = st.x - gap - ww; y = st.y - wh / 2; } else if (sd === 't') { x = st.x - ww / 2; y = st.y - gap - wh; } else { x = st.x - ww / 2; y = st.y + gap; } };
+      if (narrow) { x = (w - ww) / 2; y = by + (S.ground ?? 1) * bh + 24 + poemLine++ * wh * 1.25; }
+      else { place(side); if (x < 12 || x + ww > w - 12) place('b'); x = Math.max(12, Math.min(w - 12 - ww, x)); }
+      Object.assign(d.style, { left: x + 'px', top: y + 'px' });
+      return { d, k };
+    });
+    const poemEnd = narrow ? by + (S.ground ?? 1) * bh + 24 + poemLine * (words[0]?.d.offsetHeight || 24) * 1.25 : 0;
+    cta.style.top = `${narrow ? poemEnd + 18 : by + (S.ground ?? 1) * bh + 26 * unit}px`;
+    L = { bg, items, stars, words, ground, heads, first: S.segs[0][0], dpr };
+  }
+
+  const ease = (u) => 1 - Math.pow(1 - u, 2);
+  function render() {
+    if (!L) return;
+    const r = story.getBoundingClientRect(), k = REDUCED ? 1 : Math.max(0, Math.min(1, -r.top / (r.height - innerHeight)));
+    const prog = Math.max(0, Math.min(1, (k - DRAW[0]) / (DRAW[1] - DRAW[0])));
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(L.bg, 0, 0); ctx.setTransform(L.dpr, 0, 0, L.dpr, 0, 0);
+    const lit = { [L.first]: Math.min(1, prog * 12) };
+    L.items.forEach((it) => {
+      const u = Math.max(0, Math.min(1, (prog - it.a) / (it.b - it.a)));
+      if (it.ground) { const m = Math.floor(L.ground.length * u); for (let i = 0; i < m; i++) drawStroke(ctx, L.ground[i], 1); return; }
+      drawStroke(ctx, it.sg, ease(u));
+      if (u > .85) lit[it.sg.to] = Math.max(lit[it.sg.to] || 0, Math.min(1, (u - .85) / .15));
+    });
+    L.heads.forEach(({ k, strokes }) => { const m = Math.floor(strokes.length * Math.min(1, (lit[k] || 0) * 1.2)); for (let i = 0; i < m; i++) drawStroke(ctx, strokes[i], 1); });
+    Object.entries(L.stars).forEach(([key, st]) => drawStar(ctx, st, lit[key] || 0));
+    L.words.forEach(({ d, k }) => d.classList.toggle('on', (lit[k] || 0) > .5));
+    cta.classList.toggle('on', prog >= 1);
+  }
+  let raf = 0; const schedule = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; render(); }); };
+  const rebuild = () => { bake(); render(); };
+  document.fonts.load('26px Caprasimo').finally(rebuild);
+  addEventListener('scroll', schedule, { passive: true });
+  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(rebuild, 150); });
+
+  /*
+   * Liquid-glass lens: an SVG displacement map that bends the backdrop like a convex lens (strongest at the rim,
+   * none in the middle), used through backdrop-filter. The map is drawn once: red = x shift, green = y shift.
+   */
+  const S = 128, c = document.createElement('canvas'); c.width = c.height = S; const x = c.getContext('2d'), img = x.createImageData(S, S);
+  for (let j = 0; j < S; j++) for (let i = 0; i < S; i++) {
+    const u = (i / (S - 1)) * 2 - 1, v = (j / (S - 1)) * 2 - 1, r = Math.hypot(u, v), k = (j * S + i) * 4;
+    const bend = r < 1 ? Math.pow(r, 2.2) : 0;                                   // edge refraction, calm centre
+    img.data[k] = 128 - u * bend * 127; img.data[k + 1] = 128 - v * bend * 127; img.data[k + 2] = 128; img.data[k + 3] = 255;
+  }
+  x.putImageData(img, 0, 0);
+  document.getElementById('lensMap')?.setAttribute('href', c.toDataURL());
+})();
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import GUI from 'lil-gui';
+
+const TAU = Math.PI * 2, PI = Math.PI;
+const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* Tweakable parameters: every "variable factor" lives here, persisted in localStorage. */
+const DEFAULTS = {
+  // Gaurav's chosen values (25 Nov 2026).
+  seed: 619637061,
+  layout: 'D · Back bay, peaks left',
+  size: .75, elevation: 28, yaw: -8,                                 // camera
+  mtnHeight: 1.3, terrace: .24, tier: .2, snowLine: .3,               // landscape (rebuilds terrain)
+  exposure: 1.67, moon: 0, side: 1, sky: 1.2, towerLight: 150, beams: .01, haze: .08,   // light
+  snowSpeed: .35, snowSize: .15, snowAmount: 1,                      // snow
+  speed: .85, waves: .7,                                             // motion
+  grain: .12, stars: true,                                           // look
+};
+const TWEAK_KEY = 'gg-pit-tweak';
+/* Storage can be blocked (file:// pages, private modes, strict settings). Then the panel still works, it just forgets. */
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch { /* not saved: storage unavailable */ } },
+  remove(k) { try { localStorage.removeItem(k); } catch { /* storage unavailable */ } },
+};
+let saved = {}; try { saved = JSON.parse(store.get(TWEAK_KEY) || '{}'); } catch { saved = {}; }
+const P = Object.assign({}, DEFAULTS, saved);
+const SETTINGS = P;   // alias for places where a local `P` (vertex positions) shadows the settings
+let SEED = P.seed;
+
+/* ================= world constants (world units) ================= */
+const RF = 6.2;            // field radius
+const RR = 10;             // rim radius
+const WALL = 3.0;          // rim height above the field
+/*
+ * LAYOUTS: where the story sits in the bowl. Angles are atan2(z, x) around the bowl (back = -PI/2, right = 0).
+ * mtn/city: sector centre + half-width. sea: direction of the sea from the centre + shoreline distance.
+ * Positions are [x, z] on the ground or [angle, radius] in the stands. Pick one in the tweak panel.
+ */
+const LAYOUTS = {
+  /*
+   * D (final). Zones, so the ground reads clean:
+   *   back-left: the range (trekkers, skiers), the glacier pours straight into the sea from behind the right-hand peaks;
+   *   back-right: sea + beach;  right: Student Plaza cut into the foothills, NCC cadets drilling below its steps;
+   *   back-right, where the range ends: Royal Embassy above the bay; End Point (cliff + chai stall) between it and SP;
+   *   outside the rim by SP: the scoreboard (blank for now);
+   *   left rim: kart workshop; the test drive climbs a ramp through the front-left stands, laps the whole bowl outside and comes back;
+   *   middle: walkers, the cyclist, the wandering boxer.
+   * spPad: [angle, radius, floor height] of the terrace cut for SP. kartRamp: [bottom, top] angles of the ramp.
+   * piste: groomed ski run, a quadratic curve top → ctrl → end ([angle, radius] each), h = height at the top, w = half-width.
+   * trek: the trek peak, c = summit [angle, radius], base = base camp, h = summit height, r = radius of its base.
+   */
+  'D · Back bay, peaks left': {
+    mtn: [-2.35, .9], city: [.35, .7], sea: [-1.0, 2.5], glacier: -1.72, glacierFrom: -1.5,
+    embassy: [-.62, RR - 1.0], embassyRot: .15, spPad: [.5, RF + 1.1, .75], shop: [2.86, RF - .95],
+    kartRamp: [2.7, 1.98], scoreboard: [.98, RR + 1.55], endPoint: [-.1, RR - .95, 3.3],
+    piste: { path: [[-2.78, RR + 1.6], [-2.3, RR - .1], [-2.66, RF + 2.0], [-2.48, RF + .15]], h: 5.39, w: .55, pow: 1.15 },   // h: 25° mean fall line
+    trek: { c: [-2.0, RR + .6], base: [-2.1, RF + 1.0], h: 6.8, r: 4.2 },
+    road: [[3.0, .2], [1.8, -.1], [.4, .25]], boxer: [1.6, -1.2], walk: [-.4, .2], bike: [-.9, 1.4],
+    towers: [[-2.5, RR + 2.2, 5.4], [-1.95, RR + 2.6, 6.0]], lamps: [-2.3],
+  },
+};
+const LAY = LAYOUTS[P.layout] || LAYOUTS[Object.keys(LAYOUTS)[0]];
+const [MTN_C, MTN_W] = LAY.mtn, MTN_F = .55;      // mountain sector
+const [CITY_C, CITY_W] = LAY.city, CITY_F = .4;    // Manipal sector
+const SNOW_PER_TOWER = 650;
+
+
+/* ================= palette ================= */
+/* The original's palette. Real-world colours are remapped onto it: rock -> blues, meadows / "green peaks" -> the
+   vermilion seat sections, buildings -> bone, roofs -> black. Five hues plus black and white. */
+const C = {
+  black: '#07060a', cobalt: '#1f3fd1', blue: '#3563ea', sky: '#6aaef2', red: '#f2401f', bone: '#e8e0d2', white: '#f4f1ea',
+  snow: '#f6f4ee', rock: '#3d6ff0', rock2: '#1f3fd1', g1: '#1d9150', g2: '#25a95c', g3: '#3fc472', gDark: '#127040',
+  slate: '#0d0c14', cream: '#e8e0d2', brick: '#e0371c', khaki: '#cdbf9e', maroon: '#b21f12', orange: '#f2401f', teal: '#6aaef2',
+};
+const col = (h) => new THREE.Color(h);
+
+/* ================= noise ================= */
+function hash(x, y) {
+  let h = (Math.imul(x, 374761393) + Math.imul(y, 668265263) + Math.imul(SEED, 144665)) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+}
+function vnoise(x, y) {
+  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+function fbm(x, y, o = 4) { let s = 0, a = .5, f = 1, n = 0; for (let i = 0; i < o; i++) { s += vnoise(x * f, y * f) * a; n += a; a *= .5; f *= 2.03; } return s / n; }
+/** Ridged multifractal: sharp crests, which is what makes peaks read as mountains, not hills. */
+function ridged(x, y, o = 5) {
+  let s = 0, a = .55, f = 1, n = 0, w = 1;
+  for (let i = 0; i < o; i++) { let r = 1 - Math.abs(vnoise(x * f, y * f) * 2 - 1); r *= r * w; w = Math.min(1, r * 1.6); s += r * a; n += a; a *= .5; f *= 2.1; }
+  return s / n;
+}
+const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+const angDiff = (a, b) => { let d = a - b; while (d > PI) d -= TAU; while (d < -PI) d += TAU; return Math.abs(d); };
+const mtnW = (th) => 1 - smooth(MTN_W, MTN_W + MTN_F, angDiff(th, MTN_C));
+const cityW = (th) => 1 - smooth(CITY_W, CITY_W + CITY_F, angDiff(th, CITY_C));
+/* Student Plaza sits on a flat terrace cut into the foothills; spMask is 1 on that cut, 0 outside it. */
+const SP_C = [Math.cos(LAY.spPad[0]) * LAY.spPad[1], Math.sin(LAY.spPad[0]) * LAY.spPad[1]], SP_Y = LAY.spPad[2], SP_SCALE = 1.35, SP_R = 1.85 * SP_SCALE;   // SP_SCALE: plan size (heights stay, so steps still fit people)
+const spMask = (x, z) => Math.hypot(x, z) < RF + .1 ? 0 : 1 - smooth(SP_R, SP_R + .45, Math.hypot(x - SP_C[0], z - SP_C[1]));
+/* End Point: a grassy promontory raised above the rim. epMask is 1 on its flat top, falling off as a steep cliff. */
+const EP_C = [Math.cos(LAY.endPoint[0]) * LAY.endPoint[1], Math.sin(LAY.endPoint[0]) * LAY.endPoint[1]], EP_Y = LAY.endPoint[2], EP_R = 1.25;
+const epMask = (x, z) => 1 - smooth(EP_R, EP_R + .55, Math.hypot(x - EP_C[0], z - EP_C[1]));
+const wallAt = (d) => d < RF ? 0 : d < RR ? WALL * Math.pow((d - RF) / (RR - RF), 1.2) : WALL;
+
+/* Glacier: a channel of snow from the high snowfields down the wall to the field edge. */
+const polar = (a, d) => [Math.cos(a) * d, Math.sin(a) * d];
+// It starts behind the right-hand peaks (glacierFrom), bends round them and ends as a tidewater tongue at the sea.
+const GLACIER = [polar(LAY.glacierFrom, RR + 2.0), polar((LAY.glacierFrom + LAY.glacier) / 2, RR - .2), polar(LAY.glacier - .03, RF + 1.3), polar(LAY.glacier, RF + .1)];
+function glacierDist(x, z) {
+  let best = 1e9, t = 0;
+  for (let i = 0; i < GLACIER.length - 1; i++) {
+    const [ax, az] = GLACIER[i], [bx, bz] = GLACIER[i + 1], dx = bx - ax, dz = bz - az;
+    const k = Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / (dx * dx + dz * dz)));
+    const d = Math.hypot(x - ax - dx * k, z - az - dz * k);
+    if (d < best) { best = d; t = (i + k) / (GLACIER.length - 1); }
+  }
+  return { d: best, t };
+}
+
+/* ===== designed terrain: the ski run, the trek peak and the kart ramp are shaped on purpose, not left to noise ===== */
+/* Piste: a smooth groomed corridor on the camera-facing side of the range. Height along it falls as h·(1-u)^pow
+   (u = fraction of its length). pow 1.15 keeps the grade nearly even (~28° at the top easing to ~22° at the foot),
+   a gradual slope for slow, wide turns; it is flat across, so a skier anywhere on it sits on a smooth surface. */
+const PISTE = (() => {
+  // An S across the camera-facing side of the range (Catmull-Rom through the layout points): a long run for its height.
+  const K = LAY.piste.path.map(([a, d]) => polar(a, d)), c = [K[0], ...K, K.at(-1)], pts = [];
+  const cr = (p0, p1, p2, p3, t) => [0, 1].map(i => .5 * (2 * p1[i] + (-p0[i] + p2[i]) * t + (2 * p0[i] - 5 * p1[i] + 4 * p2[i] - p3[i]) * t * t + (-p0[i] + 3 * p1[i] - 3 * p2[i] + p3[i]) * t ** 3));
+  for (let i = 0; i < c.length - 3; i++) for (let k = 0; k < 20; k++) pts.push(cr(c[i], c[i + 1], c[i + 2], c[i + 3], k / 20));
+  pts.push(K.at(-1));
+  const len = [0]; for (let i = 1; i < pts.length; i++) len.push(len[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  const xs = pts.map(p => p[0]), zs = pts.map(p => p[1]), M = 1.2;
+  return { pts, len, L: len.at(-1), H: LAY.piste.h, w: LAY.piste.w, box: [Math.min(...xs) - M, Math.max(...xs) + M, Math.min(...zs) - M, Math.max(...zs) + M] };
+})();
+const FAR = { d: 1e9, u: 0, sd: 0, nx: 0, nz: 0, h: 0 };
+/** Nearest point on a polyline: distance, signed side, unit normal, fraction along (by length). */
+function nearestOn(pts, len, x, z) {
+  let best = 1e9, bi = 0, bk = 0;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [ax, az] = pts[i], [bx, bz] = pts[i + 1], dx = bx - ax, dz = bz - az, k = Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / (dx * dx + dz * dz)));
+    const d = Math.hypot(x - ax - dx * k, z - az - dz * k); if (d < best) { best = d; bi = i; bk = k; }
+  }
+  const [ax, az] = pts[bi], [bx, bz] = pts[bi + 1], tl = Math.hypot(bx - ax, bz - az), nx = -(bz - az) / tl, nz = (bx - ax) / tl;
+  const sd = (x - ax) * nx + (z - az) * nz, u = (len[bi] + tl * bk) / len.at(-1);
+  return { d: best, sd, nx, nz, u };
+}
+function pisteInfo(x, z) {
+  const b = PISTE.box; if (x < b[0] || x > b[1] || z < b[2] || z > b[3]) return FAR;
+  const r = nearestOn(PISTE.pts, PISTE.len, x, z); r.h = PISTE.H * Math.pow(1 - r.u, LAY.piste.pow); return r;
+}
+/* Trek peak: the tallest summit, a steep Himalayan cone (≈55-60° near the top) roughened by noise. */
+const TREK = { c: polar(...LAY.trek.c), base: polar(...LAY.trek.base), H: LAY.trek.h, R: LAY.trek.r };
+function trekCone(x, z) {
+  const r = Math.hypot(x - TREK.c[0], z - TREK.c[1]); if (r >= TREK.R) return -1e9;
+  return TREK.H * Math.pow(1 - r / TREK.R, 1.25) * (.9 + .2 * fbm(x * 1.4 + 5, z * 1.4));
+}
+/* Kart ramp: a road spiralling up the front-left stands from the track to the rim (≈23° climb, about 7.4 units long). */
+const RAMP_R0 = RF - .05, RAMP_R1 = RR + .35, RAMP_W = .45;
+const RAMP = (() => {
+  const [a0, a1] = LAY.kartRamp, pts = [], len = [0];
+  for (let i = 0; i <= 30; i++) { const u = i / 30; pts.push(polar(a0 + (a1 - a0) * u, RAMP_R0 + (RAMP_R1 - RAMP_R0) * u)); if (i) len.push(len[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])); }
+  return { pts, len, lo: Math.min(a0, a1) - .15, hi: Math.max(a0, a1) + .15 };
+})();
+function rampInfo(x, z) {
+  const d = Math.hypot(x, z), th = Math.atan2(z, x); if (th < RAMP.lo || th > RAMP.hi || d < RF - .5 || d > RR + .8) return FAR;
+  const r = nearestOn(RAMP.pts, RAMP.len, x, z); r.h = WALL * r.u; return r;
+}
+/* Trek trail bench: after the switchbacks are planned, a narrow ledge is cut along them at a constant grade (base camp
+   height → summit height), the way a real trail is built, so the walking surface is even. Null until planned. */
+let TRAIL = null;
+function trailBench(x, z, y) {
+  const b = TRAIL.box; if (x < b[0] || x > b[1] || z < b[2] || z > b[3]) return y;
+  const r = nearestOn(TRAIL.pts, TRAIL.len, x, z); if (r.d > .14) return y;
+  const w = 1 - smooth(.04, .14, r.d); return y + (TRAIL.y0 + (TRAIL.y1 - TRAIL.y0) * r.u - y) * w;
+}
+
+function heightAt(x, z) {
+  const d = Math.hypot(x, z), th = Math.atan2(z, x), m = mtnW(th);
+  let y = wallAt(d);
+  if (m > 0) {
+    const inner = smooth(RF + .35, RF + 2.4, d), frontHalf = smooth(-1, 2.5, z);
+    const outer = (1 - smooth(RR + .6, RR + 3.4, d)) * (1 - frontHalf * smooth(RR - .8, RR + .1, d));   // nearer the camera, ranges stay inside the rim
+    const grow = .7 + Math.max(0, d - RF) * .36;                  // far = taller (atmospheric scale)
+    const n = ridged(x * .2 + 11.3, z * .2 + 7.1);
+    y += m * inner * outer * (Math.pow(n, 1.4) * grow * 2.3 * P.mtnHeight + fbm(x * .7, z * .7) * .45);
+    // Meadows: soft rolling ground near the field.
+    y += m * smooth(RF, RF + .4, d) * (1 - smooth(RF + 1.6, RF + 2.8, d)) * fbm(x * .8 + 4, z * .8) * .45;
+    // The glacier sits in a shallow trough.
+    const g = glacierDist(x, z); if (g.d < .9) y -= (1 - g.d / .9) * .35 * m;
+  }
+  // Beyond the rim the foothills dive under the black ground plane, so the terrain's open edge never shows.
+  if (d > RR) y -= smooth(RR + 1.6, RR + 3.3, d) * 3.5;
+  if (m > .2) { const tc = trekCone(x, z); if (tc > y) y = tc; }
+  const cw = cityW(th);
+  const spClear = smooth(SP_R + .4, SP_R + 1.6, Math.hypot(x - SP_C[0], z - SP_C[1])) * smooth(EP_R + .3, EP_R + 1.2, Math.hypot(x - EP_C[0], z - EP_C[1]));   // no Manipal hills poking into the Plaza
+  if (cw > 0 && d > RF + 1 && d < RR - .5) { const b = fbm(x * .9 + 3, z * .9 + 1); if (b > .6) y += (b - .6) * 3.2 * cw * spClear; }
+  if (d > RR + .05 && (m < .08 || d > RR + 3.6)) return -40;                       // clean rim edge onto the black
+  // Terraces: every slope steps like stadium seating, so ranges read as part of the bowl.
+  if (d > RF + .05) {
+    const f = y / P.tier, base = Math.floor(f), frac = f - base;
+    const stepped = (base + Math.pow(frac, 5)) * P.tier;
+    y = y * (1 - P.terrace) + stepped * P.terrace;
+  }
+  const sm = spMask(x, z); if (sm > 0) y = y * (1 - sm) + SP_Y * sm;
+  // Piste and ramp are graded surfaces: they override the terraces, with soft banks either side.
+  const pi = pisteInfo(x, z); if (pi.d < PISTE.w + .55) { const w = 1 - smooth(PISTE.w, PISTE.w + .55, pi.d); y += (pi.h - y) * w; }
+  const ri = rampInfo(x, z); if (ri.d < RAMP_W + .35 && d < RR + .05) { const w = 1 - smooth(RAMP_W, RAMP_W + .35, ri.d); y += (ri.h - y) * w; }
+  if (TRAIL) y = trailBench(x, z, y);
+  const em = epMask(x, z); if (em > 0) y = y * (1 - em * em) + EP_Y * em * em;   // squared: a sharp cliff edge, not a ramp
+  return y;
+}
+
+/* ================= renderer / scene / camera ================= */
+const gl = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas: gl, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(30, 1, .1, 200);
+const LOOK = new THREE.Vector3(0, .6, -1.6);
+
+/* ================= lights ================= */
+const hemi = new THREE.HemisphereLight(0xffffff, 0x4a4a5a, .9); scene.add(hemi);
+scene.add(new THREE.AmbientLight(0x404060, .25));
+const moon = new THREE.DirectionalLight(0xfff8ee, 2.1);
+moon.position.set(-15, 10.5, 9); moon.castShadow = true;
+moon.shadow.mapSize.set(2048, 2048);
+Object.assign(moon.shadow.camera, { left: -16, right: 16, top: 16, bottom: -16, near: 1, far: 60 });
+moon.shadow.bias = -.0008;
+scene.add(moon);
+// Cool side light from the back-left: lights one face of every ridge and leaves the other in shade, so peaks read in 3D.
+const sideLight = new THREE.DirectionalLight(0xbcd2ff, 1); sideLight.position.set(-14, 9, -10); scene.add(sideLight);
+
+/* ================= helpers ================= */
+const std = (c, o = {}) => new THREE.MeshStandardMaterial({ color: c, roughness: .9, metalness: 0, flatShading: true, ...o });
+const basic = (c, o = {}) => new THREE.MeshBasicMaterial({ color: c, ...o });
+function mesh(geo, mat, x = 0, y = 0, z = 0, parent = scene, shadow = true) {
+  const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z);
+  m.castShadow = shadow; m.receiveShadow = true; parent.add(m); return m;
+}
+function canvasTex(w, h, draw, srgb = true) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(c); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
+}
+const softTex = canvasTex(128, 128, (x, w) => {
+  const g = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2);
+  g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.4, 'rgba(255,255,255,.45)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0, 0, w, w);
+});
+
+/* ================= terrain: bowl + ranges + stands ================= */
+function buildTerrain() {
+  const SIZE = 46, SEG = 300;
+  let geo = new THREE.PlaneGeometry(SIZE, SIZE, SEG, SEG);
+  geo.rotateX(-PI / 2);
+  const p = geo.attributes.position;
+  for (let i = 0; i < p.count; i++) p.setY(i, heightAt(p.getX(i), p.getZ(i)));
+  geo = geo.toNonIndexed();
+  {
+    // Remove triangles that were pushed down (outside the rim): the black ground plane replaces them.
+    const src = geo.attributes.position.array, keep = [];
+    for (let i = 0; i < src.length; i += 9) if (src[i + 1] > -1 && src[i + 4] > -1 && src[i + 7] > -1) for (let k = 0; k < 9; k++) keep.push(src[i + k]);
+    geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(keep, 3));
+  }
+  geo.computeVertexNormals();
+  const P = geo.attributes.position, N = geo.attributes.normal, cols = new Float32Array(P.count * 3);
+  const tmp = new THREE.Color(), crowdW = [], crowdD = [];
+  const pick = {
+    snow: col(C.snow), snowBlue: col('#dfe8fa'), rock: col(C.rock), rock2: col(C.rock2), g1: col(C.g1), g2: col(C.g2), g3: col(C.g3), gDark: col(C.gDark),
+    cobalt: col(C.cobalt), blue: col(C.blue), bone: col(C.bone), concrete: col('#b9b1a2'), melt: col('#9ccaf5'), meltDeep: col('#6aaef2'), sky: col(C.sky), white: col(C.white), red: col('#d8321f'), black: col(C.black), navy: col('#1a2350'),
+  };
+  for (let i = 0; i < P.count; i += 3) {
+    const cx = (P.getX(i) + P.getX(i + 1) + P.getX(i + 2)) / 3, cy = (P.getY(i) + P.getY(i + 1) + P.getY(i + 2)) / 3, cz = (P.getZ(i) + P.getZ(i + 1) + P.getZ(i + 2)) / 3;
+    const ny = N.getY(i), d = Math.hypot(cx, cz), th = Math.atan2(cz, cx), m = mtnW(th), cw = cityW(th);
+    const extra = cy - wallAt(d), slope = 1 - ny, r = hash((cx * 97) | 0, (cz * 89) | 0);
+    let c;
+    const ledge = ny > .82;                                   // flat tread of a terrace / seat row
+    const row = Math.floor(cy / SETTINGS.tier);                        // which tier this triangle belongs to
+    const band = fbm(cx * .35, cz * .35);                     // slow variation, so colour flows in patches
+    if (cy < -1) c = pick.black;
+    else if (spMask(cx, cz) > .5) c = pick.bone;
+    else if (epMask(cx, cz) > .02) c = cy > EP_Y - .04 ? (ledge ? pick.g2 : pick.g1) : pick.rock2;   // End Point: grass on top, rock cliff
+    else if (rampInfo(cx, cz).d < RAMP_W) c = pick.concrete;
+    else if (cy > .15 && pisteInfo(cx, cz).d < PISTE.w) c = pick.snow;                   // groomed piste
+    else if (d < RF - .02) c = pick.red;
+    else if (d > RR && cy < WALL + .6) c = pick.black;
+    else if (m > .35 && (extra > .1 || d < RR)) {
+      const g = glacierDist(cx, cz);
+      const snowLine = 3.7 + band * 1.2 + SETTINGS.snowLine;
+      if (g.d < .55 - g.t * .25) c = g.t > .55 ? (ledge ? pick.melt : pick.meltDeep) : (ledge ? pick.snow : pick.snowBlue);   // glacier → meltwater
+      else if (cy > snowLine) c = ledge ? pick.snow : pick.snowBlue;
+      else if (cy > snowLine - .8) c = ledge ? (row % 2 ? pick.snow : pick.rock) : pick.rock2;
+      else if (cy > snowLine - 1.7) c = ledge ? pick.rock : pick.rock2;                 // bare rock band under the snow
+      else if (cy > snowLine - 2.4) c = ledge ? (band > .5 ? pick.g2 : pick.rock) : (band > .45 ? pick.g1 : pick.rock2);   // last grass
+      else c = ledge ? (band > .55 ? pick.g3 : pick.g2) : (r < .3 ? pick.gDark : pick.g1);   // green slopes and valleys
+    } else if (extra > .12 && cw > .3) {
+      c = ledge ? (band > .5 ? pick.g2 : pick.g3) : pick.g1;  // green peaks where the red seats were
+    } else {
+      // Stands: risers cobalt, treads blue; heads are real instanced spheres (added below).
+      const aisle = ((th / TAU * 44) % 1 + 1) % 1 < .07 && d < RR - .3;
+      if (Math.abs(d - (RF + 1.45)) < .16 || aisle) c = pick.sky;
+      else if (!ledge) c = pick.cobalt;
+      else { c = pick.blue; if (r < .62) crowdW.push(cx, cy, cz); }
+    }
+    // Red sections (meadows / "green peaks") get a dark crowd, like the original's red blocks.
+    if (ledge && (c === pick.g1 || c === pick.g2 || c === pick.g3) && r < .4 && epMask(cx, cz) === 0) crowdD.push(cx, cy, cz);
+    tmp.copy(c);
+    for (let k = 0; k < 3; k++) { cols[(i + k) * 3] = tmp.r; cols[(i + k) * 3 + 1] = tmp.g; cols[(i + k) * 3 + 2] = tmp.b; }
+  }
+  geo.setAttribute('color', new THREE.BufferAttribute(cols, 3));
+  const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: .95, side: THREE.FrontSide }));
+  m.receiveShadow = true; m.castShadow = true; scene.add(m);
+  // Crowd heads: one tiny sphere per sampled seat, jittered. Children of the terrain, so a rebuild clears them.
+  const addCrowd = (arr, color, r) => {
+    const n = arr.length / 3, inst = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(r, 0), std(color), n), M = new THREE.Matrix4();
+    for (let i = 0; i < n; i++) { M.makeTranslation(arr[i * 3] + (Math.random() - .5) * .05, arr[i * 3 + 1] + r * .9, arr[i * 3 + 2] + (Math.random() - .5) * .05); inst.setMatrixAt(i, M); }
+    inst.castShadow = false; inst.receiveShadow = true; m.add(inst);
+  };
+  addCrowd(crowdW, C.white, .028); addCrowd(crowdD, '#0b3a20', .026);
+  return m;
+}
+
+/* ================= black ground around the bowl ================= */
+function buildRimEdge() {
+  const a0 = MTN_C + MTN_W + .25, a1 = MTN_C - MTN_W - .25 + TAU;            // around the bowl, skipping the range
+  const ring = new THREE.RingGeometry(RR - .18, RR + .02, 160, 1, -a1, a1 - a0).rotateX(-PI / 2);
+  mesh(ring, std(C.sky, { flatShading: false }), 0, WALL + .015, 0, scene, false);
+  const ring2 = new THREE.RingGeometry(RR - .26, RR - .2, 160, 1, -a1, a1 - a0).rotateX(-PI / 2);
+  mesh(ring2, basic(C.white), 0, WALL + .016, 0, scene, false);
+}
+function buildSurround() {
+  const ink = new THREE.MeshBasicMaterial({ color: 0x07060a });
+  mesh(new THREE.RingGeometry(RR - .02, 90, 128, 1).rotateX(-PI / 2), ink, 0, WALL - .02, 0, scene, false);
+  mesh(new THREE.CylinderGeometry(RR, RR, 12, 128, 1, true), new THREE.MeshBasicMaterial({ color: 0x07060a, side: THREE.BackSide }), 0, WALL - 6.02, 0, scene, false);
+  // Dash stars lying on the black ground (short white slivers, a few double).
+  const g = new THREE.PlaneGeometry(1, 1).rotateX(-PI / 2), star = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true });
+  const n = 900, inst = new THREE.InstancedMesh(g, star, n), M = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler();
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * TAU, r = RR + 1 + Math.pow(Math.random(), .6) * 60;
+    e.set(0, Math.random() * PI, 0); q.setFromEuler(e);
+    const l = .08 + Math.random() ** 2 * .5;
+    M.compose(new THREE.Vector3(Math.cos(a) * r, WALL, Math.sin(a) * r), q, new THREE.Vector3(l, 1, .035 + Math.random() * .03));
+    inst.setMatrixAt(i, M);
+  }
+  scene.add(inst);
+}
+
+/* ================= field ================= */
+const fieldTex = canvasTex(1024, 1024, (x, w, h) => {
+  x.fillStyle = C.red; x.fillRect(0, 0, w, h);
+  for (let k = 0; k < 90000; k++) { x.fillStyle = Math.random() < .6 ? 'rgba(150,20,8,.14)' : 'rgba(255,190,160,.12)'; x.fillRect(Math.random() * w, Math.random() * h, 2, 2); }
+});
+const ground = (y) => y + .002;
+function buildField() {
+  mesh(new THREE.CircleGeometry(RF, 128).rotateX(-PI / 2), std(0xffffff, { map: fieldTex, flatShading: false }), 0, .005, 0, scene, false);
+  mesh(new THREE.RingGeometry(RF - .35, RF + .05, 128).rotateX(-PI / 2), std(C.bone, { flatShading: false }), 0, .012, 0, scene, false);
+  mesh(new THREE.RingGeometry(RF - .52, RF - .48, 128).rotateX(-PI / 2), basic(C.white), 0, .014, 0, scene, false);
+  // Glacier tongue spills onto the field as a bone/white strip.
+
+}
+
+/* --- meltwater river + Arabian Sea + beach --- */
+const SEA_A = LAY.sea[0], SEA_OFF = LAY.sea[1], SEA_NX = Math.cos(SEA_A), SEA_NZ = Math.sin(SEA_A);
+const SEA_LINE = (x, z) => x * SEA_NX + z * SEA_NZ - SEA_OFF;   // > 0 → sea
+const S0 = [SEA_NX * SEA_OFF, SEA_NZ * SEA_OFF];                // middle of the shoreline
+/** A point by the sea: u along the shore, v seaward from the shoreline. */
+const seaPt = (u, v) => [S0[0] + SEA_NX * v - SEA_NZ * u, S0[1] + SEA_NZ * v + SEA_NX * u];
+const seaFace = Math.atan2(SEA_NX, SEA_NZ);                     // rotation.y that faces out to sea
+let waterTex;
+function ribbon(pts, w0, w1) {
+  const L = [], R = [];
+  pts.forEach(([x, z], i) => {
+    const [ax, az] = pts[Math.max(0, i - 1)], [bx, bz] = pts[Math.min(pts.length - 1, i + 1)];
+    const dx = bx - ax, dz = bz - az, n = Math.hypot(dx, dz), w = w0 + (w1 - w0) * i / (pts.length - 1);
+    L.push([x - dz / n * w, z + dx / n * w]); R.push([x + dz / n * w, z - dx / n * w]);
+  });
+  const sh = new THREE.Shape(); sh.moveTo(...L[0]); L.slice(1).forEach(p => sh.lineTo(...p)); R.reverse().forEach(p => sh.lineTo(...p)); return sh;
+}
+const SHORE_N = new THREE.Vector2(-SEA_NX, -SEA_NZ);         // landward direction, perpendicular to the shore
+let sea, foams = [], wetSand; const floes = [];
+function buildWater() {
+  waterTex = canvasTex(256, 256, (x, w, h) => {
+    x.fillStyle = C.sky; x.fillRect(0, 0, w, h);
+    x.strokeStyle = 'rgba(255,255,255,.8)'; x.lineWidth = 2; x.lineCap = 'round';
+    for (let k = 0; k < 50; k++) { const px = Math.random() * w, py = Math.random() * h, l = 8 + Math.random() * 18; x.beginPath(); x.moveTo(px, py); x.quadraticCurveTo(px + l / 2, py - 3, px + l, py); x.stroke(); }
+  });
+  waterTex.wrapS = waterTex.wrapT = THREE.RepeatWrapping; waterTex.repeat.set(3, 3);
+  // Beach: bone sand from the shoreline inland.
+  const beach = new THREE.Shape(), bp = [];
+  for (let a = SEA_A - 1.7; a <= SEA_A + 1.7; a += .02) { const x = Math.cos(a) * (RF - .02), z = Math.sin(a) * (RF - .02); if (SEA_LINE(x, z) > -.75) bp.push([x, z]); }
+  beach.moveTo(...bp[0]); bp.forEach(p => beach.lineTo(...p));
+  mesh(new THREE.ShapeGeometry(beach, 64).rotateX(PI / 2), std(C.bone, { flatShading: false, side: THREE.DoubleSide }), 0, .016, 0, scene, false);
+  // Sea surface: a dense grid clipped to the sea, displaced every frame by swells rolling in to the shore.
+  let g = new THREE.PlaneGeometry(13, 13, 160, 160).rotateX(-PI / 2); g = g.toNonIndexed();
+  const src = g.attributes.position.array, keep = [];
+  const inSea = (x, z) => Math.hypot(x, z) < RF - .03 && SEA_LINE(x, z) > -.02;
+  for (let i = 0; i < src.length; i += 9) if (inSea(src[i], src[i + 2]) && inSea(src[i + 3], src[i + 5]) && inSea(src[i + 6], src[i + 8])) for (let k = 0; k < 9; k++) keep.push(src[i + k]);
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(keep, 3));
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(new Float32Array(keep.length), 3));
+  geo.userData.base = Float32Array.from(keep);
+  sea = mesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: .35, metalness: .05 }), 0, 0, 0, scene, false);
+  // Surf: three foam lines that run up the sand and slide back, plus a wet-sand band behind them.
+  const along = new THREE.Vector2(SHORE_N.y, -SHORE_N.x);
+  const len = 2 * Math.sqrt(Math.max(0, RF * RF - SEA_OFF * SEA_OFF)) * .96;
+  const strip = (w, mat, y) => { const m = mesh(new THREE.PlaneGeometry(len, w).rotateX(-PI / 2), mat, S0[0], y, S0[1], scene, false); m.rotation.y = -Math.atan2(along.y, along.x); return m; };
+  wetSand = strip(.5, new THREE.MeshBasicMaterial({ color: '#cbc1b0', transparent: true, opacity: .5, depthWrite: false }), .018);
+  for (let k = 0; k < 3; k++) foams.push(strip(.045 + k * .015, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .9, depthWrite: false }), .05));
+  // The glacier meets the sea directly (tidewater): a few ice floes drift off its snout.
+  const [gx, gz] = polar(LAY.glacier, RF - .35);
+  for (let k = 0; k < 9; k++) {
+    const f = mesh(new THREE.IcosahedronGeometry(.05 + Math.random() * .07, 0), std(k % 3 ? C.white : '#cfe0f7'), gx + (Math.random() - .5) * 1.1, .03, gz + Math.random() * .9, scene, false);
+    f.scale.y = .45; floes.push({ m: f, ph: Math.random() * TAU, x: f.position.x, z: f.position.z });
+  }
+}
+/** Water height: swells travelling shoreward + cross-chop; the shallows sit lower so sand shows at the edge. */
+const waveH = (x, z, t) => {
+  const d = SEA_LINE(x, z);
+  const swell = Math.sin(d * 5.2 + t * 2.1) * .05 * Math.min(1, d * 1.6);
+  const chop = Math.sin(x * 3.1 - z * 2.3 + t * 1.7) * .012 + Math.sin(x * 5.7 + z * 4.1 - t * 2.9) * .008;
+  return .03 + swell + chop - Math.max(0, .25 - d) * .06;
+};
+const SEA_COLS = { deep: col(C.cobalt), mid: col(C.blue), shallow: col(C.sky), foam: col(C.white) };
+const dolphins = [];
+function buildDolphins() {
+  for (const [x, z, r] of [[...seaPt(-1.4, 2.1), .4], [...seaPt(-.7, 2.5), .1], [...seaPt(1.8, 2.0), -.3]]) {
+    const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = r; scene.add(g);
+    const body = mesh(new THREE.TorusGeometry(.09, .026, 6, 14, PI * .9), std(C.white), 0, 0, 0, g); body.rotation.z = .1;
+    mesh(new THREE.ConeGeometry(.02, .05, 4), std(C.white), 0, .1, 0, g);
+    dolphins.push({ g, ph: Math.random() * TAU });
+  }
+}
+function updateSea(t) {
+  floes.forEach(f => { f.m.position.y = waveH(f.x, f.z, t) - .01; f.m.rotation.y = f.ph + t * .05; f.m.position.x = f.x + Math.sin(t * .1 + f.ph) * .08; });
+  dolphins.forEach(d => { const u = (t * .45 + d.ph) % TAU; d.g.position.y = Math.sin(u) * .14 - .06; d.g.rotation.x = Math.cos(u) * .6; d.g.visible = Math.sin(u) > -.4; });
+  if (!sea) return;
+  const pos = sea.geometry.attributes.position, base = sea.geometry.userData.base, colA = sea.geometry.attributes.color, cc = new THREE.Color();
+  for (let i = 0; i < pos.count; i++) pos.array[i * 3 + 1] = waveH(base[i * 3], base[i * 3 + 2], t);
+  for (let i = 0; i < pos.count; i += 3) {
+    const x = (base[i * 3] + base[i * 3 + 3] + base[i * 3 + 6]) / 3, z = (base[i * 3 + 2] + base[i * 3 + 5] + base[i * 3 + 8]) / 3;
+    const y = (pos.array[i * 3 + 1] + pos.array[i * 3 + 4] + pos.array[i * 3 + 7]) / 3, d = SEA_LINE(x, z);
+    if (y > .079 || d < .05 + Math.max(0, Math.sin(t * .32 * TAU)) * .08) cc.copy(SEA_COLS.foam);   // whitecaps + the breaking edge
+    else if (d < .7) cc.copy(SEA_COLS.shallow); else if (d < 1.6) cc.copy(SEA_COLS.mid); else cc.copy(SEA_COLS.deep);
+    for (let k = 0; k < 3; k++) cc.toArray(colA.array, (i + k) * 3);
+  }
+  pos.needsUpdate = true; colA.needsUpdate = true; sea.geometry.computeVertexNormals();
+  // Swash: each foam line runs up the beach and slides back, staggered by a third of a cycle.
+  foams.forEach((f, k) => {
+    const ph = (t * .32 + k / 3) % 1, run = Math.sin(ph * PI) * .55;
+    f.position.x = S0[0] + SHORE_N.x * (run - .05); f.position.z = S0[1] + SHORE_N.y * (run - .05);
+    f.material.opacity = Math.sin(ph * PI) * .9;
+  });
+  const wet = Math.max(0, Math.sin(t * .32 * TAU));
+  wetSand.position.x = S0[0] + SHORE_N.x * .25; wetSand.position.z = S0[1] + SHORE_N.y * .25; wetSand.material.opacity = .25 + wet * .3;
+}
+
+/* --- road (where the shadow boxer and the cadets are) --- */
+const ROAD = LAY.road;
+function buildRoad() {
+  mesh(new THREE.ShapeGeometry(ribbon(ROAD, .3, .3), 1).rotateX(PI / 2), std('#d9cfbd', { flatShading: false, side: THREE.DoubleSide }), 0, .017, 0, scene, false);
+  for (let i = 0; i < 28; i++) {
+    const t = i / 28, [x, z] = (() => { const n = ROAD.length - 1, f = t * n, k = Math.floor(f), u = f - k; const [ax, az] = ROAD[k], [bx, bz] = ROAD[Math.min(n, k + 1)]; return [ax + (bx - ax) * u, az + (bz - az) * u]; })();
+    mesh(new THREE.BoxGeometry(.14, .004, .025), basic(C.white), x, .022, z, scene, false).rotation.y = -.05 + t * .3;
+  }
+}
+
+/* --- go-kart corner: workshop at the edge of the ground, test runs on the front arc of the running track --- */
+const SHOP = (() => { const [a, d] = LAY.shop, x = Math.cos(a) * d, z = Math.sin(a) * d; return { x, z, rot: Math.atan2(-x, -z) }; })();   // rot: faces the bowl centre
+const KART_SCALE = 1.485;   // 10% bigger than before
+function buildWorkshop() {
+  const g = new THREE.Group(); g.position.set(SHOP.x, 0, SHOP.z); g.rotation.y = SHOP.rot; g.scale.setScalar(1.1); scene.add(g);
+  // Local frame: +z towards the centre of the ground, -z towards the rim. Everything sits against the rim.
+  mesh(new THREE.BoxGeometry(1.7, .012, 1.15), std('#d9cfbd', { flatShading: false }), 0, .016, -.05, g, false);          // concrete pad
+  mesh(new THREE.BoxGeometry(1.66, .002, .02), basic(C.white), 0, .024, .5, g, false);                                     // painted pad edge
+  // Pop-up canopy: four poles, striped roof.
+  const roofTex = canvasTex(256, 64, (c, w, h) => { for (let i = 0; i < 8; i++) { c.fillStyle = i % 2 ? C.white : C.red; c.fillRect(i * w / 8, 0, w / 8, h); } });
+  for (const [px, pz] of [[-.75, -.52], [.75, -.52], [-.75, .38], [.75, .38]]) mesh(new THREE.CylinderGeometry(.012, .012, .78, 5), std('#2b2b2b'), px, .39, pz, g);
+  const roof = mesh(new THREE.ConeGeometry(1.08, .22, 4, 1, true), std(0xffffff, { map: roofTex, side: THREE.DoubleSide }), 0, .89, -.07, g); roof.rotation.y = PI / 4; roof.scale.set(1, 1, .64);
+  mesh(new THREE.BoxGeometry(1.52, .06, .92), std(C.red), 0, .76, -.07, g);                                               // valance
+  // Back wall of tools: chest, bench with vice, pegboard.
+  mesh(new THREE.BoxGeometry(.42, .3, .2), std('#c4221a'), -.5, .15, -.42, g);
+  for (let i = 0; i < 3; i++) mesh(new THREE.BoxGeometry(.4, .01, .005), basic('#7a140d'), -.5, .07 + i * .08, -.317, g, false);
+  mesh(new THREE.BoxGeometry(.62, .035, .24), std(C.cobalt), .3, .3, -.42, g);
+  for (const s of [-1, 1]) mesh(new THREE.BoxGeometry(.025, .3, .025), std('#2b2b2b'), .3 + s * .28, .15, -.42, g);
+  mesh(new THREE.BoxGeometry(.08, .05, .05), std('#c9ced6'), .14, .345, -.42, g);
+  mesh(new THREE.BoxGeometry(.7, .32, .015), std('#e8e0d2'), .3, .55, -.53, g);                                          // pegboard
+  for (let i = 0; i < 9; i++) mesh(new THREE.BoxGeometry(.012, .08 + (i % 3) * .03, .01), basic(i % 2 ? '#2b2b2b' : C.cobalt), .02 + i * .07, .56, -.52, g, false);
+  // Tyre stack, jerrycan, spare wheel leaning.
+  for (let i = 0; i < 4; i++) mesh(new THREE.CylinderGeometry(.085, .085, .06, 14), std('#151515'), -.72, .03 + i * .062, .15, g);
+  mesh(new THREE.BoxGeometry(.08, .12, .05), std(C.red), .7, .06, .2, g);
+  // Work lamp on a stand.
+  mesh(new THREE.CylinderGeometry(.008, .008, .7, 5), std('#222'), .7, .35, -.25, g);
+  mesh(new THREE.SphereGeometry(.035, 8, 6), basic('#fff2c8'), .66, .7, -.2, g, false);
+  const lamp = new THREE.PointLight(0xffe2a8, 1.6, 2.6, 2); lamp.position.set(.6, .72, -.15); g.add(lamp);
+  g.updateMatrixWorld();
+  SHOP.park = g.localToWorld(new THREE.Vector3(0, 0, .02));             // where the kart sits while it is worked on
+}
+
+/* The test run: out of the workshop, up the ramp through the stands, along the rim road outside the bowl, a U-turn
+   on the black ground, back along the rim and down the ramp to the tent. Sampled into a polyline with height and
+   arc-length, so the kart keeps a steady pace and pitches with the slope. */
+const KART_ROUTE = [], LANE = .14, LOOP_R = RR + .35, LOOP_BEHIND = 3.7, HAIRPIN_OUT = 1.1;   // LOOP_BEHIND: how far out it swings behind the range
+/*
+ * The test drive: up the ramp, then one full lap around the outside of the bowl on the black ground. Behind the
+ * mountains the lap swings out (radius grows with the range's weight) so it passes behind the peaks and the light
+ * towers and reappears on the other side. Back at the ramp it hairpins and comes down to the tent.
+ */
+function planKartRoute() {
+  const [a0, a1] = LAY.kartRamp, pts = [];
+  const ramp = (u, lane) => { const a = a0 + (a1 - a0) * u; return [...polar(a, RAMP_R0 + (RAMP_R1 - RAMP_R0) * u + lane), WALL * u]; };
+  const loopR = (a) => LOOP_R + LOOP_BEHIND * smooth(.05, .55, mtnW(a));
+  pts.push([SHOP.park.x, SHOP.park.z, 0], [...polar(a0 + .14, RF - .35), 0]);
+  for (let k = 0; k <= 40; k++) pts.push(ramp(k / 40, -LANE));
+  const N = 240, past = .45;                                         // full lap, then run on past the ramp top
+  for (let k = 1; k <= N; k++) {
+    const f = k / N, a = a1 - (TAU + past) * f, r = loopR(a) + (RAMP_R1 - LANE - LOOP_R) * (1 - smooth(0, .03, f)) + HAIRPIN_OUT * smooth(.95, 1, f);
+    pts.push([...polar(a, r), WALL]);
+  }
+  // Hairpin on the black ground, then back towards the ramp top on the outer lane.
+  const aT = a1 - past, rA = LOOP_R + HAIRPIN_OUT, rB = RAMP_R1 + LANE, C0 = polar(aT, (rA + rB) / 2), R = (rA - rB) / 2;
+  const ox = Math.cos(aT), oz = Math.sin(aT), tx = Math.sin(aT), tz = -Math.cos(aT);
+  for (let k = 1; k < 14; k++) { const u = k / 14 * PI; pts.push([C0[0] + R * (Math.cos(u) * ox + Math.sin(u) * tx), C0[1] + R * (Math.cos(u) * oz + Math.sin(u) * tz), WALL]); }
+  for (let k = 0; k <= 12; k++) pts.push([...polar(aT + past * k / 12, rB), WALL]);
+  for (let k = 40; k >= 0; k--) pts.push(ramp(k / 40, LANE));
+  pts.push([...polar(a0 + .14, RF - .35), 0], [SHOP.park.x, SHOP.park.z, 0]);
+  let len = 0; pts.forEach((p, i) => { if (i) len += Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]); KART_ROUTE.push({ x: p[0], z: p[1], y: p[2], s: len }); });
+}
+/* The '26 scoreboard: black board on legs outside the front-right rim, lamp-dot numerals like a stadium board. */
+function buildScoreboard() {
+  const [x, z] = polar(...LAY.scoreboard), g = new THREE.Group(); g.position.set(x, WALL, z); g.rotation.y = Math.atan2(-x * .35, 30 - z); scene.add(g);
+  const ink = basic("#050407"), W = 2.7, H = 1.5, LEG = .7;
+  for (const s of [-1, 1]) mesh(new THREE.BoxGeometry(.12, LEG + .1, .12), ink, s * W * .32, (LEG + .1) / 2, 0, g, false);
+  mesh(new THREE.BoxGeometry(W, H, .14), ink, 0, LEG + H / 2, 0, g, false);
+  mesh(new THREE.BoxGeometry(W + .1, .06, .2), ink, 0, LEG + H + .03, 0, g, false);
+  const face = canvasTex(440, 250, (c, w, h) => {
+    // Render the text, then re-draw it as a grid of lamp dots: lit where the glyph is, a dim dot everywhere else.
+    const o = document.createElement('canvas'); o.width = w; o.height = h; const oc = o.getContext('2d');
+    oc.fillStyle = '#000'; oc.fillRect(0, 0, w, h); oc.fillStyle = '#fff'; oc.font = '900 190px "Arial Black", Impact, sans-serif'; oc.textAlign = 'center'; oc.textBaseline = 'middle'; /* blank for now: no lamps lit */
+    const px = oc.getImageData(0, 0, w, h).data, G = 10;
+    c.fillStyle = '#050407'; c.fillRect(0, 0, w, h);
+    for (let yy = G / 2; yy < h; yy += G) for (let xx = G / 2; xx < w; xx += G) {
+      const on = px[((yy | 0) * w + (xx | 0)) * 4] > 120; c.fillStyle = on ? (xx < w * .3 ? C.red : '#fff6dc') : '#17151d';
+      c.beginPath(); c.arc(xx, yy, on ? 3.8 : 2.6, 0, TAU); c.fill();
+    }
+  });
+  mesh(new THREE.PlaneGeometry(W - .12, H - .12), basic(0xffffff, { map: face }), 0, LEG + H / 2, .072, g, false);
+}
+/** Point on a sampled route at arc-length s: [x, z, heading]. */
+function routeAt(route, s) {
+  s = Math.max(0, Math.min(route.at(-1).s - 1e-4, s));
+  let i = 1; while (route[i].s < s) i++;
+  const A = route[i - 1], B = route[i], k = (s - A.s) / (B.s - A.s || 1);
+  return [A.x + (B.x - A.x) * k, A.z + (B.z - A.z) * k, Math.atan2(B.x - A.x, B.z - A.z), (A.y ?? 0) + ((B.y ?? 0) - (A.y ?? 0)) * k];
+}
+
+/* ================= Manipal buildings ================= */
+function placeAt(th, d) { const x = Math.cos(th) * d, z = Math.sin(th) * d; return [x, heightAt(x, z), z]; }
+
+function windowsTex(cols, rows, base, lit) {
+  return canvasTex(256, 512, (x, w, h) => {
+    x.fillStyle = base; x.fillRect(0, 0, w, h);
+    const cw = w / cols, ch = h / rows;
+    for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
+      const on = Math.random() < lit;
+      x.fillStyle = on ? '#fffdf4' : C.cobalt;
+      x.fillRect(i * cw + cw * .28, j * ch + ch * .25, cw * .44, ch * .5);
+    }
+    x.fillStyle = 'rgba(255,248,232,.55)'; for (let j = 0; j < rows; j += 4) x.fillRect(0, j * ch, w, 2);   // floor bands
+  });
+}
+
+/* Clouds drift past the Embassy's middle: each slides along x, wraps, and fades at the ends of its run. */
+const embassyClouds = [], CLOUD_SPAN = 2.4;
+function updateClouds(t) {
+  embassyClouds.forEach(c => {
+    const u = ((c.x0 + t * c.v + CLOUD_SPAN) % (2 * CLOUD_SPAN) + 2 * CLOUD_SPAN) % (2 * CLOUD_SPAN) - CLOUD_SPAN;
+    c.s.position.set(c.cx + u, c.y0 + Math.sin(t * .3 + c.ph) * .06, c.z);
+    c.s.material.opacity = .5 * (1 - smooth(CLOUD_SPAN * .6, CLOUD_SPAN, Math.abs(u)));
+  });
+}
+function buildEmbassy() {
+  // Back-right, on the stands just past where the range ends, rising out of the cloud over the bay.
+  const [x, hy, z] = placeAt(LAY.embassy[0], LAY.embassy[1]), y = LAY.embassy[1] > RR ? Math.max(hy, WALL) : hy;
+  const g = new THREE.Group(); g.position.set(x, y - .2, z); g.rotation.y = LAY.embassyRot; scene.add(g);
+  const blocks = [[-.62, .62, 4.4], [0, .82, 5.3], [.62, .62, 4.7]];
+  blocks.forEach(([bx, bw, bh], i) => {
+    const tex = windowsTex(8, 46, i === 1 ? C.bone : '#d6cdbd', .16);
+    const em = windowsTex(8, 46, '#000', 0);
+    const mat = std(0xffffff, { map: tex, flatShading: false, emissive: 0xffc070, emissiveIntensity: 0 });
+    const b = mesh(new THREE.BoxGeometry(bw, bh, .78), mat, bx, bh / 2, 0, g);
+    // Crown band + cornice.
+    mesh(new THREE.BoxGeometry(bw + .06, .12, .84), std('#d6cdbd'), bx, bh - .1, 0, g);
+    mesh(new THREE.BoxGeometry(bw + .1, .05, .88), std(C.cream), bx, bh + .02, 0, g);
+    // Cone roof with seams (8 sides reads as slate panels), finial.
+    const coneH = bw * (i === 1 ? 1.35 : 1.2);
+    mesh(new THREE.ConeGeometry(bw * .62, coneH, 8), std(C.slate), bx, bh + .05 + coneH / 2, 0, g);
+    mesh(new THREE.CylinderGeometry(.008, .008, .3, 4), std(C.white), bx, bh + .05 + coneH + .15, 0, g);
+    mesh(new THREE.SphereGeometry(.025, 8, 6), std(C.white), bx, bh + .05 + coneH + .31, 0, g);
+    // Corner turrets.
+    for (const s of [-1, 1]) {
+      mesh(new THREE.CylinderGeometry(.06, .06, .3, 8), std('#d6cdbd'), bx + s * bw / 2, bh + .1, .3, g);
+      mesh(new THREE.ConeGeometry(.08, .22, 8), std(C.slate), bx + s * bw / 2, bh + .36, .3, g);
+    }
+    // Lit windows glow a little at night.
+    b.material.emissiveMap = tex; b.material.emissiveIntensity = .35; b.material.emissive = new THREE.Color(0xfffdf4);
+  });
+  // Cloud bank around its middle: "always half above the clouds".
+  const cloudMat = new THREE.SpriteMaterial({ map: softTex, color: 0xf4f1ea, transparent: true, opacity: .5, depthWrite: false });
+  for (let k = 0; k < 30; k++) {
+    const s = new THREE.Sprite(cloudMat.clone()); const sc = .7 + Math.random() * 1.4;
+    s.scale.set(sc * 1.9, sc * .45, 1);
+    s.position.set(x + (Math.random() - .5) * 4.2, y + 1.9 + (Math.random() - .5) * .9, z + (Math.random() - .5) * 2.4);
+    scene.add(s); embassyClouds.push({ s, x0: s.position.x - x, y0: s.position.y, z: s.position.z, cx: x, v: .12 + Math.random() * .14, ph: Math.random() * TAU });
+  }
+}
+
+function brickTex() {
+  return canvasTex(64, 256, (x, w, h) => {
+    x.fillStyle = C.brick; x.fillRect(0, 0, w, h);
+    x.fillStyle = 'rgba(80,25,10,.55)';
+    for (let yy = 0; yy < h; yy += 8) { x.fillRect(0, yy, w, 1.5); for (let xx = (yy / 8) % 2 ? 0 : 8; xx < w; xx += 16) x.fillRect(xx, yy, 1.5, 8); }
+  });
+}
+function tree(x, y, z, s, parent = scene) {
+  mesh(new THREE.CylinderGeometry(.03 * s, .05 * s, .6 * s, 6), std(C.black), x, y + .3 * s, z, parent);
+  for (let k = 0; k < 4; k++) {
+    mesh(new THREE.IcosahedronGeometry((.22 + Math.random() * .12) * s, 0), std(k % 2 ? C.sky : C.blue), x + (Math.random() - .5) * .35 * s, y + (.65 + Math.random() * .3) * s, z + (Math.random() - .5) * .35 * s, parent);
+  }
+}
+/*
+ * Student Plaza, built from the reference photos, mapped onto the poster palette:
+ * a sunken round plaza with a ring-banded floor and a medallion, steps that climb from the floor to the arcades,
+ * two curved two-storey wings (brick arches below, a balconied storey above), timber pergolas with warm lamps,
+ * a short colonnade between the wings at the back, and the tall white Ionic colonnade on the open side.
+ * It sits on the terrace cut into the foothills; a flight of stairs drops from the colonnade to the field.
+ * Local +z points at the bowl centre (the open side).
+ */
+let SP_FOOT;          // world point at the foot of the Plaza stairs (the boxer stops here, not on the steps)
+const spSeats = [];   // [x, y, z, faceY] in world space: where the friends sit on the steps
+function buildStudentPlaza() {
+  const g = new THREE.Group(); g.position.set(SP_C[0], SP_Y, SP_C[1]); g.rotation.y = Math.atan2(-SP_C[0], -SP_C[1]); g.scale.set(SP_SCALE, 1, SP_SCALE); scene.add(g);
+  const FLOOR_R = .95, STEP_H = .07, STEP_D = .11, STEPS = 4, WING_R = FLOOR_R + STEPS * STEP_D + .06;
+  // Arc helpers. Local angle 0 = +z (open side, towards the field); the wings wrap the back half.
+  const arcPt = (a, r) => [Math.sin(a) * r, Math.cos(a) * r];
+  const band = (r, h, y, a0, a1, mat, seg = 48) => {          // curved wall segment between local angles a0..a1
+    const geo = new THREE.CylinderGeometry(r, r, h, seg, 1, true, a0, a1 - a0);
+    return mesh(geo, mat, 0, y + h / 2, 0, g);
+  };
+  const ringCap = (r0, r1, y, a0, a1, mat) => {
+    const geo = new THREE.RingGeometry(r0, r1, 48, 1, a0 - PI / 2, a1 - a0).rotateX(-PI / 2);   // ring angle = local angle - 90°
+    return mesh(geo, mat, 0, y, 0, g, false);
+  };
+  // Floor: concentric bands like the real plaza (bone, sand, vermilion, black) and a medallion with white tiles.
+  const floorTex = canvasTex(1024, 1024, (c, w) => {
+    const cx = w / 2, bands = ['#e8e0d2', '#d9c9a6', '#e8e0d2', '#c2401f', '#e8e0d2', '#d9c9a6', '#e8e0d2', '#8f2a17', '#e8e0d2', '#d9c9a6'];
+    for (let i = 0; i < 40; i++) { c.fillStyle = bands[i % bands.length]; c.beginPath(); c.arc(cx, cx, w / 2 * (1 - i / 40), 0, TAU); c.fill(); }
+    c.fillStyle = '#b8361b'; c.beginPath(); c.arc(cx, cx, w * .2, 0, TAU); c.fill();
+    c.fillStyle = '#121016'; c.beginPath(); c.arc(cx, cx, w * .15, 0, TAU); c.fill();
+    c.fillStyle = '#b8361b'; c.beginPath(); c.arc(cx, cx, w * .1, 0, TAU); c.fill();
+    c.fillStyle = '#d9c9a6'; c.beginPath(); c.arc(cx, cx, w * .055, 0, TAU); c.fill();
+    c.fillStyle = '#f4f1ea'; for (let i = 0; i < 12; i++) { const a = i / 12 * TAU; c.fillRect(cx + Math.cos(a) * w * .125 - 6, cx + Math.sin(a) * w * .125 - 6, 12, 12); }
+  });
+  mesh(new THREE.CircleGeometry(FLOOR_R, 72).rotateX(-PI / 2), std(0xffffff, { map: floorTex, flatShading: false }), 0, .01, 0, g, false);
+  mesh(new THREE.CircleGeometry(WING_R + .4, 72).rotateX(-PI / 2), std('#ddd3c1', { flatShading: false }), 0, .002, 0, g, false);   // paving out to the colonnade
+  // Steps: full rings around the floor (cut away on the open side, where the colonnade stands).
+  const stepMats = [std(C.bone, { flatShading: false }), std('#d4c7ae', { flatShading: false })];
+  for (let i = 0; i < STEPS; i++) {
+    const r0 = FLOOR_R + i * STEP_D, top = (i + 1) * STEP_H;
+    const a0 = .95, a1 = TAU - .95;                              // leave the open side for the colonnade + stairs
+    const sh = new THREE.Shape(); const pts = 40;
+    for (let k = 0; k <= pts; k++) { const [x, z] = arcPt(a0 + (a1 - a0) * k / pts, r0); k ? sh.lineTo(x, -z) : sh.moveTo(x, -z); }
+    for (let k = pts; k >= 0; k--) { const [x, z] = arcPt(a0 + (a1 - a0) * k / pts, r0 + STEP_D + (STEPS - i) * STEP_D); sh.lineTo(x, -z); }
+    const geo = new THREE.ExtrudeGeometry(sh, { depth: top, bevelEnabled: false, curveSegments: 4 }).rotateX(-PI / 2);
+    mesh(geo, stepMats[i % 2], 0, 0, 0, g);
+    // Sitting spots on this step (world space), facing the plaza centre.
+    if (i < 3) for (let k = 0; k < 7; k++) {
+      const a = 1.35 + Math.random() * (TAU - 2.7), [lx, lz] = arcPt(a, r0 + .06);   // hips near the step edge, legs hang over it
+      const v = new THREE.Vector3(lx, top, lz); g.updateMatrixWorld(); g.localToWorld(v);
+      spSeats.push([v.x, v.y, v.z, g.rotation.y + a + PI]);
+    }
+  }
+  // Wings: two curved two-storey buildings on the back half, a gap at the very back for the inner colonnade.
+  const facade = canvasTex(1024, 256, (c, w, h) => {
+    c.fillStyle = C.bone; c.fillRect(0, 0, w, h);
+    c.fillStyle = '#d3c3a1'; c.fillRect(0, h * .47, w, h * .06);                                   // floor band
+    const n = 8, cw = w / n;   // fewer, bigger arches: flat poster blocks, not a photo texture
+    for (let i = 0; i < n; i++) {
+      const x0 = i * cw;
+      c.fillStyle = C.brick; c.fillRect(x0 + cw * .08, h * .56, cw * .84, h * .44);                    // brick pier panel
+      c.fillStyle = '#2a1510'; c.beginPath(); c.moveTo(x0 + cw * .22, h); c.lineTo(x0 + cw * .22, h * .74); c.arc(x0 + cw * .5, h * .74, cw * .28, PI, 0); c.lineTo(x0 + cw * .78, h); c.fill();   // arch
+      c.strokeStyle = C.bone; c.lineWidth = 5; c.beginPath(); c.arc(x0 + cw * .5, h * .74, cw * .31, PI, 0); c.stroke();
+      c.fillStyle = C.brick; c.fillRect(x0 + cw * .08, h * .1, cw * .84, h * .3);                       // upper brick band
+      c.fillStyle = '#2a1510'; c.fillRect(x0 + cw * .3, h * .14, cw * .4, h * .26);                    // upper window / door
+      c.fillStyle = i % 3 === 1 ? '#ffd9a0' : '#3b2219'; c.fillRect(x0 + cw * .36, h * .18, cw * .28, h * .18);
+    }
+    c.fillStyle = C.white; for (let x = 0; x < w; x += 9) c.fillRect(x, h * .4, 3, h * .07); c.fillRect(0, h * .4, w, 3);   // balcony railing
+  });
+  facade.wrapS = THREE.RepeatWrapping;
+  const wallMat = std(0xffffff, { map: facade, flatShading: false, side: THREE.DoubleSide });
+  const WING_H = .95, wings = [[1.25, PI - .42], [PI + .42, TAU - 1.25]];
+  for (const [a0, a1] of wings) {
+    band(WING_R, WING_H, (STEPS) * STEP_H, a0, a1, wallMat);
+    band(WING_R + .34, WING_H, (STEPS) * STEP_H, a0, a1, std(C.bone, { flatShading: false, side: THREE.DoubleSide }));   // back wall
+    ringCap(WING_R - .03, WING_R + .37, STEPS * STEP_H + WING_H + .001, a0, a1, std('#d9cfbd'));                         // roof
+    band(WING_R - .04, .06, STEPS * STEP_H + WING_H - .02, a0, a1, std(C.white, { flatShading: false, side: THREE.DoubleSide }));   // cornice
+    // Pergola in front of each wing: timber posts and beams, warm lamps under it.
+    const pr = WING_R - .2, timber = std('#8a3a1c');
+    for (let k = 0; k <= 6; k++) {
+      const a = a0 + .08 + (a1 - a0 - .16) * k / 6, [x, z] = arcPt(a, pr);
+      mesh(new THREE.BoxGeometry(.025, .42, .025), timber, x, STEPS * STEP_H + .21, z, g);
+      mesh(new THREE.SphereGeometry(.018, 6, 5), basic('#ffd27a'), x * .985, STEPS * STEP_H + .38, z * .985, g, false);
+    }
+    band(pr, .03, STEPS * STEP_H + .42, a0 + .06, a1 - .06, timber);
+    band(WING_R - .02, .03, STEPS * STEP_H + .42, a0 + .06, a1 - .06, timber);
+    for (let k = 0; k <= 14; k++) { const a = a0 + .08 + (a1 - a0 - .16) * k / 14, [x, z] = arcPt(a, pr + .09), b = mesh(new THREE.BoxGeometry(.012, .02, .22), timber, x, STEPS * STEP_H + .45, z, g, false); b.rotation.y = a; }
+  }
+  // Ionic column: plinth, fluted-look shaft, volute capital.
+  const colMat = std('#f6f4ef', { flatShading: false }), colShade = std('#dcdad2');
+  const column = (x, z, h, r, y0 = 0) => {
+    const G = new THREE.Group(); G.position.y = y0; g.add(G);
+    mesh(new THREE.BoxGeometry(r * 3, r * 1.2, r * 3), colShade, x, r * .6, z, G);
+    mesh(new THREE.CylinderGeometry(r * 1.25, r * 1.4, r * .7, 14), colMat, x, r * 1.5, z, G);
+    mesh(new THREE.CylinderGeometry(r * .88, r, h, 14), colMat, x, h / 2 + r * 1.8, z, G);
+    const cap = new THREE.Group(); cap.position.set(x, h + r * 1.8, z); cap.rotation.y = Math.atan2(x, z); G.add(cap);
+    mesh(new THREE.BoxGeometry(r * 3.2, r * .5, r * 1.6), colMat, 0, r * .55, 0, cap);
+    for (const s of [-1, 1]) mesh(new THREE.CylinderGeometry(r * .55, r * .55, r * 1.7, 12), colMat, s * r * 1.45, r * .35, 0, cap).rotation.x = PI / 2;   // volutes
+  };
+  // Inner colonnade bridging the gap at the back (between the wings).
+  for (let k = 0; k < 4; k++) { const [x, z] = arcPt(PI - .36 + k * .24, WING_R + .1); column(x, z, .62, .03, STEPS * STEP_H); }
+  band(WING_R + .1, .07, STEPS * STEP_H + .78, PI - .42, PI + .42, colMat);
+  // Main colonnade on the open side, on its own raised arc, with a curved entablature.
+  const CR = WING_R + .12, CA0 = -1.2, CA1 = 1.2, COLS = 7, CH = 1.05, CB = STEP_H * 2;
+  const plat = new THREE.Shape(); for (let k = 0; k <= 30; k++) { const [x, z] = arcPt(CA0 - .1 + (CA1 - CA0 + .2) * k / 30, CR - .14); k ? plat.lineTo(x, -z) : plat.moveTo(x, -z); }
+  for (let k = 30; k >= 0; k--) { const [x, z] = arcPt(CA0 - .1 + (CA1 - CA0 + .2) * k / 30, CR + .14); plat.lineTo(x, -z); }
+  mesh(new THREE.ExtrudeGeometry(plat, { depth: CB, bevelEnabled: false }).rotateX(-PI / 2), std('#cfc5b2'), 0, 0, 0, g);
+  for (let k = 0; k < COLS; k++) { const [x, z] = arcPt(CA0 + (CA1 - CA0) * k / (COLS - 1), CR); column(x, z, CH, .045, CB); }
+  const entY = CB + CH + .045 * 1.8 + .05;
+  band(CR + .02, .1, entY, CA0 - .08, CA1 + .08, std('#f6f4ef', { flatShading: false, side: THREE.DoubleSide }));   // architrave
+  band(CR + .06, .05, entY + .1, CA0 - .1, CA1 + .1, std('#e9e6de', { flatShading: false, side: THREE.DoubleSide }));   // cornice
+  ringCap(CR - .08, CR + .1, entY + .15, CA0 - .1, CA1 + .1, colMat);
+  // Lamps on the entablature, like the night photo.
+  for (let k = 0; k < COLS; k++) { const [x, z] = arcPt(CA0 + (CA1 - CA0) * k / (COLS - 1), CR + .02); mesh(new THREE.SphereGeometry(.016, 6, 5), basic('#fff3d0'), x, entY - .015, z, g, false); }
+  // Grand stairs: from the colonnade platform down the foothill to the running track.
+  // Podium: the plaza's front overhangs the edge of the ground, so a solid base carries it down to the field.
+  const podTex = canvasTex(1024, 128, (c, w, h) => {
+    c.fillStyle = C.bone; c.fillRect(0, 0, w, h); c.fillStyle = C.brick; c.fillRect(0, h * .72, w, h * .28);
+    c.fillStyle = '#f4f1ea'; c.fillRect(0, 0, w, h * .08);
+    for (let i = 0; i < 24; i++) { const x = (i + .5) * w / 24; c.fillStyle = '#2a1510'; c.beginPath(); c.moveTo(x - 9, h * .7); c.lineTo(x - 9, h * .4); c.arc(x, h * .4, 9, PI, 0); c.lineTo(x + 9, h * .7); c.fill(); }
+  });
+  mesh(new THREE.CylinderGeometry(CR + .16, CR + .2, SP_Y, 64, 1, false, -1.35, 2.7), std(0xffffff, { map: podTex, flatShading: false }), 0, -SP_Y / 2, 0, g);
+  mesh(new THREE.CylinderGeometry(CR + .17, CR + .17, .05, 64, 1, true, -1.35, 2.7), std(C.brick, { side: THREE.DoubleSide }), 0, -SP_Y + .03, 0, g, false);
+  const runStart = CR + .14, run = SP_Y * 1.05, nSteps = Math.max(6, Math.round(SP_Y / .07));
+  for (let i = 0; i < nSteps; i++) {
+    // Step i is a block from the field (local y = -SP_Y) up to its tread; the stair widens as it descends.
+    const top = -SP_Y * i / nSteps, hgt = SP_Y + top + .01, dep = run / nSteps, wdt = .95 + i / nSteps * .5;
+    mesh(new THREE.BoxGeometry(wdt, hgt, dep + .002), stepMats[i % 2], 0, -SP_Y + hgt / 2, runStart + dep * (i + .5), g);
+  }
+  // Lamp posts flanking the stairs.
+  for (const [lx, lz] of [[-.9, -.4], [.9, -.4], [0, -1.15]]) { const L = new THREE.PointLight(0xffc27a, 1.3, 2.6, 2); L.position.set(lx, .55, lz); g.add(L); }   // warm arcade light
+  g.updateMatrixWorld(); SP_FOOT = g.localToWorld(new THREE.Vector3(0, -SP_Y, runStart + run + .05));
+  for (const s of [-1, 1]) { const x = s * .7, z = runStart + .08; mesh(new THREE.CylinderGeometry(.01, .012, .55, 6), std('#1b1b1b'), x, .28, z, g); mesh(new THREE.SphereGeometry(.03, 8, 6), basic('#fff0c8'), x, .57, z, g, false); }
+  // Trees behind, on the hill (blue foliage, like the poster).
+  for (const [a, r, s] of [[1.9, WING_R + .7, .9], [2.6, WING_R + .8, 1.1], [3.6, WING_R + .8, 1], [4.3, WING_R + .7, .95]]) { const [x, z] = arcPt(a, r); tree(x, .2, z, s, g); }
+}
+
+/* ================= light towers (3D, behind the peaks) ================= */
+const towers = [], spots = [], beams = [];
+function buildTower(th, d, h, aim) {
+  const [x, y, z] = placeAt(th, d);
+  const g = new THREE.Group(); g.position.set(x, y, z); scene.add(g);
+  const dark = std('#15151f', { roughness: .7 });
+  // Lattice mast: 4 tapered legs, horizontal rings and X braces.
+  const legs = [[-1, -1], [1, -1], [1, 1], [-1, 1]];
+  const at = (t, [sx, sz]) => new THREE.Vector3(sx * THREE.MathUtils.lerp(.45, .12, t), t * h, sz * THREE.MathUtils.lerp(.45, .12, t));
+  const strut = (a, b, r = .018) => {
+    const len = a.distanceTo(b), m = mesh(new THREE.CylinderGeometry(r, r, len, 4), dark, (a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2, g);
+    m.lookAt(g.localToWorld(b.clone())); m.rotateX(PI / 2);
+  };
+  const STEPS = 14;
+  for (let l = 0; l < 4; l++) strut(at(0, legs[l]), at(1, legs[l]), .03);
+  for (let s = 0; s < STEPS; s++) {
+    const t0 = s / STEPS, t1 = (s + 1) / STEPS;
+    for (let l = 0; l < 4; l++) { const L = legs[l], M = legs[(l + 1) % 4]; strut(at(t0, L), at(t0, M)); strut(at(t0, L), at(t1, M), .012); }
+  }
+  // Lamp head: a tilted box with an emissive lamp grid facing the bowl.
+  const head = new THREE.Group(); head.position.set(0, h + .35, 0); g.add(head);
+  head.lookAt(aim); head.rotateX(-.35);
+  const lamps = canvasTex(256, 128, (c, w, hh) => {
+    c.fillStyle = '#121219'; c.fillRect(0, 0, w, hh);
+    for (let i = 0; i < 8; i++) for (let j = 0; j < 4; j++) { c.fillStyle = '#fffbe8'; c.fillRect(8 + i * 30, 8 + j * 29, 22, 22); }
+  });
+  const face = new THREE.MeshStandardMaterial({ color: 0x111111, emissive: 0xfff3d6, emissiveMap: lamps, emissiveIntensity: 2.2, map: lamps });
+  mesh(new THREE.BoxGeometry(1.5, .75, .25), [dark, dark, dark, dark, face, dark], 0, 0, 0, head);
+  mesh(new THREE.BoxGeometry(1.6, .04, .4), dark, 0, -.42, .05, head);           // service platform
+  // The light itself.
+  const spot = new THREE.SpotLight(0xffe6bf, P.towerLight, 40, .42, .65, 1.4); spots.push(spot);
+  head.getWorldPosition(spot.position); spot.target.position.copy(aim); scene.add(spot, spot.target);
+  // Visible beam (additive cone).
+  const hp = head.getWorldPosition(new THREE.Vector3()), dir = aim.clone().sub(hp), len = dir.length();
+  const beam = new THREE.Mesh(new THREE.ConeGeometry(2.6, len, 32, 1, true), new THREE.MeshBasicMaterial({ color: 0xfff1d0, transparent: true, opacity: .028, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
+  beam.position.copy(hp).add(dir.clone().multiplyScalar(.5)); beam.lookAt(aim); beam.rotateX(-PI / 2); scene.add(beam); beams.push(beam);
+  towers.push({ head: hp, aim, dir: dir.normalize() });
+}
+
+/* Snow from the tower lamps: particles fall through the beams, drifting towards the bowl. */
+let snow;
+function buildSnow() {
+  const n = towers.length * SNOW_PER_TOWER, pos = new Float32Array(n * 3), meta = [];
+  for (let i = 0; i < n; i++) { const T = towers[i % towers.length]; meta.push({ T, v: .5 + Math.random() * .8, sway: Math.random() * TAU }); resetFlake(pos, i, meta[i], true); }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const dotTex = canvasTex(32, 32, (x, w) => { const g = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2); g.addColorStop(0, '#fff'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, w, w); });
+  snow = new THREE.Points(geo, new THREE.PointsMaterial({ size: P.snowSize, map: dotTex, transparent: true, depthWrite: false, color: 0xffffff }));
+  snow.userData.meta = meta; scene.add(snow);
+}
+function resetFlake(pos, i, m, anywhere) {
+  const h = m.T.head, k = anywhere ? Math.random() : 0;
+  pos[i * 3] = h.x + (Math.random() - .5) * 1.6 + m.T.dir.x * k * 6;
+  pos[i * 3 + 1] = h.y - .3 - k * 8;
+  pos[i * 3 + 2] = h.z + (Math.random() - .5) * 1.6 + m.T.dir.z * k * 6;
+}
+
+/* ================= minimal haze lamps on the rim ================= */
+const hazes = [];
+function buildRimLamps() {
+  const lampMat = new THREE.MeshBasicMaterial({ color: 0xfffdf4 });
+  for (const th of LAY.lamps) {
+    const x = Math.cos(th) * (RR + .4), z = Math.sin(th) * (RR + .4), y = WALL + 1.1;
+    const g = new THREE.Group(); g.position.set(x, y, z); g.lookAt(0, y, 0); scene.add(g);
+    for (let i = -6; i <= 6; i++) for (let j = 0; j < 2; j++) mesh(new THREE.BoxGeometry(.09, .09, .02), lampMat, i * .13, j * .13, 0, g, false);
+    const hz = new THREE.Sprite(new THREE.SpriteMaterial({ map: softTex, color: 0xfff6e0, transparent: true, opacity: .12, blending: THREE.AdditiveBlending, depthWrite: false }));
+    hz.position.set(x, y, z); hz.scale.set(1.8, 1.1, 1); scene.add(hz); hazes.push(hz);
+  }
+}
+
+/* ================= End Point: the cliff viewpoint with a chai stall, looking down into the bowl ================= */
+/*
+ * A grassy ledge raised above the rim between the Royal Embassy and SP. On the bowl side: a low stone wall where
+ * friends sit with their legs over the drop, cups in hand. Behind them: a chai stall (tarp roof, counter, a big kettle
+ * steaming on the stove, a glass rack, a CHAI board, a warm bulb) and its chaiwala pouring. Local +z faces the bowl.
+ */
+const EP_STEAM = [];
+let EP_GROUP;
+const EP_WALL_R = .78, EP_WALL_H = .13, EP_SCALE = 1.3;   // EP_SCALE: ledge kit size (people stay life-size)
+function buildEndPoint() {
+  const g = new THREE.Group(); g.position.set(EP_C[0], EP_Y, EP_C[1]); g.rotation.y = Math.atan2(-EP_C[0], -EP_C[1]); g.scale.setScalar(EP_SCALE); scene.add(g); EP_GROUP = g;
+  // Low stone wall along the edge, with a rail of three posts' worth of iron on top at the ends.
+  const stone = std('#d7cfbf');
+  for (let k = 0; k <= 16; k++) {
+    const a = -1.15 + 2.3 * k / 16, x = Math.sin(a) * EP_WALL_R, z = Math.cos(a) * EP_WALL_R;
+    const b = mesh(new THREE.BoxGeometry(.16, EP_WALL_H, .09), k % 2 ? stone : std('#cbc2b0'), x, EP_WALL_H / 2, z, g); b.rotation.y = a;
+  }
+  // Stall, at the back of the ledge.
+  const st = new THREE.Group(); st.position.set(0, 0, -.42); g.add(st);
+  const wood = std('#7a3a1c'), tarp = std(C.cobalt, { side: THREE.DoubleSide });
+  for (const [px, pz] of [[-.3, -.14], [.3, -.14], [-.3, .16], [.3, .16]]) mesh(new THREE.BoxGeometry(.02, .5, .02), wood, px, .25, pz, st);
+  const roof = mesh(new THREE.PlaneGeometry(.78, .48), tarp, 0, .53, .02, st); roof.rotation.x = -PI / 2 + .22;
+  mesh(new THREE.BoxGeometry(.6, .2, .12), std(C.red), 0, .1, .17, st);                                       // counter
+  mesh(new THREE.BoxGeometry(.62, .02, .15), wood, 0, .21, .17, st);
+  mesh(new THREE.BoxGeometry(.14, .06, .1), std('#2b2b2b'), -.16, .25, .15, st);                             // stove
+  const kettle = mesh(new THREE.CylinderGeometry(.045, .055, .09, 12), std('#c9ced6', { roughness: .35, metalness: .6 }), -.16, .325, .15, st);
+  mesh(new THREE.CylinderGeometry(.006, .009, .06, 5), kettle.material, -.11, .35, .15, st).rotation.z = -1;  // spout
+  for (let i = 0; i < 5; i++) mesh(new THREE.CylinderGeometry(.009, .008, .022, 6), std('#f4f1ea', { transparent: true, opacity: .85 }), .04 + i * .03, .232, .2, st, false);   // glasses
+  const sign = canvasTex(256, 96, (c, w, h) => { c.fillStyle = C.red; c.fillRect(0, 0, w, h); c.fillStyle = C.bone; c.font = '700 64px "IBM Plex Sans", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('CHAI', w / 2, h / 2 + 4); });
+  mesh(new THREE.PlaneGeometry(.34, .12), basic(0xffffff, { map: sign, side: THREE.DoubleSide }), 0, .5, .2, st, false).rotation.x = -.1;
+  mesh(new THREE.SphereGeometry(.022, 8, 6), basic('#ffe2a0'), .12, .44, .02, st, false);                     // bulb
+  const bulb = new THREE.PointLight(0xffc878, 1.4, 2.2, 2); bulb.position.set(.12, .42, .05); st.add(bulb);
+  mesh(new THREE.BoxGeometry(.1, .06, .36), wood, .55, .1, -.15, g);                                          // bench by the stall
+  // Steam from the kettle: soft sprites that rise, widen and fade, then start again.
+  for (let i = 0; i < 7; i++) {
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: softTex, color: 0xffffff, transparent: true, opacity: 0, depthWrite: false }));
+    st.add(s); EP_STEAM.push({ s, ph: i / 7 });
+  }
+  // The stall dog: curled up asleep in front of the counter. Breathes; lifts its head when the kart goes by.
+  const dog = new THREE.Group(); dog.position.set(-.05, 0, .34); dog.rotation.y = .6; st.add(dog); EP_DOG.g = dog;
+  const fur = std('#c98f4e'), furD = std('#8a5a2c');
+  EP_DOG.body = mesh(new THREE.SphereGeometry(.07, 10, 8), fur, 0, .04, 0, dog); EP_DOG.body.scale.set(1.25, .55, .8);
+  const head = new THREE.Group(); head.position.set(.075, .04, .03); dog.add(head); EP_DOG.head = head;
+  mesh(new THREE.SphereGeometry(.032, 10, 8), fur, 0, 0, 0, head);
+  mesh(new THREE.BoxGeometry(.03, .018, .022), furD, .03, -.006, 0, head);                                     // snout
+  for (const s of [-1, 1]) { const e = mesh(new THREE.ConeGeometry(.012, .028, 4), furD, -.005, .028, s * .018, head); e.rotation.x = s * .4; }
+  EP_DOG.tail = mesh(new THREE.CylinderGeometry(.007, .004, .06, 5), fur, -.085, .03, -.02, dog); EP_DOG.tail.rotation.z = 1.2;
+  g.updateMatrixWorld();
+}
+const EP_DOG = {};
+/** How strongly End Point is watching the kart go by: 1 when the kart is on the rim right behind them, 0 when it is far. */
+function kartNearEP() { const K = actors.kart.g.position; return K.y > WALL - .3 ? smooth(4.2, 1.8, Math.hypot(K.x - EP_C[0], K.z - EP_C[1])) : 0; }
+function updateEndPoint(t) {
+  EP_STEAM.forEach(({ s, ph }) => {
+    const u = (t * .35 + ph) % 1;
+    s.position.set(-.16 + Math.sin(u * 6 + ph * 9) * .03, .38 + u * .45, .15); s.scale.setScalar(.06 + u * .16);
+    s.material.opacity = Math.sin(u * PI) * .55;
+  });
+  // Chaiwala: pours from height into a glass (the long "pull"), then hands it over the counter.
+  const W = actors.chaiwala, pour = (t * .5) % 1;
+  pose(W, 'stand', t);
+  W.armR.rotation.x = -1.2 - Math.sin(pour * PI) * 1.0; W.armR.userData.joint.rotation.x = -.4;
+  W.armL.rotation.x = -.7 + Math.sin(pour * PI) * .2; W.armL.userData.joint.rotation.x = -.9;
+  // Friends on the wall: swing their legs, sip, turn to talk.
+  actors.epFriends.forEach((p, i) => {
+    pose(p, 'sit', t + i * 2.3);
+    p.legL.userData.joint.rotation.x = 1.2 + Math.sin(t * 1.3 + i) * .25; p.legR.userData.joint.rotation.x = 1.2 + Math.sin(t * 1.3 + i + 1.4) * .25;
+    const sip = Math.max(0, Math.sin(t * .7 + i * 1.9)) ** 3;
+    p.armR.rotation.x = -.9 - sip * 1.1; p.armR.userData.joint.rotation.x = -1.3 - sip * .4;
+    p.head.rotation.y = Math.sin(t * .3 + i * 1.3) * .6; p.head.rotation.x = sip * -.25;
+    // Kart on the rim behind them: chest twists and the head turns over the shoulder to watch it pass.
+    const w = kartNearEP(); p.watch = (p.watch || 0) + (w - (p.watch || 0)) * .08;
+    if (p.watch > .01) {
+      const K = actors.kart.g.position; let rel = Math.atan2(K.x - p.g.position.x, K.z - p.g.position.z) - p.g.rotation.y; rel = Math.atan2(Math.sin(rel), Math.cos(rel));
+      const twist = Math.max(-.9, Math.min(.9, rel * .5)); p.chest.rotation.y = twist * p.watch;
+      p.head.rotation.y += (Math.max(-1.3, Math.min(1.3, rel - twist)) - p.head.rotation.y) * p.watch; p.head.rotation.x *= 1 - p.watch;
+    }
+  });
+  // Dog: slow breathing; when the kart is close, head up, ears forward, tail going.
+  if (EP_DOG.g) {
+    const w = kartNearEP();
+    EP_DOG.body.scale.y = .55 + Math.sin(t * 2.2) * .03;
+    EP_DOG.head.position.y = .04 + w * .035; EP_DOG.head.rotation.z = w * .5;
+    EP_DOG.tail.rotation.y = w ? Math.sin(t * 14) * .8 * w : 0;
+  }
+}
+function buildEndPointPeople() {
+  // Chaiwala behind the counter (local frame of the stall), white vest and checked lungi colours.
+  const W = makePerson({ shirt: C.white, pants: '#2a50e0', skin: SKIN[2] });
+  const v = EP_GROUP.localToWorld(new THREE.Vector3(.02, 0, -.5)); W.g.position.copy(v); W.g.rotation.y = EP_GROUP.rotation.y; actors.chaiwala = W;
+  // Four friends on the wall, facing out over the bowl, each with a glass of chai.
+  actors.epFriends = [-.62, -.2, .22, .6].map((a, i) => {
+    const p = makePerson({ shirt: [C.red, C.white, '#f2c12e', C.sky][i], pants: i % 2 ? C.cobalt : '#20202a', skin: SKIN[(i + 1) % 4], cap: i === 2 ? C.white : null });
+    const w = EP_GROUP.localToWorld(new THREE.Vector3(Math.sin(a) * (EP_WALL_R - .02), EP_WALL_H, Math.cos(a) * (EP_WALL_R - .02)));
+    p.g.position.set(w.x, w.y - .18, w.z); p.g.rotation.y = EP_GROUP.rotation.y + a;
+    mesh(new THREE.CylinderGeometry(.008, .007, .02, 6), std('#f4f1ea'), 0, -.11, .01, p.armR.userData.joint, false);   // glass in hand
+    return p;
+  });
+}
+
+/* ================= people (jointed, low-poly, shadow-casting) ================= */
+function makePerson(o) {
+  // Proportions about 7.5 heads tall: long legs, small head, slim tapered torso, real knees and elbows.
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  const m = (c) => std(c);
+  const skin = m(o.skin || '#8d5a3b'), shirt = m(o.shirt), pants = m(o.pants);
+  const seg = (parent, r1, r2, len, mat) => mesh(new THREE.CylinderGeometry(r1, r2, len, 7), mat, 0, -len / 2, 0, parent);
+  const limb = (x, y, r, l1, l2, m1, m2, end) => {
+    const root = new THREE.Group(); root.position.set(x, y, 0); body.add(root);
+    seg(root, r, r * .8, l1, m1);
+    const joint = new THREE.Group(); joint.position.y = -l1; root.add(joint);
+    mesh(new THREE.SphereGeometry(r * .82, 6, 5), m2, 0, 0, 0, joint);        // knee / elbow cap, so bends stay solid
+    seg(joint, r * .8, r * .62, l2, m2);
+    if (end) end(joint, l2);
+    root.userData.joint = joint; return root;
+  };
+  const shoe = (j, l) => mesh(new THREE.BoxGeometry(.034, .02, .062), m(o.shoes || '#141414'), 0, -l - .006, .014, j);
+  const hand = (j, l) => mesh(o.gloves ? new THREE.SphereGeometry(.03, 8, 6) : new THREE.SphereGeometry(.014, 6, 5), o.gloves ? m(o.gloves) : skin, 0, -l - .008, 0, j);
+  const legL = limb(-.028, .28, .022, .14, .135, pants, o.shorts ? skin : pants, shoe);
+  const legR = limb(.028, .28, .022, .14, .135, pants, o.shorts ? skin : pants, shoe);
+  const chest = new THREE.Group(); chest.position.y = .29; body.add(chest);   // upper body twists against the hips
+  const torso = mesh(new THREE.CylinderGeometry(.05, .042, .17, 8), shirt, 0, .075, 0, chest); torso.scale.z = .62;
+  mesh(new THREE.CylinderGeometry(.044, .046, .035, 8), pants, 0, .285, 0, body).scale.z = .65;
+  if (o.belt) mesh(new THREE.CylinderGeometry(.047, .047, .012, 8), m(o.belt), 0, .3, 0, body).scale.z = .66;
+  const arm = (x) => {
+    const root = new THREE.Group(); root.position.set(x, .15, 0); chest.add(root);
+    seg(root, .016, .013, .11, shirt);
+    const joint = new THREE.Group(); joint.position.y = -.11; root.add(joint);
+    mesh(new THREE.SphereGeometry(.013, 6, 5), o.longSleeve ? shirt : skin, 0, 0, 0, joint);
+    seg(joint, .013, .01, .1, o.longSleeve ? shirt : skin); hand(joint, .1);
+    root.userData.joint = joint; return root;
+  };
+  const armL = arm(-.062), armR = arm(.062);
+  const neck = new THREE.Group(); neck.position.y = .175; chest.add(neck);
+  mesh(new THREE.CylinderGeometry(.013, .015, .03, 6), skin, 0, .0, 0, neck);
+  const head = new THREE.Group(); head.position.y = .04; neck.add(head);
+  mesh(new THREE.SphereGeometry(.037, 12, 10), skin, 0, 0, 0, head).scale.set(.92, 1.08, .98);
+  mesh(new THREE.BoxGeometry(.012, .012, .01), skin, 0, -.004, .036, head);    // nose: tells you which way they look
+  const hat = new THREE.Group(); head.add(hat);                                  // swappable (the kart driver trades cap for helmet)
+  if (o.beret) { const b = mesh(new THREE.CylinderGeometry(.044, .04, .016, 10), m(o.beret), -.008, .033, 0, hat); b.rotation.z = .3; }
+  else if (o.helmet) mesh(new THREE.SphereGeometry(.045, 12, 8, 0, TAU, 0, PI / 1.8), m(o.helmet), 0, .005, 0, hat);
+  else if (o.cap) { mesh(new THREE.SphereGeometry(.039, 12, 8, 0, TAU, 0, PI / 2), m(o.cap), 0, .01, 0, hat); mesh(new THREE.BoxGeometry(.05, .005, .04), m(o.cap), 0, .011, .04, hat); }
+  else mesh(new THREE.SphereGeometry(.039, 12, 8, 0, TAU, 0, PI / 2.3), m(o.hair || '#120c0a'), 0, .007, -.004, head);
+  if (o.backpack) mesh(new THREE.BoxGeometry(.075, .1, .045), m(o.backpack), 0, .08, -.055, chest);
+  scene.add(g);
+  return { g, body, chest, head, hat, legL, legR, armL, armR, o, seed: Math.random() * TAU, rate: .85 + Math.random() * .3 };
+}
+
+/**
+ * Poses with knees, elbows, a chest that counter-twists the hips, and a head that looks around.
+ * Rotation +x swings a limb backwards (figures face +z). Every person gets their own seed and rate,
+ * so nobody moves in perfect sync (that is what makes crowds of figures look mechanical).
+ */
+function pose(p, kind, ph) {
+  const s = Math.sin(ph), c = Math.cos(ph), sd = p.seed;
+  const L = (lL, kL, lR, kR) => { p.legL.rotation.x = lL; p.legL.userData.joint.rotation.x = kL; p.legR.rotation.x = lR; p.legR.userData.joint.rotation.x = kR; };
+  const A = (aL, eL, aR, eR, zL = .07, zR = -.07) => { p.armL.rotation.x = aL; p.armL.userData.joint.rotation.x = eL; p.armR.rotation.x = aR; p.armR.userData.joint.rotation.x = eR; p.armL.rotation.z = zL; p.armR.rotation.z = zR; };
+  const B = (lean = 0, bob = 0, roll = 0, twist = 0) => { p.body.rotation.x = lean; p.body.position.y = bob; p.body.rotation.z = roll; p.chest.rotation.y = twist; };
+  const look = (yaw, pitch = 0) => { p.head.rotation.y = yaw; p.head.rotation.x = pitch; };
+  const swingKnee = (x) => .06 + Math.max(0, x) * .8;     // the swinging leg folds, the planted leg stays almost straight
+  p.chest.rotation.x = 0;
+  if (kind === 'walk') {
+    L(-s * .42, swingKnee(-c), s * .42, swingKnee(c));
+    A(s * .32, -.22 - Math.max(0, s) * .25, -s * .32, -.22 - Math.max(0, -s) * .25);
+    B(.03, Math.abs(c) * .007, s * .02, -s * .12); look(Math.sin(ph * .13 + sd) * .45, .05);
+  } else if (kind === 'run') {
+    L(-s * .85, .35 + swingKnee(-c), s * .85, .35 + swingKnee(c));
+    A(s * .85, -1.35, -s * .85, -1.35, .12, -.12);
+    B(.24, Math.abs(c) * .02, 0, -s * .2); look(0, -.15);
+  } else if (kind === 'march') {
+    L(-s * .4, .04 + Math.max(0, -s) * .15, s * .4, .04 + Math.max(0, s) * .15);
+    A(s * .78, -.04, -s * .78, -.04, .03, -.03); B(0, Math.abs(c) * .004); look(0);
+  } else if (kind === 'box') {
+    // Shadow boxing: bouncing guard, jab-cross combos, slips and a head that stays tucked.
+    const k = ph * 2, jab = Math.max(0, Math.sin(k)) ** 3, cross = Math.max(0, Math.sin(k + 2.2)) ** 3, slip = Math.sin(ph * .7) * .15;
+    L(-.3, .35, .22, .3); A(-1.15 - cross * .5, -1.75 + cross * 1.55, -1.15 - jab * .5, -1.75 + jab * 1.55, .3, -.3);
+    B(.14, Math.abs(Math.sin(ph * 3)) * .012, slip, -.35 + cross * .5 - jab * .25); look(.3 - cross * .3, .1);
+  } else if (kind === 'cheer') {
+    L(0, .05, 0, .05); A(0, -.25, 0, -.25, 2.75 + s * .15, -2.75 - s * .15); B(0, Math.max(0, s) * .025); look(0, -.2);
+  } else if (kind === 'sit') {
+    L(-1.45, 1.4, -1.45, 1.4); A(-.8, -.5, -.8, -.5); B(0, -.1); look(Math.sin(ph * .3) * .3);
+  } else if (kind === 'talk') {
+    L(-s * .42, swingKnee(-c), s * .42, swingKnee(c)); A(s * .3, -.25, -.85, -1.35 + Math.sin(ph * 2.3) * .35, .07, -.28);
+    B(.03, Math.abs(c) * .006, 0, .15); look(.55, .05);              // turned towards the friend beside them
+  } else if (kind === 'swim') {
+    // Front crawl: alternating overhead arm recovery, flutter kick, head turning to breathe every stroke.
+    L(Math.sin(ph * 3) * .3, .2, -Math.sin(ph * 3) * .3, .2);
+    A(-(ph % TAU), -.15, -((ph + PI) % TAU), -.15, .12, -.12);
+    B(-1.42, 0, Math.sin(ph) * .25); look(Math.max(0, Math.sin(ph)) * .9);
+  } else if (kind === 'splash') {
+    // Waist-deep, sweeping water at a friend with both arms, rocking back to dodge the return splash.
+    const sweep = Math.sin(ph), dodge = Math.max(0, Math.sin(ph + 2.6)) ** 2;
+    L(.1, .2, -.1, .2); A(-.6 + sweep * .9, -.35, -.6 + sweep * .9, -.35, .35, -.35);
+    B(.15 - dodge * .35, Math.abs(sweep) * .015, 0, sweep * .35); look(-sweep * .25, dodge * -.3);
+  } else if (kind === 'jump') {
+    // Jumping the incoming wave: crouch, spring, arms up, land with bent knees.
+    const u = (ph % TAU) / TAU, air = u > .35 && u < .7 ? Math.sin((u - .35) / .35 * PI) : 0, crouch = u < .35 ? Math.sin(u / .35 * PI) : u > .7 ? Math.sin((u - .7) / .3 * PI) * .6 : 0;
+    L(-crouch * .7 - air * .3, crouch * 1.3 + air * .6, -crouch * .7 - air * .3, crouch * 1.3 + air * .6);
+    A(crouch * .6, -.2, crouch * .6, -.2, .1 + air * 2.5, -.1 - air * 2.5); B(crouch * .25, air * .2 - crouch * .06); look(0, -air * .3);
+  } else if (kind === 'trek') {
+    // Uphill with poles: short steps, knees lifting, chest over the toes, poles planted with the opposite foot.
+    L(-s * .32 - .12, .1 + Math.max(0, -c) * 1.0, s * .32 - .12, .1 + Math.max(0, c) * 1.0);
+    A(-.45 + s * .4, -.55, -.45 - s * .4, -.55, .16, -.16);
+    B(.2, Math.abs(c) * .006, s * .02, -s * .08); look(Math.sin(ph * .11 + sd) * .3, -.1);
+  } else if (kind === 'ski') {
+    // Athletic stance: ankles, knees and hips flexed, hands forward. ph is the turn phase: weight and lean swap each turn.
+    const turn = Math.cos(ph);
+    L(-.55 - turn * .08, .9 + turn * .12, -.55 + turn * .08, .9 - turn * .12);
+    A(-.6, -.75, -.6, -.75, .3, -.3);
+    B(.32, -.035, turn * .28, turn * .25); look(-turn * .2, .1);
+  } else if (kind === 'kick') {
+    // Front kick (right leg) from the boxer's stance, guard up, leaning back to balance. ph 0..1 over the kick.
+    const k = Math.sin(Math.min(1, ph) * PI);
+    L(.1, .15, -1.55 * k, 1.4 * (1 - k) + .1);
+    A(-1.15, -1.75, -1.15 + k * .3, -1.75, .3, -.3);
+    B(-.28 * k, .01, 0, -.3 * k); look(0, .1);
+  } else if (kind === 'sitGround') {
+    // Sitting on the sand, legs out, leaning back on both hands.
+    L(-1.5, .12 + Math.max(0, Math.sin(ph * .4)) * .4, -1.5, .12);
+    A(.75, -.05, .75, -.05, .28, -.28);
+    B(-.3, -.255, 0, 0); look(Math.sin(ph * .2 + sd) * .35, -.15);
+  } else {
+    // Idle: weight shifts from foot to foot, breathing, occasional glance around.
+    const w = Math.sin(ph * .35 * p.rate + sd);
+    L(.02, .05 + Math.max(0, w) * .14, -.02, .05 + Math.max(0, -w) * .14);
+    A(.04, -.12, -.04, -.12, .09, -.09); B(0, Math.sin(ph * .8) * .002, w * .035, w * .05);
+    look(Math.sin(ph * .21 * p.rate + sd * 2) * .6);
+  }
+}
+
+/** A real-looking go-kart: low tube frame, fat rear slicks, side pods, nose cone, number board, side-mounted engine. Faces +x. */
+function makeKart() {
+  const g = new THREE.Group(); scene.add(g);
+  const body = new THREE.Group(); body.scale.setScalar(KART_SCALE); g.add(body);
+  const tube = std('#c9ced6', { roughness: .4, metalness: .5 }), dark = std('#1a1a1a'), red = std(C.red), white = std(C.white);
+  const rod = (a, b, r = .007) => { const v = new THREE.Vector3().subVectors(b, a), m = mesh(new THREE.CylinderGeometry(r, r, v.length(), 6), tube, (a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2, body); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), v.normalize()); };
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  // Frame rails + floor pan.
+  for (const s of [-1, 1]) { rod(V(-.24, .045, s * .1), V(.2, .045, s * .08)); rod(V(.2, .045, s * .08), V(.3, .05, s * .05)); }
+  rod(V(-.24, .045, -.1), V(-.24, .045, .1)); rod(V(.3, .05, -.05), V(.3, .05, .05));
+  mesh(new THREE.BoxGeometry(.3, .006, .14), dark, .02, .04, 0, body);
+  // Wheels: fat rear slicks, narrower fronts, bone rims.
+  const wheels = [];
+  for (const [wx, wz, r, w] of [[-.2, .185, .062, .07], [-.2, -.185, .062, .07], [.23, .165, .05, .05], [.23, -.165, .05, .05]]) {
+    const hub = new THREE.Group(); hub.position.set(wx, r, wz); body.add(hub);
+    const tyre = mesh(new THREE.CylinderGeometry(r, r, w, 16), std('#111'), 0, 0, 0, hub); tyre.rotation.x = PI / 2;
+    const rim = mesh(new THREE.CylinderGeometry(r * .55, r * .55, w + .004, 10), std(C.bone), 0, 0, 0, hub); rim.rotation.x = PI / 2;
+    wheels.push(hub);
+  }
+  rod(V(-.2, .062, -.2), V(-.2, .062, .2), .008);                                                // rear axle
+  // Side pods (between the wheels) and the nose cone with the number board.
+  for (const s of [-1, 1]) { const pod = mesh(new THREE.BoxGeometry(.24, .05, .06), red, .01, .07, s * .15, body); pod.rotation.x = s * -.15; }
+  const nose = mesh(new THREE.BoxGeometry(.12, .055, .26), red, .33, .065, 0, body); nose.rotation.z = -.25;
+  mesh(new THREE.BoxGeometry(.004, .05, .07), white, .275, .14, 0, body);                         // number board
+  mesh(new THREE.BoxGeometry(.005, .03, .01), basic('#111'), .278, .14, 0, body, false);          // "1"
+  rod(V(.37, .04, -.15), V(.37, .04, .15), .006);                                                  // front bumper
+  rod(V(-.29, .06, -.17), V(-.29, .06, .17), .009);                                                // rear bumper
+  // Seat, steering column and wheel.
+  mesh(new THREE.BoxGeometry(.11, .025, .11), dark, -.07, .065, 0, body);
+  const back = mesh(new THREE.BoxGeometry(.025, .13, .11), dark, -.13, .12, 0, body); back.rotation.z = .25;
+  rod(V(.2, .05, 0), V(.09, .16, 0), .006);
+  mesh(new THREE.TorusGeometry(.04, .007, 5, 14), dark, .09, .165, 0, body).rotation.set(0, PI / 2, .4);
+  // Engine on the right of the driver: block, finned head, chain guard, exhaust pipe.
+  mesh(new THREE.BoxGeometry(.08, .07, .06), std('#5d6470', { roughness: .5, metalness: .4 }), -.17, .09, -.12, body);
+  for (let i = 0; i < 4; i++) mesh(new THREE.BoxGeometry(.06, .006, .05), std('#8b929c'), -.17, .13 + i * .011, -.12, body, false);
+  mesh(new THREE.BoxGeometry(.1, .04, .01), red, -.2, .07, -.155, body);
+  const ex = mesh(new THREE.TorusGeometry(.04, .009, 5, 10, PI), tube, -.24, .11, -.09, body); ex.rotation.y = PI / 2;
+  return { g, wheels };
+}
+
+function makeBike(rider) {
+  const g = new THREE.Group(); scene.add(g);
+  const wheel = new THREE.TorusGeometry(.11, .01, 6, 24), frame = std(C.teal);
+  const wB = mesh(wheel, std('#111'), -.18, .11, 0, g), wF = mesh(wheel, std('#111'), .18, .11, 0, g);
+  const rod = (a, b) => { const len = a.distanceTo(b), m = mesh(new THREE.CylinderGeometry(.008, .008, len, 5), frame, (a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2, g); m.lookAt(g.localToWorld(b.clone())); m.rotateX(PI / 2); };
+  const V = (x, y) => new THREE.Vector3(x, y, 0);
+  const pts = { back: V(-.18, .11), crank: V(0, .1), seat: V(-.06, .3), head: V(.13, .3), front: V(.18, .11) };
+  g.updateMatrixWorld();
+  rod(pts.back, pts.crank); rod(pts.crank, pts.seat); rod(pts.seat, pts.back); rod(pts.seat, pts.head); rod(pts.head, pts.crank); rod(pts.head, pts.front);
+  mesh(new THREE.BoxGeometry(.02, .02, .16), std('#111'), .14, .36, 0, g);            // handlebar
+  mesh(new THREE.BoxGeometry(.08, .02, .04), std('#111'), -.06, .31, 0, g);           // saddle
+  g.add(rider.g); rider.g.position.set(-.05, .08, 0); rider.g.rotation.y = PI / 2;
+  rider.body.rotation.x = .35;
+  return { g, wB, wF, rider };
+}
+
+/* ================= mountain routes: planned on purpose-built slopes ================= */
+/*
+ * The two mountain stories get terrain designed for them (see PISTE and TREK in heightAt), and routes planned on it
+ * with the rule real trail builders and skiers use: never go straight down (or up) a slope steeper than you want.
+ *   gradient g = |∇h| of the (smoothed) heightfield at the current point.
+ *   if g ≤ target grade: go along the fall line (straight down / up).
+ *   else: traverse at angle α across the fall line, where sin α = grade / g, so the climb or drop per unit walked is
+ *         exactly the target grade. On reaching the edge of the corridor, turn and traverse the other way
+ *         (a switchback for the trekkers, a turn for the skiers).
+ * Steeper ground → shallower traverse → more turns. That is what makes the runs look real.
+ */
+const ROUTES = { trek: [], ski: [], peakT: null, beach: null, stats: {} };
+const hSmooth = (x, z) => (heightAt(x, z) * 2 + heightAt(x + .25, z) + heightAt(x - .25, z) + heightAt(x, z + .25) + heightAt(x, z - .25)) / 6;
+const TREK_GRADE = Math.tan(24 * PI / 180);   // a steep but walkable trail
+const STEP = .05;
+function gradedRoute({ from, grade, halfW, down, lateral, toward, stop, maxSteps = 2500 }) {
+  let [x, z] = from, side = 1; const pts = [[x, z]];
+  for (let i = 0; i < maxSteps; i++) {
+    const e = .25, gx = (hSmooth(x + e, z) - hSmooth(x - e, z)) / (2 * e), gz = (hSmooth(x, z + e) - hSmooth(x, z - e)) / (2 * e);
+    const g = Math.hypot(gx, gz) || 1e-6;
+    let ux = gx / g, uz = gz / g; if (down) { ux = -ux; uz = -uz; }
+    // A gentle pull towards the goal keeps a traverse from circling the mountain on a contour.
+    const [tx, tz] = toward(x, z), tl = Math.hypot(tx, tz) || 1;
+    ux = ux * .85 + tx / tl * .15; uz = uz * .85 + tz / tl * .15; const ul = Math.hypot(ux, uz); ux /= ul; uz /= ul;
+    let dx = ux, dz = uz;
+    if (g > grade) {
+      const sa = grade / g, ca = Math.sqrt(1 - sa * sa), cx = -uz * side, cz = ux * side;
+      dx = ux * sa + cx * ca; dz = uz * sa + cz * ca;
+      const [lat, nx, nz] = lateral(x, z);                     // signed distance from the corridor axis + its normal
+      if (Math.abs(lat) > halfW && (dx * nx + dz * nz) * lat > 0) { side = -side; continue; }   // edge of corridor: turn
+    }
+    x += dx * STEP; z += dz * STEP; pts.push([x, z]);
+    if (stop(x, z)) break;
+  }
+  // Round the corners: a skier carves an arc, a trekker cuts the hairpin a little.
+  const sm = pts.map((p, i) => { let sx = 0, sz = 0, n = 0; for (let k = -5; k <= 5; k++) { const q = pts[Math.max(0, Math.min(pts.length - 1, i + k))]; sx += q[0]; sz += q[1]; n++; } return { x: sx / n, z: sz / n }; });
+  let len = 0; sm.forEach((p, i) => { if (i) len += Math.hypot(p.x - sm[i - 1].x, p.z - sm[i - 1].z); p.s = len; });
+  return sm;
+}
+/** Grade statistics of a route on the terrain: mean and steepest stretch (over 0.3 units), in degrees. */
+function gradeStats(route) {
+  let max = 0, rise = 0; const W = .3;
+  for (let i = 1; i < route.length; i++) {
+    const a = route[i - 1], b = route[i]; rise += Math.abs(heightAt(b.x, b.z) - heightAt(a.x, a.z));
+    if (b.s >= W) { const j = route.findIndex(q => q.s >= b.s - W); const g = Math.abs(heightAt(b.x, b.z) - heightAt(route[j].x, route[j].z)) / (b.s - route[j].s); max = Math.max(max, g); }
+  }
+  const L = route.at(-1).s, deg = (v) => +(Math.atan(v) * 180 / PI).toFixed(1);
+  return { length: +L.toFixed(1), meanDeg: deg(rise / L), steepestDeg: deg(max) };
+}
+function planMountainRoutes() {
+  // Trek: base camp to the summit of the trek peak, switchbacks inside a corridor along the camp → summit line.
+  const [bx, bz] = TREK.base, [sx, sz] = TREK.c, ax = sx - bx, az = sz - bz, al = Math.hypot(ax, az), nx = -az / al, nz = ax / al;
+  ROUTES.trek = gradedRoute({
+    from: TREK.base, grade: TREK_GRADE, halfW: .55, down: false,
+    lateral: (x, z) => [(x - bx) * nx + (z - bz) * nz, nx, nz],
+    toward: (x, z) => [sx - x, sz - z],
+    stop: (x, z) => Math.hypot(x - sx, z - sz) < .12,
+  });
+  {
+    const tp = ROUTES.trek.filter((_, i) => i % 3 === 0).concat([ROUTES.trek.at(-1)]).map(q => [q.x, q.z]), len = [0];
+    for (let i = 1; i < tp.length; i++) len.push(len[i - 1] + Math.hypot(tp[i][0] - tp[i - 1][0], tp[i][1] - tp[i - 1][1]));
+    const xs = tp.map(q => q[0]), zs = tp.map(q => q[1]), y0 = heightAt(...tp[0]), y1 = heightAt(sx, sz);
+    TRAIL = { pts: tp, len, y0, y1, box: [Math.min(...xs) - .2, Math.max(...xs) + .2, Math.min(...zs) - .2, Math.max(...zs) + .2] };
+  }
+  ROUTES.peakT = { x: sx, z: sz, h: heightAt(sx, sz) };
+  /*
+   * Skiers: the piste is flat across, so the turns can be drawn exactly instead of searched for. Each skier follows the
+   * centreline with a sine weave w(σ) = A·sin(2πσ/λ + φ). The weave lengthens the path by about √(1 + (2πA/λ)²/2), which
+   * lowers their grade below the fall line; A and λ are picked so that each line averages about 18-20°.
+   * Turns fade in after the start and straighten into the run-out. Sampled finely, so there is no jitter.
+   */
+  const [ex, ez] = PISTE.pts.at(-1);
+  const SKIERS = [{ A: .3, lam: 1.6, ph: 0 }, { A: .22, lam: 1.25, ph: 2.1 }, { A: .36, lam: 1.9, ph: 4.0 }];
+  ROUTES.ski = SKIERS.map(({ A, lam, ph }) => {
+    const out = [], L = PISTE.L;
+    for (let sg = .15; sg <= L; sg += .02) {
+      const k = sg / L, i = Math.min(PISTE.pts.length - 2, Math.floor(k * (PISTE.pts.length - 1)));
+      // centreline point + normal at arc-length sg
+      let j = 0; while (j < PISTE.len.length - 2 && PISTE.len[j + 1] < sg) j++;
+      const [ax, az] = PISTE.pts[j], [bx, bz] = PISTE.pts[j + 1], f = (sg - PISTE.len[j]) / (PISTE.len[j + 1] - PISTE.len[j]), tl = Math.hypot(bx - ax, bz - az);
+      const cx = ax + (bx - ax) * f, cz = az + (bz - az) * f, nx = -(bz - az) / tl, nz = (bx - ax) / tl;
+      const w = A * Math.sin(TAU * sg / lam + ph) * smooth(.15, .9, sg) * (1 - smooth(L - 1.1, L - .2, sg));
+      out.push({ x: cx + nx * w, z: cz + nz * w, turn: -Math.sin(TAU * sg / lam + ph) * smooth(.15, .9, sg) * (1 - smooth(L - 1.1, L - .2, sg)) });
+    }
+    let len = 0; out.forEach((q, i) => { if (i) len += Math.hypot(q.x - out[i - 1].x, q.z - out[i - 1].z); q.s = len; });
+    return out;
+  });
+  // Shore spot nearest to the foot of the piste.
+  const k = SEA_LINE(ex, ez) + .35; ROUTES.beach = [ex - SEA_NX * k, ez - SEA_NZ * k];
+  ROUTES.stats = { trek: gradeStats(ROUTES.trek), ski: ROUTES.ski.map(gradeStats), pisteFallLine: gradeStats(PISTE.pts.map(([x, z], i) => ({ x, z, s: PISTE.len[i] }))) };
+}
+
+/* Visible kit: prayer flags + summit flag, trail markers, base camp tents, piste edge poles. */
+let summitFlag;
+function buildSummit() {
+  const p = ROUTES.peakT; if (!p) return;
+  const y = heightAt(p.x, p.z), cols = [C.sky, C.white, C.red, '#25a95c', '#f2c12e'];
+  const a = [p.x - .35, y + .02, p.z + .1], b = [p.x + .35, y + .02, p.z - .1];
+  for (const q of [a, b]) mesh(new THREE.CylinderGeometry(.006, .006, .32, 4), std('#2b2b2b'), q[0], heightAt(q[0], q[2]) + .16, q[2]);
+  for (let i = 1; i < 12; i++) {
+    const f = i / 12, x = a[0] + (b[0] - a[0]) * f, z = a[2] + (b[2] - a[2]) * f, sag = Math.sin(f * PI) * .06;
+    const yy = (heightAt(a[0], a[2]) * (1 - f) + heightAt(b[0], b[2]) * f) + .3 - sag;
+    mesh(new THREE.PlaneGeometry(.04, .045), basic(cols[i % 5], { side: THREE.DoubleSide }), x, yy - .025, z, scene, false).rotation.y = Math.atan2(b[0] - a[0], b[2] - a[2]) + PI / 2;
+  }
+  summitFlag = new THREE.Group(); summitFlag.position.set(p.x, y, p.z); scene.add(summitFlag);
+  mesh(new THREE.CylinderGeometry(.005, .005, .3, 4), std(C.white), 0, .15, 0, summitFlag);
+  ['#ff9933', '#ffffff', '#138808'].forEach((c, i) => mesh(new THREE.BoxGeometry(.11, .022, .003), basic(c), .055, .28 - i * .022, 0, summitFlag, false));
+  summitFlag.visible = false;
+  // Trail: small bone markers every 0.3 along the switchbacks, and base camp at the bottom.
+  const dash = new THREE.BoxGeometry(.06, .012, .02), dmat = basic(C.bone);
+  for (let s = .2; s < ROUTES.trek.at(-1).s - .2; s += .3) { const [x, z, h] = routeAt(ROUTES.trek, s); mesh(dash, dmat, x, heightAt(x, z) + .012, z, scene, false).rotation.y = h + PI / 2; }
+  ROUTES.trek.slice(0, 1).forEach(({ x, z }) => {
+    [[-.32, .1, '#f2c12e'], [-.12, .32, C.red]].forEach(([ox, oz, c]) => {
+      const tx = x + ox, tz = z + oz, t = mesh(new THREE.ConeGeometry(.13, .16, 4), std(c), tx, heightAt(tx, tz) + .08, tz); t.rotation.y = PI / 4 + ox;
+    });
+  });
+  // Piste: red and blue marker poles down both edges, like a real run.
+  for (let i = 2; i < PISTE.pts.length - 2; i += 2) {
+    const [x, z] = PISTE.pts[i], [x2, z2] = PISTE.pts[i + 1], tl = Math.hypot(x2 - x, z2 - z), nx = -(z2 - z) / tl, nz = (x2 - x) / tl;
+    for (const s of [-1, 1]) { const px = x + nx * s * (PISTE.w + .04), pz = z + nz * s * (PISTE.w + .04); mesh(new THREE.CylinderGeometry(.008, .008, .2, 4), basic(s < 0 ? C.red : C.cobalt), px, heightAt(px, pz) + .1, pz, scene, false); }
+  }
+}
+
+/* People with mountain kit. */
+function addPoles(p, len, back) {
+  for (const arm of [p.armL, p.armR]) {
+    const j = arm.userData.joint, pole = new THREE.Group(); pole.position.y = -.1; pole.rotation.x = back; j.add(pole);
+    mesh(new THREE.CylinderGeometry(.004, .004, len, 4), std('#c9ced6'), 0, -len / 2, 0, pole, false);
+    mesh(new THREE.CylinderGeometry(.012, .012, .003, 8), std('#1a1a1a'), 0, -len + .03, 0, pole, false);   // basket
+  }
+}
+function addSkis(p, color) {
+  const skis = new THREE.Group(); p.g.add(skis); p.skis = skis;
+  for (const s of [-1, 1]) { const k = mesh(new THREE.BoxGeometry(.026, .006, .36), std(color), s * .03, .003, .03, skis, false); mesh(new THREE.BoxGeometry(.026, .006, .04), std(color), s * .03, .012, .21, skis, false).rotation.x = -.5; }
+  return skis;
+}
+function addGoggles(p, color) {
+  mesh(new THREE.BoxGeometry(.06, .016, .02), basic(color), 0, .008, .03, p.head, false);
+  mesh(new THREE.TorusGeometry(.039, .004, 4, 16), std('#1a1a1a'), 0, .008, 0, p.head, false).rotation.x = PI / 2;
+}
+function addTrekPack(p, color) {
+  mesh(new THREE.BoxGeometry(.085, .15, .06), std(color), 0, .09, -.065, p.chest);           // tall rucksack
+  mesh(new THREE.CylinderGeometry(.022, .022, .11, 8), std('#2b2b2b'), 0, .185, -.065, p.chest).rotation.z = PI / 2;   // rolled mat
+  mesh(new THREE.SphereGeometry(.012, 6, 5), std(C.white), 0, .085, 0, p.head, false);       // beanie pompom (sits on the cap)
+}
+
+/* ================= actors ================= */
+const actors = { walkers: [], cadets: [] };
+const SKIN = ['#8d5a3b', '#a8714c', '#6f442b', '#c08a62'];
+const WALK = [[-3.9, -2.1], [-2.6, -1.2], [-1.2, -1.6], [-.2, -.9], [-.8, .9], [-2.0, 1.5], [-3.2, .9], [-3.9, -.4], [-3.9, -2.1]].map(([x, z]) => [x + LAY.walk[0], z + LAY.walk[1]]);
+function buildActors() {
+  [C.white, C.sky, C.red].forEach((c, i) => actors.walkers.push(makePerson({ shirt: c, pants: i % 2 ? C.cobalt : C.bone, cap: i === 0 ? C.red : null, skin: SKIN[i % 4] })));
+  for (let i = 0; i < 4; i++) actors.cadets.push(makePerson({ shirt: C.khaki, pants: C.khaki, longSleeve: true, beret: C.maroon, belt: C.black, shoes: '#0a0a0a', skin: SKIN[(i + 1) % 4] }));
+  actors.boxer = makePerson({ shirt: C.white, pants: C.red, gloves: C.red, shorts: true, skin: SKIN[2] });
+  actors.mech = makePerson({ shirt: C.cobalt, pants: C.cobalt, longSleeve: true, cap: C.white, skin: '#8d5a3b' });
+  // Friends at the sea: two splashing each other waist-deep, one swimming lengths, one jumping waves, one chasing the surf.
+  actors.sea = [
+    { p: makePerson({ shirt: C.red, pants: C.cobalt, shorts: true, skin: SKIN[0] }), kind: 'splash', at: seaPt(-.3, .8), face: 0 },
+    { p: makePerson({ shirt: C.white, pants: C.cobalt, shorts: true, skin: SKIN[2] }), kind: 'splash', at: seaPt(.35, 1.15), face: 0, off: 2.3 },
+    { p: makePerson({ shirt: C.sky, pants: C.black, shorts: true, skin: SKIN[1] }), kind: 'swim' },
+    { p: makePerson({ shirt: C.white, pants: C.red, shorts: true, cap: C.red, skin: SKIN[3] }), kind: 'jump', at: seaPt(-1.3, .55), face: seaFace },
+    { p: makePerson({ shirt: C.red, pants: C.bone, shorts: true, skin: SKIN[2] }), kind: 'surf' },
+  ];
+  actors.splash = [];
+  const spMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .9, depthWrite: false });
+  for (let i = 0; i < 60; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(.012, 5, 4), spMat.clone()); d.visible = false; scene.add(d); actors.splash.push({ m: d, v: new THREE.Vector3(), life: 0 }); }
+  actors.kart = makeKart();
+  actors.bike = makeBike(makePerson({ shirt: C.white, pants: C.cobalt, backpack: C.red, skin: '#8d5a3b' }));
+  // Kart driver's helmet: swapped for the cap when he gets in.
+  actors.helmet = new THREE.Group(); actors.mech.head.add(actors.helmet); actors.helmet.visible = false;
+  mesh(new THREE.SphereGeometry(.048, 12, 9), std(C.red), 0, .004, 0, actors.helmet);
+  mesh(new THREE.BoxGeometry(.06, .02, .02), basic('#101014'), 0, .0, .04, actors.helmet, false);
+  mesh(new THREE.BoxGeometry(.012, .05, .095), std(C.white), 0, .03, -.005, actors.helmet, false);    // stripe
+  // Two trekkers in full kit: shell jackets, beanies, tall packs with mats, trekking poles, boots.
+  actors.trek = [
+    makePerson({ shirt: C.red, pants: '#1a2350', longSleeve: true, helmet: C.cobalt, shoes: '#3a2416', skin: SKIN[1] }),
+    makePerson({ shirt: C.sky, pants: '#20202a', longSleeve: true, helmet: C.red, shoes: '#3a2416', skin: SKIN[0] }),
+  ];
+  actors.trek.forEach((p, i) => { addTrekPack(p, i ? '#f2c12e' : C.cobalt); addPoles(p, .3, .25); p.g.scale.setScalar(MTN_PEOPLE_SCALE); });
+  // Three skiers: helmets, goggles, jackets, skis and poles.
+  actors.ski = [[C.red, C.white, '#1a2350'], [C.white, C.cobalt, '#20202a'], [C.sky, C.red, '#1a2350']].map(([jacket, helm, pants], i) => {
+    const p = makePerson({ shirt: jacket, pants, longSleeve: true, helmet: helm, skin: SKIN[(i + 2) % 4] });
+    addGoggles(p, i === 1 ? '#f2c12e' : '#6aaef2'); addPoles(p, .26, .7); addSkis(p, i === 0 ? C.cobalt : i === 1 ? C.red : C.white);
+    p.g.scale.setScalar(MTN_PEOPLE_SCALE); return p;
+  });
+  // Friends on the Plaza steps, the way everyone hung out there; three more standing and chatting on the floor.
+  const SIT_SHIRTS = [C.white, C.red, C.sky, '#1b1b1b', C.bone, C.cobalt, '#f2c12e', C.white];
+  actors.sitters = spSeats.slice(0, 18).map(([x, y, z, ry], i) => {
+    const p = makePerson({ shirt: SIT_SHIRTS[i % 8], pants: i % 3 ? '#20202a' : C.cobalt, skin: SKIN[i % 4], backpack: i % 5 === 0 ? C.red : null, cap: i % 7 === 3 ? C.white : null });
+    p.g.position.set(x, y - .18, z); p.g.rotation.y = ry; return p;
+  });
+  actors.plazaChat = [0, 1, 2].map(i => {
+    const p = makePerson({ shirt: [C.red, C.white, '#f2c12e'][i], pants: '#20202a', skin: SKIN[(i + 1) % 4], backpack: i === 1 ? C.cobalt : null });
+    // A loose circle of three, a little off the medallion towards the open side, each facing the middle of the group.
+    const ry = Math.atan2(-SP_C[0], -SP_C[1]), Q = [SP_C[0] + Math.sin(ry) * .45, SP_C[1] + Math.cos(ry) * .45], a = i / 3 * TAU;
+    const x = Q[0] + Math.cos(a) * .12, z = Q[1] + Math.sin(a) * .12;
+    p.g.position.set(x, SP_Y + .01, z); p.g.rotation.y = Math.atan2(Q[0] - x, Q[1] - z); return p;
+  });
+  buildEndPointPeople();
+  actors.dust = [];
+  const dustMat = new THREE.MeshBasicMaterial({ color: C.bone, transparent: true, opacity: .5, depthWrite: false });
+  for (let i = 0; i < 30; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(.03, 6, 5), dustMat.clone()); d.visible = false; scene.add(d); actors.dust.push({ m: d, life: 0 }); }
+}
+
+function pathAt(pts, t) {
+  const n = pts.length - 1, f = ((t % 1) + 1) % 1 * n, i = Math.floor(f), k = f - i;
+  const [ax, az] = pts[i], [bx, bz] = pts[i + 1];
+  return [ax + (bx - ax) * k, az + (bz - az) * k, Math.atan2(bx - ax, bz - az)];
+}
+
+const MTN_PEOPLE_SCALE = 1.7;        // up on the range people are drawn larger, like the poster's far-is-bigger scale
+const KART_SPEED = 3.4;                 // world units per second at full speed
+const TREK_SPEED = .3;                  // units/s on the trail at pace 1; the turnaround time is 15% over the planned climb
+const SKI_SPEED = .5;                   // units/s down the piste: slow, controlled turns
+const SKI_CHILL = 14, SKI_GAP = 1.5;
+const CADET_KICKED = 3, BOXER_CYCLE = 46;
+/** Cadets march up and down the drill strip, halting and turning about at each end. */
+function cadetPos(i, t) {
+  const cyc = (t * .045) % 2.4, leg = cyc < 1 ? 0 : cyc < 1.2 ? 1 : cyc < 2.2 ? 2 : 3;
+  const right = leg === 0 || leg === 3, along = leg === 0 ? cyc : leg === 1 ? 1 : leg === 2 ? 1 - (cyc - 1.2) : 0;
+  const [x, z, h] = pathAt(ROAD, .08 + along * .8 - (right ? 1 : -1) * i * .05);
+  return { x, z: z + (i % 2 ? .05 : -.05), h: right ? h : h + PI, halt: leg === 1 || leg === 3 };
+}
+/**
+ * The boxer's afternoon: shadow-boxing by the water, a jog to the Plaza stairs, more rounds there, then he sneaks up on
+ * the last NCC cadet, plants a front kick on his backside and legs it to the middle of the ground, laughing.
+ */
+function boxerState(t) {
+  const base = Math.floor(t / BOXER_CYCLE) * BOXER_CYCLE, c = t - base;
+  const fd = Math.hypot(SP_FOOT.x, SP_FOOT.z), A = LAY.boxer, Bp = [SP_FOOT.x * (1 - .4 / fd), SP_FOOT.z * (1 - .4 / fd)], Cp = [-.6, .3];
+  const tk = base + 23, cd = cadetPos(CADET_KICKED, tk), K = [cd.x - Math.sin(cd.h) * .2, cd.z - Math.cos(cd.h) * .2];
+  const go = (P0, P1, u, kind, rate) => { const e = u * u * (3 - 2 * u); return { x: P0[0] + (P1[0] - P0[0]) * e, z: P0[1] + (P1[1] - P0[1]) * e, h: Math.atan2(P1[0] - P0[0], P1[1] - P0[1]), kind, ph: t * rate, kickHit: -1 }; };
+  const box = (P0, h) => ({ x: P0[0] + Math.sin(t * 1.6) * .07, z: P0[1] + Math.cos(t * 1.3) * .05, h: h + Math.sin(t * .7) * .35, kind: 'box', ph: t * 4.6, kickHit: -1 });
+  if (c < 8) return box(A, seaFace);
+  if (c < 13) return go(A, Bp, (c - 8) / 5, 'run', 8);
+  if (c < 19) return box(Bp, Math.atan2(SP_C[0] - Bp[0], SP_C[1] - Bp[1]));
+  if (c < 23) return go(Bp, K, (c - 19) / 4, 'walk', 6);
+  if (c < 24.2) return { x: K[0], z: K[1], h: cd.h, kind: 'kick', ph: (c - 23) / 1.2, kickHit: c > 23.5 ? (c - 23.5) / 1.6 : -1 };
+  if (c < 28) { const r = go(K, Cp, (c - 24.2) / 3.8, 'run', 10); r.kickHit = c < 25.1 ? (c - 23.5) / 1.6 : -1; return r; }
+  if (c < 38) return box(Cp, -.6);
+  return go(Cp, A, (c - 38) / 8, 'walk', 5);
+}
+let dustTick = 0;
+function updateActors(t, dt) {
+  // Walkers on the ground, one talking with a raised hand now and then.
+  actors.walkers.forEach((p, i) => {
+    const [x, z, h] = pathAt(WALK, t * .012 + i * .02);
+    p.g.position.set(x + (i % 2 ? .12 : -.12), 0, z + (i - 1) * .07); p.g.rotation.y = h;
+    pose(p, i === 1 && Math.sin(t * .9) > .55 ? 'talk' : 'walk', t * 5 + i);
+  });
+  // Cyclist wanders anywhere on dry ground (a slow Lissajous loop that stays off the sea).
+  {
+    const B = actors.bike, f = (tt) => [LAY.bike[0] + 2.2 * Math.sin(tt * .11) + .5 * Math.sin(tt * .27), LAY.bike[1] + 1.0 * Math.sin(tt * .17 + 1) + .3 * Math.cos(tt * .31)];
+    let [x, z] = f(t); const [x2, z2] = f(t + .05);
+    if (SEA_LINE(x, z) > -.7) { const k = SEA_LINE(x, z) + .7; x -= SEA_NX * k; z -= SEA_NZ * k; }   // keep off the beach
+    if (Math.hypot(x, z) > RF - .5) { const k = (RF - .5) / Math.hypot(x, z); x *= k; z *= k; }
+    B.g.position.set(x, 0, z); B.g.rotation.y = Math.atan2(-(z2 - z), x2 - x);
+    B.wB.rotation.z -= dt * 9; B.wF.rotation.z -= dt * 9;
+    const ph = t * 7; B.rider.legL.rotation.x = -1.2 + Math.sin(ph) * .45; B.rider.legR.rotation.x = -1.2 - Math.sin(ph) * .45; B.rider.legL.userData.joint.rotation.x = 1.1 + Math.cos(ph) * .4; B.rider.legR.userData.joint.rotation.x = 1.1 - Math.cos(ph) * .4;
+    B.rider.armL.rotation.x = B.rider.armR.rotation.x = -1.2;
+  }
+  // Cadets drill on the strip below the Plaza stairs; the boxer wanders over and kicks one.
+  const boxer = boxerState(t);
+  actors.cadets.forEach((p, i) => {
+    const c = cadetPos(i, t);
+    p.g.position.set(c.x, .02, c.z); p.g.rotation.y = c.h;
+    pose(p, c.halt ? 'stand' : 'march', c.halt ? t : t * 6.4);
+    if (boxer.kickHit >= 0) {
+      if (i === CADET_KICKED) { const k = Math.sin(Math.min(1, boxer.kickHit) * PI); p.body.rotation.x = .55 * k; p.body.rotation.z = .2 * k; p.g.position.x += Math.sin(c.h) * .12 * k; p.g.position.z += Math.cos(c.h) * .12 * k; p.armL.rotation.z = .3 + k; p.armR.rotation.z = -.3 - k; }
+      else { p.head.rotation.y = .9 * (i % 2 ? 1 : -1); }
+    }
+  });
+  { const B = actors.boxer; B.g.position.set(boxer.x, .02, boxer.z); B.g.rotation.y = boxer.h; pose(B, boxer.kind, boxer.ph); }
+  // Kart: fix it, helmet on, a run along the front of the track and back, climb out, fix it again.
+  {
+    const K = actors.kart, M = actors.mech, len = KART_ROUTE.at(-1).s, D = len / KART_SPEED, CYC = 8.6 + D + 7.5, c = t % CYC;
+    const [px, pz, ph0] = routeAt(KART_ROUTE, 0), fwd0 = [Math.sin(ph0), Math.cos(ph0)];
+    let kx = px, kz = pz, kh = ph0, ky = 0, pitch = 0, mode = 'fix1';
+    if (c >= 8 && c < 8.6) mode = 'in';
+    else if (c >= 8.6 && c < 8.6 + D) {
+      mode = 'drive'; const u = (c - 8.6) / D, s = len * (u - Math.sin(TAU * u) / TAU);
+      [kx, kz, kh, ky] = routeAt(KART_ROUTE, s);
+      pitch = Math.atan2(routeAt(KART_ROUTE, s + .2)[3] - ky, .2);
+      const v = len / D * (1 - Math.cos(TAU * u));
+      K.wheels.forEach(w => w.rotation.z -= dt * v / (.06 * KART_SCALE));
+      if (!REDUCED_MOTION && v > .8 && (dustTick++ % 4 === 0)) { const d = actors.dust.find(d => d.life <= 0); if (d) { d.life = 1; d.m.visible = true; d.m.position.set(kx - Math.sin(kh) * .32, .05, kz - Math.cos(kh) * .32); d.m.scale.setScalar(1); } }
+    } else if (c >= 8.6 + D && c < 9.6 + D) mode = 'in';
+    else if (c >= 9.6 + D) mode = 'fix2';
+    else if (c >= 7) mode = 'walk';
+    K.g.position.set(kx, ky, kz); K.g.rotation.set(0, kh - PI / 2, pitch);      // XYZ order: pitch about the kart's own axis, then heading
+    M.g.rotation.order = 'YXZ'; M.g.rotation.x = 0;
+    actors.helmet.visible = mode === 'in' || mode === 'drive'; M.hat.visible = !actors.helmet.visible;
+    if (mode === 'in' || mode === 'drive') {
+      const back = -.075 * KART_SCALE;
+      M.g.position.set(kx + Math.sin(kh) * back, ky + .1 * KART_SCALE - .19, kz + Math.cos(kh) * back); M.g.rotation.set(-pitch, kh, 0);
+      pose(M, 'sit', 0); M.legL.rotation.x = M.legR.rotation.x = -1.35; M.legL.userData.joint.rotation.x = M.legR.userData.joint.rotation.x = .45;
+      M.armL.rotation.x = M.armR.rotation.x = -1.05; M.armL.userData.joint.rotation.x = M.armR.userData.joint.rotation.x = -.35; M.body.rotation.x = -.12;
+    } else {
+      // Fixing: crouched at the side (first) or at the engine at the back (second), wrench hand going.
+      const side = mode === 'fix2' ? [-fwd0[0] * .55, -fwd0[1] * .55] : [fwd0[1] * .4, -fwd0[0] * .4];
+      M.g.position.set(px + side[0], -.08, pz + side[1]); M.g.rotation.y = Math.atan2(-side[0], -side[1]);
+      pose(M, 'stand', t); M.legL.rotation.x = -1.3; M.legL.userData.joint.rotation.x = 2.2; M.legR.rotation.x = -.2; M.legR.userData.joint.rotation.x = 1.6; M.body.rotation.x = .45; M.body.position.y = -.06;
+      M.armR.rotation.x = -1.3 + Math.sin(t * 9) * .35; M.armR.userData.joint.rotation.x = -.6 + Math.sin(t * 9) * .4; M.armL.rotation.x = -.8; M.armL.userData.joint.rotation.x = -.7;
+      if (mode === 'walk' || (mode === 'fix2' && c < 10.4 + D)) { M.g.position.y = 0; M.body.rotation.x = 0; M.body.position.y = 0; pose(M, 'walk', t * 5); }
+      if (mode === 'fix2' && Math.sin(t * .9) > .8) { M.g.position.y = 0; M.body.position.y = 0; M.body.rotation.x = 0; pose(M, 'stand', t); M.armR.rotation.x = -2.6; M.armR.userData.joint.rotation.x = -1.6; }   // scratches his head
+    }
+  }
+  // Trekkers: a summit push with a turnaround time. Fast enough → summit, jump, plant the flag. Too slow → turn back.
+  if (ROUTES.trek.length) {
+    const L = ROUTES.trek.at(-1).s, CLIMB = L / TREK_SPEED, CUTOFF = CLIMB * 1.15, TREK_CYCLE = CUTOFF + 7 + L / (TREK_SPEED * 2.2) + 2;
+    const cyc = Math.floor(t / TREK_CYCLE), c = t % TREK_CYCLE, TREK_CUTOFF = CUTOFF;
+    const pace = .8 + hash(cyc, 77) * .45, climb = CLIMB / pace, made = climb <= TREK_CUTOFF;
+    const top = made ? climb : TREK_CUTOFF, sTop = made ? L : L * TREK_CUTOFF / climb, rest = made ? 7 : 3;
+    summitFlag && (summitFlag.visible = made && c > climb + 1.2);
+    actors.trek.forEach((p, i) => {
+      const lag = i * .22;
+      let s, kind = 'trek', down = false, ph = t * 3.4 + i;
+      if (c < top) s = Math.max(0, L * c / climb - lag);
+      else if (c < top + rest) {
+        s = Math.max(0, sTop - lag * .5);
+        if (made) { kind = (Math.floor((c - top) * 1.3) + i) % 3 === 2 ? 'cheer' : 'jump'; ph = (c - top) * 4.4 + i * 1.3; }
+        else { kind = 'stand'; p.head.rotation.x = -.45; }
+      } else { s = Math.max(0, sTop * (1 - (c - top - rest) / (TREK_CYCLE - top - rest)) - lag * .5); kind = 'walk'; down = true; ph = t * 4.4 + i; }
+      const [x, z, h] = routeAt(ROUTES.trek, s);
+      p.g.position.set(x + (i ? .05 : 0), heightAt(x, z) + .005, z); p.g.rotation.y = down ? h + PI : h;
+      pose(p, kind, ph);
+      if (kind === 'stand' && !made) { p.head.rotation.x = -.45; p.body.rotation.x = -.05; }
+    });
+  }
+  // Skiers: slow carved turns down the fall line, off the slope, skis on the shoulder, down to the shore to hang out.
+  if (ROUTES.ski.length) {
+    const [bx, bz] = ROUTES.beach, SKI_RUN = Math.max(...ROUTES.ski.map(r => r.at(-1).s)) / SKI_SPEED;
+    const walkD = Math.max(...ROUTES.ski.map(r => Math.hypot(bx - r.at(-1).x, bz - r.at(-1).z))) / .38, CYC = SKI_RUN + walkD + SKI_CHILL + 3 * SKI_GAP + 1;
+    actors.ski.forEach((p, i) => {
+      const route = ROUTES.ski[i], L = route.at(-1).s, ex = route.at(-1).x, ez = route.at(-1).z;
+      const c = (t % CYC) - i * SKI_GAP, sk = p.skis; let sc = 1;
+      sk.position.set(0, 0, 0); sk.rotation.set(0, 0, 0);
+      const spot = [bx + SEA_NZ * (i - 1) * .35, bz - SEA_NX * (i - 1) * .35];
+      if (c < SKI_RUN) {
+        const u = Math.min(1, Math.max(0, c) / (L / SKI_SPEED)), s = L * u * u * (3 - 2 * u), [x, z] = routeAt(route, s), y = heightAt(x, z);
+        const [hx, hz] = routeAt(route, Math.min(L, s + .25)), [bx0, bz0] = routeAt(route, Math.max(0, s - .05)), h = Math.atan2(hx - bx0, hz - bz0);
+        const [ax, az] = routeAt(route, Math.min(L, s + .12)), pitch = Math.atan2(y - heightAt(ax, az), .12);
+        p.g.position.set(x, y + .01, z); p.g.rotation.y = h; sk.rotation.x = pitch * .9;
+        // Lean into the turn: the rate the heading changes along the route sets which edge they are on and how hard.
+        const q = route[Math.min(route.length - 1, Math.max(0, route.findIndex(r => r.s >= s)))];
+        pose(p, c < 0 || u >= 1 ? 'stand' : 'ski', Math.acos(Math.max(-1, Math.min(1, q.turn * .9))));
+        sc = Math.min(1, (t % CYC) / .6);                                                // appear at the summit
+      } else if (c < SKI_RUN + walkD) {
+        const u = (c - SKI_RUN) / walkD, x = ex + (spot[0] - ex) * u, z = ez + (spot[1] - ez) * u;
+        p.g.position.set(x, 0, z); p.g.rotation.y = Math.atan2(spot[0] - ex, spot[1] - ez); pose(p, 'walk', t * 5 + i);
+        sk.position.set(.07, .5, -.02); sk.rotation.set(-1.25, 0, .2);                  // skis over the shoulder
+      } else {
+        const c2 = c - SKI_RUN - walkD;
+        p.g.rotation.y = seaFace; sk.position.set(-.12, .2, .05); sk.rotation.set(-PI / 2 + .1, 0, 0);   // skis stuck in the sand
+        if (i === 0) { p.g.position.set(spot[0], 0, spot[1]); pose(p, 'sitGround', t); }
+        else if (i === 1) { p.g.position.set(spot[0], 0, spot[1]); pose(p, Math.sin(t * .7) > .2 ? 'jump' : 'cheer', t * 3); }
+        else {
+          const into = Math.min(1, c2 / 2.5), x = spot[0] + SEA_NX * into * .7, z = spot[1] + SEA_NZ * into * .7;
+          p.g.position.set(x, into < 1 ? 0 : waveH(x, z, t) - .17, z); pose(p, into < 1 ? 'run' : 'splash', t * 4.6); sk.visible = into < .2;
+        }
+        const left = CYC - (t % CYC); sc = Math.min(1, left / 1);
+      }
+      if (c < SKI_RUN + walkD + .1) sk.visible = true;
+      const shrink = smooth(SKI_RUN - 1, SKI_RUN + 2.5, c);                                  // back to ground scale as they come off the slope
+      p.g.scale.setScalar(Math.max(.001, sc) * (MTN_PEOPLE_SCALE + (1 - MTN_PEOPLE_SCALE) * shrink));
+    });
+  }
+  // Plaza steps: friends sit, chat, turn to each other, now and then someone gestures.
+  actors.sitters.forEach((p, i) => {
+    pose(p, 'sit', t + i * 3.1);
+    const talk = Math.sin(t * .6 + i * 2.2) > .7;
+    if (talk) { p.armR.rotation.x = -1.1 + Math.sin(t * 5 + i) * .25; p.armR.userData.joint.rotation.x = -1.2; }
+    p.head.rotation.y = Math.sin(t * .25 + i * 1.7) * .7;
+  });
+  actors.plazaChat.forEach((p, i) => { pose(p, i === 1 && Math.sin(t * .8) > .3 ? 'talk' : 'stand', t + i * 2); if (i === 1) { p.legL.rotation.x = p.legR.rotation.x = 0; } });
+
+  // Sea friends: bodies sit at the local wave height, so the water hides their legs and they bob with the swell.
+  const spray = (x, y, z, n, up) => {
+    for (let k = 0; k < n; k++) {
+      const d = actors.splash.find(d => d.life <= 0); if (!d) return;
+      d.life = 1; d.m.visible = true; d.m.position.set(x + (Math.random() - .5) * .12, y, z + (Math.random() - .5) * .12);
+      d.v.set((Math.random() - .5) * .7, up * (.7 + Math.random() * .6), (Math.random() - .5) * .7);
+    }
+  };
+  actors.sea.forEach((sf) => {
+    const p = sf.p;
+    if (sf.kind === 'swim') {
+      const u = Math.sin(t * .12) * 1.5, [x, z] = seaPt(u, 1.55), wy = waveH(x, z, t);
+      p.g.position.set(x, wy - .06, z); p.g.rotation.y = Math.atan2(-SEA_NZ, SEA_NX) + (Math.cos(t * .12) > 0 ? 0 : PI); pose(p, 'swim', t * 3.2);
+      if (!REDUCED_MOTION && Math.random() < .12) spray(x, wy, z, 1, .5);
+    } else if (sf.kind === 'surf') {
+      // Runs down to the water as it slides back, sprints up the sand as the next wave comes in.
+      const ph = (t * .32) % 1, run = Math.sin(ph * PI) * .55, [bx, bz] = seaPt(-1.9 + Math.sin(t * .2) * .3, 0), x = bx + SHORE_N.x * (run + .12), z = bz + SHORE_N.y * (run + .12);
+      p.g.position.set(x, 0, z); p.g.rotation.y = seaFace + (Math.cos(ph * TAU) > 0 ? PI : 0); pose(p, 'run', t * 9.5);
+    } else {
+      const [x, z] = sf.at, wy = waveH(x, z, t), depth = sf.kind === 'jump' ? .12 : .2;
+      if (sf.kind === 'splash') { const o = actors.sea.find(q => q !== sf && q.kind === 'splash'); sf.face = Math.atan2(o.at[0] - x, o.at[1] - z); }
+      const ph = t * (sf.kind === 'jump' ? 2.1 : 4.6) + (sf.off || 0);
+      p.g.position.set(x, wy - depth, z); p.g.rotation.y = sf.face; pose(p, sf.kind, ph);
+      if (!REDUCED_MOTION) {
+        if (sf.kind === 'splash' && Math.sin(ph) > .85 && Math.random() < .5) spray(x + Math.sin(sf.face) * .1, wy + .02, z + Math.cos(sf.face) * .1, 2, 1);
+        if (sf.kind === 'jump' && (ph % TAU) / TAU > .69 && (ph % TAU) / TAU < .73) spray(x, wy, z, 3, .8);
+      }
+    }
+  });
+  actors.splash.forEach(d => { if (d.life > 0) { d.life -= dt * 1.6; d.v.y -= dt * 4; d.m.position.addScaledVector(d.v, dt); d.m.material.opacity = Math.max(0, d.life); if (d.life <= 0) d.m.visible = false; } });
+  actors.dust.forEach(d => { if (d.life > 0) { d.life -= dt * .9; d.m.scale.multiplyScalar(1 + dt * 1.2); d.m.position.y += dt * .05; d.m.material.opacity = Math.max(0, d.life * .45); if (d.life <= 0) d.m.visible = false; } });
+  updateSea(t);
+  if (waterTex && !REDUCED_MOTION) { waterTex.offset.x += dt * .02 * P.waves; waterTex.offset.y += dt * .008 * P.waves; }
+}
+
+/* ================= stars (2D canvas behind the render) ================= */
+function drawStars() {
+  const c = document.getElementById('stars'), dpr = Math.min(devicePixelRatio, 2);
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr;
+  const x = c.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0);
+  x.fillStyle = C.black; x.fillRect(0, 0, innerWidth, innerHeight); x.lineCap = 'round';
+  for (let k = 0; k < innerWidth * innerHeight / 7000; k++) {
+    const px = Math.random() * innerWidth, py = Math.random() * innerHeight, a = -.3 + Math.random() * .6, l = 1.5 + Math.random() ** 2 * 9;
+    x.strokeStyle = `rgba(255,255,255,${(.35 + Math.random() * .6).toFixed(2)})`; x.lineWidth = Math.random() < .85 ? 1.2 : 2;
+    x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(a) * l, py + Math.sin(a) * l); x.stroke();
+  }
+}
+
+const FRAME_TARGET = new THREE.Vector3(0, 2.2, -1.2);
+/* ================= camera framing ================= */
+function frameCamera() {
+  const w = innerWidth, h = innerHeight, aspect = w / h;
+  renderer.setSize(w, h, false);
+  camera.aspect = aspect;
+  camera.fov = 30;
+  // Elevation ~32° gives the original's ellipse ratio (~0.52). Distance is set so the bowl + ranges
+  // fill ~60% of the screen width (40% smaller than full-bleed), centred.
+  const ELEV = P.elevation * PI / 180, SPAN = 30;                         // world width of the whole illustration
+  // Screen-size framing: phones edge to edge (little padding), tablets a bit wider than desktop, desktop uses the panel's
+  // "Size on screen" (default .75). The camera also backs off if the bowl would be too tall for the screen, so the
+  // whole stadium and the name always fit.
+  const size = w < MOBILE_W ? SIZE_PHONE : w < TABLET_W ? Math.max(P.size, SIZE_TABLET) : P.size;
+  const fitW = SPAN / size, hfov = 2 * Math.atan(Math.tan(camera.fov * PI / 360) * aspect), vfov = camera.fov * PI / 180;
+  const dist = Math.max(fitW / 2 / Math.tan(hfov / 2), (SPAN * BOWL_H) / (h < 560 ? .5 : .62) / 2 / Math.tan(vfov / 2), 12);
+  const target = FRAME_TARGET;
+  const yaw = P.yaw * PI / 180, horiz = Math.cos(ELEV) * dist;
+  camera.position.set(Math.sin(yaw) * horiz, target.y + Math.sin(ELEV) * dist, target.z + Math.cos(yaw) * horiz);
+  camera.clearViewOffset(); camera.updateProjectionMatrix(); camera.lookAt(target); camera.updateMatrixWorld();
+  layoutHero();
+  drawStars();
+}
+
+/*
+ * Hero name on a curve under the bowl. The curve is the front rim itself, projected to the screen and pushed down a
+ * little, so the type hugs the stadium at any size or camera angle. If the name and the role line would run off the
+ * bottom, the render is lifted (camera view offset) by just enough to make room.
+ */
+const MOBILE_W = 640, TABLET_W = 1100, SIZE_PHONE = .97, SIZE_TABLET = .86, NAME_SPAN_PHONE = .94, NAME_SPAN = .8, BOWL_H = .58, NAME_FIT_TRIES = 6, NAME_MIN = 28;   // BOWL_H: illustration height / width
+const NAME_GAP = .03, COPY_GAP = 12, BOTTOM_MARGIN = 28, MAX_LIFT = .21, ARC_FLAT = .5, NAME_FILL = 1;   // ARC_FLAT: 1 = follow the rim exactly, 0 = straight
+function rimToScreen(a) {
+  const v = new THREE.Vector3(Math.cos(a) * (RR + .25), WALL, Math.sin(a) * (RR + .25)).project(camera);
+  return [(v.x + 1) / 2 * innerWidth, (1 - v.y) / 2 * innerHeight];
+}
+function layoutHero() {
+  const w = innerWidth, h = innerHeight, svg = document.querySelector('.hero-name'), text = svg.querySelector('text'), copy = document.querySelector('.hero-copy');
+  const mobile = w < MOBILE_W, copyH = copy.offsetHeight || 60;
+  // Big, Jarcos-scale name: phones ~13% of the width, larger screens up to ~10% of the width / 14% of the height.
+  let size = mobile ? Math.max(34, w * .13) : Math.max(40, Math.min(170, h * .14, w * .1));
+  // Short windows: shrink the name step by step until name + role line + button fit above the fold without overlapping.
+  for (let attempt = 0; attempt < NAME_FIT_TRIES; attempt++) {
+    text.setAttribute('font-size', size);
+    const need = NAME_GAP * h + size * 1.05 + COPY_GAP + copyH + BOTTOM_MARGIN;
+    const front = rimToScreen(PI / 2)[1], lift = Math.min(MAX_LIFT, Math.max(0, (front + need - h) / h));
+    camera.setViewOffset(w, h, 0, lift * h, w, h); camera.updateProjectionMatrix(); HERO_LIFT_PX = lift * h;
+    const pts = []; for (let k = 0; k <= 48; k++) pts.push(rimToScreen(PI - .42 - (PI - .84) * k / 48));   // a wide arc: the name spans the bowl
+    pts.sort((p, q) => p[0] - q[0]);
+    // Stretch the curve sideways so the name can run nearly edge to edge (Jarcos-scale), whatever the bowl's width.
+    { const x0 = pts[0][0], x1 = pts.at(-1)[0], c = (x0 + x1) / 2, want = w * (mobile ? NAME_SPAN_PHONE : NAME_SPAN), k = Math.max(1, want / (x1 - x0)); pts.forEach(p => { p[0] = w / 2 + (p[0] - c) * k; }); }   // centred on the screen, not the bowl (the bowl can sit off-centre when turned)
+    const drop = NAME_GAP * h + size * .82, yLow = Math.max(...pts.map(p => p[1]));
+    pts.forEach(p => { p[1] = yLow + (p[1] - yLow) * (mobile ? .2 : ARC_FLAT); });       // a gentler smile than the rim, so the ends clear the stands
+    document.getElementById('nameArc').setAttribute('d', 'M' + pts.map(([x, y]) => `${x.toFixed(1)} ${(y + drop).toFixed(1)}`).join(' L'));
+    // Fit: the name may use at most NAME_FILL of the curve, otherwise textPath silently drops the overflowing letters.
+    const arcLen = document.getElementById('nameArc').getTotalLength(), tl = text.getComputedTextLength();
+    if (tl > arcLen * NAME_FILL) { size *= arcLen * NAME_FILL / tl; text.setAttribute('font-size', size); }
+    const top = yLow + drop + size * .22 + COPY_GAP;
+    copy.style.top = `${top}px`;
+    if (top + copyH + 20 <= h || size <= NAME_MIN) break;
+    camera.clearViewOffset(); camera.updateProjectionMatrix(); HERO_LIFT_PX = 0;      // measure the next try from the unlifted view
+    size = Math.max(NAME_MIN, size * .88);
+  }
+  copy.style.opacity = 1;
+  HULL = bowlHull();
+}
+document.fonts?.load('80px Caprasimo').then(() => layoutHero());
+
+/* ================= lens + story zoom ================= */
+/*
+ * Hover the bowl (mouse/trackpad): the cursor becomes a round lens showing the scene at LENS_ZOOM×.
+ *   How: after the main render, the same scene is rendered again through a camera whose view offset covers only the
+ *   small square under the cursor, into a render target; a circular quad then draws that texture over the cursor.
+ * Tap/click a story: the camera flies in to it and a chat thread pops up, one bubble at a time, with the story.
+ * Esc, the close button, or a click on the scene flies back. Touch screens skip the lens and zoom on tap.
+ *
+ * STORIES: the copy is a draft for Gaurav to rewrite. "them" = a friend (grey, left), "me" = Gaurav (blue, right).
+ */
+const STORIES = [
+  { id: 'kart', title: 'The kart', at: () => [SHOP.park.x, .2, SHOP.park.z], dist: 3.4, lift: .4,
+    lines: ['Weekends went into a go-kart in the corner of the ground.', 'Fix one thing, take it out for a lap, find the next thing to fix.', 'It never stayed fixed. I still work in that loop.'] },
+  { id: 'trek', title: 'Summit day', at: () => [ROUTES.peakT.x, ROUTES.peakT.h - 1.2, ROUTES.peakT.z], dist: 6, lift: 2.2,
+    lines: ['Every summit push had a turnaround time.', 'Reach the top by then, or turn back. No arguing on the mountain.', 'The flag only goes up when we make it.'] },
+  { id: 'ski', title: 'First runs', at: () => { const [x, z] = PISTE.pts[Math.floor(PISTE.pts.length * .45)]; return [x, heightAt(x, z), z]; }, dist: 5.5, lift: 2,
+    lines: ['Three of us, slow wide turns, nobody racing.', 'At the bottom: skis on the shoulder, straight to the sea.'] },
+  { id: 'sp', title: 'SP steps', at: () => [SP_C[0], SP_Y + .3, SP_C[1]], dist: 4.6, lift: 2.2,
+    lines: ['Most plans in Manipal started on the SP steps.', 'Same steps every evening, with whoever showed up.'] },
+  { id: 'endpoint', title: 'End Point', at: () => [EP_C[0], EP_Y + .3, EP_C[1]], dist: 3.8, lift: 1.2,
+    lines: ['End Point: a cliff edge, a chai stall, the whole place below us.', 'We always stayed for the sunset.'] },
+  { id: 'ncc', title: 'NCC drill', at: () => [ROAD[1][0], .3, ROAD[1][1]], dist: 4.2, lift: 1.8,
+    lines: ['Friends in NCC drilled on the ground most mornings.', 'Our boxer friend liked to interrupt them.'] },
+  { id: 'sea', title: 'The beach', at: () => { const [x, z] = seaPt(0, .4); return [x, .1, z]; }, dist: 5, lift: 2,
+    lines: ['The Arabian Sea was close enough to reach after class.', 'Someone was always in the water first.'] },
+  { id: 'embassy', title: 'Royal Embassy', at: () => { const [x, y, z] = placeAt(LAY.embassy[0], LAY.embassy[1]); return [x, y + 2.4, z]; }, dist: 7, lift: 1,
+    lines: ['Royal Embassy stood half inside the clouds most mornings.', 'You saw the top floors only when the cloud moved.'] },
+];
+const STORY_PULLBACK = 1.6;   // close-up distance multiplier: far enough that roofs and canopies do not fill the frame
+const FLY_TIME = 1.1, TAP_REACH = 170;   // TAP_REACH: px from a story's anchor that still counts as tapping it
+const FINE_POINTER = matchMedia('(hover: hover) and (pointer: fine)').matches;
+const lensEl = document.querySelector('.lens-cursor');
+let HERO_LIFT_PX = 0;
+const ZOOM = { state: 'off', t: 0, story: null, from: null, to: null };   // state: off | in | open | out
+
+/* Is a screen point over the bowl? Convex hull of the rim (and the rim lifted to the peaks on the far side). */
+function bowlHull() {
+  const pts = [];
+  for (let k = 0; k < 48; k++) {
+    const a = k / 48 * TAU, far = Math.sin(a) < .15;
+    for (const y of far ? [WALL, WALL + 6.5] : [WALL]) { const v = new THREE.Vector3(Math.cos(a) * (RR + .6), y, Math.sin(a) * (RR + .6)).project(camera); pts.push([(v.x + 1) / 2 * innerWidth, (1 - v.y) / 2 * innerHeight]); }
+  }
+  pts.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]), lo = [], hi = [];
+  for (const p of pts) { while (lo.length > 1 && cross(lo.at(-2), lo.at(-1), p) <= 0) lo.pop(); lo.push(p); }
+  for (const p of pts.slice().reverse()) { while (hi.length > 1 && cross(hi.at(-2), hi.at(-1), p) <= 0) hi.pop(); hi.push(p); }
+  return lo.slice(0, -1).concat(hi.slice(0, -1));
+}
+let HULL = [];
+const inHull = (x, y) => { for (let i = 0; i < HULL.length; i++) { const a = HULL[i], b = HULL[(i + 1) % HULL.length]; if ((b[0] - a[0]) * (y - a[1]) - (b[1] - a[1]) * (x - a[0]) < 0) return false; } return HULL.length > 2; };
+
+/* Which story is nearest to a screen point (within reach)? */
+function storyAt(x, y, reach = 150) {
+  let best = null, bd = reach;
+  for (const s of STORIES) { const [ax, ay, az] = s.at(), v = new THREE.Vector3(ax, ay, az).project(camera), sx = (v.x + 1) / 2 * innerWidth, sy = (1 - v.y) / 2 * innerHeight, d = Math.hypot(sx - x, sy - y); if (v.z < 1 && d < bd) { bd = d; best = s; } }
+  return best;
+}
+
+const glEl = document.getElementById('gl'), storyEl = document.querySelector('.story');
+// Over the bowl the cursor becomes a small lens: a hint that tapping zooms in. It does not magnify by itself.
+glEl.addEventListener('pointermove', (e) => {
+  const over = FINE_POINTER && ZOOM.state === 'off' && HERO_VISIBLE && inHull(e.clientX, e.clientY);
+  lensEl.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`; lensEl.classList.toggle('on', over);
+  glEl.style.cursor = over ? 'none' : ZOOM.state === 'open' ? 'zoom-out' : '';
+});
+glEl.addEventListener('pointerleave', () => lensEl.classList.remove('on'));
+glEl.addEventListener('click', (e) => {
+  if (ZOOM.state === 'open' || ZOOM.state === 'in') return flyOut();
+  if (ZOOM.state !== 'off' || !inHull(e.clientX, e.clientY)) return;
+  const s = storyAt(e.clientX, e.clientY, TAP_REACH); if (s) flyIn(s);
+});
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && (ZOOM.state === 'open' || ZOOM.state === 'in')) flyOut(); });
+document.querySelector('.story-close').addEventListener('click', () => flyOut());
+document.querySelectorAll('[data-story]').forEach(b => b.addEventListener('click', () => { const s = STORIES.find(q => q.id === b.dataset.story); if (s && ZOOM.state === 'off') flyIn(s); }));
+
+/* Camera poses: the framed hero pose, and a close pose for a story (pulled back along the hero view direction). */
+function framePose() { return { pos: camera.position.clone(), target: FRAME_TARGET.clone(), off: HERO_LIFT_PX }; }
+function storyPose(s) {
+  const [x, y, z] = s.at(), a = new THREE.Vector3(x, y, z), dir = camera.position.clone().sub(a).setY(0).normalize();
+  const D = s.dist * STORY_PULLBACK;
+  return { pos: a.clone().addScaledVector(dir, D).add(new THREE.Vector3(0, s.lift + D * .3, 0)), target: a, off: 0 };
+}
+function flyIn(s) {
+  ZOOM.from = framePose(); ZOOM.to = storyPose(s); ZOOM.story = s; ZOOM.state = 'in'; ZOOM.t = 0; lensEl.classList.remove('on');
+  document.body.classList.add('zoomed');
+}
+function flyOut() {
+  const cur = { pos: camera.position.clone(), target: ZOOM.to.target.clone(), off: 0 };
+  ZOOM.to = ZOOM.from; ZOOM.from = cur; ZOOM.state = 'out'; ZOOM.t = 0;
+  storyEl.classList.remove('open'); document.body.classList.remove('zoomed'); clearTimeout(chatTimer);
+}
+const ease = (u) => u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+function updateZoom(dt) {
+  if (ZOOM.state !== 'in' && ZOOM.state !== 'out') return;
+  ZOOM.t = Math.min(1, ZOOM.t + (REDUCED_MOTION ? 1 : dt / FLY_TIME)); const u = ease(ZOOM.t), A = ZOOM.from, B = ZOOM.to;
+  camera.position.lerpVectors(A.pos, B.pos, u); camera.lookAt(new THREE.Vector3().lerpVectors(A.target, B.target, u));
+  camera.setViewOffset(innerWidth, innerHeight, 0, A.off + (B.off - A.off) * u, innerWidth, innerHeight); camera.updateProjectionMatrix();
+  if (ZOOM.t >= 1) {
+    if (ZOOM.state === 'in') { ZOOM.state = 'open'; openChat(ZOOM.story); }
+    else { ZOOM.state = 'off'; frameCamera(); }
+  }
+}
+
+/* The story: message bubbles float in the scene beside the subject (no panel), one at a time after a typing dot. */
+let chatTimer;
+function openChat(s) {
+  storyEl.querySelector('.story-tag').textContent = `Gaurav · ${s.title}`;
+  const list = storyEl.querySelector('.story-list'); list.replaceChildren(); storyEl.classList.add('open');
+  let i = 0;
+  const next = () => {
+    if (i >= s.lines.length) return;
+    const text = s.lines[i++], typing = document.createElement('li');
+    typing.className = 'bubble typing'; typing.innerHTML = '<span></span><span></span><span></span>'; typing.setAttribute('aria-hidden', 'true'); list.append(typing);
+    chatTimer = setTimeout(() => {
+      typing.remove(); const b = document.createElement('li'); b.className = 'bubble'; b.textContent = text; list.append(b);
+      chatTimer = setTimeout(next, 500);
+    }, REDUCED_MOTION ? 0 : 650 + text.length * 12);
+  };
+  next();
+}
+
+/* ================= build + run ================= */
+planMountainRoutes();   // routes first: the trail bench they define is part of the terrain
+buildSurround(); let terrainMesh = buildTerrain(); buildRimEdge(); buildField(); buildWater(); buildDolphins(); buildRoad(); buildWorkshop(); planKartRoute(); buildScoreboard();
+buildEmbassy(); buildStudentPlaza(); buildEndPoint(); buildSummit();
+LAY.towers.forEach(([a, d, h], i) => buildTower(a, d, h, new THREE.Vector3(i ? 1.2 : -1.5, 0, i ? 0 : -1)));
+buildSnow(); buildRimLamps(); buildActors();
+frameCamera();
+addEventListener('resize', () => { clearTimeout(window.rt); window.rt = setTimeout(() => {
+  if (ZOOM.state !== 'off') { ZOOM.state = 'off'; storyEl.classList.remove('open'); document.body.classList.remove('zoomed'); }   // a resize snaps back to the bowl
+  frameCamera(); }, 150); });
+document.querySelector('.loading').remove();
+
+/* ================= tweak panel ================= */
+function applyLive() {
+  renderer.toneMappingExposure = P.exposure; moon.intensity = P.moon; sideLight.intensity = P.side; hemi.intensity = P.sky;
+  spots.forEach(s => s.intensity = P.towerLight); beams.forEach(b => b.material.opacity = P.beams);
+  snow.material.size = P.snowSize; snow.geometry.setDrawRange(0, Math.round(snow.userData.meta.length * P.snowAmount));
+  document.querySelector('.grain').style.opacity = P.grain;
+  document.getElementById('stars').style.visibility = P.stars ? 'visible' : 'hidden';
+  store.set(TWEAK_KEY, JSON.stringify(P));
+}
+/* Everything (SP terrace, routes, summit, buildings) sits on the heightfield, so a landscape change rebuilds the page. */
+function rebuildTerrain() { store.set(TWEAK_KEY, JSON.stringify(P)); location.reload(); }
+const gui = new GUI({ title: 'Tweak the pit' });
+gui.domElement.style.top = '72px'; gui.domElement.style.right = '16px';   // below the nav
+const fc = gui.addFolder('Camera');
+fc.add(P, 'size', .3, 1, .01).name('Size on screen').onChange(() => { frameCamera(); applyLive(); });
+fc.add(P, 'elevation', 18, 70, 1).name('Angle (°)').onChange(() => { frameCamera(); applyLive(); });
+fc.add(P, 'yaw', -40, 40, 1).name('Turn (°)').onChange(() => { frameCamera(); applyLive(); });
+const fl = gui.addFolder('Landscape');
+fl.add(P, 'mtnHeight', .3, 2, .05).name('Mountain height').onFinishChange(rebuildTerrain);
+fl.add(P, 'terrace', 0, 1, .02).name('Terraces (seat rows)').onFinishChange(rebuildTerrain);
+fl.add(P, 'tier', .12, .6, .01).name('Row height').onFinishChange(rebuildTerrain);
+fl.add(P, 'snowLine', -2, 2, .05).name('Snow line').onFinishChange(rebuildTerrain);
+fl.add({ reroll() { P.seed = (Math.random() * 1e9) | 0; rebuildTerrain(); } }, 'reroll').name('New mountains');
+const fli = gui.addFolder('Light');
+fli.add(P, 'exposure', .5, 2, .01).name('Exposure').onChange(applyLive);
+fli.add(P, 'moon', 0, 4, .05).name('Moonlight').onChange(applyLive);
+fli.add(P, 'sky', 0, 2, .05).name('Sky fill').onChange(applyLive);
+fli.add(P, 'towerLight', 0, 600, 5).name('Tower lamps').onChange(applyLive);
+fli.add(P, 'side', 0, 3, .05).name('Ridge light').onChange(applyLive);
+fli.add(P, 'beams', 0, .12, .002).name('Beam haze').onChange(applyLive);
+fli.add(P, 'haze', 0, .4, .01).name('Rim lamp haze').onChange(applyLive);
+const fs = gui.addFolder('Snow');
+fs.add(P, 'snowAmount', 0, 1, .01).name('Amount').onChange(applyLive);
+fs.add(P, 'snowSpeed', 0, 3, .05).name('Fall speed').onChange(applyLive);
+fs.add(P, 'snowSize', .02, .2, .005).name('Flake size').onChange(applyLive);
+const fm = gui.addFolder('Motion');
+fm.add(P, 'speed', 0, 3, .05).name('Life speed').onChange(applyLive);
+fm.add(P, 'waves', 0, 4, .05).name('Sea waves').onChange(applyLive);
+const fk = gui.addFolder('Look');
+fk.add(P, 'grain', 0, .6, .01).name('Grain').onChange(applyLive);
+fk.add(P, 'stars').name('Sky stars').onChange(applyLive);
+gui.add({ reset() { store.remove(TWEAK_KEY); location.reload(); } }, 'reset').name('Reset all');
+gui.add({ copy() { navigator.clipboard?.writeText(JSON.stringify(P, null, 2)); } }, 'copy').name('Copy values');
+fl.close(); fs.close(); fm.close(); fk.close();
+if (innerWidth < MOBILE_W) gui.close();
+applyLive();
+
+const clock = new THREE.Clock();
+let simT = 0, PAUSED = false, HERO_VISIBLE = true, lastFrame = performance.now();
+// Once the work card covers the screen, skip rendering the scene (saves battery; it resumes as you scroll back).
+const heroCheck = () => {   // scroll-based (not IntersectionObserver): deterministic even in throttled or background tabs
+  HERO_VISIBLE = scrollY < innerHeight * .98;
+  document.querySelector('.pause').style.visibility = HERO_VISIBLE ? '' : 'hidden';
+  gui.domElement.style.visibility = HERO_VISIBLE ? '' : 'hidden';   // the panel tweaks the scene, so it leaves with it
+};
+addEventListener('scroll', heroCheck, { passive: true }); addEventListener('resize', heroCheck); setTimeout(heroCheck);
+// Pause: the scene never stops on its own, so give people a way to still it (WCAG 2.2.2).
+document.querySelector('.pause').addEventListener('click', (e) => { PAUSED = !PAUSED; e.currentTarget.textContent = PAUSED ? 'Play' : 'Pause'; e.currentTarget.setAttribute('aria-pressed', PAUSED); });
+if (REDUCED_MOTION) document.querySelector('.pause').hidden = true;
+function tick() {
+  const dt = PAUSED ? (clock.getDelta(), 0) : Math.min(clock.getDelta(), .05) * P.speed; simT += dt; const t = simT;
+  updateActors(t, REDUCED_MOTION ? 0 : dt); updateClouds(t); updateEndPoint(t);
+  if (!REDUCED_MOTION) {
+    const pos = snow.geometry.attributes.position.array, meta = snow.userData.meta;
+    for (let i = 0; i < meta.length; i++) {
+      const m = meta[i];
+      pos[i * 3] += (m.T.dir.x * .35 + Math.sin(t * 1.3 + m.sway) * .12) * dt;
+      pos[i * 3 + 1] -= m.v * dt * P.snowSpeed;
+      pos[i * 3 + 2] += (m.T.dir.z * .35 + Math.cos(t * 1.1 + m.sway) * .1) * dt;
+      if (pos[i * 3 + 1] < m.T.head.y - 9 || pos[i * 3 + 1] < .6) resetFlake(pos, i, m, false);
+    }
+    snow.geometry.attributes.position.needsUpdate = true;
+    hazes.forEach((h, i) => { h.material.opacity = P.haze * (1 + Math.sin(t * .8 + i) * .4); });
+  }
+  // Camera flights run on wall-clock time, so a slow or throttled frame rate cannot leave the camera stuck mid-flight.
+  const now = performance.now(), realDt = Math.min((now - lastFrame) / 1000, .25); lastFrame = now; updateZoom(realDt);
+  if (HERO_VISIBLE) renderer.render(scene, camera);
+  if (!REDUCED_MOTION) requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body>
+</html>
