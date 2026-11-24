@@ -7,7 +7,7 @@
 <meta name="description" content="Gaurav Gupta, an Associate Product Manager with a design habit. Four years of Manipal in one 3D stadium, selected work, and a note written in stars.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=IBM+Plex+Sans:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; }
   html { scroll-behavior: smooth; }
@@ -102,23 +102,30 @@
   .p-cap span { color: var(--muted); font: 14px 'IBM Plex Sans', sans-serif; }
   .p-line { margin-top: 4px; padding-left: 33px; color: var(--muted); font: 14px/1.5 'IBM Plex Sans', sans-serif; }
 
-  /* Closing: a crayon constellation on black paper, drawn as you scroll. Two people holding hands, made of stars;
-     a small bright star rises from their hands. Words in the hero's Caprasimo, labels in Plex. The CTA is written
-     on the ground they stand on, so it is part of the drawing. */
-  .sky-story { position: relative; height: 380vh; }
-  .sky-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; background: #07060a; }
-  .sky-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .sky-eyebrow { position: absolute; left: var(--margin); top: clamp(20px, 5vh, 48px); font: 500 12px/1.4 'IBM Plex Sans', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #a09bb2; }
-  .sky-word { position: absolute; font: clamp(15px, 1.7vw, 26px)/1.1 'Caprasimo', serif; color: var(--bone); white-space: nowrap; opacity: 0; transform: translateY(6px) rotate(var(--tilt, 0deg)); transition: opacity .6s, transform .6s cubic-bezier(.2,.8,.2,1); }
-  .sky-word.on { opacity: 1; transform: rotate(var(--tilt, 0deg)); }
-  .sky-cta { position: absolute; left: 50%; transform: translate(-50%, 12px); text-align: center; opacity: 0; pointer-events: none; transition: opacity .8s, transform .8s cubic-bezier(.2,.8,.2,1); width: min(920px, 92vw); }
+  /* Closing: a star chart drawn as you scroll. Fine points of light, hairline links, words in an italic serif.
+     Positions are computed from the stage size (separate layouts for wide and tall screens). The CTA is the caption
+     of the last star, so it lives inside the art. */
+  .sky-story { position: relative; height: 360vh; }
+  .sky-stage { position: sticky; top: 0; height: 100svh; overflow: hidden;
+    background: linear-gradient(180deg, #0b0a10 0%, #0b0a10 45%, #121430 100%); }   /* night deepening to a faint horizon */
+  .sky-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sky-eyebrow { position: absolute; left: var(--margin); top: clamp(20px, 5vh, 48px); font: 500 12px/1.4 'IBM Plex Sans', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #8d88a0; }
+  .sky-eyebrow b { color: var(--bone); font-weight: 500; }
+  .sky-word { position: absolute; font: italic 400 clamp(19px, 2.1vw, 34px)/1.15 'Instrument Serif', serif; letter-spacing: .005em; color: var(--bone); white-space: nowrap;
+    opacity: 0; filter: blur(6px); transform: translateY(6px); transition: opacity .7s, filter .7s, transform .7s cubic-bezier(.2,.8,.2,1); }
+  .sky-word.on { opacity: 1; filter: none; transform: none; }
+  .sky-word.left { text-align: right; }
+  .sky-cta { position: absolute; transform: translate(-50%, 12px); text-align: center; opacity: 0; pointer-events: none; transition: opacity .8s, transform .8s cubic-bezier(.2,.8,.2,1); width: min(820px, 92vw); }
   .sky-cta.on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
-  .sky-cta h2 { font: clamp(24px, 3vw, 46px)/1.08 'Caprasimo', serif; margin-bottom: 18px; text-wrap: balance; }
+  .sky-cta h2 { font: 400 clamp(30px, 4vw, 58px)/1.05 'Instrument Serif', serif; letter-spacing: -.01em; margin-bottom: 22px; }
+  .sky-cta h2 em { color: #f5a3c7; }
   .sky-cta .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
   .ghost { display: inline-flex; align-items: center; min-height: 56px; padding: 12px 24px; border-radius: 999px; color: var(--bone); text-decoration: none; font: 500 16px 'IBM Plex Sans', sans-serif; box-shadow: inset 0 0 0 1px rgba(244,237,224,.28); }
   .ghost:hover { box-shadow: inset 0 0 0 1px var(--bone); }
   .ghost:focus-visible { outline: 2px solid #6aaef2; outline-offset: 4px; }
-  @media (prefers-reduced-motion: reduce) { .sky-word, .sky-cta { transition: none; } }
+  .twinkle-a { animation: tw 4s ease-in-out infinite; } .twinkle-b { animation: tw 5.5s ease-in-out 1.2s infinite; } .twinkle-c { animation: tw 7s ease-in-out 2.4s infinite; }
+  @keyframes tw { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+  @media (prefers-reduced-motion: reduce) { .twinkle-a, .twinkle-b, .twinkle-c { animation: none; } .sky-word, .sky-cta { transition: none; } }
   .say { display: inline-flex; align-items: center; min-height: 56px; padding: 12px 28px; border-radius: 999px; background: var(--bone); color: #07060a; font: 500 17px/1 'IBM Plex Sans', sans-serif; text-decoration: none; box-shadow: 3px 3px 0 var(--mag); transition: transform .15s, box-shadow .15s; }
   .say:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--mag); }
   .say:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--mag); }
@@ -191,11 +198,11 @@
   <!-- Closing: scroll draws a star chart that spells the line; its last star carries the CTA. -->
   <section class="sky-story" id="hello" aria-labelledby="sky-line">
     <div class="sky-stage">
-      <canvas aria-hidden="true"></canvas>
-      <p class="sky-eyebrow" aria-hidden="true">Two people, holding the same star</p>
+      <svg aria-hidden="true"></svg>
+      <p class="sky-eyebrow" aria-hidden="true"><b>Fig. 08</b> &nbsp;A constellation of small teams</p>
       <p class="sr-only" id="sky-line">Different people, different rhythms, but we share the same spaces on the internet. Let's make it beautiful.</p>
       <div class="sky-cta">
-        <h2>Let's make something people love.</h2>
+        <h2>Let's make something <em>people love.</em></h2>
         <div class="row"><a class="say" href="#">Say hello</a><a class="ghost" href="#">Download resume</a></div>
       </div>
     </div>
@@ -210,171 +217,73 @@
   const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent && parent.append(n); return n; };
 
   /*
-   * Crayon constellation: two people holding hands, drawn in stars on black paper. A string runs from their joined
-   * hands up to one bright star (the thing they make together). They stand on a crayon hill; the CTA is written on
-   * the ground below it.
-   *
-   * Everything is drawn on a canvas with a crayon look: each stroke is several thin, jittered passes with uneven
-   * pressure and small skips where the "paper tooth" catches, and stars are scribble-filled with hatching. All
-   * randomness is seeded and baked once per layout, so strokes never shimmer while you scroll.
-   *
-   * SHAPE switches the figure ('friends' or the 'heart' fallback). Points are in a box: x 0..1, y 0..1.
+   * The star chart. Each fragment of the line belongs to a star. Stars sit on normalised positions (one layout for
+   * wide screens, one for tall ones) and are laid out in pixels from the stage size on every resize. Scroll progress
+   * draws a hairline from star to star; a star ignites when the line reaches it and its words resolve out of a blur.
+   * The last star has no words of its own: the CTA is its caption.
    */
-  const SHAPE = 'friends';
-  const SHAPES = {
-    friends: {
-      aspect: 1.3,
-      pts: { ah: [.27, .14], an: [.29, .28], ap: [.31, .52], af1: [.22, .8], af2: [.37, .79], ao: [.12, .4], j: [.5, .46],
-             bn: [.71, .3], bh: [.73, .16], bp: [.69, .54], bf1: [.63, .8], bf2: [.79, .81], bo: [.88, .32], st: [.5, .2] },
-      // [from, to, colour], drawn in this order.
-      segs: [['ah', 'an', 'pink'], ['an', 'ap', 'pink'], ['ap', 'af1', 'pink'], ['ap', 'af2', 'pink'], ['an', 'ao', 'pink'], ['an', 'j', 'pink'],
-             ['j', 'bn', 'sky'], ['bn', 'bh', 'sky'], ['bn', 'bo', 'sky'], ['bn', 'bp', 'sky'], ['bp', 'bf1', 'sky'], ['bp', 'bf2', 'sky'], ['j', 'st', 'butter']],
-      // Words: [star, text, side (l/r/t/b), tilt in degrees]. A word appears when its star lights up.
-      words: [['ah', 'different people,', 'l', -3], ['ao', 'different rhythms,', 'l', 2], ['j', 'but we share', 'b', -2], ['bh', 'the same spaces', 'r', 2],
-              ['bo', 'on the internet.', 'r', -2], ['bp', "let's make it", 'r', 3], ['st', 'beautiful.', 't', -2]],
-      big: 'st', ground: .85, heads: [['ah', 'pink'], ['bh', 'sky']],
-    },
-    heart: {
-      aspect: 1.1,
-      pts: { a: [.5, .3], b: [.32, .12], c: [.12, .22], d: [.14, .46], e: [.5, .86], f: [.86, .46], g: [.88, .22], h: [.68, .12] },
-      segs: [['a', 'b', 'pink'], ['b', 'c', 'pink'], ['c', 'd', 'pink'], ['d', 'e', 'pink'], ['e', 'f', 'sky'], ['f', 'g', 'sky'], ['g', 'h', 'sky'], ['h', 'a', 'sky']],
-      words: [['b', 'different people,', 't', -3], ['c', 'different rhythms,', 'l', 2], ['d', 'but we share', 'l', -2], ['e', 'the same spaces', 'b', 2],
-              ['f', 'on the internet.', 'r', -2], ['g', "let's make it", 'r', 3], ['a', 'beautiful.', 'b', -2]],
-      big: 'a', ground: null,
-    },
-  };
-  const INK = { pink: '#f5a3c7', sky: '#9cc9f5', butter: '#f6dc8c', mint: '#a8e0c0', lilac: '#c4b2f0', peach: '#f7b08a', bone: '#f1e9dc' };
-  const STAR_COLS = ['butter', 'pink', 'sky', 'mint', 'peach', 'lilac'];
-  const DRAW = [.05, .86];                     // scroll share of the section that draws; the CTA follows
-  const NARROW = 600;                          // px: below this the words become a stacked poem
-  const story = document.querySelector('.sky-story'), stage = story.querySelector('.sky-stage'), cv = stage.querySelector('canvas'), cta = stage.querySelector('.sky-cta');
-  const ctx = cv.getContext('2d');
-  let seed = 1; const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  let L = null;                                // the baked layout for the current stage size
-
-  /** One crayon stroke from a to b, baked into passes of short sub-segments with jitter, pressure and skips. */
-  function bakeStroke(a, b, col, w) {
-    const len = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, n = Math.max(2, Math.round(len / 3)), nx = -(b[1] - a[1]) / len, ny = (b[0] - a[0]) / len;
-    const bow = (rand() - .5) * len * .03, passes = [];                       // a hand-drawn line is never quite straight
-    for (let p = 0; p < 4; p++) {
-      const off = (rand() - .5) * w * 1.1, pts = [];
-      for (let i = 0; i <= n; i++) {
-        const t = i / n, side = Math.sin(t * Math.PI) * bow + off + (rand() - .5) * w * .5;
-        pts.push([a[0] + (b[0] - a[0]) * t + nx * side, a[1] + (b[1] - a[1]) * t + ny * side, .25 + rand() * .5, rand() < .07]);
-      }
-      passes.push({ pts, lw: w * (.35 + rand() * .45) });
+  const FRAGS = ['different people,', 'different rhythms,', 'but we share', 'the same spaces', 'on the internet.', "let's make it", 'beautiful.'];
+  // [x, y, side] in stage fractions; side = which side of the star the words sit (r / l / t = above).
+  const WIDE = [[.12, .2, 'r'], [.31, .33, 'r'], [.54, .17, 'r'], [.76, .3, 'l'], [.62, .45, 'l'], [.33, .5, 'r'], [.5, .6, 't']];
+  const TALL = [[.12, .13, 'r'], [.84, .2, 'l'], [.16, .28, 'r'], [.86, .35, 'l'], [.14, .43, 'r'], [.84, .5, 'l'], [.5, .58, 't']];
+  const DRAW = [.06, .84];                       // scroll share of the section that draws the chart; the CTA follows
+  const story = document.querySelector('.sky-story'), stage = story.querySelector('.sky-stage'), svg = stage.querySelector('svg'), cta = stage.querySelector('.sky-cta');
+  let rnd = 11; const rand = () => (rnd = (rnd * 16807) % 2147483647) / 2147483647;
+  let chart = null;
+  function buildChart() {
+    rnd = 11; svg.replaceChildren(); stage.querySelectorAll('.sky-word').forEach(n => n.remove());
+    const w = stage.clientWidth, h = stage.clientHeight, layout = w / h < .9 ? TALL : WIDE;
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    const defs = el('defs', {}, svg), f = el('filter', { id: 'starGlow', x: '-200%', y: '-200%', width: '500%', height: '500%' }, defs);
+    el('feGaussianBlur', { stdDeviation: 4 }, f);
+    // Faint chart furniture: two great-circle arcs, like a star atlas.
+    for (const [cy, r, op] of [[h * 1.35, h * 1.05, .07], [h * 1.6, h * 1.45, .05]]) el('circle', { cx: w * .5, cy, r, fill: 'none', stroke: '#f4ede0', 'stroke-width': 1, 'stroke-dasharray': '2 6', opacity: op }, svg);
+    // Field stars: many tiny points in three twinkle groups.
+    const groups = ['twinkle-a', 'twinkle-b', 'twinkle-c'].map(c => el('g', { class: c }, svg)), n = Math.round(w * h / 3200);
+    for (let i = 0; i < n; i++) el('circle', { cx: (rand() * w).toFixed(1), cy: (rand() * h).toFixed(1), r: (rand() < .92 ? .5 + rand() * .5 : 1 + rand() * .6).toFixed(2), fill: '#f4ede0', opacity: (.15 + rand() * .55).toFixed(2) }, groups[i % 3]);
+    // Constellation.
+    const P = layout.map(([x, y, side]) => ({ x: x * w, y: y * h, side }));
+    const links = [];
+    for (let i = 0; i < P.length - 1; i++) {
+      const a = P[i], b = P[i + 1], len = Math.hypot(b.x - a.x, b.y - a.y);
+      const ln = el('line', { x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: '#f4ede0', 'stroke-width': 1, opacity: .55, 'stroke-dasharray': len, 'stroke-dashoffset': len }, svg);
+      links.push({ el: ln, len });
     }
-    return { col, passes, len };
-  }
-  function drawStroke(c, S, u) {
-    if (u <= 0) return;
-    c.strokeStyle = INK[S.col]; c.lineCap = 'round';
-    S.passes.forEach(({ pts, lw }) => {
-      const m = Math.floor((pts.length - 1) * u); c.lineWidth = lw;
-      for (let i = 1; i <= m; i++) { if (pts[i][3]) continue; c.globalAlpha = pts[i][2]; c.beginPath(); c.moveTo(pts[i - 1][0], pts[i - 1][1]); c.lineTo(pts[i][0], pts[i][1]); c.stroke(); }
+    const tint = ['#9cc9f5', '#f5a3c7', '#f6dc8c', '#c4b2f0', '#9cc9f5', '#f5a3c7', '#f6dc8c'];
+    const stars = P.map((p, i) => {
+      const g = el('g', { transform: `translate(${p.x} ${p.y})`, opacity: .35 }, svg), big = i === P.length - 1 ? 1.6 : 1;
+      const glow = el('circle', { r: 7 * big, fill: tint[i], filter: 'url(#starGlow)', opacity: 0 }, g);
+      el('path', { d: `M0 ${-11 * big} V${11 * big} M${-11 * big} 0 H${11 * big}`, stroke: '#f4ede0', 'stroke-width': .8, opacity: .6 }, g);      // diffraction spikes
+      el('circle', { r: 2.2 * big, fill: '#fffaf0' }, g);
+      return { g, glow };
     });
-    c.globalAlpha = 1;
-  }
-  /** A crayon star: a wobbly five-point outline, scribble-filled with hatching. */
-  function bakeStar(x, y, r, col) {
-    const rot = (rand() - .5) * .5, poly = [];
-    for (let i = 0; i < 10; i++) { const rr = (i % 2 ? r * .46 : r) * (.86 + rand() * .28), a = rot - Math.PI / 2 + i * Math.PI / 5; poly.push([x + Math.cos(a) * rr, y + Math.sin(a) * rr]); }
-    const outline = poly.map((p, i) => bakeStroke(p, poly[(i + 1) % poly.length], col, Math.max(1.6, r * .16)));
-    const hatch = [], ang = .6 + rand() * .4, step = Math.max(1.8, r * .16);
-    for (let d = -r * 1.2; d <= r * 1.2; d += step) {
-      const hx = x + Math.cos(ang + Math.PI / 2) * d, hy = y + Math.sin(ang + Math.PI / 2) * d;
-      hatch.push(bakeStroke([hx - Math.cos(ang) * r * 1.2, hy - Math.sin(ang) * r * 1.2], [hx + Math.cos(ang) * r * 1.2, hy + Math.sin(ang) * r * 1.2], col, Math.max(1.2, r * .1)));
-    }
-    return { x, y, r, poly, outline, hatch };
-  }
-  function drawStar(c, st, lit) {
-    if (lit <= 0) { c.globalAlpha = .55; c.fillStyle = INK.bone; c.beginPath(); c.arc(st.x, st.y, 1.6, 0, 6.3); c.fill(); c.globalAlpha = 1; return; }
-    c.save(); c.beginPath(); st.poly.forEach(([px, py], i) => (i ? c.lineTo(px, py) : c.moveTo(px, py))); c.closePath(); c.clip();
-    const nh = Math.ceil(st.hatch.length * Math.min(1, lit * 1.4)); for (let i = 0; i < nh; i++) drawStroke(c, st.hatch[i], 1);
-    c.restore();
-    st.outline.forEach(o => drawStroke(c, o, Math.min(1, lit * 1.6)));
-  }
-
-  /** Lay the drawing out for the current stage size and bake every stroke. */
-  function bake() {
-    seed = 7;
-    const dpr = Math.min(devicePixelRatio, 2), w = stage.clientWidth, h = stage.clientHeight, S = SHAPES[SHAPE];
-    cv.width = w * dpr; cv.height = h * dpr;
-    // The figure box: as large as fits above the CTA, centred.
-    const narrow = w < NARROW;                  // phones: bigger drawing, words stacked as a poem under it
-    const bh = narrow ? Math.min(h * .42, (w * .96) / S.aspect) : Math.min(h * .62, (w * .9) / S.aspect), bw = bh * S.aspect, bx = (w - bw) / 2, by = h * (narrow ? .1 : .12);
-    const at = (k) => [bx + S.pts[k][0] * bw, by + S.pts[k][1] * bh], unit = Math.max(.7, Math.min(1.3, bh / 520));
-    // Paper (baked once): black, a little tooth, chalk dust, and a few small crayon stars around the figure.
-    const bg = document.createElement('canvas'); bg.width = cv.width; bg.height = cv.height; const g = bg.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    g.fillStyle = '#07060a'; g.fillRect(0, 0, w, h);
-    for (let i = 0; i < w * h / 90; i++) { g.globalAlpha = rand() * .05; g.fillStyle = INK.bone; g.fillRect(rand() * w, rand() * h, 1, 1); }
-    for (let i = 0; i < w * h / 2600; i++) { g.globalAlpha = .25 + rand() * .5; g.fillStyle = rand() < .7 ? INK.bone : INK[STAR_COLS[i % STAR_COLS.length]]; g.beginPath(); g.arc(rand() * w, rand() * h, .5 + rand() * 1.3, 0, 6.3); g.fill(); }
-    g.globalAlpha = 1;
-    for (let i = 0, n = Math.round(w / 140); i < n; i++) {
-      let x, y; do { x = rand() * w; y = rand() * h * .8; } while (x > bx - 24 && x < bx + bw + 24 && y > by - 24 && y < by + bh + 24);
-      drawStar(g, bakeStar(x, y, (5 + rand() * 6) * unit, STAR_COLS[Math.floor(rand() * STAR_COLS.length)]), 1);
-    }
-    // Constellation strokes and stars.
-    const segs = S.segs.map(([a, b, col]) => ({ to: b, ...bakeStroke(at(a), at(b), col, 4.2 * unit) }));
-    const stars = {}; Object.keys(S.pts).forEach((k, i) => { const [x, y] = at(k); stars[k] = bakeStar(x, y, (k === S.big ? 20 : 9 + rand() * 4) * unit, k === S.big ? 'butter' : STAR_COLS[i % STAR_COLS.length]); });
-    // Heads: a loose crayon circle (slightly open, overdrawn) around each head star, so the stars read as people.
-    const heads = (S.heads || []).map(([k, col]) => {
-      const [hx, hy] = at(k), rr = bh * .075, n = 20, start = rand() * 6.28, pts = [];
-      for (let i = 0; i <= n + 3; i++) { const a = start + i / n * 6.28, q = rr * (.94 + rand() * .12); pts.push([hx + Math.cos(a) * q, hy + Math.sin(a) * q]); }
-      return { k, strokes: pts.slice(1).map((p, i) => bakeStroke(pts[i], p, col, 3.4 * unit)) };
+    // Words beside their stars (HTML, so they are crisp and use the real font).
+    const words = FRAGS.map((t, i) => {
+      const p = P[i], d = document.createElement('span'); d.className = 'sky-word' + (p.side === 'l' ? ' left' : ''); d.textContent = t; stage.append(d);
+      const off = 18;
+      if (p.side === 'r') Object.assign(d.style, { left: `${p.x + off}px`, top: `${p.y}px`, translate: '0 -55%' });
+      else if (p.side === 'l') Object.assign(d.style, { right: `${w - p.x + off}px`, top: `${p.y}px`, translate: '0 -55%' });
+      else Object.assign(d.style, { left: `${p.x}px`, top: `${p.y - off}px`, translate: '-50% -100%' });
+      return d;
     });
-    // Ground: a soft crayon hill under their feet, then a few tufts.
-    const ground = [];
-    if (S.ground) {
-      const gy = by + S.ground * bh, gp = [];
-      for (let i = 0; i <= 24; i++) { const t = i / 24; gp.push([bx - bw * .15 + t * bw * 1.3, gy - Math.sin(t * Math.PI) * bh * .05 + Math.sin(t * 9) * 2]); }
-      gp.slice(1).forEach((p, i) => ground.push(bakeStroke(gp[i], p, i % 3 ? 'mint' : 'lilac', 3 * unit)));
-      for (let i = 0; i < 10; i++) { const p = gp[2 + Math.floor(rand() * 20)]; ground.push(bakeStroke(p, [p[0] + (rand() - .5) * 8, p[1] - 8 - rand() * 8], 'mint', 1.8 * unit)); }
-    }
-    // Drawing order: segments (each lights the star at its end), then the ground. Each gets scroll in proportion to length.
-    const items = segs.map(sg => ({ sg, w: sg.len }));
-    if (ground.length) items.push({ ground: true, w: bw * .6 });
-    const total = items.reduce((a, it) => a + it.w, 0); let acc = 0; items.forEach(it => { it.a = acc / total; acc += it.w; it.b = acc / total; });
-    // Words: HTML in Caprasimo beside their stars; moved under the star or clamped so they never leave the screen.
-    stage.querySelectorAll('.sky-word').forEach(n => n.remove());
-    let poemLine = 0;
-    const words = S.words.map(([k, text, side, tilt]) => {
-      const st = stars[k], d = document.createElement('span'); d.className = 'sky-word'; d.textContent = text; d.style.setProperty('--tilt', tilt + 'deg'); stage.append(d);
-      const ww = d.offsetWidth, wh = d.offsetHeight, gap = st.r + 10; let x, y;
-      const place = (sd) => { if (sd === 'r') { x = st.x + gap; y = st.y - wh / 2; } else if (sd === 'l') { x = st.x - gap - ww; y = st.y - wh / 2; } else if (sd === 't') { x = st.x - ww / 2; y = st.y - gap - wh; } else { x = st.x - ww / 2; y = st.y + gap; } };
-      if (narrow) { x = (w - ww) / 2; y = by + (S.ground ?? 1) * bh + 24 + poemLine++ * wh * 1.25; }
-      else { place(side); if (x < 12 || x + ww > w - 12) place('b'); x = Math.max(12, Math.min(w - 12 - ww, x)); }
-      Object.assign(d.style, { left: x + 'px', top: y + 'px' });
-      return { d, k };
-    });
-    const poemEnd = narrow ? by + (S.ground ?? 1) * bh + 24 + poemLine * (words[0]?.d.offsetHeight || 24) * 1.25 : 0;
-    cta.style.top = `${narrow ? poemEnd + 18 : by + (S.ground ?? 1) * bh + 26 * unit}px`;
-    L = { bg, items, stars, words, ground, heads, first: S.segs[0][0], dpr };
+    // CTA: the caption of the last star, centred under it.
+    const last = P.at(-1); Object.assign(cta.style, { left: `${last.x}px`, top: `${last.y + 34}px` });
+    chart = { links, stars, words };
   }
-
-  const ease = (u) => 1 - Math.pow(1 - u, 2);
-  function render() {
-    if (!L) return;
+  const ease = (u) => 1 - Math.pow(1 - u, 3);
+  function drawChart() {
+    if (!chart) return;
     const r = story.getBoundingClientRect(), k = REDUCED ? 1 : Math.max(0, Math.min(1, -r.top / (r.height - innerHeight)));
-    const prog = Math.max(0, Math.min(1, (k - DRAW[0]) / (DRAW[1] - DRAW[0])));
-    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(L.bg, 0, 0); ctx.setTransform(L.dpr, 0, 0, L.dpr, 0, 0);
-    const lit = { [L.first]: Math.min(1, prog * 12) };
-    L.items.forEach((it) => {
-      const u = Math.max(0, Math.min(1, (prog - it.a) / (it.b - it.a)));
-      if (it.ground) { const m = Math.floor(L.ground.length * u); for (let i = 0; i < m; i++) drawStroke(ctx, L.ground[i], 1); return; }
-      drawStroke(ctx, it.sg, ease(u));
-      if (u > .85) lit[it.sg.to] = Math.max(lit[it.sg.to] || 0, Math.min(1, (u - .85) / .15));
-    });
-    L.heads.forEach(({ k, strokes }) => { const m = Math.floor(strokes.length * Math.min(1, (lit[k] || 0) * 1.2)); for (let i = 0; i < m; i++) drawStroke(ctx, strokes[i], 1); });
-    Object.entries(L.stars).forEach(([key, st]) => drawStar(ctx, st, lit[key] || 0));
-    L.words.forEach(({ d, k }) => d.classList.toggle('on', (lit[k] || 0) > .5));
+    const prog = Math.max(0, Math.min(1, (k - DRAW[0]) / (DRAW[1] - DRAW[0]))), n = chart.links.length, f = prog * n;
+    chart.links.forEach((l, i) => { const u = Math.max(0, Math.min(1, f - i)); l.el.setAttribute('stroke-dashoffset', (l.len * (1 - ease(u))).toFixed(1)); });
+    chart.stars.forEach((s, i) => { const lit = i === 0 ? Math.min(1, prog * 8) : Math.max(0, Math.min(1, (f - (i - 1)) * 1.2 - .2)); s.g.setAttribute('opacity', (.35 + .65 * lit).toFixed(2)); s.glow.setAttribute('opacity', (lit * .55).toFixed(2)); });
+    chart.words.forEach((d, i) => d.classList.toggle('on', i === 0 ? prog > .02 : f >= i - .05));
     cta.classList.toggle('on', prog >= 1);
   }
-  let raf = 0; const schedule = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; render(); }); };
-  const rebuild = () => { bake(); render(); };
-  document.fonts.load('26px Caprasimo').finally(rebuild);
-  addEventListener('scroll', schedule, { passive: true });
-  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(rebuild, 150); });
+  const rebuild = () => { buildChart(); drawChart(); };
+  document.fonts.load('italic 30px "Instrument Serif"').finally(rebuild);
+  addEventListener('scroll', drawChart, { passive: true });
+  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(rebuild, 120); });
 
   /*
    * Liquid-glass lens: an SVG displacement map that bends the backdrop like a convex lens (strongest at the rim,
