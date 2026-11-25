@@ -1,309 +1,21 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Gaurav Gupta · Associate Product Manager</title>
-<meta name="description" content="Gaurav Gupta, an Associate Product Manager with a design habit. Four years of Manipal in one 3D stadium, selected work, and a note written in stars.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=IBM+Plex+Sans:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; margin: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: #07060a; color: #f4ede0; font-family: 'IBM Plex Sans', system-ui, sans-serif; overflow-x: hidden; }
-  canvas { position: fixed; inset: 0; width: 100vw; height: 100svh; display: block; }
-  #stars { z-index: 0; }
-  #gl { z-index: 1; }
-  /* Riso-style grain over the render. */
-  .grain {
-    position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: .22; mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  }
-  .nav { position: fixed; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 24px clamp(20px, 4vw, 64px); z-index: 3; }
-  .wordmark { font: 24px/1 'Caprasimo', serif; }
-  .nav .links { display: flex; gap: 24px; font-size: 14px; }
-  .nav a { color: inherit; text-decoration: none; opacity: .85; display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
-  .nav a:hover { opacity: 1; }
-  .nav .links a:last-child { padding: 8px 16px; min-height: 40px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(244,237,224,.3); }
-  .nav .links a:last-child:hover { box-shadow: inset 0 0 0 1px #f4ede0; }
-  /* Hero type. The name runs along the front rim of the bowl (Caprasimo, like the wordmark and the site's name card);
-     the role sits under it in Plex, in two tones like Gaurav's own intro line. */
-  .hero-name { position: fixed; top: 0; left: 0;   /* fixed with the scene; the work card slides over it */ inset: 0; width: 100vw; height: 100svh; z-index: 3; pointer-events: none; overflow: visible; }
-  .hero-name text { font-family: 'Caprasimo', serif; fill: #f4ede0; letter-spacing: .045em; }
-  .hero-copy { position: fixed; left: 0; right: 0; z-index: 3; text-align: center; pointer-events: none; opacity: 0; transition: opacity .6s; }
-  .hero-copy .role { font-size: clamp(14px, 1.25vw, 18px); line-height: 1.4; color: #f4ede0; }
-  .hero-copy .role span { color: #a09bb2; }
-  .hero-copy .now { margin-top: 6px; font: 500 13px/1.4 'IBM Plex Sans', system-ui, sans-serif; font-variant-caps: all-small-caps; letter-spacing: .05em; color: #a09bb2; }
-  .hero-copy .next { pointer-events: auto; display: inline-block; margin-top: 18px; padding: 12px 18px; font-size: 14px; color: #f4ede0; text-decoration: none; border: 1px solid rgba(244,237,224,.28); border-radius: 999px; }
-  .hero-copy .next:hover { border-color: #f4ede0; }
-  .hero-copy .next:focus-visible, .pause:focus-visible, .nav a:focus-visible { outline: 2px solid #6aaef2; outline-offset: 3px; }
-  .pause { position: fixed; right: clamp(20px, 4vw, 64px); bottom: 24px; z-index: 3; min-width: 44px; min-height: 44px; padding: 8px 16px; font: 500 13px 'IBM Plex Sans', sans-serif; color: #a09bb2; background: none; border: 1px solid rgba(244,237,224,.2); border-radius: 999px; cursor: pointer; }
-  .pause:hover { color: #f4ede0; }
-  /* Lens cursor: a small liquid-glass lens. The backdrop bends at the rim (SVG displacement, see #lensGlass) and is a
-     touch brighter and more saturated; specular highlights on the inner edge sell the glass. No handle, no ring. */
-  .lens-cursor { position: fixed; left: 0; top: 0; z-index: 6; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; pointer-events: none; opacity: 0; transition: opacity .15s;
-    backdrop-filter: url(#lensGlass) saturate(1.5) brightness(1.08); -webkit-backdrop-filter: blur(.6px) saturate(1.5) brightness(1.08);
-    box-shadow: inset 0 1.5px 1px rgba(255,255,255,.75), inset 0 -1px 2px rgba(255,255,255,.3), inset 0 0 0 1px rgba(255,255,255,.22), inset 0 10px 14px -10px rgba(255,255,255,.5), 0 6px 16px rgba(0,0,0,.35); }
-  .lens-cursor.on { opacity: 1; }
-  /* Story: iMessage bubbles floating in the scene beside the subject (the camera centres it), no panel behind them. */
-  .story { position: fixed; z-index: 5; left: calc(50% + 70px); top: 50%; transform: translateY(-50%); width: min(320px, calc(100vw - 32px)); display: flex; flex-direction: column; align-items: flex-start; gap: 8px; pointer-events: none; opacity: 0; transition: opacity .25s; }
-  .story.open { opacity: 1; }
-  .story-tag { padding: 5px 12px; border-radius: 999px; background: #e0338a; color: #fff; font: 500 12px/1.3 'IBM Plex Sans', sans-serif; }
-  .story-list { list-style: none; padding: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-  .bubble { max-width: 100%; padding: 9px 14px; border-radius: 19px 19px 19px 6px; background: #2f6bf0; color: #fff; font: 15px/1.4 'IBM Plex Sans', sans-serif;
-    box-shadow: 0 6px 18px rgba(7,6,10,.35); transform-origin: 0 100%; animation: pop .3s cubic-bezier(.2,1.4,.4,1) both; }
-  .bubble.typing { display: flex; gap: 4px; padding: 12px 14px; }
-  .bubble.typing span { width: 6px; height: 6px; border-radius: 50%; background: #fff; opacity: .6; animation: dot 1s infinite; }
-  .bubble.typing span:nth-child(2) { animation-delay: .15s; } .bubble.typing span:nth-child(3) { animation-delay: .3s; }
-  .story-close { pointer-events: auto; margin-top: 6px; min-height: 40px; padding: 8px 16px; border-radius: 999px; border: 0; background: rgba(244,237,224,.92); color: #07060a; font: 500 13px 'IBM Plex Sans', sans-serif; cursor: pointer; }
-  .story-close:focus-visible, .stories button:focus-visible { outline: 2px solid #6aaef2; outline-offset: 2px; }
-  @keyframes pop { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
-  @keyframes dot { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(-3px); opacity: 1; } }
-  body.zoomed .hero-name, body.zoomed .hero-copy { opacity: 0 !important; transition: opacity .3s; }
-  /* Keyboard / screen-reader way into the stories: hidden until focused. */
-  .stories { position: fixed; z-index: 5; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 90vw;
-    clip-path: inset(50%); }
-  .stories:focus-within { clip-path: none; }
-  .stories button { min-height: 44px; padding: 8px 16px; border-radius: 999px; border: 0; background: #2c2a35; color: #f4ede0; font: 14px 'IBM Plex Sans', sans-serif; }
-  @media (max-width: 640px) { .story { top: auto; bottom: 24px; left: 16px; transform: none; } }
-  @media (prefers-reduced-motion: reduce) { .bubble, .bubble.typing span { animation: none; } .story { transition: none; } }
-  .hero-copy .now i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #f2401f; margin: 0 6px 1px 0; }
-  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  /* ===== Below the hero: dark sections that slide up over the fixed scene. Type: Caprasimo display, Plex text. ===== */
-  :root { --ink-bg: #0b0a10; --rule: rgba(244,237,224,.12); --muted: #a09bb2; --bone: #f4ede0; --cobalt: #2f6bf0; --mag: #e0338a; --margin: clamp(20px, 4vw, 64px); --gutter: clamp(12px, 1.6vw, 24px); }
-  .work { position: relative; z-index: 4; margin-top: 100svh; background: var(--ink-bg); border-radius: 14px 14px 0 0; box-shadow: 0 -1px 0 var(--rule); }
-  .label { font: 500 13px/1.4 'IBM Plex Sans', sans-serif; font-variant-caps: all-small-caps; letter-spacing: .05em; color: var(--muted); }
-  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-
-  /* Projects */
-  .projects { padding: 88px 0 40px; }
-  .sec-head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 var(--margin) 28px; }
-  .sec-head h2 { font: clamp(34px, 4vw, 60px)/1 'Caprasimo', serif; }
-  .sec-link { color: var(--muted); text-decoration: none; font: 500 15px 'IBM Plex Sans', sans-serif; padding: 12px 0; }
-  .sec-link:hover { color: var(--bone); }
-  .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px 16px; padding: 0 var(--margin); }
-  .p-card { display: block; color: inherit; text-decoration: none; }
-  .p-card.feature { grid-column: 1 / -1; }
-  .p-img { position: relative; aspect-ratio: 3 / 2; border-radius: 6px; overflow: hidden; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
-  .p-card.feature .p-img { aspect-ratio: 21 / 9; }
-  .p-card:hover .p-img { transform: scale(.99); }
-  .p-card:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 6px; border-radius: 8px; }
-  .c-cobalt { background: #23319c; } .c-vermilion { background: #c7381d; } .c-bone { background: #e3dccd; }   /* the poster colours, one step quieter */
-  .phone { position: absolute; left: 50%; top: 50%; width: 15%; aspect-ratio: 9 / 19.5; transform: translate(-50%, -50%); border-radius: 16% / 7.5%; background: rgba(7,6,10,.88); box-shadow: inset 0 0 0 5px rgba(244,237,224,.14); }
-  .feature .phone { width: 9%; transform: translate(-115%, -50%); } .feature .phone + .phone { transform: translate(15%, -44%); }
-  .c-bone .phone { background: #141217; }
-  /* A hint of an app inside each phone: a header bar and two content cards. */
-  .phone::before { content: ''; position: absolute; inset: 12% 11% 14%; border-radius: 6px;
-    background: linear-gradient(rgba(244,237,224,.85) 0 0) 0 0 / 55% 6% no-repeat, linear-gradient(rgba(244,237,224,.16) 0 0) 0 16% / 100% 34% no-repeat, linear-gradient(rgba(244,237,224,.1) 0 0) 0 62% / 100% 24% no-repeat; }
-  .idx { margin-right: 14px; color: var(--muted); font: 500 13px 'IBM Plex Sans', sans-serif; font-variant-numeric: tabular-nums; vertical-align: 2px; }
-  .p-cap { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-top: 14px; }
-  .p-cap h3 { font: 500 20px/1.3 'IBM Plex Sans', sans-serif; }
-  .p-cap span { color: var(--muted); font: 14px 'IBM Plex Sans', sans-serif; }
-  .p-line { margin-top: 4px; padding-left: 33px; color: var(--muted); font: 14px/1.5 'IBM Plex Sans', sans-serif; }
-
-  /* Closing: a star chart drawn as you scroll. Fine points of light, hairline links, words in an italic serif.
-     Positions are computed from the stage size (separate layouts for wide and tall screens). The CTA is the caption
-     of the last star, so it lives inside the art. */
-  .sky-story { position: relative; height: 360vh; }
-  .sky-stage { position: sticky; top: 0; height: 100svh; overflow: hidden;
-    background: linear-gradient(180deg, #0b0a10 0%, #0b0a10 45%, #121430 100%); }   /* night deepening to a faint horizon */
-  .sky-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .sky-eyebrow { position: absolute; left: var(--margin); top: clamp(20px, 5vh, 48px); font: 500 12px/1.4 'IBM Plex Sans', sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #8d88a0; }
-  .sky-eyebrow b { color: var(--bone); font-weight: 500; }
-  .sky-word { position: absolute; font: italic 400 clamp(19px, 2.1vw, 34px)/1.15 'Instrument Serif', serif; letter-spacing: .005em; color: var(--bone); white-space: nowrap;
-    opacity: 0; filter: blur(6px); transform: translateY(6px); transition: opacity .7s, filter .7s, transform .7s cubic-bezier(.2,.8,.2,1); }
-  .sky-word.on { opacity: 1; filter: none; transform: none; }
-  .sky-word.left { text-align: right; }
-  .sky-cta { position: absolute; transform: translate(-50%, 12px); text-align: center; opacity: 0; pointer-events: none; transition: opacity .8s, transform .8s cubic-bezier(.2,.8,.2,1); width: min(820px, 92vw); }
-  .sky-cta.on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
-  .sky-cta h2 { font: 400 clamp(30px, 4vw, 58px)/1.05 'Instrument Serif', serif; letter-spacing: -.01em; margin-bottom: 22px; }
-  .sky-cta h2 em { color: #f5a3c7; }
-  .sky-cta .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-  .ghost { display: inline-flex; align-items: center; min-height: 56px; padding: 12px 24px; border-radius: 999px; color: var(--bone); text-decoration: none; font: 500 16px 'IBM Plex Sans', sans-serif; box-shadow: inset 0 0 0 1px rgba(244,237,224,.28); }
-  .ghost:hover { box-shadow: inset 0 0 0 1px var(--bone); }
-  .ghost:focus-visible { outline: 2px solid #6aaef2; outline-offset: 4px; }
-  .twinkle-a { animation: tw 4s ease-in-out infinite; } .twinkle-b { animation: tw 5.5s ease-in-out 1.2s infinite; } .twinkle-c { animation: tw 7s ease-in-out 2.4s infinite; }
-  @keyframes tw { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
-  @media (prefers-reduced-motion: reduce) { .twinkle-a, .twinkle-b, .twinkle-c { animation: none; } .sky-word, .sky-cta { transition: none; } }
-  .say { display: inline-flex; align-items: center; min-height: 56px; padding: 12px 28px; border-radius: 999px; background: var(--bone); color: #07060a; font: 500 17px/1 'IBM Plex Sans', sans-serif; text-decoration: none; box-shadow: 3px 3px 0 var(--mag); transition: transform .15s, box-shadow .15s; }
-  .say:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--mag); }
-  .say:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--mag); }
-  .say:focus-visible { outline: 2px solid #6aaef2; outline-offset: 4px; }
-  .foot-meta { display: flex; justify-content: space-between; gap: 16px; padding: 16px var(--margin) 20px; border-top: 1px solid var(--rule); }
-  .foot-meta a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
-  .foot-meta a:hover { color: var(--bone); }
-  @media (max-width: 760px) {
-    .p-grid { grid-template-columns: 1fr; } .p-card.feature .p-img { aspect-ratio: 4 / 3; }
-    .sec-head h2 { font-size: 30px; } .sec-link { white-space: nowrap; font-size: 14px; }
-  }
-  .loading { position: fixed; inset: 0; display: grid; place-items: center; z-index: 4; font: 500 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; color: #8d88a0; pointer-events: none; transition: opacity .6s; }
-</style>
-<script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "lil-gui": "https://unpkg.com/lil-gui@0.19.2/dist/lil-gui.esm.js" } }</script>
-</head>
-<body>
-<span id="top"></span>
-<canvas id="stars" aria-hidden="true"></canvas>
-<canvas id="gl" role="img" aria-label="A 3D stadium bowl at night holding four years of Manipal. Snowy ranges fill the far stands: two trekkers climb a switchback trail to a summit, three skiers carve down a groomed run, and a glacier pours into the Arabian Sea, where friends swim and splash. On the right, Student Plaza sits in the foothills with friends on its steps, and Royal Embassy rises out of the clouds above the bay. On the red ground NCC cadets drill, a boxer shadow-boxes, a cyclist rides, and Gaurav fixes his go-kart, then laps the whole bowl in it. A black scoreboard reads '26."></canvas>
-<div class="grain"></div>
-<div class="loading">Building the bowl…</div>
-<svg class="hero-name" aria-hidden="true"><path id="nameArc" fill="none"/><text><textPath href="#nameArc" startOffset="50%" text-anchor="middle">GAURAV GUPTA</textPath></text></svg>
-<div class="hero-copy">
-  <h1 class="sr-only">Gaurav Gupta</h1>
-  <p class="role">Associate Product Manager <span>with a design habit.</span></p>
-  <p class="now">Building Wylde &middot; <i aria-hidden="true"></i>Open to new roles</p>
-  <a class="next" href="#work">See the work &darr;</a>
-</div>
-<button class="pause" type="button" aria-pressed="false">Pause</button>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="lensGlass" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
-  <feImage id="lensMap" x="0" y="0" width="46" height="46" preserveAspectRatio="none" result="map"/>
-  <feDisplacementMap in="SourceGraphic" in2="map" scale="22" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
-<div class="lens-cursor" aria-hidden="true"></div>
-<div class="story" aria-live="polite">
-  <span class="story-tag"></span>
-  <ol class="story-list"></ol>
-  <button class="story-close" type="button">&times; Back to the bowl</button>
-</div>
-<nav class="stories" aria-label="Stories in the scene">
-  <button type="button" data-story="kart">The kart</button><button type="button" data-story="trek">Summit day</button><button type="button" data-story="ski">First runs</button><button type="button" data-story="sp">SP steps</button><button type="button" data-story="endpoint">End Point</button><button type="button" data-story="ncc">NCC drill</button><button type="button" data-story="sea">The beach</button><button type="button" data-story="embassy">Royal Embassy</button>
-</nav>
-<nav class="nav" aria-label="Primary"><span class="wordmark">GG</span><span class="links"><a href="#work">Work</a><a href="#">About</a><a href="#hello">Say hello</a></span></nav>
-
-<main class="work" id="work">
-  <!-- Projects: Analogue's header row + Jarcos' big colour-field cards with a two-part caption. Dark, like the scene. -->
-  <section class="projects" aria-labelledby="work-title">
-    <header class="sec-head">
-      <h2 id="work-title">Selected work</h2>
-      <a class="sec-link" href="#">All projects &rarr;</a>
-    </header>
-    <div class="p-grid">
-      <a class="p-card feature" href="#">
-        <div class="p-img c-cobalt"><i class="phone" aria-hidden="true"></i><i class="phone" aria-hidden="true"></i></div>
-        <div class="p-cap"><h3><span class="idx">01</span>Wylde</h3><span>Product, Design</span></div>
-        <p class="p-line">Building now.</p>
-      </a>
-      <a class="p-card" href="#">
-        <div class="p-img c-vermilion"><i class="phone" aria-hidden="true"></i></div>
-        <div class="p-cap"><h3><span class="idx">02</span>Project two</h3><span>iOS · 2025</span></div>
-        <p class="p-line">One line on what it does.</p>
-      </a>
-      <a class="p-card" href="#">
-        <div class="p-img c-bone"><i class="phone" aria-hidden="true"></i></div>
-        <div class="p-cap"><h3><span class="idx">03</span>Project three</h3><span>iOS · 2024</span></div>
-        <p class="p-line">One line on what it does.</p>
-      </a>
-    </div>
-  </section>
-
-  <!-- Closing: scroll draws a star chart that spells the line; its last star carries the CTA. -->
-  <section class="sky-story" id="hello" aria-labelledby="sky-line">
-    <div class="sky-stage">
-      <svg aria-hidden="true"></svg>
-      <p class="sky-eyebrow" aria-hidden="true"><b>Fig. 08</b> &nbsp;A constellation of small teams</p>
-      <p class="sr-only" id="sky-line">Different people, different rhythms, but we share the same spaces on the internet. Let's make it beautiful.</p>
-      <div class="sky-cta">
-        <h2>Let's make something <em>people love.</em></h2>
-        <div class="row"><a class="say" href="#">Say hello</a><a class="ghost" href="#">Download resume</a></div>
-      </div>
-    </div>
-  </section>
-  <footer class="foot-meta label"><span>© 2026 Gaurav Gupta · Bengaluru</span><a href="#top">Back to the bowl ↑</a></footer>
-</main>
-
-<script>
-/* Below-the-hero behaviour: the closing constellation and the glass lens map. */
-(() => {
-  const NS = 'http://www.w3.org/2000/svg', REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent && parent.append(n); return n; };
-
-  /*
-   * The star chart. Each fragment of the line belongs to a star. Stars sit on normalised positions (one layout for
-   * wide screens, one for tall ones) and are laid out in pixels from the stage size on every resize. Scroll progress
-   * draws a hairline from star to star; a star ignites when the line reaches it and its words resolve out of a blur.
-   * The last star has no words of its own: the CTA is its caption.
-   */
-  const FRAGS = ['different people,', 'different rhythms,', 'but we share', 'the same spaces', 'on the internet.', "let's make it", 'beautiful.'];
-  // [x, y, side] in stage fractions; side = which side of the star the words sit (r / l / t = above).
-  const WIDE = [[.12, .2, 'r'], [.31, .33, 'r'], [.54, .17, 'r'], [.76, .3, 'l'], [.62, .45, 'l'], [.33, .5, 'r'], [.5, .6, 't']];
-  const TALL = [[.12, .13, 'r'], [.84, .2, 'l'], [.16, .28, 'r'], [.86, .35, 'l'], [.14, .43, 'r'], [.84, .5, 'l'], [.5, .58, 't']];
-  const DRAW = [.06, .84];                       // scroll share of the section that draws the chart; the CTA follows
-  const story = document.querySelector('.sky-story'), stage = story.querySelector('.sky-stage'), svg = stage.querySelector('svg'), cta = stage.querySelector('.sky-cta');
-  let rnd = 11; const rand = () => (rnd = (rnd * 16807) % 2147483647) / 2147483647;
-  let chart = null;
-  function buildChart() {
-    rnd = 11; svg.replaceChildren(); stage.querySelectorAll('.sky-word').forEach(n => n.remove());
-    const w = stage.clientWidth, h = stage.clientHeight, layout = w / h < .9 ? TALL : WIDE;
-    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-    const defs = el('defs', {}, svg), f = el('filter', { id: 'starGlow', x: '-200%', y: '-200%', width: '500%', height: '500%' }, defs);
-    el('feGaussianBlur', { stdDeviation: 4 }, f);
-    // Faint chart furniture: two great-circle arcs, like a star atlas.
-    for (const [cy, r, op] of [[h * 1.35, h * 1.05, .07], [h * 1.6, h * 1.45, .05]]) el('circle', { cx: w * .5, cy, r, fill: 'none', stroke: '#f4ede0', 'stroke-width': 1, 'stroke-dasharray': '2 6', opacity: op }, svg);
-    // Field stars: many tiny points in three twinkle groups.
-    const groups = ['twinkle-a', 'twinkle-b', 'twinkle-c'].map(c => el('g', { class: c }, svg)), n = Math.round(w * h / 3200);
-    for (let i = 0; i < n; i++) el('circle', { cx: (rand() * w).toFixed(1), cy: (rand() * h).toFixed(1), r: (rand() < .92 ? .5 + rand() * .5 : 1 + rand() * .6).toFixed(2), fill: '#f4ede0', opacity: (.15 + rand() * .55).toFixed(2) }, groups[i % 3]);
-    // Constellation.
-    const P = layout.map(([x, y, side]) => ({ x: x * w, y: y * h, side }));
-    const links = [];
-    for (let i = 0; i < P.length - 1; i++) {
-      const a = P[i], b = P[i + 1], len = Math.hypot(b.x - a.x, b.y - a.y);
-      const ln = el('line', { x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: '#f4ede0', 'stroke-width': 1, opacity: .55, 'stroke-dasharray': len, 'stroke-dashoffset': len }, svg);
-      links.push({ el: ln, len });
-    }
-    const tint = ['#9cc9f5', '#f5a3c7', '#f6dc8c', '#c4b2f0', '#9cc9f5', '#f5a3c7', '#f6dc8c'];
-    const stars = P.map((p, i) => {
-      const g = el('g', { transform: `translate(${p.x} ${p.y})`, opacity: .35 }, svg), big = i === P.length - 1 ? 1.6 : 1;
-      const glow = el('circle', { r: 7 * big, fill: tint[i], filter: 'url(#starGlow)', opacity: 0 }, g);
-      el('path', { d: `M0 ${-11 * big} V${11 * big} M${-11 * big} 0 H${11 * big}`, stroke: '#f4ede0', 'stroke-width': .8, opacity: .6 }, g);      // diffraction spikes
-      el('circle', { r: 2.2 * big, fill: '#fffaf0' }, g);
-      return { g, glow };
-    });
-    // Words beside their stars (HTML, so they are crisp and use the real font).
-    const words = FRAGS.map((t, i) => {
-      const p = P[i], d = document.createElement('span'); d.className = 'sky-word' + (p.side === 'l' ? ' left' : ''); d.textContent = t; stage.append(d);
-      const off = 18;
-      if (p.side === 'r') Object.assign(d.style, { left: `${p.x + off}px`, top: `${p.y}px`, translate: '0 -55%' });
-      else if (p.side === 'l') Object.assign(d.style, { right: `${w - p.x + off}px`, top: `${p.y}px`, translate: '0 -55%' });
-      else Object.assign(d.style, { left: `${p.x}px`, top: `${p.y - off}px`, translate: '-50% -100%' });
-      return d;
-    });
-    // CTA: the caption of the last star, centred under it.
-    const last = P.at(-1); Object.assign(cta.style, { left: `${last.x}px`, top: `${last.y + 34}px` });
-    chart = { links, stars, words };
-  }
-  const ease = (u) => 1 - Math.pow(1 - u, 3);
-  function drawChart() {
-    if (!chart) return;
-    const r = story.getBoundingClientRect(), k = REDUCED ? 1 : Math.max(0, Math.min(1, -r.top / (r.height - innerHeight)));
-    const prog = Math.max(0, Math.min(1, (k - DRAW[0]) / (DRAW[1] - DRAW[0]))), n = chart.links.length, f = prog * n;
-    chart.links.forEach((l, i) => { const u = Math.max(0, Math.min(1, f - i)); l.el.setAttribute('stroke-dashoffset', (l.len * (1 - ease(u))).toFixed(1)); });
-    chart.stars.forEach((s, i) => { const lit = i === 0 ? Math.min(1, prog * 8) : Math.max(0, Math.min(1, (f - (i - 1)) * 1.2 - .2)); s.g.setAttribute('opacity', (.35 + .65 * lit).toFixed(2)); s.glow.setAttribute('opacity', (lit * .55).toFixed(2)); });
-    chart.words.forEach((d, i) => d.classList.toggle('on', i === 0 ? prog > .02 : f >= i - .05));
-    cta.classList.toggle('on', prog >= 1);
-  }
-  const rebuild = () => { buildChart(); drawChart(); };
-  document.fonts.load('italic 30px "Instrument Serif"').finally(rebuild);
-  addEventListener('scroll', drawChart, { passive: true });
-  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(rebuild, 120); });
-
-  /*
-   * Liquid-glass lens: an SVG displacement map that bends the backdrop like a convex lens (strongest at the rim,
-   * none in the middle), used through backdrop-filter. The map is drawn once: red = x shift, green = y shift.
-   */
-  const S = 128, c = document.createElement('canvas'); c.width = c.height = S; const x = c.getContext('2d'), img = x.createImageData(S, S);
-  for (let j = 0; j < S; j++) for (let i = 0; i < S; i++) {
-    const u = (i / (S - 1)) * 2 - 1, v = (j / (S - 1)) * 2 - 1, r = Math.hypot(u, v), k = (j * S + i) * 4;
-    const bend = r < 1 ? Math.pow(r, 2.2) : 0;                                   // edge refraction, calm centre
-    img.data[k] = 128 - u * bend * 127; img.data[k + 1] = 128 - v * bend * 127; img.data[k + 2] = 128; img.data[k + 3] = 255;
-  }
-  x.putImageData(img, 0, 0);
-  document.getElementById('lensMap')?.setAttribute('href', c.toDataURL());
-})();
-</script>
-
-<script type="module">
+/*
+ * The stadium: four years of Manipal in one 3D bowl (three.js). Ported from the single-file prototype as plain
+ * JavaScript: it is ~1,900 lines of procedural geometry where types would add noise, not safety. The typed surface is
+ * the one function below (see stadium.d.ts).
+ */
 import * as THREE from 'three';
-import GUI from 'lil-gui';
+import { batchRigid } from './batch';
+import { createRenderer } from './renderer';
+import { createGovernor, pickQuality } from './quality';
 
+/** Hand the main thread back between build steps, so the page stays responsive while the bowl is built. */
+const breathe = () => new Promise((done) => { const c = new MessageChannel(); c.port1.onmessage = () => done(); c.port2.postMessage(0); });
+
+export async function mountStadium(root, { showPanel = false, force } = {}) {
+const Q = pickQuality();
+let disposed = false;
+const listeners = new AbortController();
+const on = (target, type, fn, opts = {}) => target.addEventListener(type, fn, { ...opts, signal: listeners.signal });
 const TAU = Math.PI * 2, PI = Math.PI;
 const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* Tweakable parameters: every "variable factor" lives here, persisted in localStorage. */
@@ -325,11 +37,13 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, v); } catch { /* not saved: storage unavailable */ } },
   remove(k) { try { localStorage.removeItem(k); } catch { /* storage unavailable */ } },
 };
-let saved = {}; try { saved = JSON.parse(store.get(TWEAK_KEY) || '{}'); } catch { saved = {}; }
+let saved = {}; try { if (showPanel) saved = JSON.parse(store.get(TWEAK_KEY) || '{}'); } catch { saved = {}; }
 const P = Object.assign({}, DEFAULTS, saved);
 const SETTINGS = P;   // alias for places where a local `P` (vertex positions) shadows the settings
 let SEED = P.seed;
 
+/* Materials and triangles whose colour depends on the page theme (see setTone). */
+const THEMED = { ground: [], dashes: [], outer: [] };
 /* ================= world constants (world units) ================= */
 const RF = 6.2;            // field radius
 const RR = 10;             // rim radius
@@ -517,10 +231,14 @@ function heightAt(x, z) {
 }
 
 /* ================= renderer / scene / camera ================= */
-const gl = document.getElementById('gl');
-const renderer = new THREE.WebGLRenderer({ canvas: gl, antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const gl = root.querySelector('#gl');
+const VW = () => gl.clientWidth || innerWidth, VH = () => gl.clientHeight || innerHeight;   // the hero box: stable when a phone's URL bar moves
+const renderer = await createRenderer(gl, { antialias: Q.antialias, force });
+renderer.setPixelRatio(Q.pixelRatio);
+// WebGPU blends in linear light, WebGL in display space: the same opacity reads far brighter there. These bring them level.
+const LINEAR_BLEND = Boolean(renderer.isWebGPURenderer), GLOW = LINEAR_BLEND ? .14 : 1, CLOUD = LINEAR_BLEND ? .34 : 1;
+const governor = createGovernor(Q.pixelRatio, (k) => { renderer.setPixelRatio(k); renderer.setSize(VW(), VH(), false); });
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap;
 renderer.toneMapping = THREE.NoToneMapping;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 const scene = new THREE.Scene();
@@ -532,7 +250,7 @@ const hemi = new THREE.HemisphereLight(0xffffff, 0x4a4a5a, .9); scene.add(hemi);
 scene.add(new THREE.AmbientLight(0x404060, .25));
 const moon = new THREE.DirectionalLight(0xfff8ee, 2.1);
 moon.position.set(-15, 10.5, 9); moon.castShadow = true;
-moon.shadow.mapSize.set(2048, 2048);
+moon.shadow.mapSize.set(Q.shadowSize, Q.shadowSize); moon.shadow.autoUpdate = false;   // refreshed every few frames, see tick()
 Object.assign(moon.shadow.camera, { left: -16, right: 16, top: 16, bottom: -16, near: 1, far: 60 });
 moon.shadow.bias = -.0008;
 scene.add(moon);
@@ -558,7 +276,7 @@ const softTex = canvasTex(128, 128, (x, w) => {
 
 /* ================= terrain: bowl + ranges + stands ================= */
 function buildTerrain() {
-  const SIZE = 46, SEG = 300;
+  const SIZE = 46, SEG = Q.terrainSegments;
   let geo = new THREE.PlaneGeometry(SIZE, SIZE, SEG, SEG);
   geo.rotateX(-PI / 2);
   const p = geo.attributes.position;
@@ -612,6 +330,7 @@ function buildTerrain() {
     }
     // Red sections (meadows / "green peaks") get a dark crowd, like the original's red blocks.
     if (ledge && (c === pick.g1 || c === pick.g2 || c === pick.g3) && r < .4 && epMask(cx, cz) === 0) crowdD.push(cx, cy, cz);
+    if (c === pick.black) THEMED.outer.push(i);
     tmp.copy(c);
     for (let k = 0; k < 3; k++) { cols[(i + k) * 3] = tmp.r; cols[(i + k) * 3 + 1] = tmp.g; cols[(i + k) * 3 + 2] = tmp.b; }
   }
@@ -637,11 +356,12 @@ function buildRimEdge() {
   mesh(ring2, basic(C.white), 0, WALL + .016, 0, scene, false);
 }
 function buildSurround() {
-  const ink = new THREE.MeshBasicMaterial({ color: 0x07060a });
+  const ink = new THREE.MeshBasicMaterial({ color: 0x07060a }), wallInk = new THREE.MeshBasicMaterial({ color: 0x07060a, side: THREE.BackSide });
   mesh(new THREE.RingGeometry(RR - .02, 90, 128, 1).rotateX(-PI / 2), ink, 0, WALL - .02, 0, scene, false);
-  mesh(new THREE.CylinderGeometry(RR, RR, 12, 128, 1, true), new THREE.MeshBasicMaterial({ color: 0x07060a, side: THREE.BackSide }), 0, WALL - 6.02, 0, scene, false);
+  mesh(new THREE.CylinderGeometry(RR, RR, 12, 128, 1, true), wallInk, 0, WALL - 6.02, 0, scene, false);
   // Dash stars lying on the black ground (short white slivers, a few double).
   const g = new THREE.PlaneGeometry(1, 1).rotateX(-PI / 2), star = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true });
+  THEMED.ground.push(ink, wallInk); THEMED.dashes.push(star);
   const n = 900, inst = new THREE.InstancedMesh(g, star, n), M = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler();
   for (let i = 0; i < n; i++) {
     const a = Math.random() * TAU, r = RR + 1 + Math.pow(Math.random(), .6) * 60;
@@ -656,7 +376,7 @@ function buildSurround() {
 /* ================= field ================= */
 const fieldTex = canvasTex(1024, 1024, (x, w, h) => {
   x.fillStyle = C.red; x.fillRect(0, 0, w, h);
-  for (let k = 0; k < 90000; k++) { x.fillStyle = Math.random() < .6 ? 'rgba(150,20,8,.14)' : 'rgba(255,190,160,.12)'; x.fillRect(Math.random() * w, Math.random() * h, 2, 2); }
+  for (let k = 0; k < Q.grainDots; k++) { x.fillStyle = Math.random() < .6 ? 'rgba(150,20,8,.14)' : 'rgba(255,190,160,.12)'; x.fillRect(Math.random() * w, Math.random() * h, 2, 2); }
 });
 const ground = (y) => y + .002;
 function buildField() {
@@ -699,14 +419,14 @@ function buildWater() {
   beach.moveTo(...bp[0]); bp.forEach(p => beach.lineTo(...p));
   mesh(new THREE.ShapeGeometry(beach, 64).rotateX(PI / 2), std(C.bone, { flatShading: false, side: THREE.DoubleSide }), 0, .016, 0, scene, false);
   // Sea surface: a dense grid clipped to the sea, displaced every frame by swells rolling in to the shore.
-  let g = new THREE.PlaneGeometry(13, 13, 160, 160).rotateX(-PI / 2); g = g.toNonIndexed();
+  let g = new THREE.PlaneGeometry(13, 13, Q.seaSegments, Q.seaSegments).rotateX(-PI / 2); g = g.toNonIndexed();
   const src = g.attributes.position.array, keep = [];
   const inSea = (x, z) => Math.hypot(x, z) < RF - .03 && SEA_LINE(x, z) > -.02;
   for (let i = 0; i < src.length; i += 9) if (inSea(src[i], src[i + 2]) && inSea(src[i + 3], src[i + 5]) && inSea(src[i + 6], src[i + 8])) for (let k = 0; k < 9; k++) keep.push(src[i + k]);
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(keep, 3));
   geo.setAttribute('color', new THREE.Float32BufferAttribute(new Float32Array(keep.length), 3));
-  geo.userData.base = Float32Array.from(keep);
+  geo.computeVertexNormals(); geo.userData.base = Float32Array.from(keep);
   sea = mesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: .35, metalness: .05 }), 0, 0, 0, scene, false);
   // Surf: three foam lines that run up the sand and slide back, plus a wet-sand band behind them.
   const along = new THREE.Vector2(SHORE_N.y, -SHORE_N.x);
@@ -751,7 +471,7 @@ function updateSea(t) {
     else if (d < .7) cc.copy(SEA_COLS.shallow); else if (d < 1.6) cc.copy(SEA_COLS.mid); else cc.copy(SEA_COLS.deep);
     for (let k = 0; k < 3; k++) cc.toArray(colA.array, (i + k) * 3);
   }
-  pos.needsUpdate = true; colA.needsUpdate = true; sea.geometry.computeVertexNormals();
+  pos.needsUpdate = true; colA.needsUpdate = true;                // flat shading needs no vertex normals
   // Swash: each foam line runs up the beach and slides back, staggered by a third of a cycle.
   foams.forEach((f, k) => {
     const ph = (t * .32 + k / 3) % 1, run = Math.sin(ph * PI) * .55;
@@ -847,7 +567,7 @@ function buildScoreboard() {
     const px = oc.getImageData(0, 0, w, h).data, G = 10;
     c.fillStyle = '#050407'; c.fillRect(0, 0, w, h);
     for (let yy = G / 2; yy < h; yy += G) for (let xx = G / 2; xx < w; xx += G) {
-      const on = px[((yy | 0) * w + (xx | 0)) * 4] > 120; c.fillStyle = on ? (xx < w * .3 ? C.red : '#fff6dc') : '#17151d';
+      const on = px[((yy | 0) * w + (xx | 0)) * 4] > 120; c.fillStyle = on ? (xx < w * .3 ? C.red : '#fff6dc') : '#4a4556';
       c.beginPath(); c.arc(xx, yy, on ? 3.8 : 2.6, 0, TAU); c.fill();
     }
   });
@@ -883,7 +603,7 @@ function updateClouds(t) {
   embassyClouds.forEach(c => {
     const u = ((c.x0 + t * c.v + CLOUD_SPAN) % (2 * CLOUD_SPAN) + 2 * CLOUD_SPAN) % (2 * CLOUD_SPAN) - CLOUD_SPAN;
     c.s.position.set(c.cx + u, c.y0 + Math.sin(t * .3 + c.ph) * .06, c.z);
-    c.s.material.opacity = .5 * (1 - smooth(CLOUD_SPAN * .6, CLOUD_SPAN, Math.abs(u)));
+    c.s.material.opacity = .5 * CLOUD * (1 - smooth(CLOUD_SPAN * .6, CLOUD_SPAN, Math.abs(u)));
   });
 }
 function buildEmbassy() {
@@ -1115,10 +835,24 @@ let snow;
 function buildSnow() {
   const n = towers.length * SNOW_PER_TOWER, pos = new Float32Array(n * 3), meta = [];
   for (let i = 0; i < n; i++) { const T = towers[i % towers.length]; meta.push({ T, v: .5 + Math.random() * .8, sway: Math.random() * TAU }); resetFlake(pos, i, meta[i], true); }
-  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  // Quads that face the camera (WebGPU draws points one pixel wide).
+  const geo = new THREE.BufferGeometry(), uv = new Float32Array(n * 8), index = new Uint16Array(n * 6);
+  for (let i = 0; i < n; i++) { uv.set([0, 0, 1, 0, 1, 1, 0, 1], i * 8); index.set([0, 1, 2, 0, 2, 3].map(k => i * 4 + k), i * 6); }
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 12), 3).setUsage(THREE.DynamicDrawUsage)); geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); geo.setIndex(new THREE.BufferAttribute(index, 1));
   const dotTex = canvasTex(32, 32, (x, w) => { const g = x.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2); g.addColorStop(0, '#fff'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, w, w); });
-  snow = new THREE.Points(geo, new THREE.PointsMaterial({ size: P.snowSize, map: dotTex, transparent: true, depthWrite: false, color: 0xffffff }));
-  snow.userData.meta = meta; scene.add(snow);
+  snow = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: dotTex, transparent: true, depthWrite: false, color: 0xffffff }));
+  snow.frustumCulled = false; snow.userData = { meta, pos }; scene.add(snow);
+}
+const FLAKE_SCALE = .134, snowX = new THREE.Vector3(), snowY = new THREE.Vector3(), snowZ = new THREE.Vector3();   // half of tan(15°): matches the size of the old points
+/** Turn the flake positions into quads facing the camera. */
+function layFlakes() {
+  camera.matrixWorld.extractBasis(snowX, snowY, snowZ); const k = P.snowSize * FLAKE_SCALE; snowX.multiplyScalar(k); snowY.multiplyScalar(k);
+  const src = snow.userData.pos, attr = snow.geometry.attributes.position, out = attr.array;
+  for (let i = 0, n = src.length / 3; i < n; i++) for (let c = 0; c < 3; c++) {
+    const p0 = src[i * 3 + c], rx = snowX.getComponent(c), uy = snowY.getComponent(c);
+    out[i * 12 + c] = p0 - rx - uy; out[i * 12 + 3 + c] = p0 + rx - uy; out[i * 12 + 6 + c] = p0 + rx + uy; out[i * 12 + 9 + c] = p0 - rx + uy;
+  }
+  attr.needsUpdate = true;
 }
 function resetFlake(pos, i, m, anywhere) {
   const h = m.T.head, k = anywhere ? Math.random() : 0;
@@ -1196,7 +930,7 @@ function updateEndPoint(t) {
   EP_STEAM.forEach(({ s, ph }) => {
     const u = (t * .35 + ph) % 1;
     s.position.set(-.16 + Math.sin(u * 6 + ph * 9) * .03, .38 + u * .45, .15); s.scale.setScalar(.06 + u * .16);
-    s.material.opacity = Math.sin(u * PI) * .55;
+    s.material.opacity = Math.sin(u * PI) * .55 * CLOUD;
   });
   // Chaiwala: pours from height into a glass (the long "pull"), then hands it over the counter.
   const W = actors.chaiwala, pour = (t * .5) % 1;
@@ -1838,84 +1572,119 @@ function updateActors(t, dt) {
 }
 
 /* ================= stars (2D canvas behind the render) ================= */
+let starSeed = 5;
+const starRand = () => (starSeed = (starSeed * 16807) % 2147483647) / 2147483647;     // seeded: the sky does not reshuffle on resize
 function drawStars() {
-  const c = document.getElementById('stars'), dpr = Math.min(devicePixelRatio, 2);
-  c.width = innerWidth * dpr; c.height = innerHeight * dpr;
+  const c = root.querySelector('#stars'), dpr = Math.min(devicePixelRatio, 2), w = VW(), h = VH(), T = TONES[tone];
+  starSeed = 5; c.width = w * dpr; c.height = h * dpr;
   const x = c.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0);
-  x.fillStyle = C.black; x.fillRect(0, 0, innerWidth, innerHeight); x.lineCap = 'round';
-  for (let k = 0; k < innerWidth * innerHeight / 7000; k++) {
-    const px = Math.random() * innerWidth, py = Math.random() * innerHeight, a = -.3 + Math.random() * .6, l = 1.5 + Math.random() ** 2 * 9;
-    x.strokeStyle = `rgba(255,255,255,${(.35 + Math.random() * .6).toFixed(2)})`; x.lineWidth = Math.random() < .85 ? 1.2 : 2;
+  x.fillStyle = heroBg(); x.fillRect(0, 0, w, h); x.lineCap = 'round';
+  for (let k = 0; k < w * h / 7000; k++) {
+    const px = starRand() * w, py = starRand() * h, a = -.3 + starRand() * .6, l = 1.5 + starRand() ** 2 * 9;
+    x.strokeStyle = `rgba(${T.dash},${(.35 + starRand() * .6).toFixed(2)})`; x.lineWidth = starRand() < .85 ? 1.2 : 2;
     x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(a) * l, py + Math.sin(a) * l); x.stroke();
   }
 }
 
+/* ================= light and dark ================= */
+const TONES = {
+  dark: { dash: '255,255,255', dashHex: 0xffffff, outer: null, snow: 0xffffff, sun: 0, sky: 1, side: 1, lamps: 1 },
+  light: { dash: '214,205,188', dashHex: 0xddd5c4, outer: '#2f55e6', snow: 0xffffff, sun: 1.5, sky: 1.25, side: .6, lamps: .25 },   // daylight
+};
+/** The ground is the page's own hero colour, so the bowl always sits flush in it. */
+const heroBg = () => getComputedStyle(document.documentElement).getPropertyValue('--hero-bg').trim();
+let tone = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+/** Night poster or day poster: ground, dash marks, the outer faces of the range, snowfall and the additive light effects. */
+function setTone(next) {
+  tone = next; const T = TONES[tone];
+  THEMED.ground.forEach(mat => mat.color.set(heroBg())); THEMED.dashes.forEach(mat => mat.color.set(T.dashHex));
+  const colA = terrainMesh.geometry.attributes.color, c = new THREE.Color(T.outer ?? heroBg());
+  THEMED.outer.forEach(i => { for (let k = 0; k < 3; k++) colA.setXYZ(i + k, c.r, c.g, c.b); }); colA.needsUpdate = true;
+  snow.material.color.set(T.snow);
+  // Additive glows only exist against a dark sky; on paper they would read as grey smudges.
+  [...beams, ...hazes].forEach(o => { o.visible = tone === 'dark'; });
+  drawStars(); lightScene();
+}
+function lightScene() {
+  const T = TONES[tone];
+  renderer.toneMappingExposure = P.exposure; moon.intensity = P.moon + T.sun; moon.visible = moon.castShadow = moon.intensity > 0; sideLight.intensity = P.side * T.side; hemi.intensity = P.sky * T.sky;
+  spots.forEach(s => { s.intensity = P.towerLight * T.lamps; });
+}
+
 const FRAME_TARGET = new THREE.Vector3(0, 2.2, -1.2);
 /* ================= camera framing ================= */
+const PHONE_W = 640, TABLET_W = 1100;
+const ART_FILL = { phone: .95, tablet: .86 };        // share of the screen width the artwork fills (desktop uses P.size)
+const NAME_FILL = { phone: .9, tablet: .88, desktop: .8 }, NAME_MAX_H = { phone: .11, tablet: .13, desktop: .17 };   // name: share of width, cap as share of height
+const NAME_TRACK = .02, NAME_SAG = { phone: .06, tablet: .05, desktop: .045 };          // letter spacing (em), how deep the curve dips (share of its width)
+const STACK = { nav: 76, artToName: .012, nameToCopy: 10, bottom: 22 };
+const SWING_MAX = 24;                                 // degrees the visitor can turn the bowl each way; the tilt never changes
+const heroNameEl = root.querySelector('.hero-name'), heroCopyEl = root.querySelector('.hero-copy');
+const FRAME = { dist: 40, ox: 0, oy: 0, swing: 0 };
+/** Points that bound the drawing: the rim, the range and towers behind it, the Embassy. */
+const ART_POINTS = (() => {
+  const pts = [];
+  for (let k = 0; k < 64; k++) { const a = k / 64 * TAU; pts.push([Math.cos(a) * (RR + .1), WALL, Math.sin(a) * (RR + .1)]); if (mtnW(a) > .4) pts.push([Math.cos(a) * (RR + .6), WALL + 5, Math.sin(a) * (RR + .6)], [Math.cos(a) * (RR + 1.9), WALL, Math.sin(a) * (RR + 1.9)]); }
+  LAY.towers.forEach(([a, d, h]) => pts.push([Math.cos(a) * d, h + 3.4, Math.sin(a) * d]));
+  const e = placeAt(LAY.embassy[0], LAY.embassy[1]); pts.push([e[0], e[1] + 6.8, e[2]]);
+  return pts.map(p => new THREE.Vector3(...p));
+})();
+function poseCamera() {
+  const el = P.elevation * PI / 180, yaw = (P.yaw + FRAME.swing) * PI / 180, flat = Math.cos(el) * FRAME.dist;
+  camera.position.set(FRAME_TARGET.x + Math.sin(yaw) * flat, FRAME_TARGET.y + Math.sin(el) * FRAME.dist, FRAME_TARGET.z + Math.cos(yaw) * flat);
+  camera.lookAt(FRAME_TARGET); camera.updateMatrixWorld();
+}
+function artBox() {
+  const w = VW(), h = VH(); let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; const v = new THREE.Vector3();
+  ART_POINTS.forEach(p => { v.copy(p).project(camera); const x = (v.x + 1) / 2 * w, y = (1 - v.y) / 2 * h; x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); });
+  return { x0, x1, y0, y1, w: x1 - x0, h: y1 - y0 };
+}
+/*
+ * Everything in the hero is stacked from measurements, so nothing can leave the screen: nav, artwork, name, copy.
+ * The camera distance is solved until the projected artwork fills its share of the width or runs out of height.
+ */
 function frameCamera() {
-  const w = innerWidth, h = innerHeight, aspect = w / h;
-  renderer.setSize(w, h, false);
-  camera.aspect = aspect;
-  camera.fov = 30;
-  // Elevation ~32° gives the original's ellipse ratio (~0.52). Distance is set so the bowl + ranges
-  // fill ~60% of the screen width (40% smaller than full-bleed), centred.
-  const ELEV = P.elevation * PI / 180, SPAN = 30;                         // world width of the whole illustration
-  // Screen-size framing: phones edge to edge (little padding), tablets a bit wider than desktop, desktop uses the panel's
-  // "Size on screen" (default .75). The camera also backs off if the bowl would be too tall for the screen, so the
-  // whole stadium and the name always fit.
-  const size = w < MOBILE_W ? SIZE_PHONE : w < TABLET_W ? Math.max(P.size, SIZE_TABLET) : P.size;
-  const fitW = SPAN / size, hfov = 2 * Math.atan(Math.tan(camera.fov * PI / 360) * aspect), vfov = camera.fov * PI / 180;
-  const dist = Math.max(fitW / 2 / Math.tan(hfov / 2), (SPAN * BOWL_H) / (h < 560 ? .5 : .62) / 2 / Math.tan(vfov / 2), 12);
-  const target = FRAME_TARGET;
-  const yaw = P.yaw * PI / 180, horiz = Math.cos(ELEV) * dist;
-  camera.position.set(Math.sin(yaw) * horiz, target.y + Math.sin(ELEV) * dist, target.z + Math.cos(yaw) * horiz);
-  camera.clearViewOffset(); camera.updateProjectionMatrix(); camera.lookAt(target); camera.updateMatrixWorld();
-  layoutHero();
-  drawStars();
+  const w = VW(), h = VH(), kind = w < PHONE_W ? 'phone' : w < TABLET_W ? 'tablet' : 'desktop';
+  renderer.setSize(w, h, false); camera.fov = 30; camera.aspect = w / h; camera.clearViewOffset(); camera.updateProjectionMatrix();
+  const name = layoutName(w, h, kind), copyH = heroCopyEl.offsetHeight, gap = h * STACK.artToName;
+  const roomH = h - STACK.nav - gap - name.height - STACK.nameToCopy - copyH - STACK.bottom;
+  const wantW = w * (ART_FILL[kind] ?? Math.min(.92, P.size * .86));
+  FRAME.dist = 40;
+  for (let i = 0; i < 6; i++) { poseCamera(); const b = artBox(); FRAME.dist *= Math.max(b.w / wantW, b.h / Math.max(roomH, 120)); }
+  poseCamera(); const b = artBox();
+  const total = b.h + gap + name.height + STACK.nameToCopy + copyH, spare = Math.max(0, h - STACK.nav - STACK.bottom - total);
+  const top = STACK.nav + spare * .5;
+  FRAME.ox = (b.x0 + b.x1) / 2 - w / 2; FRAME.oy = b.y0 - top;
+  camera.setViewOffset(w, h, FRAME.ox, FRAME.oy, w, h); camera.updateProjectionMatrix();
+  const nameTop = top + b.h + gap; placeName(name, nameTop);
+  heroCopyEl.style.top = `${nameTop + name.height + STACK.nameToCopy}px`; heroCopyEl.style.opacity = 1;
+  HULL = bowlHull(); drawStars();
 }
 
 /*
- * Hero name on a curve under the bowl. The curve is the front rim itself, projected to the screen and pushed down a
- * little, so the type hugs the stadium at any size or camera angle. If the name and the role line would run off the
- * bottom, the render is lifted (camera view offset) by just enough to make room.
+ * The name on a shallow curve under the bowl. Each letter is measured and placed on its own (no SVG textPath): browsers
+ * disagree on how long text on a path is, and some clip it. Here the size is solved from the measured letters, so the
+ * full name always fits inside its share of the width.
  */
-const MOBILE_W = 640, TABLET_W = 1100, SIZE_PHONE = .97, SIZE_TABLET = .86, NAME_SPAN_PHONE = .94, NAME_SPAN = .8, BOWL_H = .58, NAME_FIT_TRIES = 6, NAME_MIN = 28;   // BOWL_H: illustration height / width
-const NAME_GAP = .03, COPY_GAP = 12, BOTTOM_MARGIN = 28, MAX_LIFT = .21, ARC_FLAT = .5, NAME_FILL = 1;   // ARC_FLAT: 1 = follow the rim exactly, 0 = straight
-function rimToScreen(a) {
-  const v = new THREE.Vector3(Math.cos(a) * (RR + .25), WALL, Math.sin(a) * (RR + .25)).project(camera);
-  return [(v.x + 1) / 2 * innerWidth, (1 - v.y) / 2 * innerHeight];
+const NAME = 'GAURAV GUPTA', MEASURE_PX = 100;
+const measureCtx = document.createElement('canvas').getContext('2d');
+function layoutName(w, h, kind) {
+  measureCtx.font = `${MEASURE_PX}px ${getComputedStyle(heroNameEl).fontFamily}`;
+  const at = [...NAME].map((ch, i) => { const x0 = measureCtx.measureText(NAME.slice(0, i)).width + i * NAME_TRACK * MEASURE_PX, cw = measureCtx.measureText(ch).width; return { ch, mid: x0 + cw / 2 }; });
+  const full = measureCtx.measureText(NAME).width + (NAME.length - 1) * NAME_TRACK * MEASURE_PX;
+  const size = Math.min(w * NAME_FILL[kind] / full * MEASURE_PX, h * NAME_MAX_H[kind]), k = size / MEASURE_PX, width = full * k, sag = width * NAME_SAG[kind];
+  return { at, k, size, width, sag, height: sag + size * .8, w };
 }
-function layoutHero() {
-  const w = innerWidth, h = innerHeight, svg = document.querySelector('.hero-name'), text = svg.querySelector('text'), copy = document.querySelector('.hero-copy');
-  const mobile = w < MOBILE_W, copyH = copy.offsetHeight || 60;
-  // Big, Jarcos-scale name: phones ~13% of the width, larger screens up to ~10% of the width / 14% of the height.
-  let size = mobile ? Math.max(34, w * .13) : Math.max(40, Math.min(170, h * .14, w * .1));
-  // Short windows: shrink the name step by step until name + role line + button fit above the fold without overlapping.
-  for (let attempt = 0; attempt < NAME_FIT_TRIES; attempt++) {
-    text.setAttribute('font-size', size);
-    const need = NAME_GAP * h + size * 1.05 + COPY_GAP + copyH + BOTTOM_MARGIN;
-    const front = rimToScreen(PI / 2)[1], lift = Math.min(MAX_LIFT, Math.max(0, (front + need - h) / h));
-    camera.setViewOffset(w, h, 0, lift * h, w, h); camera.updateProjectionMatrix(); HERO_LIFT_PX = lift * h;
-    const pts = []; for (let k = 0; k <= 48; k++) pts.push(rimToScreen(PI - .42 - (PI - .84) * k / 48));   // a wide arc: the name spans the bowl
-    pts.sort((p, q) => p[0] - q[0]);
-    // Stretch the curve sideways so the name can run nearly edge to edge (Jarcos-scale), whatever the bowl's width.
-    { const x0 = pts[0][0], x1 = pts.at(-1)[0], c = (x0 + x1) / 2, want = w * (mobile ? NAME_SPAN_PHONE : NAME_SPAN), k = Math.max(1, want / (x1 - x0)); pts.forEach(p => { p[0] = w / 2 + (p[0] - c) * k; }); }   // centred on the screen, not the bowl (the bowl can sit off-centre when turned)
-    const drop = NAME_GAP * h + size * .82, yLow = Math.max(...pts.map(p => p[1]));
-    pts.forEach(p => { p[1] = yLow + (p[1] - yLow) * (mobile ? .2 : ARC_FLAT); });       // a gentler smile than the rim, so the ends clear the stands
-    document.getElementById('nameArc').setAttribute('d', 'M' + pts.map(([x, y]) => `${x.toFixed(1)} ${(y + drop).toFixed(1)}`).join(' L'));
-    // Fit: the name may use at most NAME_FILL of the curve, otherwise textPath silently drops the overflowing letters.
-    const arcLen = document.getElementById('nameArc').getTotalLength(), tl = text.getComputedTextLength();
-    if (tl > arcLen * NAME_FILL) { size *= arcLen * NAME_FILL / tl; text.setAttribute('font-size', size); }
-    const top = yLow + drop + size * .22 + COPY_GAP;
-    copy.style.top = `${top}px`;
-    if (top + copyH + 20 <= h || size <= NAME_MIN) break;
-    camera.clearViewOffset(); camera.updateProjectionMatrix(); HERO_LIFT_PX = 0;      // measure the next try from the unlifted view
-    size = Math.max(NAME_MIN, size * .88);
-  }
-  copy.style.opacity = 1;
-  HULL = bowlHull();
+function placeName(n, top) {
+  heroNameEl.replaceChildren(); const NS = 'http://www.w3.org/2000/svg';
+  n.at.forEach(({ ch, mid }) => {
+    if (ch === ' ') return;
+    const u = (mid * n.k - n.width / 2) / (n.width / 2);                                   // -1 left end … 1 right end
+    const x = n.w / 2 + u * n.width / 2, y = top + n.size * .76 + n.sag * (1 - u * u), slope = -2 * n.sag * u / (n.width / 2);
+    const t = document.createElementNS(NS, 'text'); t.textContent = ch; t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-size', n.size.toFixed(2));
+    t.setAttribute('transform', `translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${(Math.atan(slope) * 180 / PI).toFixed(2)})`); heroNameEl.append(t);
+  });
 }
-document.fonts?.load('80px Caprasimo').then(() => layoutHero());
 
 /* ================= lens + story zoom ================= */
 /*
@@ -1948,8 +1717,7 @@ const STORIES = [
 const STORY_PULLBACK = 1.6;   // close-up distance multiplier: far enough that roofs and canopies do not fill the frame
 const FLY_TIME = 1.1, TAP_REACH = 170;   // TAP_REACH: px from a story's anchor that still counts as tapping it
 const FINE_POINTER = matchMedia('(hover: hover) and (pointer: fine)').matches;
-const lensEl = document.querySelector('.lens-cursor');
-let HERO_LIFT_PX = 0;
+const lensEl = root.querySelector('.lens-cursor');
 const ZOOM = { state: 'off', t: 0, story: null, from: null, to: null };   // state: off | in | open | out
 
 /* Is a screen point over the bowl? Convex hull of the rim (and the rim lifted to the peaks on the far side). */
@@ -1957,7 +1725,7 @@ function bowlHull() {
   const pts = [];
   for (let k = 0; k < 48; k++) {
     const a = k / 48 * TAU, far = Math.sin(a) < .15;
-    for (const y of far ? [WALL, WALL + 6.5] : [WALL]) { const v = new THREE.Vector3(Math.cos(a) * (RR + .6), y, Math.sin(a) * (RR + .6)).project(camera); pts.push([(v.x + 1) / 2 * innerWidth, (1 - v.y) / 2 * innerHeight]); }
+    for (const y of far ? [WALL, WALL + 6.5] : [WALL]) { const v = new THREE.Vector3(Math.cos(a) * (RR + .6), y, Math.sin(a) * (RR + .6)).project(camera); pts.push([(v.x + 1) / 2 * VW(), (1 - v.y) / 2 * VH()]); }
   }
   pts.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
   const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]), lo = [], hi = [];
@@ -1971,49 +1739,79 @@ const inHull = (x, y) => { for (let i = 0; i < HULL.length; i++) { const a = HUL
 /* Which story is nearest to a screen point (within reach)? */
 function storyAt(x, y, reach = 150) {
   let best = null, bd = reach;
-  for (const s of STORIES) { const [ax, ay, az] = s.at(), v = new THREE.Vector3(ax, ay, az).project(camera), sx = (v.x + 1) / 2 * innerWidth, sy = (1 - v.y) / 2 * innerHeight, d = Math.hypot(sx - x, sy - y); if (v.z < 1 && d < bd) { bd = d; best = s; } }
+  for (const s of STORIES) { const [ax, ay, az] = s.at(), v = new THREE.Vector3(ax, ay, az).project(camera), sx = (v.x + 1) / 2 * VW(), sy = (1 - v.y) / 2 * VH(), d = Math.hypot(sx - x, sy - y); if (v.z < 1 && d < bd) { bd = d; best = s; } }
   return best;
 }
 
-const glEl = document.getElementById('gl'), storyEl = document.querySelector('.story');
-// Over the bowl the cursor becomes a small lens: a hint that tapping zooms in. It does not magnify by itself.
-glEl.addEventListener('pointermove', (e) => {
-  const over = FINE_POINTER && ZOOM.state === 'off' && HERO_VISIBLE && inHull(e.clientX, e.clientY);
-  lensEl.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`; lensEl.classList.toggle('on', over);
-  glEl.style.cursor = over ? 'none' : ZOOM.state === 'open' ? 'zoom-out' : '';
+const storyEl = root.querySelector('.story');
+/* Over the bowl the cursor becomes a small lens: a hint that tapping zooms in. Dragging sideways turns the bowl a little. */
+const DRAG_START = 7, SWING_PER_WIDTH = 60, SWING_FRICTION = 5;       // px before a press counts as a drag; degrees per screen width; how fast a flick dies out
+const drag = { on: false, moved: false, x: 0, from: 0, lastX: 0, lastT: 0, v: 0 };
+function setSwing(deg) { FRAME.swing = Math.max(-SWING_MAX, Math.min(SWING_MAX, deg)); poseCamera(); }
+on(gl, 'pointerdown', (e) => {
+  if (ZOOM.state !== 'off' || (e.pointerType === 'mouse' && e.button !== 0)) return;
+  Object.assign(drag, { on: true, moved: false, x: e.clientX, lastX: e.clientX, lastT: e.timeStamp, from: FRAME.swing, v: 0 });
 });
-glEl.addEventListener('pointerleave', () => lensEl.classList.remove('on'));
-glEl.addEventListener('click', (e) => {
+on(gl, 'pointermove', (e) => {
+  const over = FINE_POINTER && ZOOM.state === 'off' && HERO_VISIBLE && inHull(e.clientX, e.clientY);
+  lensEl.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+  if (drag.on) {
+    if (!drag.moved && Math.abs(e.clientX - drag.x) > DRAG_START) { drag.moved = true; gl.setPointerCapture(e.pointerId); }
+    if (drag.moved) {
+      setSwing(drag.from - (e.clientX - drag.x) / VW() * SWING_PER_WIDTH);
+      const dt = Math.max(1, e.timeStamp - drag.lastT) / 1000; drag.v = -(e.clientX - drag.lastX) / VW() * SWING_PER_WIDTH / dt; drag.lastX = e.clientX; drag.lastT = e.timeStamp;
+    }
+  }
+  lensEl.classList.toggle('on', over && !drag.moved);
+  gl.style.cursor = drag.moved ? 'grabbing' : over ? 'none' : ZOOM.state === 'open' ? 'zoom-out' : 'grab';
+});
+const endDrag = () => { if (drag.on && drag.moved) { HULL = bowlHull(); if (REDUCED_MOTION) drag.v = 0; } drag.on = false; };
+on(gl, 'pointerup', (e) => { if (e.timeStamp - drag.lastT > 80) drag.v = 0; endDrag(); }); on(gl, 'pointercancel', () => { drag.v = 0; endDrag(); });
+on(gl, 'pointerleave', () => lensEl.classList.remove('on'));
+on(gl, 'click', (e) => {
+  if (drag.moved) { drag.moved = false; return; }                       // that press was a turn, not a tap
   if (ZOOM.state === 'open' || ZOOM.state === 'in') return flyOut();
   if (ZOOM.state !== 'off' || !inHull(e.clientX, e.clientY)) return;
   const s = storyAt(e.clientX, e.clientY, TAP_REACH); if (s) flyIn(s);
 });
-addEventListener('keydown', (e) => { if (e.key === 'Escape' && (ZOOM.state === 'open' || ZOOM.state === 'in')) flyOut(); });
-document.querySelector('.story-close').addEventListener('click', () => flyOut());
-document.querySelectorAll('[data-story]').forEach(b => b.addEventListener('click', () => { const s = STORIES.find(q => q.id === b.dataset.story); if (s && ZOOM.state === 'off') flyIn(s); }));
+/** After a flick the bowl keeps turning and settles. */
+function updateSwing(dt) {
+  if (drag.on || ZOOM.state !== 'off' || Math.abs(drag.v) < .2) return;
+  setSwing(FRAME.swing + drag.v * dt); drag.v *= Math.exp(-SWING_FRICTION * dt);
+  if (Math.abs(drag.v) < .2) HULL = bowlHull();
+}
+// Keyboard: with the artwork focused, the arrow keys turn it.
+on(gl, 'keydown', (e) => {
+  if (ZOOM.state !== 'off' || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+  e.preventDefault(); setSwing(FRAME.swing + (e.key === 'ArrowLeft' ? -4 : 4)); HULL = bowlHull();
+});
+on(window, 'keydown', (e) => { if (e.key === 'Escape' && (ZOOM.state === 'open' || ZOOM.state === 'in')) flyOut(); });
+on(root.querySelector('.story-close'), 'click', () => flyOut());
+root.querySelectorAll('[data-story]').forEach(b => on(b, 'click', () => { const s = STORIES.find(q => q.id === b.dataset.story); if (s && ZOOM.state === 'off') flyIn(s); }));
 
 /* Camera poses: the framed hero pose, and a close pose for a story (pulled back along the hero view direction). */
-function framePose() { return { pos: camera.position.clone(), target: FRAME_TARGET.clone(), off: HERO_LIFT_PX }; }
+function framePose() { return { pos: camera.position.clone(), target: FRAME_TARGET.clone(), off: FRAME.oy, offX: FRAME.ox }; }
 function storyPose(s) {
   const [x, y, z] = s.at(), a = new THREE.Vector3(x, y, z), dir = camera.position.clone().sub(a).setY(0).normalize();
   const D = s.dist * STORY_PULLBACK;
-  return { pos: a.clone().addScaledVector(dir, D).add(new THREE.Vector3(0, s.lift + D * .3, 0)), target: a, off: 0 };
+  return { pos: a.clone().addScaledVector(dir, D).add(new THREE.Vector3(0, s.lift + D * .3, 0)), target: a, off: 0, offX: 0 };
 }
 function flyIn(s) {
   ZOOM.from = framePose(); ZOOM.to = storyPose(s); ZOOM.story = s; ZOOM.state = 'in'; ZOOM.t = 0; lensEl.classList.remove('on');
-  document.body.classList.add('zoomed');
+  root.classList.add('zoomed');
 }
 function flyOut() {
-  const cur = { pos: camera.position.clone(), target: ZOOM.to.target.clone(), off: 0 };
+  const u = ZOOM.state === 'in' ? ease(ZOOM.t) : 1, mid = (a, b) => a + (b - a) * u;
+  const cur = { pos: camera.position.clone(), target: new THREE.Vector3().lerpVectors(ZOOM.from.target, ZOOM.to.target, u), off: mid(ZOOM.from.off, ZOOM.to.off), offX: mid(ZOOM.from.offX, ZOOM.to.offX) };
   ZOOM.to = ZOOM.from; ZOOM.from = cur; ZOOM.state = 'out'; ZOOM.t = 0;
-  storyEl.classList.remove('open'); document.body.classList.remove('zoomed'); clearTimeout(chatTimer);
+  storyEl.classList.remove('open'); root.classList.remove('zoomed'); clearTimeout(chatTimer);
 }
 const ease = (u) => u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
 function updateZoom(dt) {
   if (ZOOM.state !== 'in' && ZOOM.state !== 'out') return;
   ZOOM.t = Math.min(1, ZOOM.t + (REDUCED_MOTION ? 1 : dt / FLY_TIME)); const u = ease(ZOOM.t), A = ZOOM.from, B = ZOOM.to;
   camera.position.lerpVectors(A.pos, B.pos, u); camera.lookAt(new THREE.Vector3().lerpVectors(A.target, B.target, u));
-  camera.setViewOffset(innerWidth, innerHeight, 0, A.off + (B.off - A.off) * u, innerWidth, innerHeight); camera.updateProjectionMatrix();
+  camera.setViewOffset(VW(), VH(), A.offX + (B.offX - A.offX) * u, A.off + (B.off - A.off) * u, VW(), VH()); camera.updateProjectionMatrix();
   if (ZOOM.t >= 1) {
     if (ZOOM.state === 'in') { ZOOM.state = 'open'; openChat(ZOOM.story); }
     else { ZOOM.state = 'off'; frameCamera(); }
@@ -2039,29 +1837,44 @@ function openChat(s) {
 }
 
 /* ================= build + run ================= */
+frameCamera(); drawStars();   // the name, the line and the sky appear at once; the bowl follows
+await breathe();
 planMountainRoutes();   // routes first: the trail bench they define is part of the terrain
-buildSurround(); let terrainMesh = buildTerrain(); buildRimEdge(); buildField(); buildWater(); buildDolphins(); buildRoad(); buildWorkshop(); planKartRoute(); buildScoreboard();
-buildEmbassy(); buildStudentPlaza(); buildEndPoint(); buildSummit();
+buildSurround(); const terrainMesh = buildTerrain(); await breathe();
+buildRimEdge(); buildField(); buildWater(); await breathe();
+buildDolphins(); buildRoad(); buildWorkshop(); planKartRoute(); buildScoreboard(); await breathe();
+buildEmbassy(); buildStudentPlaza(); await breathe();
+buildEndPoint(); buildSummit();
 LAY.towers.forEach(([a, d, h], i) => buildTower(a, d, h, new THREE.Vector3(i ? 1.2 : -1.5, 0, i ? 0 : -1)));
-buildSnow(); buildRimLamps(); buildActors();
-frameCamera();
-addEventListener('resize', () => { clearTimeout(window.rt); window.rt = setTimeout(() => {
-  if (ZOOM.state !== 'off') { ZOOM.state = 'off'; storyEl.classList.remove('open'); document.body.classList.remove('zoomed'); }   // a resize snaps back to the bowl
-  frameCamera(); }, 150); });
-document.querySelector('.loading').remove();
+buildSnow(); buildRimLamps(); await breathe();
+buildActors(); await breathe();
+if (!Q.pointLights) scene.traverse(o => { if (o.isPointLight) o.visible = false; });
+batchRigid(scene, new Set([terrainMesh, sea, ...THEMED.ground]));
+await breathe();
+frameCamera(); setTone(tone);
+document.fonts?.ready.then(() => { if (!disposed) frameCamera(); });
+// Re-frame when the hero box itself changes size (not on every phone URL-bar move).
+let reframe = 0;
+const boxWatch = new ResizeObserver(() => { clearTimeout(reframe); reframe = setTimeout(() => {
+  if (ZOOM.state !== 'off') { ZOOM.state = 'off'; clearTimeout(chatTimer); storyEl.classList.remove('open'); root.classList.remove('zoomed'); }
+  frameCamera(); }, 120); });
+boxWatch.observe(gl); boxWatch.observe(heroCopyEl);
+on(window, 'themechange', () => setTone(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'));
 
 /* ================= tweak panel ================= */
 function applyLive() {
-  renderer.toneMappingExposure = P.exposure; moon.intensity = P.moon; sideLight.intensity = P.side; hemi.intensity = P.sky;
-  spots.forEach(s => s.intensity = P.towerLight); beams.forEach(b => b.material.opacity = P.beams);
-  snow.material.size = P.snowSize; snow.geometry.setDrawRange(0, Math.round(snow.userData.meta.length * P.snowAmount));
-  document.querySelector('.grain').style.opacity = P.grain;
-  document.getElementById('stars').style.visibility = P.stars ? 'visible' : 'hidden';
-  store.set(TWEAK_KEY, JSON.stringify(P));
+  lightScene(); beams.forEach(b => { b.material.opacity = P.beams * GLOW; });
+  snow.geometry.setDrawRange(0, Math.round(snow.userData.meta.length * P.snowAmount * Q.snow) * 6); layFlakes();
+  root.querySelector('.grain').style.opacity = P.grain;
+  root.querySelector('#stars').style.visibility = P.stars ? 'visible' : 'hidden';
+  if (showPanel) store.set(TWEAK_KEY, JSON.stringify(P));
 }
 /* Everything (SP terrace, routes, summit, buildings) sits on the heightfield, so a landscape change rebuilds the page. */
 function rebuildTerrain() { store.set(TWEAK_KEY, JSON.stringify(P)); location.reload(); }
-const gui = new GUI({ title: 'Tweak the pit' });
+let gui = null;
+if (showPanel) {
+const { default: GUI } = await import('lil-gui');
+gui = new GUI({ title: 'Tweak the pit' });
 gui.domElement.style.top = '72px'; gui.domElement.style.right = '16px';   // below the nav
 const fc = gui.addFolder('Camera');
 fc.add(P, 'size', .3, 1, .01).name('Size on screen').onChange(() => { frameCamera(); applyLive(); });
@@ -2094,26 +1907,29 @@ fk.add(P, 'stars').name('Sky stars').onChange(applyLive);
 gui.add({ reset() { store.remove(TWEAK_KEY); location.reload(); } }, 'reset').name('Reset all');
 gui.add({ copy() { navigator.clipboard?.writeText(JSON.stringify(P, null, 2)); } }, 'copy').name('Copy values');
 fl.close(); fs.close(); fm.close(); fk.close();
-if (innerWidth < MOBILE_W) gui.close();
+if (VW() < TABLET_W) gui.close();
+}
 applyLive();
 
-const clock = new THREE.Clock();
-let simT = 0, PAUSED = false, HERO_VISIBLE = true, lastFrame = performance.now();
+let simT = 0, HERO_VISIBLE = true, lastFrame = performance.now();
 // Once the work card covers the screen, skip rendering the scene (saves battery; it resumes as you scroll back).
 const heroCheck = () => {   // scroll-based (not IntersectionObserver): deterministic even in throttled or background tabs
-  HERO_VISIBLE = scrollY < innerHeight * .98;
-  document.querySelector('.pause').style.visibility = HERO_VISIBLE ? '' : 'hidden';
-  gui.domElement.style.visibility = HERO_VISIBLE ? '' : 'hidden';   // the panel tweaks the scene, so it leaves with it
+  HERO_VISIBLE = scrollY < VH() * .98;
+  if (gui) gui.domElement.style.visibility = HERO_VISIBLE ? '' : 'hidden';   // the panel tweaks the scene, so it leaves with it
 };
-addEventListener('scroll', heroCheck, { passive: true }); addEventListener('resize', heroCheck); setTimeout(heroCheck);
-// Pause: the scene never stops on its own, so give people a way to still it (WCAG 2.2.2).
-document.querySelector('.pause').addEventListener('click', (e) => { PAUSED = !PAUSED; e.currentTarget.textContent = PAUSED ? 'Play' : 'Pause'; e.currentTarget.setAttribute('aria-pressed', PAUSED); });
-if (REDUCED_MOTION) document.querySelector('.pause').hidden = true;
+on(window, 'scroll', heroCheck, { passive: true }); heroCheck();
+const SHADOW_EVERY = 3;                          // frames between shadow refreshes: people move slowly at this size
+let raf = 0, stepped = false, frameNo = 0;
 function tick() {
-  const dt = PAUSED ? (clock.getDelta(), 0) : Math.min(clock.getDelta(), .05) * P.speed; simT += dt; const t = simT;
-  updateActors(t, REDUCED_MOTION ? 0 : dt); updateClouds(t); updateEndPoint(t);
+  if (disposed) return;
+  raf = requestAnimationFrame(tick);               // keeps running under reduced motion too: turning and story zoom still need frames
+  const now = performance.now(), wall = now - lastFrame;
+  if (!HERO_VISIBLE) { lastFrame = now; return; }      // the page covers the scene: nothing to move or draw
+  if (!governor.frame(wall)) return;
+  lastFrame = now; const realDt = Math.min(wall / 1000, .25), dt = Math.min(realDt, .05) * P.speed; simT += dt; const t = simT;
+  if (!REDUCED_MOTION || !stepped) { updateActors(t, REDUCED_MOTION ? 0 : dt); updateClouds(t); updateEndPoint(t); stepped = true; }   // reduced motion: one still frame of the scene
   if (!REDUCED_MOTION) {
-    const pos = snow.geometry.attributes.position.array, meta = snow.userData.meta;
+    const pos = snow.userData.pos, meta = snow.userData.meta;
     for (let i = 0; i < meta.length; i++) {
       const m = meta[i];
       pos[i * 3] += (m.T.dir.x * .35 + Math.sin(t * 1.3 + m.sway) * .12) * dt;
@@ -2121,15 +1937,21 @@ function tick() {
       pos[i * 3 + 2] += (m.T.dir.z * .35 + Math.cos(t * 1.1 + m.sway) * .1) * dt;
       if (pos[i * 3 + 1] < m.T.head.y - 9 || pos[i * 3 + 1] < .6) resetFlake(pos, i, m, false);
     }
-    snow.geometry.attributes.position.needsUpdate = true;
-    hazes.forEach((h, i) => { h.material.opacity = P.haze * (1 + Math.sin(t * .8 + i) * .4); });
+    layFlakes();
+    hazes.forEach((h, i) => { h.material.opacity = P.haze * GLOW * (1 + Math.sin(t * .8 + i) * .4); });
   }
   // Camera flights run on wall-clock time, so a slow or throttled frame rate cannot leave the camera stuck mid-flight.
-  const now = performance.now(), realDt = Math.min((now - lastFrame) / 1000, .25); lastFrame = now; updateZoom(realDt);
-  if (HERO_VISIBLE) renderer.render(scene, camera);
-  if (!REDUCED_MOTION) requestAnimationFrame(tick);
+  updateZoom(realDt); updateSwing(realDt);
+  if (moon.castShadow && frameNo++ % SHADOW_EVERY === 0) moon.shadow.needsUpdate = true;
+  renderer.render(scene, camera);
 }
+if (new URLSearchParams(location.search).has('perf')) window.__gg = { renderer, scene, camera, governor, moon, Q, ready: performance.now() };
 tick();
-</script>
-</body>
-</html>
+gl.classList.add('ready');
+
+return () => {
+  disposed = true; cancelAnimationFrame(raf); listeners.abort(); boxWatch.disconnect(); clearTimeout(reframe); clearTimeout(chatTimer); gui?.destroy();
+  scene.traverse((o) => { o.geometry?.dispose(); [].concat(o.material ?? []).forEach((mat) => { mat.map?.dispose(); mat.emissiveMap?.dispose(); mat.dispose(); }); });
+  renderer.dispose();
+};
+}
